@@ -1,0 +1,1548 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>RotasDF — Documento de Arquitetura - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rotasdf-documento-de-arquitetura" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Documentação" class="md-header__button md-logo" aria-label="Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RotasDF — Documento de Arquitetura
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Documentação" class="md-nav__button md-logo" aria-label="Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instruções mkdocs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Atas de Reunião
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Atas de Reunião
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../atas-reuniao/ata-reuniao-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ata 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integrantes-do-grupo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrantes do Grupo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#historico-de-revisoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Histórico de Revisões
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sumario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sumário
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-introducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 Introdução
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Introdução">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-escopo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Escopo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-representacao-arquitetural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 Representação arquitetural
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Representação arquitetural">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-definicoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Definições
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 Definições">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regras-de-dependencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regras de dependência
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-justificativa-da-escolha-arquitetural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Justificativa da escolha arquitetural
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Justificativa da escolha arquitetural">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fatores-que-orientaram-a-decisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fatores que orientaram a decisão
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternativas-consideradas-e-descartadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternativas consideradas e descartadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consequencias-e-riscos-aceitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequências e riscos aceitos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-detalhamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Detalhamento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Detalhamento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#elementos-e-responsabilidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elementos e responsabilidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-metas-e-restricoes-arquiteturais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Metas e restrições arquiteturais
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.4 Metas e restrições arquiteturais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mr01-desempenho-e-capacidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR01 — Desempenho e capacidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr02-responsividade-e-acessibilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR02 — Responsividade e acessibilidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr03-padrao-de-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR03 — Padrão de API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr04-padrao-de-codificacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR04 — Padrão de codificação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr05-revisao-por-pares-integracao-continua-e-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR05 — Revisão por pares, integração contínua e branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr06-cobertura-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR06 — Cobertura de testes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr07-seguranca-e-privacidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR07 — Segurança e privacidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr08-ambientes-padronizados-com-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR08 — Ambientes padronizados com Docker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr09-dados-oficiais-validados-e-tolerancia-a-falhas-externas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR09 — Dados oficiais validados e tolerância a falhas externas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr10-tecnologias-e-prazo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MR10 — Tecnologias e prazo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-visoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Visões
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5 Visões">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#251-visao-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.1 Visão de uso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#252-visao-de-organizacao-logica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.2 Visão de organização lógica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5.2 Visão de organização lógica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulo-de-linhas-paradas-e-horarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Linhas, Paradas e Horários
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-de-trajetos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Trajetos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-de-alertas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Alertas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-de-autenticacao-e-autorizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Autenticação e Autorização
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-de-conta-e-personalizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Conta e Personalização
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-de-administracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Administração
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-de-importacao-gtfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Importação GTFS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-de-adaptadores-de-integracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulo de Adaptadores de Integração
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comunicacao-entre-os-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comunicação entre os módulos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-de-pacotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrama de pacotes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#253-visao-estrutural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5.3 Visão estrutural
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.5.3 Visão estrutural">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-de-componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrama de componentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagramas-de-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagramas de classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-visao-de-implantacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Visão de implantação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.6 Visão de implantação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-de-implantacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrama de implantação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-restricoes-adicionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Restrições adicionais
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7 Restrições adicionais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-aspectos-negociais-e-de-acesso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Aspectos negociais e de acesso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-caracteristicas-de-qualidade-baseadas-na-isoiec-25010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Características de qualidade (baseadas na ISO/IEC 25010)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-seguranca-e-perfis-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Segurança e perfis de usuário
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 Referências
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="rotasdf-documento-de-arquitetura">RotasDF — Documento de Arquitetura</h1>
+<p><strong>Grupo Knuth (T02_KNUTH)</strong> · Versão 1.1.0</p>
+<h2 id="integrantes-do-grupo">Integrantes do Grupo</h2>
+<table>
+<thead>
+<tr>
+<th>Matrícula</th>
+<th>Nome</th>
+<th>Função (responsabilidade)</th>
+<th>Pontos de participação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>252014223</td>
+<td>Gabriel Sakai e Silva</td>
+<td>Analista de qualidade / desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>242015601</td>
+<td>Emanuele Victor Santos</td>
+<td>Scrum master / Líder do grupo / desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>232013990</td>
+<td>Gabriel Felix Mota Soares</td>
+<td>Dono do produto / desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>190128160</td>
+<td>Guilherme Maciel de Meneses</td>
+<td>Desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>222024819</td>
+<td>Gabriela Xavier Rodrigues</td>
+<td>Desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>242015460</td>
+<td>Denilson Lima Santos</td>
+<td>Desenvolvedor</td>
+<td>16,6</td>
+</tr>
+</tbody>
+</table>
+<h2 id="historico-de-revisoes">Histórico de Revisões</h2>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Versão</th>
+<th>Descrição</th>
+<th>Autor(es)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>07/10/2026</td>
+<td>1.0</td>
+<td>Versão inicial do Documento de Arquitetura</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td>27/10/2026</td>
+<td>1.1.0</td>
+<td>Revisão do Sumário, correção da formatação ABNT em cabeçalhos e referências, e inserção do Diagrama de Implantação</td>
+<td>Denilson Lima Santos</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sumario">Sumário</h2>
+<ol>
+<li><a href="#1-introdução">Introdução</a></li>
+<li><a href="#11-propósito">1.1 Propósito</a></li>
+<li><a href="#12-escopo">1.2 Escopo</a></li>
+<li><a href="#2-representação-arquitetural">Representação arquitetural</a></li>
+<li><a href="#21-definições">2.1 Definições</a></li>
+<li><a href="#22-justificativa-da-escolha-arquitetural">2.2 Justificativa da escolha arquitetural</a></li>
+<li><a href="#23-detalhamento">2.3 Detalhamento</a></li>
+<li><a href="#24-metas-e-restrições-arquiteturais">2.4 Metas e restrições arquiteturais</a></li>
+<li><a href="#25-visões">2.5 Visões</a></li>
+<li><a href="#26-visão-de-implantação">2.6 Visão de implantação</a></li>
+<li><a href="#27-restrições-adicionais">2.7 Restrições adicionais</a></li>
+<li><a href="#3-referências">Referências</a></li>
+</ol>
+<hr />
+<h2 id="1-introducao">1 Introdução</h2>
+<h3 id="11-proposito">1.1 Propósito</h3>
+<p>Este documento descreve a arquitetura do sistema RotasDF, desenvolvido pelo grupo Knuth (T02_KNUTH) na disciplina de MDS — Métodos de Desenvolvimento de Software, edição do segundo semestre de 2026. Seu objetivo é fornecer uma visão abrangente do sistema para desenvolvedores, testadores e demais interessados nos aspectos relacionados às tecnologias usadas no desenvolvimento.</p>
+<h3 id="12-escopo">1.2 Escopo</h3>
+<p>O detalhamento do escopo encontra-se na Visão, versão 1.0.0, seção 4 (Declaração de Escopo do Projeto). Em linhas gerais, o produto compreende uma plataforma digital de transporte público que reúne, em uma interface responsiva e acessível:</p>
+<ul>
+<li>consulta de linhas, paradas, itinerários e quadros de horários;</li>
+<li>planejamento de trajetos entre origem e destino;</li>
+<li>divulgação de alertas de alteração no serviço;</li>
+<li>conta e personalização do passageiro (favoritos, buscas recentes e reporte de divergências);</li>
+<li>área administrativa para importação de dados oficiais (GTFS), gestão de alertas e manutenção da base.</li>
+</ul>
+<p>O sistema atende a três perfis: Passageiro Anônimo, Passageiro Cadastrado e Administrador.</p>
+<hr />
+<h2 id="2-representacao-arquitetural">2 Representação arquitetural</h2>
+<h3 id="21-definicoes">2.1 Definições</h3>
+<p>O sistema seguirá uma arquitetura em três camadas (<em>three-tier</em>), com modelo cliente-servidor e comunicação por API REST:</p>
+<ol>
+<li><strong>Front-end:</strong> aplicativo mobile em React Native executado em dispositivos móveis (Android e iOS);</li>
+<li><strong>Servidor de aplicação:</strong> API REST em Node.js que concentra as regras de negócio, acompanhada do serviço de importação de dados GTFS em Python;</li>
+<li><strong>Banco de dados relacional:</strong> PostgreSQL.</li>
+</ol>
+<p>O servidor de aplicação é organizado como um <strong>monólito modular</strong>: uma única aplicação implantável, dividida internamente em módulos coesos por funcionalidade.</p>
+<ul>
+<li><strong>Cliente-servidor:</strong> o cliente (aplicativo mobile) solicita serviços e o servidor os executa e responde (SOMMERVILLE, 2019).</li>
+<li><strong>Três camadas:</strong> apresentação (front-end), aplicação/negócio (servidor de aplicação) e persistência (banco de dados). Cada camada só se comunica com a vizinha (RICHARDS, 2015).</li>
+<li><strong>API REST:</strong> única porta de entrada do servidor; o front-end nunca acessa o banco diretamente (FIELDING, 2000).</li>
+<li><strong>Monólito modular:</strong> módulos de baixo acoplamento (linhas e horários, trajetos, alertas, conta, autenticação e administração) em uma única aplicação.</li>
+</ul>
+<h4 id="regras-de-dependencia">Regras de dependência</h4>
+<ul>
+<li>O front-end só se comunica com o servidor de aplicação, pela API REST.</li>
+<li>Os módulos só acessam o banco pelos repositórios; nenhum módulo executa SQL diretamente nem conhece HTTP.</li>
+<li>Um módulo não acessa as tabelas de outro: usa o serviço do módulo correspondente.</li>
+</ul>
+<p><strong>Tecnologias:</strong> React Native no front-end mobile; Node.js e Python no servidor; PostgreSQL no banco de dados; Docker, GitHub e VS Code no processo e na infraestrutura.</p>
+<h3 id="22-justificativa-da-escolha-arquitetural">2.2 Justificativa da escolha arquitetural</h3>
+<p>A escolha considera os seguintes pontos do Documento de Visão do Produto e do Projeto (doravante, Visão), incluindo a Declaração de Escopo (seção 4):</p>
+<h4 id="fatores-que-orientaram-a-decisao">Fatores que orientaram a decisão</h4>
+<ul>
+<li><strong>Perfis distintos de usuário (Visão, seção 4.2).</strong> Passageiro Anônimo, Passageiro Cadastrado e Administrador acessam o mesmo conjunto de dados com permissões diferentes. Concentrar as regras de negócio e a autorização no servidor de aplicação evita que o controle de acesso fique espalhado pelo cliente.</li>
+<li><strong>Interface mobile responsiva e acessível (Visão, seções 1.2 e 4.1).</strong> O diferencial do produto é a acessibilidade e a facilidade de uso em dispositivos móveis. Separar a apresentação (React Native) da lógica permite evoluir a interface mobile com rapidez, sem afetar as regras de negócio.</li>
+<li><strong>Entregas incrementais em Sprints semanais (Visão, seções 2.1 e 2.3).</strong> Os módulos são entregues progressivamente, do módulo base (S1) aos recursos avançados (S5). Módulos independentes dentro de um único monólito permitem que cada Sprint entregue um incremento sem a sobrecarga operacional de vários serviços.</li>
+<li><strong>Equipe de 6 integrantes e prazo curto (26/10 a 29/11/2026).</strong> O monólito modular reduz a complexidade de implantação e de integração em comparação a microsserviços e mantém baixo acoplamento entre os módulos, o que facilita uma eventual separação futura (RICHARDS, 2015).</li>
+<li><strong>Dados oficiais em formato padronizado (Visão, RF20).</strong> Um serviço de importação isolado das consultas permite validar e carregar os dados GTFS sem afetar a experiência do passageiro.</li>
+<li><strong>Picos de acesso (Visão, seção 6.1).</strong> A estratégia de testes prevê desempenho em horários de pico. Uma camada de aplicação única permite concentrar cache, paginação e controle de carga em um só lugar (MR01).</li>
+<li><strong>Práticas de XP e qualidade (Visão, seções 2.1, 3 e 5.1).</strong> Camadas e módulos bem delimitados favorecem os testes unitários por módulo, os testes de integração entre camadas e a meta de 80% de cobertura (MR06).</li>
+</ul>
+<h4 id="alternativas-consideradas-e-descartadas">Alternativas consideradas e descartadas</h4>
+<ul>
+<li><strong>Microsserviços.</strong> Cada módulo seria um serviço independente. Foi descartada porque exigiria comunicação entre serviços, monitoramento e implantação mais complexos, sem benefício proporcional para uma equipe de 6 pessoas e cinco semanas de desenvolvimento (SOMMERVILLE, 2019; RICHARDS, 2015). A organização em módulos permite migrar para essa abordagem no futuro, se necessário.</li>
+<li><strong>Aplicação web tradicional sem aplicativo mobile.</strong> Foi descartada porque a interface mobile com mapa e navegação por geolocalização nativa, previstas na Visão (seção 1.4), exigem uma experiência nativa ou híbrida otimizada para smartphones (React Native). A API REST também permite reutilizar o back-end em outros clientes no futuro.</li>
+<li><strong>Back-end como serviço (BaaS) ou funções sem servidor.</strong> Foi descartada porque o cálculo de trajetos e a importação e validação dos dados GTFS exigem lógica própria e controle sobre o banco relacional (PostgreSQL), já definido na Visão.</li>
+</ul>
+<h4 id="consequencias-e-riscos-aceitos">Consequências e riscos aceitos</h4>
+<ul>
+<li>O monólito é implantado e escalado como um todo. Se um módulo exigir muito mais recursos, como o cálculo de trajetos, será necessário otimizá-lo por cache e índices antes de separá-lo.</li>
+<li>O uso de duas linguagens (Node.js e Python) aumenta o esforço de configuração. O risco é reduzido ao isolar o Python no serviço de importação e padronizar os ambientes com Docker (MR08).</li>
+<li>A disponibilidade de mapas, geocodificação e dados de transporte depende de serviços e fontes externas. Isso motiva a validação prévia dos dados e o tratamento de falhas (MR09).</li>
+</ul>
+<h3 id="23-detalhamento">2.3 Detalhamento</h3>
+<p>A figura a seguir apresenta o estilo arquitetural escolhido, com as camadas, os componentes principais, as interfaces e os conectores.</p>
+<p align="center"><b>Figura 1 — Arquitetura em três camadas do RotasDF</b></p>
+
+<p><img alt="Arquitetura em três camadas do RotasDF: aplicativo móvel, servidor de aplicação (monólito modular) com controladores REST, módulos de negócio e camada de persistência, PostgreSQL e serviços externos" src="../imagens/arq-fig1-tres-camadas.png" /></p>
+<h4 id="elementos-e-responsabilidades">Elementos e responsabilidades</h4>
+<p><strong>Camada de apresentação (front-end)</strong></p>
+<ul>
+<li><strong>Aplicativo Mobile (React Native):</strong> exibe as telas de busca, trajetos, linhas, horários, alertas, conta e administração em dispositivos Android e iOS, consumindo a API REST.</li>
+<li><strong>Componente de Mapa:</strong> desenha itinerários, paradas e trajetos na interface móvel (RF04, RF08).</li>
+<li><strong>Geolocalização (GPS nativo do dispositivo):</strong> obtém a localização atual do usuário via sensores nativos do smartphone/tablet, mediante autorização (RF03).</li>
+</ul>
+<p><strong>Camada de aplicação/negócio (servidor de aplicação)</strong></p>
+<ul>
+<li><strong>Controladores REST (Node.js, Express):</strong> recebem as requisições HTTP, validam entradas, chamam os módulos e padronizam respostas e erros.</li>
+<li><strong>Linhas, Paradas e Horários:</strong> consulta de linhas, itinerários, paradas, quadros de horários e próximas partidas (RF07 a RF12).</li>
+<li><strong>Trajetos:</strong> cálculo de opções de trajeto, etapas, baldeações e tempo estimado, com ordenação e filtros (RF01 a RF06).</li>
+<li><strong>Alertas:</strong> cadastro, consulta e encerramento de alertas, associados a linhas e paradas; expiração automática dos vencidos (RF13, RF14, RF22).</li>
+<li><strong>Autenticação e Autorização:</strong> autentica administradores e passageiros e aplica permissões por perfil (RF16, RF21).</li>
+<li><strong>Conta e Personalização:</strong> buscas recentes, favoritos, reporte de divergências e notificações de alterações em favoritos (RF15 a RF19).</li>
+<li><strong>Administração:</strong> manutenção manual de linhas, paradas e horários e análise de reportes (RF23, RF24).</li>
+<li><strong>Serviço de Importação GTFS (Python):</strong> lê, valida e carrega os dados oficiais na base (RF20).</li>
+<li><strong>Adaptadores de integração:</strong> concentram a comunicação com serviços externos (posição da frota em tempo real e central de trânsito) e tratam falhas.</li>
+</ul>
+<p><strong>Camada de persistência (banco de dados)</strong></p>
+<ul>
+<li><strong>Repositórios (ORM):</strong> isolam o acesso ao banco.</li>
+<li><strong>Banco de dados (PostgreSQL):</strong> persiste linhas, paradas, itinerários, horários, alertas, usuários, favoritos e reportes.</li>
+</ul>
+<p><strong>Interfaces e conectores</strong></p>
+<ul>
+<li><strong>API REST (aplicativo mobile → controladores):</strong> recebe requisições HTTPS com JSON/parâmetros e devolve JSON com código HTTP padronizado.</li>
+<li><strong>Chamada de módulo (controladores → módulos):</strong> recebe objetos já validados e devolve o resultado da regra de negócio.</li>
+<li><strong>Acesso a dados (módulos → repositórios → PostgreSQL):</strong> comandos de leitura e escrita via ORM.</li>
+<li><strong>Importação (fonte oficial GTFS → serviço de importação):</strong> valida arquivos GTFS antes da persistência no banco.</li>
+<li><strong>Notificação (módulo Conta → e-mail / push no aplicativo mobile):</strong> notificação enviada a usuários cadastrados sobre alterações nos favoritos (RF15).</li>
+</ul>
+<h3 id="24-metas-e-restricoes-arquiteturais">2.4 Metas e restrições arquiteturais</h3>
+<p>Cada item abaixo traz a meta ou restrição e sua justificativa, com a seção da Visão de onde ela decorre. Quando o valor ou o mecanismo é decisão da equipe, e não consta na Visão, isso está indicado.</p>
+<h4 id="mr01-desempenho-e-capacidade">MR01 — Desempenho e capacidade</h4>
+<ul>
+<li><strong>Meta:</strong> 95% das consultas de linhas, horários e alertas respondidas em até 2 segundos, e a busca de trajeto em até 5 segundos, com até 500 usuários simultâneos em horários de pico. Cache e paginação são obrigatórios nas consultas frequentes.</li>
+<li><strong>Justificativa:</strong> a Visão (seção 6.1) exige garantir estabilidade em horários de pico. O público busca informação rápida, e a demora reproduz o problema que o produto quer resolver.</li>
+</ul>
+<h4 id="mr02-responsividade-e-acessibilidade">MR02 — Responsividade e acessibilidade</h4>
+<ul>
+<li><strong>Meta:</strong> aplicativo mobile responsivo e adaptável a diferentes tamanhos de tela (Android e iOS), em conformidade com diretrizes de acessibilidade mobile (WCAG 2.1 nível AA / diretrizes de acessibilidade Android e iOS).</li>
+<li><strong>Justificativa:</strong> a acessibilidade é o diferencial do produto (Visão, seções 1.2 e 4.1) e responde às causas "exclusão digital" e "barreiras sensoriais" do Diagrama de Ishikawa. A escolha pelo aplicativo mobile em React Native é da equipe para garantir boa experiência em dispositivos móveis.</li>
+</ul>
+<h4 id="mr03-padrao-de-api">MR03 — Padrão de API</h4>
+<ul>
+<li><strong>Restrição:</strong> API REST em JSON, com verbos e códigos HTTP adequados, prefixo <code>/api/v1</code>, formato único de erro e documentação em OpenAPI (FIELDING, 2000; OPENAPI INITIATIVE, 2021).</li>
+<li><strong>Justificativa:</strong> um contrato único entre front-end e back-end reduz retrabalho e facilita os testes de integração previstos na Visão (seção 6.1).</li>
+</ul>
+<h4 id="mr04-padrao-de-codificacao">MR04 — Padrão de codificação</h4>
+<ul>
+<li><strong>Restrição:</strong> ESLint e Prettier para JavaScript/React Native e PEP 8 para Python (VAN ROSSUM; WARSAW; COGHLAN, 2001), com Clean Code (MARTIN, 2009); funções curtas, nomes em camelCase (JavaScript) e snake_case (Python), um módulo por funcionalidade.</li>
+<li><strong>Justificativa:</strong> a Visão (seções 2.1 e 3) exige Coding Standards e Clean Code, sem definir as ferramentas, que são escolha da equipe. As ferramentas rodam no pipeline de CI, e código fora do padrão não é integrado.</li>
+</ul>
+<h4 id="mr05-revisao-por-pares-integracao-continua-e-branches">MR05 — Revisão por pares, integração contínua e branches</h4>
+<ul>
+<li><strong>Restrição:</strong> todo código entra pela <code>main</code> apenas por Pull Request revisado (Analista de Qualidade e outro desenvolvedor) e com o pipeline do GitHub Actions sem falhas. As branches são <code>feature/*</code>, <code>develop</code>, <code>staging</code> e <code>main</code>, sem commits diretos na <code>main</code>.</li>
+<li><strong>Justificativa:</strong> é a Definição de Pronto e a política de branches da Visão (seções 3 e 6.1), e reduz defeitos antes das inspeções de repositório.</li>
+</ul>
+<h4 id="mr06-cobertura-de-testes">MR06 — Cobertura de testes</h4>
+<ul>
+<li><strong>Meta:</strong> cobertura mínima de 80% do código desenvolvido, medida ao final de cada Sprint pelo pipeline, principalmente nas regras de negócio.</li>
+<li><strong>Justificativa:</strong> é o valor esperado da Métrica 2 do GQM (Visão, seção 5.1). A separação em camadas permite testar as regras sem HTTP nem banco.</li>
+</ul>
+<h4 id="mr07-seguranca-e-privacidade">MR07 — Segurança e privacidade</h4>
+<ul>
+<li><strong>Meta:</strong> comunicação por HTTPS; senhas armazenadas apenas como hash (bcrypt); acesso por tokens com expiração e por perfil, validado no servidor; entradas validadas e consultas parametrizadas; segredos em variáveis de ambiente. A geolocalização só é usada com autorização do usuário e os dados pessoais seguem a LGPD (BRASIL, 2018): coleta mínima e exclusão de conta.</li>
+<li><strong>Justificativa:</strong> a Visão define os três perfis (seção 4.2) e exige autorização para a localização (RF03), autenticação (RF16, RF21) e exclusão de conta (RF16); os mecanismos citados são escolha da equipe. O sistema trata dados pessoais, como e-mail e localização.</li>
+</ul>
+<h4 id="mr08-ambientes-padronizados-com-docker">MR08 — Ambientes padronizados com Docker</h4>
+<ul>
+<li><strong>Restrição:</strong> servidor de aplicação e banco de dados executam em contêineres descritos em arquivos versionados (Dockerfile e Docker Compose) para suporte ao back-end da aplicação mobile nos ambientes de desenvolvimento, homologação e produção.</li>
+<li><strong>Justificativa:</strong> a Visão (seções 1.4 e 2.1) prevê o Docker para padronizar os ambientes de desenvolvimento e implantação, o que reduz diferenças entre máquinas e facilita o pipeline.</li>
+</ul>
+<h4 id="mr09-dados-oficiais-validados-e-tolerancia-a-falhas-externas">MR09 — Dados oficiais validados e tolerância a falhas externas</h4>
+<ul>
+<li><strong>Restrição:</strong> os dados de transporte são importados de fonte oficial em formato GTFS e validados antes de atualizar a base (GTFS, 2026); se a validação falhar, a base não é alterada. Falhas de serviços externos passam pelos adaptadores de integração e não podem tornar o sistema indisponível: o sistema segue com os dados programados e avisa o usuário.</li>
+<li><strong>Justificativa:</strong> a Visão prevê a importação com validação (RF20), classifica como alto o risco de falhas na integração ou obtenção dos dados (seção 2.5). Dados incorretos ou indisponíveis reproduzem a causa "baixa confiabilidade" do Ishikawa.</li>
+</ul>
+<h4 id="mr10-tecnologias-e-prazo">MR10 — Tecnologias e prazo</h4>
+<ul>
+<li><strong>Restrição:</strong> GitHub, VS Code, Python, Node.js, React Native, PostgreSQL e Docker; entrega em cinco Sprints semanais, de 26/10 a 29/11/2026, com ponto de controle, inspeção e apresentação final. A Visão lista Python e Node.js sem dividir suas funções; a equipe decidiu usar Node.js na API, React Native no aplicativo mobile e Python na importação. Mudanças são avaliadas pelos critérios de replanejamento (Visão, seção 2.5) e registradas no histórico de revisões.</li>
+<li><strong>Justificativa:</strong> tecnologias (seção 1.4) e cronograma (seções 2.3 e 3) já estão definidos na Visão; o monólito modular permite entregar um módulo por Sprint e reduz o risco de chegar às inspeções sem versão funcional.</li>
+</ul>
+<h3 id="25-visoes">2.5 Visões</h3>
+<p>A arquitetura do RotasDF é formada por meio de três visões: a <strong>visão de uso</strong>, que descreve o sistema sob a perspectiva do usuário final; a <strong>visão de organização lógica</strong>, que define a organização lógica do software em três camadas; e a <strong>visão estrutural</strong>, que detalha os componentes de software e seus conectores.</p>
+<h4 id="251-visao-de-uso">2.5.1 Visão de uso</h4>
+<p>O RotasDF é uma plataforma digital que visa mitigar a desinformação no transporte público. O sistema reúne, em uma interface acessível, a consulta de linhas e horários, o planejamento de trajetos e a emissão de alertas de alteração em tempo real. O escopo abrange três perfis de acesso (Passageiro Anônimo, Passageiro Cadastrado e Administrador), sendo que a gestão de dados oficiais (GTFS) é de responsabilidade exclusiva do Administrador.</p>
+<p>Os atores do sistema são:</p>
+<ul>
+<li><strong>Passageiro Anônimo:</strong> pode consultar rotas, horários, mapas e trajetos livremente.</li>
+<li><strong>Passageiro Cadastrado:</strong> possui login e senha. Além das permissões do anônimo, pode salvar rotas favoritas, registrar histórico de buscas, gerenciar preferências e reportar divergências.</li>
+<li><strong>Administrador:</strong> importar dados GTFS, gerenciar alertas, analisar reportes, manter dados manualmente.</li>
+</ul>
+<p>A Figura 2 apresenta a descrição resumida de cada caso de uso mapeado no sistema RotasDF, organizados por módulo funcional, conforme os requisitos estabelecidos no Backlog do Produto.</p>
+<p align="center"><b>Figura 2: Diagrama de caso de uso</b></p>
+
+<p><img alt="Diagrama de casos de uso do RotasDF com os atores Passageiro Anônimo, Passageiro Cadastrado e Administrador" src="../imagens/arq-fig2-casos-de-uso.png" /></p>
+<h4 id="252-visao-de-organizacao-logica">2.5.2 Visão de organização lógica</h4>
+<p>A visão de organização lógica apresenta a decomposição do RotasDF em módulos coesos, definidos de acordo com as principais responsabilidades funcionais do sistema. Essa organização é compatível com a arquitetura em três camadas e com o modelo de monólito modular definido nas seções anteriores. Dessa forma, os módulos permanecem integrados em uma única aplicação de servidor, mas possuem responsabilidades bem delimitadas e baixo acoplamento.</p>
+<p>A organização lógica foi definida considerando os cenários funcionais e os requisitos apresentados na Declaração de Escopo do projeto.</p>
+<h5 id="modulo-de-linhas-paradas-e-horarios">Módulo de Linhas, Paradas e Horários</h5>
+<p>Este módulo é responsável pelas funcionalidades relacionadas à consulta e à organização das informações básicas do transporte público. Ele disponibiliza dados sobre linhas, itinerários, paradas, horários e próximas partidas.</p>
+<p>Sua responsabilidade está relacionada principalmente aos requisitos RF07 a RF12 e ao cenário C2 — Consulta de linhas e paradas, além de parte do cenário C3 — Consulta de horários. O módulo recebe solicitações dos controladores REST, aplica as regras de negócio correspondentes e utiliza os repositórios para consultar os dados persistidos no PostgreSQL.</p>
+<p>O módulo não acessa diretamente outros módulos nem o banco de dados. Quando necessita de informações persistidas, utiliza sua camada de repositórios, mantendo o acesso aos dados isolado da lógica de negócio.</p>
+<h5 id="modulo-de-trajetos">Módulo de Trajetos</h5>
+<p>O módulo de Trajetos concentra as regras responsáveis pelo planejamento de deslocamentos entre uma origem e um destino. Ele calcula as opções disponíveis, organiza o percurso em etapas, identifica baldeações e calcula o tempo total estimado, além de permitir a aplicação dos critérios de ordenação e filtragem definidos para o sistema.</p>
+<p>Está diretamente relacionado ao cenário C1 — Planejamento de trajetos e aos requisitos RF01 a RF06. Também utiliza informações de linhas, paradas e horários para construir as opções de deslocamento.</p>
+<p>A comunicação com os demais componentes ocorre por meio das chamadas internas entre módulos, realizadas pelo servidor de aplicação. O módulo de Trajetos não conhece HTTP nem acessa diretamente o banco de dados, recebendo dados previamente validados pelos controladores e utilizando os repositórios para persistência quando necessário.</p>
+<h5 id="modulo-de-alertas">Módulo de Alertas</h5>
+<p>O módulo de Alertas é responsável pelo cadastro, consulta, atualização e encerramento dos alertas relacionados a alterações no serviço de transporte público. Também controla a vigência dos alertas e sua associação a linhas e paradas, incluindo a retirada automática de alertas vencidos.</p>
+<p>Esse módulo atende principalmente aos requisitos RF13, RF14 e RF22 e está associado ao cenário C4 — Alterações no serviço.</p>
+<p>Os alertas podem ser consultados pelo passageiro por meio da API REST, enquanto as operações de cadastro e gerenciamento dependem da autorização do perfil Administrador. O módulo também fornece informações utilizadas pelo módulo de Conta e Personalização para identificar alterações que afetam linhas ou paradas favoritas.</p>
+<h5 id="modulo-de-autenticacao-e-autorizacao">Módulo de Autenticação e Autorização</h5>
+<p>Este módulo concentra as regras relacionadas à identificação dos usuários e ao controle de permissões de acesso. É responsável pela autenticação de passageiros e administradores e pela aplicação das permissões correspondentes a cada perfil.</p>
+<p>O módulo está relacionado aos requisitos RF16 e RF21 e aos perfis Passageiro Cadastrado e Administrador definidos na Visão do Produto.</p>
+<p>A autenticação ocorre por meio da API REST, enquanto a autorização é aplicada no servidor antes da execução das operações protegidas. Dessa forma, o cliente não é responsável por garantir as permissões de acesso. As credenciais e os tokens são tratados de acordo com as restrições de segurança definidas na arquitetura.</p>
+<h5 id="modulo-de-conta-e-personalizacao">Módulo de Conta e Personalização</h5>
+<p>O módulo de Conta e Personalização concentra as funcionalidades específicas do Passageiro Cadastrado. Ele gerencia favoritos, buscas recentes, reportes de divergências e notificações relacionadas a alterações que afetem itens salvos pelo usuário.</p>
+<p>Está relacionado aos requisitos RF15 a RF19 e ao cenário C5 — Conta e personalização do passageiro.</p>
+<p>Esse módulo depende do módulo de Autenticação e Autorização para identificar o usuário e verificar suas permissões. Também se comunica com o módulo de Alertas para identificar alterações relacionadas às linhas e paradas favoritas. As informações específicas do usuário são persistidas por meio dos repositórios correspondentes.</p>
+<h5 id="modulo-de-administracao">Módulo de Administração</h5>
+<p>O módulo de Administração reúne as operações destinadas ao gerenciamento da base de dados de transporte e à análise dos reportes enviados pelos passageiros.</p>
+<p>Suas principais responsabilidades são a manutenção manual de linhas, paradas, itinerários e horários, o gerenciamento dos alertas e a análise dos reportes recebidos. Está relacionado aos requisitos RF22, RF23 e RF24 e ao cenário C6 — Gestão dos dados de transporte.</p>
+<p>O acesso a esse módulo é restrito ao perfil Administrador. Para realizar suas operações, o módulo utiliza os serviços de Autenticação e Autorização e os repositórios responsáveis pela persistência das informações.</p>
+<h5 id="modulo-de-importacao-gtfs">Módulo de Importação GTFS</h5>
+<p>O módulo de Importação GTFS é responsável por receber, validar e carregar na base os dados oficiais de transporte público disponibilizados no formato GTFS.</p>
+<p>A importação é executada exclusivamente pelo Administrador e está relacionada ao requisito RF20. Antes da atualização da base, os dados recebidos são validados. Caso sejam identificados erros, a atualização não deve ser realizada, preservando a integridade dos dados já existentes.</p>
+<p>Esse módulo é implementado como um serviço específico em Python, enquanto a API principal do sistema é implementada em Node.js. A separação lógica permite que o processamento e a validação dos arquivos GTFS ocorram sem misturar essa responsabilidade às operações de consulta realizadas pelos passageiros.</p>
+<h5 id="modulo-de-adaptadores-de-integracao">Módulo de Adaptadores de Integração</h5>
+<p>O módulo de Adaptadores de Integração concentra a comunicação do sistema com serviços externos utilizados pelo RotasDF, como serviços relacionados à posição da frota em tempo real e à central de trânsito.</p>
+<p>Os adaptadores têm como responsabilidade isolar as particularidades das APIs externas e tratar situações de indisponibilidade, erros e tempo limite. Dessa maneira, a dependência de serviços externos não é propagada diretamente para os demais módulos do sistema.</p>
+<p>Quando uma informação externa não estiver disponível, o sistema deve continuar utilizando os dados programados disponíveis, conforme as regras de tolerância a falhas definidas na arquitetura.</p>
+<h5 id="comunicacao-entre-os-modulos">Comunicação entre os módulos</h5>
+<p>A comunicação entre os componentes segue as regras de dependência estabelecidas na arquitetura. O aplicativo mobile não acessa diretamente os módulos internos ou o banco de dados: suas solicitações são encaminhadas aos Controladores REST, que validam as entradas e direcionam as operações ao módulo responsável.</p>
+<p>A comunicação entre os controladores e os módulos ocorre por meio de chamadas internas, utilizando objetos previamente validados. Os módulos não conhecem HTTP e não dependem diretamente da camada de apresentação.</p>
+<p>Quando um módulo necessita persistir ou consultar informações, utiliza seus respectivos Repositórios, que fazem a comunicação com o PostgreSQL. Dessa forma, o acesso ao banco permanece isolado da lógica de negócio.</p>
+<p>As principais relações lógicas são:</p>
+<ul>
+<li><strong>Aplicativo Mobile → Controladores REST:</strong> comunicação por API REST, utilizando HTTPS e JSON;</li>
+<li><strong>Controladores REST → Módulos de negócio:</strong> chamadas internas com dados previamente validados;</li>
+<li><strong>Trajetos → Linhas, Paradas e Horários:</strong> utilização das informações necessárias para cálculo e composição dos trajetos;</li>
+<li><strong>Conta e Personalização → Autenticação e Autorização:</strong> identificação do usuário e validação de permissões;</li>
+<li><strong>Conta e Personalização → Alertas:</strong> identificação de alterações que afetam itens favoritos;</li>
+<li><strong>Administração → Autenticação e Autorização:</strong> validação do perfil de Administrador;</li>
+<li><strong>Módulos de negócio → Repositórios:</strong> acesso às informações persistidas;</li>
+<li><strong>Repositórios → PostgreSQL:</strong> operações de leitura e escrita;</li>
+<li><strong>Administração → Importação GTFS:</strong> acionamento das operações de importação por usuário autorizado;</li>
+<li><strong>Módulos que necessitam de informações externas → Adaptadores de Integração:</strong> acesso controlado aos serviços externos.</li>
+</ul>
+<h5 id="diagrama-de-pacotes">Diagrama de pacotes</h5>
+<p>O diagrama de pacotes apresentado representa a organização lógica dos principais módulos do RotasDF e suas dependências. As setas representam a direção da comunicação entre os componentes, enquanto a separação entre os pacotes evidencia a divisão das responsabilidades.</p>
+<p align="center"><b>Figura 3 — Diagrama de pacotes do RotasDF</b></p>
+
+<p><img alt="Diagrama de pacotes do RotasDF" src="../imagens/arq-fig3-diagrama-pacotes.png" /></p>
+<p align="center"><i>Fonte: Elaborado pelos autores (2026).</i></p>
+
+<h4 id="253-visao-estrutural">2.5.3 Visão estrutural</h4>
+<p>A visão estrutural descreve como o RotasDF é composto e como suas partes se relacionam. Ela detalha os elementos da Figura 1 e os módulos da seção 2.5.2 em dois níveis, com a notação da UML 2.5 (OBJECT MANAGEMENT GROUP, 2017): o diagrama de componentes mostra as unidades de software, as interfaces que cada uma fornece e as dependências entre elas; os diagramas de classes mostram as entidades do domínio e a organização interna de um módulo.</p>
+<h5 id="diagrama-de-componentes">Diagrama de componentes</h5>
+<p>A Figura 4 organiza os componentes nas três camadas da arquitetura. Os oito módulos de negócio são os mesmos do diagrama de pacotes. A Importação GTFS aparece entre eles por ser um módulo lógico do sistema, mas é executada como um serviço Python, em processo separado do servidor Node.js. O círculo indica uma interface fornecida, e a seta tracejada parte do componente que usa em direção ao componente ou à interface usada. Para manter a figura legível, as dependências entre módulos aparecem como setas diretas; cada uma corresponde ao uso da interface de serviço do módulo de destino, listada no Quadro 1.</p>
+<p align="center"><b>Figura 4 — Diagrama de componentes do RotasDF</b></p>
+
+<p><img alt="Diagrama de componentes do RotasDF organizado nas camadas de apresentação, aplicação/negócio e persistência" src="../imagens/arq-fig4-diagrama-componentes.png" /></p>
+<p align="center"><i>Fonte: Elaborado pelos autores (2026).</i></p>
+
+<p>O Quadro 1 resume a responsabilidade de cada componente e as interfaces que ele fornece e usa.</p>
+<p><strong>Quadro 1 — Componentes, responsabilidades e interfaces</strong></p>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Responsabilidade</th>
+<th>Interface fornecida</th>
+<th>Usa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Camada de apresentação (aplicativo mobile)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Telas (React Native)</td>
+<td>Telas de busca, trajetos, linhas, horários, alertas, conta e administração para Android e iOS, com acessibilidade (MR02).</td>
+<td>—</td>
+<td>Mapa; Geolocalização; Cliente da API</td>
+</tr>
+<tr>
+<td>Mapa (ex.: Leaflet)</td>
+<td>Desenha itinerários, paradas e trajetos (RF04, RF08).</td>
+<td>—</td>
+<td>Serviço externo de mapas e geocodificação</td>
+</tr>
+<tr>
+<td>Geolocalização</td>
+<td>Obtém a posição atual pelo GPS do aparelho, com autorização do usuário (RF03).</td>
+<td>—</td>
+<td>GPS do aparelho (sistema operacional)</td>
+</tr>
+<tr>
+<td>Cliente da API</td>
+<td>Centraliza as chamadas HTTP, envia o token e trata o formato único de erro.</td>
+<td>—</td>
+<td>API REST <code>/api/v1</code></td>
+</tr>
+<tr>
+<td><strong>Camada de aplicação / negócio</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Controladores REST (Node.js, Express)</td>
+<td>Recebem as requisições, validam as entradas, chamam os módulos e padronizam respostas e erros (MR03).</td>
+<td>API REST <code>/api/v1</code></td>
+<td>Interfaces dos módulos</td>
+</tr>
+<tr>
+<td>Linhas, Paradas e Horários</td>
+<td>Consulta de linhas, itinerários, paradas, horários e próximas partidas (RF07 a RF12); operações de escrita usadas na manutenção manual (RF23).</td>
+<td>ServicoLinhas</td>
+<td>ProvedorPosicaoFrota; AcessoDados</td>
+</tr>
+<tr>
+<td>Trajetos</td>
+<td>Cálculo, detalhamento e ordenação das opções de trajeto (RF01 a RF06).</td>
+<td>ServicoTrajetos</td>
+<td>ServicoLinhas</td>
+</tr>
+<tr>
+<td>Alertas</td>
+<td>Cadastro, consulta, encerramento e expiração de alertas; emite o evento <code>alertaPublicado</code> (RF13, RF14, RF22).</td>
+<td>ServicoAlertas</td>
+<td>ProvedorCentralTransito; AcessoDados</td>
+</tr>
+<tr>
+<td>Autenticação e Autorização</td>
+<td>Cadastro e login de passageiros e administradores, emissão e validação de tokens e permissões por perfil (RF16, RF21, MR07).</td>
+<td>ServicoAutenticacao</td>
+<td>AcessoDados</td>
+</tr>
+<tr>
+<td>Conta e Personalização</td>
+<td>Favoritos, buscas recentes, reportes de divergência e notificações (RF15 a RF19).</td>
+<td>ServicoConta</td>
+<td>ServicoAutenticacao; ServicoAlertas (evento); e-mail / push; AcessoDados</td>
+</tr>
+<tr>
+<td>Administração</td>
+<td>Gestão de alertas, manutenção manual da base, análise de reportes e disparo da importação (RF22 a RF24).</td>
+<td>ServicoAdministracao</td>
+<td>ServicoAutenticacao; ServicoLinhas; ServicoAlertas; ServicoConta; ServicoImportacao</td>
+</tr>
+<tr>
+<td>Importação GTFS (Python)</td>
+<td>Lê o pacote GTFS, valida estrutura e consistência e carrega a base em transação única, em processo separado do servidor (RF20, MR09).</td>
+<td>ServicoImportacao</td>
+<td>Fonte oficial GTFS; PostgreSQL</td>
+</tr>
+<tr>
+<td>Adaptadores de integração</td>
+<td>Comunicação com a posição da frota e a central de trânsito, com tempo limite e tratamento de falhas (MR09).</td>
+<td>ProvedorPosicaoFrota; ProvedorCentralTransito</td>
+<td>Serviços externos (HTTPS)</td>
+</tr>
+<tr>
+<td><strong>Camada de persistência</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Repositórios (ORM)</td>
+<td>Isolam o acesso ao banco; cada módulo usa só os repositórios das suas tabelas.</td>
+<td>AcessoDados</td>
+<td>PostgreSQL (SQL, porta 5432)</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Armazena dados de transporte, alertas, usuários, favoritos, buscas, reportes e o histórico de importações.</td>
+<td>Conexão SQL (porta 5432)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><em>Fonte: Elaborado pelos autores (2026).</em></p>
+<p>As conexões entre os componentes seguem as regras de dependência da seção 2.1 e as relações lógicas da seção 2.5.2:</p>
+<ul>
+<li><strong>Entrada única pela API.</strong> O aplicativo mobile só chega ao servidor pela API REST <code>/api/v1</code>, por HTTPS e em JSON (MR03). Os controladores validam as entradas e encaminham cada operação ao módulo responsável.</li>
+<li><strong>Identificação e perfil.</strong> Conta e Personalização e Administração usam <code>ServicoAutenticacao</code> para identificar o usuário e verificar o perfil antes de executar operações protegidas (MR07).</li>
+<li><strong>Dependências em um só sentido.</strong> Trajetos depende de Linhas, Paradas e Horários; Conta e Personalização depende de Alertas; Administração depende de Linhas, Paradas e Horários, Alertas, Conta e Personalização e Importação GTFS; Linhas, Paradas e Horários e Alertas dependem dos Adaptadores de integração. Não há ciclos, o que permite testar cada módulo com as dependências simuladas (MR06).</li>
+<li><strong>Administração sem acesso a tabelas de outros módulos.</strong> A gestão de alertas (RF22), a manutenção manual da base (RF23) e a análise de reportes (RF24) são feitas pelos serviços dos módulos donos desses dados, e não pelos repositórios deles, conforme a regra da seção 2.1.</li>
+<li><strong>Notificação por evento.</strong> Ao publicar um alerta, o módulo Alertas emite o evento interno <code>alertaPublicado</code>; Conta e Personalização o escuta, identifica os passageiros com favoritos afetados e envia a notificação por e-mail ou push no aparelho (RF15). Assim, Alertas não precisa conhecer Conta, e a dependência continua em um só sentido.</li>
+<li><strong>Serviços externos isolados.</strong> As consultas à posição da frota e à central de trânsito passam pelos Adaptadores de integração, que aplicam tempo limite e tratam falhas. Se um serviço não responder, o sistema segue com os dados programados e avisa o usuário (MR09; Visão, caso CT-03).</li>
+<li><strong>Importação em processo separado.</strong> Administração dispara a importação pela interface <code>ServicoImportacao</code>, e o serviço Python a executa em segundo plano. Como os repositórios do servidor são escritos em Node.js, a Importação GTFS tem acesso a dados próprio: lê o pacote GTFS, valida estrutura e consistência e grava os dados em uma única transação. Se a validação encontrar erros, a base não é alterada, e o resultado fica registrado no histórico de importações (RF20, MR09).</li>
+<li><strong>Acesso a dados só pelos repositórios.</strong> No servidor, apenas os repositórios executam SQL no PostgreSQL, e cada módulo usa somente os repositórios das tabelas que lhe pertencem (Figura 4).</li>
+</ul>
+<h5 id="diagramas-de-classes">Diagramas de classes</h5>
+<p>O diagrama de classes foi dividido em duas figuras para manter a legibilidade. A Figura 5 mostra o modelo de domínio, isto é, as classes persistidas no banco de dados; a cor de cada classe indica o módulo responsável por ela. A Figura 6 detalha a estrutura interna do módulo Trajetos.</p>
+<p align="center"><b>Figura 5 — Diagrama de classes do domínio</b></p>
+
+<p><img alt="Diagrama de classes do domínio: Usuario, Passageiro, Administrador, Favorito, Reporte, BuscaRecente, Alerta, Linha, Parada, Viagem, Calendario, HorarioParada e ImportacaoGTFS" src="../imagens/arq-fig5-classes-dominio.png" /></p>
+<p align="center"><i>Fonte: Elaborado pelos autores (2026).</i></p>
+
+<p>Os principais pontos do modelo de domínio são:</p>
+<ul>
+<li><strong>Dados de transporte.</strong> As classes seguem a estrutura do GTFS: Linha corresponde a <em>routes</em>, Viagem a <em>trips</em>, Parada a <em>stops</em>, HorarioParada a <em>stop_times</em> e Calendario a <em>calendar</em>. Uma linha é composta por viagens; cada viagem opera conforme um calendário e percorre uma sequência ordenada de horários, cada um em uma parada. O itinerário (RF08) é a sequência de paradas de uma viagem em cada sentido, e o quadro de horários (RF10) reúne as partidas das viagens de acordo com o tipo de dia.</li>
+<li><strong>Alertas.</strong> Um alerta afeta zero ou mais linhas e paradas e é publicado por um administrador (RF13, RF14, RF22). O método <code>estaVigente()</code> considera o período de vigência e o encerramento manual, o que permite deixar de exibir alertas vencidos sem intervenção.</li>
+<li><strong>Usuários e perfis.</strong> Usuario é abstrata e se especializa em Passageiro e Administrador, que correspondem aos perfis Passageiro Cadastrado e Administrador. O Passageiro Anônimo não é persistido: corresponde às requisições feitas sem token. A senha é guardada só como hash (MR07), e <code>excluirConta()</code> atende à exclusão de conta prevista na LGPD (RF16).</li>
+<li><strong>Conta e personalização.</strong> Favoritos e buscas recentes compõem o passageiro e são excluídos com a conta (RF17, RF18). Reporte registra a divergência enviada pelo passageiro (RF19) e a classificação feita pelo administrador (RF24).</li>
+<li><strong>Histórico de importações.</strong> ImportacaoGTFS pertence ao módulo Importação GTFS e guarda cada execução, com o administrador que a disparou, a situação, o total de registros carregados e o relatório de erros (RF20).</li>
+<li><strong>Associações entre módulos.</strong> As associações que cruzam módulos, como Alerta–Linha ou Reporte–Passageiro, são implementadas como chaves estrangeiras: o módulo que guarda a chave obtém os dados completos pela interface do outro módulo, e não pela tabela dele. Em Favorito e Reporte, as referências opcionais a Linha e Parada aparecem como atributos apenas para não sobrecarregar a figura.</li>
+</ul>
+<p align="center"><b>Figura 6 — Diagrama de classes do módulo Trajetos</b></p>
+
+<p><img alt="Diagrama de classes do módulo Trajetos: ControladorTrajetos, ServicoTrajetos, CalculadoraDeTrajetos, OpcaoTrajeto, Etapa, EstrategiaOrdenacao e classes relacionadas" src="../imagens/arq-fig6-classes-trajetos.png" /></p>
+<p align="center"><i>Fonte: Elaborado pelos autores (2026).</i></p>
+
+<p>O módulo Trajetos foi detalhado por ser o mais complexo do sistema e por ilustrar a organização interna que todos os módulos seguem:</p>
+<ul>
+<li><strong>Camadas dentro do módulo.</strong> <code>ControladorTrajetos</code> recebe a requisição HTTP, valida os parâmetros e monta uma <code>ConsultaTrajeto</code>; <code>ServicoTrajetos</code> coordena a busca e não conhece HTTP, o que permite testá-lo sem o servidor. Nos módulos que têm tabelas próprias, o serviço usa também os repositórios.</li>
+<li><strong>Sem tabelas próprias.</strong> Trajetos não tem repositórios: as paradas e os horários vêm da interface <code>ServicoLinhas</code>, a única dependência do módulo (seção 2.5.2). O método <code>paradasProximas()</code> devolve as paradas dentro de um raio a partir de um ponto, e <code>partidas()</code> devolve os horários de saída da parada <code>o</code> com destino à parada <code>d</code> após o instante <code>apos</code>.</li>
+<li><strong>Sinalização de alertas.</strong> Para marcar as opções afetadas por alterações no serviço (RF14), o controlador consulta <code>ServicoAlertas</code> e associa os alertas vigentes a cada <code>OpcaoTrajeto</code>. Como a chamada parte do controlador, que pode acionar qualquer módulo, Trajetos continua dependendo apenas de Linhas, Paradas e Horários.</li>
+<li><strong>Cálculo isolado.</strong> <code>CalculadoraDeTrajetos</code> concentra o algoritmo de busca, limitado pelo raio de caminhada e pelo número máximo de baldeações. Esses parâmetros controlam o tempo de resposta (MR01), e a classe é o principal alvo dos testes unitários, com <code>ServicoLinhas</code> simulada (MR06).</li>
+<li><strong>Ordenação extensível.</strong> A ordenação usa o padrão <em>Strategy</em> (GAMMA et al., 2000): cada critério do RF05 é uma classe que implementa <code>EstrategiaOrdenacao</code>, e o serviço escolhe a estratégia conforme o <code>CriterioOrdenacao</code> da consulta. Um novo critério exige apenas uma nova classe, sem alterar o serviço.</li>
+<li><strong>Instruções em linguagem simples.</strong> Cada <code>OpcaoTrajeto</code> é composta por etapas ordenadas. <code>Etapa</code> é abstrata e se especializa em <code>EtapaCaminhada</code> e <code>EtapaOnibus</code>, que implementam <code>instrucao()</code> para gerar o texto exibido ao passageiro, como "Caminhe 300 m até a parada X" ou "Embarque na linha Y e desça após 6 paradas" (RF02).</li>
+<li><strong>Horário de partida ou de chegada.</strong> <code>ReferenciaHorario</code> indica se o horário da consulta é de partida ou de chegada (RF06). <code>Coordenada</code> é um tipo de valor: o aplicativo converte endereços em coordenadas antes de chamar a API (seção 2.3).</li>
+</ul>
+<h3 id="26-visao-de-implantacao">2.6 Visão de implantação</h3>
+<p>A visão de implantação descreve o mapeamento dos artefatos de software para a infraestrutura de hardware e para os ambientes de execução (nós) nos quais o sistema operará, fundamentando-se nos conceitos e diretrizes arquiteturais adotados na disciplina.</p>
+<p>O sistema RotasDF será implantado em um ambiente de computação em nuvem (<em>Cloud Computing</em>) utilizando contêineres Docker, o que garante a padronização dos ambientes de desenvolvimento, homologação e produção, conforme estabelecido na restrição MR08. A topologia física da aplicação está dividida da seguinte forma:</p>
+<p><strong>Nó Cliente (<code>&lt;&lt;Device&gt;&gt;</code>):</strong> representa o hardware do usuário final, abrangendo dispositivos móveis como smartphones e tablets.</p>
+<ul>
+<li><strong>Tecnologia:</strong> sistemas operacionais mobile (Android e iOS).</li>
+<li><strong>Artefato:</strong> aplicativo mobile (compilado via React Native).</li>
+<li><strong>Justificativa:</strong> visando priorizar a acessibilidade, a mobilidade e a praticidade para o passageiro em trânsito, o aplicativo mobile garante integração nativa com os sensores do dispositivo (como o GPS) e proporciona um tempo de resposta otimizado.</li>
+</ul>
+<p><strong>Nó Servidor de Aplicação (<code>&lt;&lt;Execution Environment&gt;&gt;</code>):</strong> representa o servidor virtual em plataforma de nuvem (PaaS — ex.: Render, Heroku ou AWS) responsável pela hospedagem da lógica de negócio.</p>
+<ul>
+<li><strong>Tecnologia:</strong> ambiente de execução Node.js conteinerizado via Docker. O serviço de importação de dados GTFS, desenvolvido em Python, será executado sob demanda no mesmo ambiente (ou via cron job/worker).</li>
+<li><strong>Artefato:</strong> monólito modular da API REST.</li>
+<li><strong>Justificativa:</strong> o uso de contêineres em uma plataforma gerenciada facilita as práticas de Integração e Entrega Contínuas (CI/CD) automatizadas pelo GitHub Actions (MR05). Essa abordagem permite que a equipe realize implantações contínuas de novos testes e funcionalidades sem a necessidade de gerenciar uma infraestrutura de baixo nível.</li>
+</ul>
+<p><strong>Nó Servidor de Banco de Dados (<code>&lt;&lt;Database Server&gt;&gt;</code>):</strong> representa o serviço de banco de dados relacional gerenciado.</p>
+<ul>
+<li><strong>Tecnologia:</strong> Sistema Gerenciador de Banco de Dados PostgreSQL.</li>
+<li><strong>Artefato:</strong> esquemas e tabelas de dados relacionais e georreferenciados.</li>
+<li><strong>Justificativa:</strong> o PostgreSQL é uma solução robusta para manter a integridade transacional das informações de transporte e lidar com a estrutura complexa do formato GTFS. A eventual adoção da extensão PostGIS permite escalabilidade caso o sistema demande consultas espaciais mais complexas de geolocalização no futuro.</li>
+</ul>
+<h4 id="diagrama-de-implantacao">Diagrama de implantação</h4>
+<p>A representação visual ilustra a comunicação entre os nós físicos do sistema:</p>
+<p align="center"><b>Figura 7 — Diagrama de implantação do RotasDF</b></p>
+
+<p><img alt="Diagrama de implantação: dispositivo cliente com aplicativo React Native, plataforma em nuvem (PaaS) com servidor de aplicação e servidor de banco de dados PostgreSQL, e serviços externos de mapas" src="../imagens/arq-fig7-implantacao.png" /></p>
+<ul>
+<li>O Dispositivo Cliente comunica-se de forma segura com o Servidor de Aplicação por meio do protocolo HTTPS, consumindo a API REST.</li>
+<li>O Servidor de Aplicação conecta-se ao Servidor de Banco de Dados internamente via protocolo TCP/IP (Porta 5432) para operações de leitura e escrita.</li>
+<li>O Dispositivo Cliente também realiza requisições externas diretas (HTTPS) para a API de Mapas (ex.: provedores utilizados pelo Leaflet) para renderização cartográfica.</li>
+</ul>
+<h3 id="27-restricoes-adicionais">2.7 Restrições adicionais</h3>
+<p>O funcionamento e a arquitetura do RotasDF são guiados não apenas pelas tecnologias, mas por restrições negociais, características de qualidade e políticas rígidas de segurança.</p>
+<h4 id="1-aspectos-negociais-e-de-acesso">1. Aspectos negociais e de acesso</h4>
+<ul>
+<li><strong>Acessibilidade pública:</strong> o sistema é acessível diretamente pela Internet. Não é necessário estar em uma rede corporativa (Intranet).</li>
+<li><strong>Uso concomitante:</strong> a aplicação deve estar preparada para suportar picos de acesso (estimativa de até 500 usuários simultâneos), especialmente em horários de pico do transporte público (início da manhã e fim da tarde). O cache de respostas e a paginação na API REST são obrigatórios para evitar sobrecarga no banco de dados nesses horários.</li>
+</ul>
+<h4 id="2-caracteristicas-de-qualidade-baseadas-na-isoiec-25010">2. Características de qualidade (baseadas na ISO/IEC 25010)</h4>
+<ul>
+<li><strong>Usabilidade:</strong> é a principal diretriz de qualidade do RotasDF. O sistema deve atender às diretrizes de acessibilidade WCAG 2.1 nível AA. Isso restringe o uso de componentes visuais que não sejam legíveis por leitores de tela e proíbe fluxos de navegação que dependam exclusivamente do mouse.</li>
+<li><strong>Portabilidade e compatibilidade:</strong> o aplicativo mobile deve funcionar de maneira uniforme nos principais sistemas operacionais móveis (Android e iOS) em suas versões mais recentes.</li>
+<li><strong>Confiabilidade:</strong> como o produto visa mitigar a desinformação no transporte público, a base de dados não pode ser editada livremente pelos usuários. A integridade dos itinerários é garantida pela validação dos pacotes oficiais GTFS antes da persistência.</li>
+</ul>
+<h4 id="3-seguranca-e-perfis-de-usuario">3. Segurança e perfis de usuário</h4>
+<p>Devido à natureza aberta do aplicativo, o acesso é segmentado por perfis, e a comunicação é estritamente protegida por criptografia de transporte (HTTPS/TLS) para evitar interceptação de dados de geolocalização e credenciais.</p>
+<p>A autorização é baseada em tokens JWT (<em>JSON Web Token</em>), gerenciando os seguintes acessos:</p>
+<ul>
+<li><strong>Passageiro Anônimo:</strong> possui permissão apenas de leitura. Pode consultar rotas, horários, mapas e trajetos livremente, sem necessidade de identificação. A localização (GPS) só é coletada mediante prompt de autorização explícita do sistema operacional mobile.</li>
+<li><strong>Passageiro Cadastrado:</strong> exige login e senha (armazenada em hash via bcrypt). Além das permissões do perfil anônimo, possui acesso de escrita restrito à sua própria conta (salvar rotas favoritas, registrar histórico de buscas, gerenciar preferências e reportar divergências nos ônibus/paradas).</li>
+<li><strong>Administrador:</strong> exige autenticação de alto nível (contas pré-cadastradas internamente). Possui permissão de escrita global para gerenciar alertas no sistema, aprovar/revisar reportes de passageiros e executar o módulo de importação e validação de dados GTFS. Não tem acesso às senhas cruas nem ao histórico exato de geolocalização de usuários específicos, respeitando as normativas da LGPD.</li>
+</ul>
+<hr />
+<h2 id="3-referencias">3 Referências</h2>
+<p>GAMMA, Erich et al. <strong>Padrões de projeto</strong>: soluções reutilizáveis de software orientado a objetos. Porto Alegre: Bookman, 2000.</p>
+<p>KRUCHTEN, Philippe. The 4+1 View Model of Architecture. <strong>IEEE Software</strong>, v. 12, n. 6, p. 42-50, nov. 1995.</p>
+<p>OBJECT MANAGEMENT GROUP. <strong>OMG Unified Modeling Language (OMG UML)</strong>: version 2.5.1. [S. l.]: OMG, 2017. Disponível em: <a href="https://www.omg.org/spec/UML/2.5.1">https://www.omg.org/spec/UML/2.5.1</a>. Acesso em: 8 out. 2026.</p>
+<p>RICHARDS, Mark. <strong>Software Architecture Patterns</strong>. Sebastopol: O'Reilly Media, 2015.</p>
+<p>SOMMERVILLE, Ian. <strong>Engenharia de Software</strong>. 10. ed. São Paulo: Pearson Education do Brasil, 2019.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
