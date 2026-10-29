@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: RotasDF API
+  description: API REST para a plataforma de transporte público RotasDF. Desenvolvido pela equipe Knuth (T02_KNUTH).
+  version: 1.1.0
+  contact:
+    name: Equipe de Desenvolvimento Knuth
+servers:
+  - url: https://api.rotasdf.com.br/api/v1
+    description: Servidor de Produção (PaaS)
+  - url: http://localhost:3000/api/v1
+    description: Ambiente de Desenvolvimento Local (Docker)
+paths:
+  /linhas:
+    get:
+      summary: Busca linhas de ônibus
+      description: Retorna linhas filtradas por nome ou número (RF07).
+      parameters:
+        - in: query
+          name: busca
+          schema:
+            type: string
+          description: Nome ou número da linha
+      responses:
+        '200':
+          description: Sucesso. Retorna a lista de linhas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Linha'
+  /trajetos:
+    get:
+      summary: Busca de Trajetos
+      description: Calcula e retorna as opções de trajeto entre uma origem e um destino (RF01, RF05).
+      parameters:
+        - in: query
+          name: origem
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: destino
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: criterio
+          schema:
+            type: string
+            enum: 
+              - MENOR_TEMPO
+              - MENOS_BALDEACOES
+              - MENOR_CAMINHADA
+      responses:
+        '200':
+          description: Lista de opções de trajeto encontradas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpcaoTrajeto'
+        '400':
+          description: Erro de validação nos parâmetros (Ex. origem ou destino ausentes).
+  /alertas:
+    get:
+      summary: Alertas Vigentes
+      description: Retorna os alertas de alteração de serviço ativos (RF13).
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alerta'
+components:
+  schemas:
+    Linha:
+      type: object
+      properties:
+        id:
+          type: string
+        codigo:
+          type: string
+        nome:
+          type: string
+        cor:
+          type: string
+    Alerta:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tipo:
+          type: string
+          enum: 
+            - DESVIO
+            - SUSPENSAO
+            - ALTERACAO_HORARIO
+            - PARALISACAO
+        titulo:
+          type: string
+        descricao:
+          type: string
+        inicioVigencia:
+          type: string
+          format: date-time
+        fimVigencia:
+          type: string
+          format: date-time
+    OpcaoTrajeto:
+      type: object
+      properties:
+        partida:
+          type: string
+          format: date-time
+        chegada:
+          type: string
+          format: date-time
+        baldeacoes:
+          type: integer
+        caminhadaMetros:
+          type: integer
+        duracaoMinutos:
+          type: integer
+        afetadaPorAlerta:
+          type: boolean
