@@ -1,190 +1,132 @@
 openapi: 3.0.3
 info:
-title: RotasDF API
-description: API REST para a plataforma de transporte público RotasDF. Desenvolvido pela equipe Knuth (T02_KNUTH).
-version: 1.1.0
-contact:
-name: Equipe de Desenvolvimento Knuth
+  title: RotasDF API
+  description: API REST para a plataforma de transporte público RotasDF. Desenvolvido pela equipe Knuth (T02_KNUTH).
+  version: 1.1.0
+  contact:
+    name: Equipe de Desenvolvimento Knuth
 servers:
-
-url: https://api.rotasdf.com.br/api/v1
-description: Servidor de Produção (PaaS)
-
-url: http://localhost:3000/api/v1
-description: Ambiente de Desenvolvimento Local (Docker)
+  - url: https://api.rotasdf.com.br/api/v1
+    description: Servidor de Produção (PaaS)
+  - url: http://localhost:3000/api/v1
+    description: Ambiente de Desenvolvimento Local (Docker)
 paths:
-/linhas:
-get:
-summary: Busca linhas de ônibus
-description: Retorna linhas filtradas por nome ou número (RF07).
-tags:
-- Linhas, Paradas e Horários
-parameters:
-- in: query
-name: busca
-schema:
-type: string
-required: false
-description: Termo de busca (nome ou código da linha).
-responses:
-'200':
-description: Lista de linhas encontradas.
-content:
-application/json:
-schema:
-type: array
-items:
-$ref: '#/components/schemas/Linha'
-'400':
-$ref: '#/components/responses/ErroRequisicao'
-/trajetos:
-get:
-summary: Planejamento de trajeto entre origem e destino
-description: Calcula opções de trajeto com base nas coordenadas de origem e destino, aplicando ordenação (RF01, RF05).
-tags:
-- Trajetos
-parameters:
-- in: query
-name: origem_lat
-schema:
-type: number
-format: float
-required: true
-- in: query
-name: origem_lng
-schema:
-type: number
-format: float
-required: true
-- in: query
-name: destino_lat
-schema:
-type: number
-format: float
-required: true
-- in: query
-name: destino_lng
-schema:
-type: number
-format: float
-required: true
-- in: query
-name: criterio
-schema:
-type: string
-enum: [MENOR_TEMPO, MENOS_BALDEACOES, MENOR_CAMINHADA]
-required: false
-responses:
-'200':
-description: Opções de trajetos calculadas.
-content:
-application/json:
-schema:
-type: array
-items:
-$ref: '#/components/schemas/OpcaoTrajeto'
-'400':
-$ref: '#/components/responses/ErroRequisicao'
-/alertas:
-get:
-summary: Consulta de alertas vigentes
-description: Retorna os alertas ativos de alterações no serviço (RF13).
-tags:
-- Alertas
-responses:
-'200':
-description: Lista de alertas ativos.
-content:
-application/json:
-schema:
-type: array
-items:
-$ref: '#/components/schemas/Alerta'
+  /linhas:
+    get:
+      summary: Busca linhas de ônibus
+      description: Retorna linhas filtradas por nome ou número (RF07).
+      parameters:
+        - in: query
+          name: busca
+          schema:
+            type: string
+          description: Nome ou número da linha
+      responses:
+        '200':
+          description: Sucesso. Retorna a lista de linhas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Linha'
+  /trajetos:
+    get:
+      summary: Busca de Trajetos
+      description: Calcula e retorna as opções de trajeto entre uma origem e um destino (RF01, RF05).
+      parameters:
+        - in: query
+          name: origem
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: destino
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: criterio
+          schema:
+            type: string
+            enum: 
+              - MENOR_TEMPO
+              - MENOS_BALDEACOES
+              - MENOR_CAMINHADA
+      responses:
+        '200':
+          description: Lista de opções de trajeto encontradas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpcaoTrajeto'
+        '400':
+          description: Erro de validação nos parâmetros (Ex. origem ou destino ausentes).
+  /alertas:
+    get:
+      summary: Alertas Vigentes
+      description: Retorna os alertas de alteração de serviço ativos (RF13).
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alerta'
 components:
-schemas:
-Linha:
-type: object
-properties:
-id:
-type: string
-format: uuid
-codigo:
-type: string
-example: "205.1"
-nome:
-type: string
-example: "Gama - Leste / Rodoviária do Plano Piloto"
-cor:
-type: string
-example: "#FF0000"
-OpcaoTrajeto:
-type: object
-properties:
-partida:
-type: string
-format: date-time
-chegada:
-type: string
-format: date-time
-duracaoMinutos:
-type: integer
-example: 45
-baldeacoes:
-type: integer
-example: 1
-caminhadaMetros:
-type: integer
-example: 350
-afetadaPorAlerta:
-type: boolean
-example: false
-etapas:
-type: array
-items:
-$ref: '#/components/schemas/Etapa'
-Etapa:
-type: object
-properties:
-ordem:
-type: integer
-duracaoMinutos:
-type: integer
-instrucao:
-type: string
-example: "Embarque na linha 205.1 e desça após 6 paradas."
-tipo:
-type: string
-enum: [CAMINHADA, ONIBUS]
-Alerta:
-type: object
-properties:
-id:
-type: string
-format: uuid
-tipo:
-type: string
-enum: [DESVIO, SUSPENSAO, ALTERACAO_HORARIO, PARALISACAO]
-titulo:
-type: string
-example: "Desvio na via W3 Sul"
-descricao:
-type: string
-inicioVigencia:
-type: string
-format: date-time
-fimVigencia:
-type: string
-format: date-time
-responses:
-ErroRequisicao:
-description: Erro de validação nos dados enviados pelo cliente.
-content:
-application/json:
-schema:
-type: object
-properties:
-erro:
-type: string
-example: "Parâmetros inválidos."
-detalhes:
-type: string
+  schemas:
+    Linha:
+      type: object
+      properties:
+        id:
+          type: string
+        codigo:
+          type: string
+        nome:
+          type: string
+        cor:
+          type: string
+    Alerta:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tipo:
+          type: string
+          enum: 
+            - DESVIO
+            - SUSPENSAO
+            - ALTERACAO_HORARIO
+            - PARALISACAO
+        titulo:
+          type: string
+        descricao:
+          type: string
+        inicioVigencia:
+          type: string
+          format: date-time
+        fimVigencia:
+          type: string
+          format: date-time
+    OpcaoTrajeto:
+      type: object
+      properties:
+        partida:
+          type: string
+          format: date-time
+        chegada:
+          type: string
+          format: date-time
+        baldeacoes:
+          type: integer
+        caminhadaMetros:
+          type: integer
+        duracaoMinutos:
+          type: integer
+        afetadaPorAlerta:
+          type: boolean
