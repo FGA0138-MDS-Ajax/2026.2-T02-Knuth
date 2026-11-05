@@ -4,6 +4,14 @@ class LinhasController {
   async getItinerario(req, res) {
     try {
       const { id } = req.params;
+
+      if (isNaN(Number(id))) {
+        return res.status(400).json({
+          codigo: 'BAD_REQUEST',
+          mensagem: 'O ID da linha deve ser um número válido.'
+        });
+      }
+
       const data = await linhasService.obterItinerario(id);
 
       if (!data) {
@@ -15,7 +23,7 @@ class LinhasController {
 
       return res.status(200).json(data);
     } catch (error) {
-      console.error('Erro na consulta do itinerario:', error); // Exibe o erro no terminal
+      console.error('Erro na consulta do itinerario:', error);
       return res.status(500).json({
         codigo: 'INTERNAL_ERROR',
         mensagem: 'Erro interno ao consultar o itinerário.'
@@ -26,6 +34,14 @@ class LinhasController {
   async getHorarios(req, res) {
     try {
       const { id } = req.params;
+
+      if (isNaN(Number(id))) {
+        return res.status(400).json({
+          codigo: 'BAD_REQUEST',
+          mensagem: 'O ID da linha deve ser um número válido.'
+        });
+      }
+
       const data = await linhasService.obterQuadroHorarios(id);
 
       if (!data) {
@@ -37,7 +53,7 @@ class LinhasController {
 
       return res.status(200).json(data);
     } catch (error) {
-      console.error('Erro na consulta de horarios:', error); // Exibe o erro no terminal
+      console.error('Erro na consulta de horarios:', error);
       return res.status(500).json({
         codigo: 'INTERNAL_ERROR',
         mensagem: 'Erro interno ao consultar o quadro de horários.'
