@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { getHorarios } from '../services/api';
 
-export default function HorariosScreen({ route }) {
+export default function HorariosScreen({ route, navigation }) {
   const { linhaId } = route?.params || { linhaId: 1 };
   const [dados, setDados] = useState(null);
   const [tipoDia, setTipoDia] = useState('DIA_UTIL'); // DIA_UTIL, SABADO, DOMINGO_FERIADO
@@ -28,6 +28,13 @@ export default function HorariosScreen({ route }) {
         <Text style={styles.numeroLinha}>{dados?.codigo || '---'}</Text>
         <Text style={styles.nomeLinha}>{dados?.nome || 'Carregando...'}</Text>
       </View>
+
+    <TouchableOpacity
+      style={styles.botaoItinerario}
+      onPress={() => navigation.navigate('Itinerario', { linhaId })}
+    >
+      <Text style={styles.botaoItinerarioTexto}>Ver itinerário</Text>
+    </TouchableOpacity>
 
       {/* Seletores de Tipo de Dia */}
       <View style={styles.tabContainer}>
@@ -74,5 +81,7 @@ const styles = StyleSheet.create({
   tabAtiva: { backgroundColor: '#006666' },
   tabTexto: { color: '#FFF', fontWeight: 'bold' },
   horarioCard: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#EEE' },
-  horarioTexto: { fontSize: 18, fontWeight: '500' }
+  horarioTexto: { fontSize: 18, fontWeight: '500' },
+  botaoItinerario: { alignSelf: 'center', paddingVertical: 8, paddingHorizontal: 20, borderRadius: 20, borderWidth: 1, borderColor: '#006666', marginBottom: 16 },
+  botaoItinerarioTexto: { color: '#006666', fontWeight: 'bold' }
 });

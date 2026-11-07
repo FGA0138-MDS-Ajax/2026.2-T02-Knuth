@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LinhasScreen from './src/screens/LinhasScreen';
 import HorariosScreen from './src/screens/HorariosScreen';
+import ItinerarioScreen from './src/screens/ItinerarioScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,11 @@ export default function App() {
           name="Horarios"
           component={HorariosScreen}
           options={{ title: 'Quadro de Horários' }}
+        />
+        <Stack.Screen
+          name="Itinerario"
+          component={ItinerarioScreen}
+          options={{ title: 'Itinerário' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
