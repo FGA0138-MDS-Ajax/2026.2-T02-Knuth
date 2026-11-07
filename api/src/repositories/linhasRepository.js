@@ -37,7 +37,7 @@ class LinhasRepository {
         TO_CHAR(hp.partida, 'HH24:MI') AS horario_partida
       FROM linhas l
       INNER JOIN viagens v ON v.linha_id = l.id
-      INNER JOIN calendarios c ON c.id = v.calendario_id
+      INNER JOIN calendario c ON c.id = v.calendario_id
       INNER JOIN horarios_paradas hp ON hp.viagem_id = v.id
       WHERE l.id = $1 AND hp.sequencia = 1
       ORDER BY v.sentido, c.tipo_dia, hp.partida ASC;

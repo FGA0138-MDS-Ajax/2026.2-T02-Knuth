@@ -4,12 +4,12 @@ import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from 'r
 export default function LinhasScreen({ navigation }) {
   const [busca, setBusca] = useState('');
   
-  // Lista de exemplo para a Sprint 1 (depois pode ser integrada com a API de listagem de linhas)
   const linhas = [
-    { id: 1, codigo: '304', nome: 'Terminal Rodoviário do Plano Piloto / W3 Sul' },
-    { id: 2, codigo: '335.1', nome: 'Ceilândia / Rodoviária do Plano Piloto' },
-    { id: 3, codigo: '0.32', nome: 'Taguatinga Sul / Eixão' }
-  ];
+  { id: '2302', codigo: '2302', nome: 'Terminal de Integração de Santa Maria / Rodoviária do Plano Piloto (Eixinho)' },
+  { id: '2202', codigo: '2202', nome: 'Terminal de Integração do Gama / Rod. do Plano Piloto' },
+  { id: '0.764', codigo: '0.764', nome: 'Itapoã / Rodoviária do Plano Piloto (Via Ponte JK)' },
+  { id: '335.1', codigo: '335.1', nome: 'Setor "O" Norte/W3 Sul (SIG - Qd. 716 Sul)' },
+];
 
   const linhasFiltradas = linhas.filter(item => 
     item.codigo.toLowerCase().includes(busca.toLowerCase()) ||
