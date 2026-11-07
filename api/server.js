@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Configuração da conexão com o PostgreSQL usando as variáveis do .env
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -18,29 +17,16 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
-// Rota de teste inicial
-app.get('/', (req, res) => {
-  res.json({ message: 'API do RotasDF (RF07) a funcionar com sucesso!' });
-});
-
-// Rota do RF07: Consulta de Linhas com suporte a filtros por código ou nome
-app.get('/api/linhas', async (req, res) => {
+app.get('/api/v1/linhas', async (req, res) => {
   try {
-    const { codigo, busca } = req.query;
-    
-    let query = 'SELECT * FROM linhas WHERE 1=1';
+    const { busca } = req.query;
+
+    let query = 'SELECT id, codigo, nome, cor FROM linhas';
     const params = [];
 
-    // Se o usuário passar o parâmetro ?codigo=...
-    if (codigo) {
-      params.push(codigo);
-      query += ` AND codigo = $${params.length}`;
-    }
-
-    // Se o usuário passar o parâmetro ?busca=... (pesquisa por nome)
     if (busca) {
       params.push(`%${busca}%`);
-      query += ` AND nome ILIKE $${params.length}`;
+      query += ` WHERE codigo ILIKE $1 OR nome ILIKE $1`;
     }
 
     const result = await pool.query(query, params);
@@ -52,5 +38,5 @@ app.get('/api/linhas', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor a correr na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
