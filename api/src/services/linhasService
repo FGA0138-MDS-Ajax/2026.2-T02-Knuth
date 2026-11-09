@@ -1,6 +1,10 @@
 const linhasRepository = require('../repositories/linhasRepository');
 
 class LinhasService {
+  async obterLinhas(busca) {
+    return await linhasRepository.findLinhas(busca);
+  }
+
   // RF08: Agrupa e formata as paradas no JSON do itinerário
   async obterItinerario(linhaId) {
     const rows = await linhasRepository.findItinerarioByLinhaId(linhaId);
