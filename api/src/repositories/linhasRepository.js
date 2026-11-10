@@ -34,7 +34,7 @@ class LinhasRepository {
     const query = `
       SELECT 
         l.id AS linha_id, l.codigo AS linha_codigo, l.nome AS linha_nome,
-        v.sentido, c.tipo_dia, TO_CHAR(hp.partida, 'HH24:MI') AS horario_partida
+        v.sentido, c.tipo_dia, TO_CHAR(hp.partida::time, 'HH24:MI') AS horario_partida
       FROM linhas l
       INNER JOIN viagens v ON v.linha_id = l.id
       INNER JOIN calendario c ON c.id = v.calendario_id
