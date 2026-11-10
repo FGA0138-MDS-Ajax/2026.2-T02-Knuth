@@ -139,9 +139,9 @@ def importar_dados():
         dia_label = str(row.get('dia_label', '')).lower()
         dias_semana = str(row.get('dias_semana', '')).strip().upper()
         
-        if 'sab' in dia_label or dias_semana == "NNNNNNS":
+        if 'sab' in dia_label or dias_semana == "NNNNNSN":
             cal_id = "CAL_SAB"
-        elif 'dom' in dia_label or 'feriado' in dia_label or dias_semana == "NNNNNNN":
+        elif 'dom' in dia_label or 'feriado' in dia_label or dias_semana == "NNNNNNS":
             cal_id = "CAL_DOM"
         else:
             cal_id = "CAL_UTIL"
