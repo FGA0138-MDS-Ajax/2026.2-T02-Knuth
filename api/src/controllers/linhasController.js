@@ -5,8 +5,8 @@ class LinhasController {
   // RF02 - Busca e Filtragem de Linhas (bacia, regiao, tipo, busca)
   async getLinhas(req, res) {
     try {
-      const { busca, bacia, regiao, tipo } = req.query || {};
-      const data = await linhasService.obterLinhas({ busca, bacia, regiao, tipo });
+      const { busca } = req.query || {};
+      const data = await linhasService.obterLinhas(busca);
       return res.status(200).json(data);
     } catch (error) {
       console.error('Erro na busca de linhas:', error);
@@ -24,7 +24,7 @@ class LinhasController {
       const { sentido = 'IDA' } = req.query || {}; 
 
       // Valida se o ID é nulo, vazio ou contém letras (isNaN)
-      if (!id || String(id).trim() === '' || isNaN(Number(id))) {
+      if (!id || String(id).trim() === '') {
         return res.status(400).json({
           erro: 'BAD_REQUEST',
           detalhes: 'O ID da linha é obrigatório.'
@@ -57,7 +57,7 @@ class LinhasController {
       const { sentido = 'IDA' } = req.query || {}; 
 
       // Valida se o ID é nulo, vazio ou contém letras (isNaN)
-      if (!id || String(id).trim() === '' || isNaN(Number(id))) {
+      if (!id || String(id).trim() === '') {
         return res.status(400).json({
           erro: 'BAD_REQUEST',
           detalhes: 'O ID da linha é obrigatório.'
