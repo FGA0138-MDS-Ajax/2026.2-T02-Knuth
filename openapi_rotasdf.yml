@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: RotasDF API
-  description: API REST para a plataforma de transporte público RotasDF. Desenvolvido pela equipe Knuth (T02_KNUTH).
+  description: API REST para a plataforma de transporte público RotasDF. Desenvolvido pela equipe Knuth.
   version: 1.1.0
   contact:
     name: Equipe de Desenvolvimento Knuth
@@ -10,6 +10,7 @@ servers:
     description: Servidor de Produção (PaaS)
   - url: http://localhost:3000/api/v1
     description: Ambiente de Desenvolvimento Local (Docker)
+
 paths:
   /linhas:
     get:
@@ -30,6 +31,79 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Linha'
+
+  /linhas/{id}/itinerario:
+    get:
+      summary: Consultar Itinerário
+      description: Retorna a sequência de paradas de uma linha (RF08).
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Código da linha
+        - in: query
+          name: sentido
+          schema:
+            type: string
+            enum: [IDA, VOLTA]
+            default: IDA
+      responses:
+        '200':
+          description: Lista de paradas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Parada'
+        '404':
+          description: Itinerário não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
+  /linhas/{id}/horarios:
+    get:
+      summary: Consultar Horários
+      description: Retorna os horários de partida de uma linha (RF10).
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Código da linha
+        - in: query
+          name: sentido
+          schema:
+            type: string
+            enum: [IDA, VOLTA]
+            default: IDA
+        - in: query
+          name: tipoDia
+          schema:
+            type: string
+            enum: [DIA_UTIL, SABADO, DOMINGO_FERIADO]
+            default: DIA_UTIL
+      responses:
+        '200':
+          description: Lista de horários.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Horario'
+        '404':
+          description: Horários não encontrados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
   /trajetos:
     get:
       summary: Busca de Trajetos
@@ -63,7 +137,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/OpcaoTrajeto'
         '400':
-          description: Erro de validação nos parâmetros (Ex. origem ou destino ausentes).
+          description: Erro de validação nos parâmetros
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
   /alertas:
     get:
       summary: Alertas Vigentes
@@ -77,6 +156,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Alerta'
+
 components:
   schemas:
     Linha:
@@ -90,6 +170,37 @@ components:
           type: string
         cor:
           type: string
+
+    Parada:
+      type: object
+      properties:
+        sequencia:
+          type: integer
+          example: 1
+        parada:
+          type: string
+          example: "Terminal Rodoviário do Plano Piloto"
+
+    Horario:
+      type: object
+      properties:
+        partida:
+          type: string
+          example: "05:00"
+        parada:
+          type: string
+          example: "Terminal Rodoviário do Plano Piloto"
+
+    Erro:
+      type: object
+      properties:
+        erro:
+          type: string
+          example: "NOT_FOUND"
+        detalhes:
+          type: string
+          example: "Itinerário não encontrado para a linha informada."
+
     Alerta:
       type: object
       properties:
@@ -113,6 +224,7 @@ components:
         fimVigencia:
           type: string
           format: date-time
+
     OpcaoTrajeto:
       type: object
       properties:
