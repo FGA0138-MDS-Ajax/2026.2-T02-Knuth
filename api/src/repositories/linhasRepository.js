@@ -1,16 +1,40 @@
 const pool = require('../config/database');
 
 class LinhasRepository {
-  async findLinhas(busca) {
-    let query = 'SELECT id, codigo, nome, cor FROM linhas';
+  async findLinhas(filters = {}) {
+    // Suporta tanto o envio de string de busca simples quanto objeto com filtros do RF02
+    const { busca, bacia, regiao, tipo } = typeof filters === 'string' ? { busca: filters } : filters;
+
+    let query = 'SELECT id, codigo, nome, cor FROM linhas WHERE 1=1';
     const params = [];
 
     if (busca) {
       params.push(`%${busca}%`);
-      query += ' WHERE codigo ILIKE $1 OR nome ILIKE $1';
+      query += ` AND (codigo ILIKE $${params.length} OR nome ILIKE $${params.length})`;
     }
+
+    if (bacia) {
+      params.push(bacia);
+      query += ` AND bacia = $${params.length}`;
+    }
+
+    if (regiao) {
+      params.push(`%${regiao}%`);
+      query += ` AND regiao_administrativa ILIKE $${params.length}`;
+    }
+
+    if (tipo) {
+      params.push(tipo);
+      query += ` AND tipo_tarifa = $${params.length}`;
+    }
+
     const { rows } = await pool.query(query, params);
     return rows;
+  }
+
+  // Alias para garantir compatibilidade caso algum service chame findLinhasWithFilters
+  async findLinhasWithFilters(filtros) {
+    return this.findLinhas(filtros);
   }
 
   async findItinerarioByLinhaId(linhaId) {
