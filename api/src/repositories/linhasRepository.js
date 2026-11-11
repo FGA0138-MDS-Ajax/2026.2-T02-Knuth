@@ -2,7 +2,6 @@ const pool = require('../config/database');
 
 class LinhasRepository {
   async findLinhas(filters = {}) {
-    // Suporta tanto o envio de string de busca simples quanto objeto
     const { busca } = typeof filters === 'string' ? { busca: filters } : filters;
 
     let query = 'SELECT id, codigo, nome, cor FROM linhas WHERE 1=1';
@@ -15,11 +14,6 @@ class LinhasRepository {
 
     const { rows } = await pool.query(query, params);
     return rows;
-  }
-
-  // Alias para garantir compatibilidade caso algum service chame findLinhasWithFilters
-  async findLinhasWithFilters(filtros) {
-    return this.findLinhas(filtros);
   }
 
   async findItinerarioByLinhaId(linhaId) {
