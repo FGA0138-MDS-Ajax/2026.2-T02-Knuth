@@ -2,14 +2,11 @@ const trajetosRepository = require('../repositories/trajetosRepository');
 
 class TrajetosService {
   async obterTrajetos(origem, destino) {
-    const paradaOrigem = await trajetosRepository.buscarParadaPorNome(origem);
-    const paradaDestino = await trajetosRepository.buscarParadaPorNome(destino);
+    const viagens = await trajetosRepository.buscarTrajetosPorNome(origem, destino);
 
-    if (!paradaOrigem || !paradaDestino) {
+    if (!viagens || viagens.length === 0) {
       return [];
     }
-
-    const viagens = await trajetosRepository.buscarViagensDiretas(paradaOrigem.id, paradaDestino.id);
 
     const opcoes = viagens.map(viagem => {
       return {
@@ -23,7 +20,8 @@ class TrajetosService {
           {
             ordem: 1,
             duracaoMinutos: Math.round(viagem.duracao),
-            instrucao: `Embarque na linha ${viagem.codigo_linha} e desça após ${viagem.qtd_paradas} paradas.`,
+            // Agora a instrução mostra exatamente as paradas que o banco encontrou
+            instrucao: `Embarque na linha ${viagem.codigo_linha} em "${viagem.nome_origem}" e desça em "${viagem.nome_destino}" após ${viagem.qtd_paradas} paradas.`,
             tipo: "ONIBUS"
           }
         ]
