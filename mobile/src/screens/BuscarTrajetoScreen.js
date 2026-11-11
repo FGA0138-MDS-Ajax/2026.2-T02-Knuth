@@ -1,29 +1,33 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { getTrajetos } from '../services/api';
 
 export default function BuscarTrajetoScreen({ navigation }) {
   const [origem, setOrigem] = useState('');
   const [destino, setDestino] = useState('');
   const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState('');
 
   const buscar = async () => {
+    setErro('');
+    
     if (!origem.trim() || !destino.trim()) {
-      Alert.alert("Atenção", "Por favor, preencha a origem e o destino.");
+      setErro("Por favor, preencha a origem e o destino.");
       return;
     }
 
     setCarregando(true);
     try {
       const opcoes = await getTrajetos(origem, destino);
-      if (opcoes.length === 0) {
-        Alert.alert("Sem rotas", "Nenhuma rota direta encontrada para esses locais.");
+      
+      if (!opcoes || opcoes.length === 0) {
+        setErro("Nenhuma rota direta encontrada. Tente ser mais específico.");
       } else {
         navigation.navigate('ResultadoTrajeto', { opcoes });
       }
     } catch (error) {
       console.error(error);
-      Alert.alert("Erro", "Falha na conexão com o servidor.");
+      setErro("Erro ao conectar com o servidor.");
     } finally {
       setCarregando(false);
     }
@@ -53,6 +57,8 @@ export default function BuscarTrajetoScreen({ navigation }) {
         />
       </View>
 
+      {erro ? <Text style={styles.textoErro}>{erro}</Text> : null}
+
       <TouchableOpacity style={styles.botao} onPress={buscar} disabled={carregando}>
         {carregando ? <ActivityIndicator color="#FFF" /> : <Text style={styles.botaoTexto}>Buscar Trajetos</Text>}
       </TouchableOpacity>
@@ -66,6 +72,7 @@ const styles = StyleSheet.create({
   inputContainer: { marginBottom: 20 },
   label: { fontSize: 16, color: '#333', marginBottom: 8, fontWeight: '600' },
   input: { backgroundColor: '#FFF', padding: 15, borderRadius: 8, borderWidth: 1, borderColor: '#DDD', fontSize: 16 },
+  textoErro: { color: 'red', textAlign: 'center', marginBottom: 15, fontSize: 15 },
   botao: { backgroundColor: '#006666', padding: 18, borderRadius: 8, alignItems: 'center', marginTop: 10 },
   botaoTexto: { color: '#FFF', fontSize: 18, fontWeight: 'bold' }
 });
