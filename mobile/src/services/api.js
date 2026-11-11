@@ -22,3 +22,10 @@ export const getHorarios = async (linhaId) => {
   const response = await axios.get(`${API_BASE_URL}/linhas/${linhaId}/horarios`);
   return response.data;
 };
+
+export const getTrajetos = async (origem, destino) => {
+  const response = await axios.get(`${API_BASE_URL}/trajetos`, {
+    params: { origem, destino }
+  });
+  return response.data;
+};
