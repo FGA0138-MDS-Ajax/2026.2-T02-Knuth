@@ -6,4 +6,6 @@ router.get('/', linhasController.getLinhas);
 router.get('/:id/itinerario', linhasController.getItinerario);
 router.get('/:id/horarios', linhasController.getHorarios);
 
+router.get('/parada/:paradaId/linhas', linhasController.getLinhasPorParada);
+
 module.exports = router;

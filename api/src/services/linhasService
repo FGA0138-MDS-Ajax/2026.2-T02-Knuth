@@ -66,6 +66,12 @@ class LinhasService {
 
     return resultado;
   }
+
+  async obterLinhasPorParada(paradaId) {
+    const rows = await linhasRepository.findLinhasByParadaId(paradaId);
+    return rows;
+  }
+  
 }
 
 module.exports = new LinhasService();
