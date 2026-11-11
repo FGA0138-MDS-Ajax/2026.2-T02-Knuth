@@ -1,14 +1,17 @@
 const pool = require('../config/database');
 
 class LinhasRepository {
-  async findLinhas(busca) {
-    let query = 'SELECT id, codigo, nome, cor FROM linhas';
+  async findLinhas(filters = {}) {
+    const { busca } = typeof filters === 'string' ? { busca: filters } : filters;
+
+    let query = 'SELECT id, codigo, nome, cor FROM linhas WHERE 1=1';
     const params = [];
 
     if (busca) {
       params.push(`%${busca}%`);
-      query += ' WHERE codigo ILIKE $1 OR nome ILIKE $1';
+      query += ` AND (codigo ILIKE $${params.length} OR nome ILIKE $${params.length})`;
     }
+
     const { rows } = await pool.query(query, params);
     return rows;
   }
