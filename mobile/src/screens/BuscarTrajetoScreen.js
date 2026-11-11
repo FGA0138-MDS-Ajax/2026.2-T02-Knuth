@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import BuscasRecentes from '../components/BuscasRecentes';
+import { salvarBuscaRecente } from '../services/api';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { getTrajetos } from '../services/api';
 
@@ -7,6 +9,15 @@ export default function BuscarTrajetoScreen({ navigation }) {
   const [destino, setDestino] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState('');
+  const [buscaSelecionada, setBuscaSelecionada] = useState(null);
+
+  // Repete a busca depois que os campos foram preenchidos com a busca recente tocada
+  useEffect(() => {
+    if (buscaSelecionada) {
+      setBuscaSelecionada(null);
+      buscar();
+    }
+  }, [buscaSelecionada]);
 
   const buscar = async () => {
     setErro('');
@@ -23,6 +34,7 @@ export default function BuscarTrajetoScreen({ navigation }) {
       if (!opcoes || opcoes.length === 0) {
         setErro("Nenhuma rota direta encontrada. Tente ser mais específico.");
       } else {
+        salvarBuscaRecente(origem, destino).catch((error) => console.error('Erro ao salvar busca recente:', error));
         navigation.navigate('ResultadoTrajeto', { opcoes });
       }
     } catch (error) {
@@ -62,6 +74,15 @@ export default function BuscarTrajetoScreen({ navigation }) {
       <TouchableOpacity style={styles.botao} onPress={buscar} disabled={carregando}>
         {carregando ? <ActivityIndicator color="#FFF" /> : <Text style={styles.botaoTexto}>Buscar Trajetos</Text>}
       </TouchableOpacity>
+
+      <BuscasRecentes
+        aoSelecionar={(busca) => {
+          if (carregando) return;
+          setOrigem(busca.origem);
+          setDestino(busca.destino);
+          setBuscaSelecionada(busca);
+        }}
+      />
     </View>
   );
 }
