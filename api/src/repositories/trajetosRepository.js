@@ -31,7 +31,7 @@ class TrajetosRepository {
       INNER JOIN paradas p2 ON p2.id = hp2.parada_id
       WHERE hp1.parada_id = ANY($1::varchar[])
         AND hp2.sequencia > hp1.sequencia
-        AND ($2::time IS NULL OR hp1.partida >= $2::time)
+        AND ($2::time IS NULL OR hp1.partida::time >= $2::time)
         AND (EXTRACT(EPOCH FROM (hp2.partida::time - hp1.partida::time)) / 60) > 0
       ORDER BY hp2.parada_id, dist_destino ASC
       LIMIT 50;
