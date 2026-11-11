@@ -10,84 +10,64 @@ class TrajetosService {
     }
 
     const idOrigem = paradasOrigem[0].id;
-    const nomeOrigem = paradasOrigem[0].nome;
     const idDestino = paradasDestino[0].id;
-    const latDestino = parseFloat(paradasDestino[0].latitude);
-    const lngDestino = parseFloat(paradasDestino[0].longitude);
+    const opcoesFinais = [];
 
-    const MAX_BALDEACOES = 2; 
-    const MAX_PARADAS_POR_NIVEL = 5; 
+    const diretas = await trajetosRepository.buscarRotasDiretas(idOrigem, idDestino);
+    diretas.forEach(viagem => {
+      opcoesFinais.push({
+        partida: viagem.horario_origem,
+        chegada: viagem.horario_destino,
+        duracaoMinutos: Math.max(Math.round(viagem.duracao), 1),
+        baldeacoes: 0,
+        caminhadaMetros: 0,
+        afetadaPorAlerta: false,
+        etapas: [
+          {
+            ordem: 1,
+            duracaoMinutos: Math.max(Math.round(viagem.duracao), 1),
+            instrucao: `Embarque na linha ${viagem.linha_codigo} em "${viagem.nome_origem}" e desça em "${viagem.nome_destino}" após ${viagem.qtd_paradas} paradas.`,
+            tipo: "ONIBUS"
+          }
+        ]
+      });
+    });
 
-    const fila = [{
-      paradaAtual: idOrigem,
-      nomeAtual: nomeOrigem,
-      horarioAtual: null,
-      caminho: [],
-      visitadas: new Set([idOrigem]),
-      baldeacoes: 0
-    }];
+    const comBaldeacao = await trajetosRepository.buscarRotasComBaldeacao(idOrigem, idDestino);
+    comBaldeacao.forEach(viagem => {
+      const tempoEspera = Math.round((new Date(`1970-01-01T${viagem.hora_saida_transfer}`) - new Date(`1970-01-01T${viagem.hora_chegada_transfer}`)) / 60000);
 
-    const caminhosEncontrados = [];
+      opcoesFinais.push({
+        partida: viagem.hora_origem,
+        chegada: viagem.hora_destino,
+        duracaoMinutos: Math.max(Math.round(viagem.duracao_total), 1),
+        baldeacoes: 1,
+        caminhadaMetros: 0,
+        afetadaPorAlerta: false,
+        etapas: [
+          {
+            ordem: 1,
+            duracaoMinutos: Math.max(Math.round(viagem.duracao_total / 2), 1),
+            instrucao: `Embarque na linha ${viagem.linha_1} em "${viagem.nome_origem}" e desça em "${viagem.nome_transferencia}" após ${viagem.paradas_leg1} paradas.`,
+            tipo: "ONIBUS"
+          },
+          {
+            ordem: 2,
+            duracaoMinutos: Math.max(tempoEspera, 1),
+            instrucao: `Faça a baldeação na parada "${viagem.nome_transferencia}". Aguarde o próximo ônibus.`,
+            tipo: "CAMINHADA"
+          },
+          {
+            ordem: 3,
+            duracaoMinutos: Math.max(Math.round(viagem.duracao_total / 2), 1),
+            instrucao: `Embarque na linha ${viagem.linha_2} e desça em "${viagem.nome_destino}" após ${viagem.paradas_leg2} paradas.`,
+            tipo: "ONIBUS"
+          }
+        ]
+      });
+    });
 
-    while (fila.length > 0 && caminhosEncontrados.length < 3) {
-      const no = fila.shift();
-
-      if (no.baldeacoes >= MAX_BALDEACOES) continue;
-
-      const conexoes = await trajetosRepository.buscarConexoes(
-        [no.paradaAtual],
-        no.horarioAtual,
-        latDestino,
-        lngDestino
-      );
-
-      const conexoesValidas = conexoes
-        .filter(c => !no.visitadas.has(c.destino_id))
-        .slice(0, MAX_PARADAS_POR_NIVEL);
-
-      for (const conexao of conexoesValidas) {
-        const novaEtapa = {
-          ordem: no.caminho.length + 1,
-          duracaoMinutos: Math.max(Math.round(conexao.duracao), 1),
-          instrucao: `Embarque na linha ${conexao.linha_codigo} em "${no.nomeAtual}" e desça em "${conexao.destino_nome}" após ${conexao.qtd_paradas} paradas.`,
-          tipo: "ONIBUS",
-          _horarioChegada: conexao.horario_chegada,
-          _nomeChegada: conexao.destino_nome
-        };
-
-        const novoCaminho = [...no.caminho, novaEtapa];
-        const novasVisitadas = new Set(no.visitadas);
-        novasVisitadas.add(conexao.destino_id);
-
-        if (conexao.destino_id === idDestino) {
-          caminhosEncontrados.push({
-            partida: novoCaminho[0]._horarioChegada,
-            chegada: conexao.horario_chegada,
-            duracaoMinutos: novoCaminho.reduce((acc, e) => acc + e.duracaoMinutos, 0),
-            baldeacoes: novoCaminho.length - 1,
-            caminhadaMetros: 0,
-            afetadaPorAlerta: false,
-            etapas: novoCaminho.map(e => ({
-              ordem: e.ordem,
-              duracaoMinutos: e.duracaoMinutos,
-              instrucao: e.instrucao,
-              tipo: e.tipo
-            }))
-          });
-        } else {
-          fila.push({
-            paradaAtual: conexao.destino_id,
-            nomeAtual: conexao.destino_nome,
-            horarioAtual: conexao.horario_chegada,
-            caminho: novoCaminho,
-            visitadas: novasVisitadas,
-            baldeacoes: no.baldeacoes + 1
-          });
-        }
-      }
-    }
-
-    return caminhosEncontrados;
+    return opcoesFinais;
   }
 }
 
