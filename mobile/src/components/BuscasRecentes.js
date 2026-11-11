@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { getBuscasRecentes } from '../services/api';
+import { getBuscasRecentes } from '../services/storage'; 
 
 export default function BuscasRecentes({ aoSelecionar }) {
   const [buscas, setBuscas] = useState([]);
@@ -10,18 +10,16 @@ export default function BuscasRecentes({ aoSelecionar }) {
 
   const carregarBuscas = async () => {
     try {
-      const dados = await getBuscasRecentes(5);
+      const dados = await getBuscasRecentes();
       setBuscas(dados);
       setErro('');
     } catch (error) {
-      console.error('Erro ao carregar buscas recentes:', error);
       setErro('Não foi possível carregar as buscas recentes.');
     } finally {
       setCarregando(false);
     }
   };
 
-  // Recarrega sempre que a tela aparece (ex.: ao voltar dos resultados)
   useFocusEffect(
     useCallback(() => {
       carregarBuscas();
@@ -40,7 +38,7 @@ export default function BuscasRecentes({ aoSelecionar }) {
       <FlatList
         style={styles.lista}
         data={buscas}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.card} onPress={() => aoSelecionar(item)}>
             <Text style={styles.texto}>{item.origem} → {item.destino}</Text>
@@ -50,13 +48,3 @@ export default function BuscasRecentes({ aoSelecionar }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flexShrink: 1 },
-  titulo: { fontSize: 16, color: '#333', fontWeight: '600', marginTop: 30, marginBottom: 8 },
-  textoErro: { color: 'red', textAlign: 'center', marginBottom: 15, fontSize: 15 },
-  vazio: { color: '#666', textAlign: 'center' },
-  lista: { flexGrow: 0 },
-  card: { backgroundColor: '#FFF', padding: 16, borderRadius: 8, marginBottom: 12, elevation: 2 },
-  texto: { fontSize: 15, color: '#333', fontWeight: '500' }
-});
