@@ -78,6 +78,28 @@ class LinhasController {
       });
     }
   }
+
+  async getLinhasPorParada(req, res) {
+    try {
+      const { paradaId } = req.params;
+
+      if (!paradaId || String(paradaId).trim() === '') {
+        return res.status(400).json({
+          erro: 'BAD_REQUEST',
+          detalhes: 'O ID da parada é obrigatório.'
+        });
+      }
+
+      const linhas = await linhasService.obterLinhasPorParada(paradaId);
+      return res.status(200).json(linhas);
+    } catch (error) {
+      console.error('Erro ao buscar linhas por parada:', error);
+      return res.status(500).json({
+        erro: 'INTERNAL_ERROR',
+        detalhes: 'Erro interno ao buscar linhas da parada.'
+      });
+    }
+  }
 }
 
 module.exports = new LinhasController();

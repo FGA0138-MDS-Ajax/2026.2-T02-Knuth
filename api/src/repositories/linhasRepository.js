@@ -45,6 +45,19 @@ class LinhasRepository {
     const { rows } = await pool.query(query, [linhaId]);
     return rows;
   }
+
+  async findLinhasByParadaId(paradaId) {
+    const query = `
+      SELECT DISTINCT l.id, l.codigo, l.nome, l.cor
+      FROM linhas l
+      INNER JOIN viagens v ON v.linha_id = l.id
+      INNER JOIN horarios_paradas hp ON hp.viagem_id = v.id
+      WHERE hp.parada_id = $1
+    `;
+    const { rows } = await pool.query(query, [paradaId]);
+    return rows;
+  }
+  
 }
 
 module.exports = new LinhasRepository();
