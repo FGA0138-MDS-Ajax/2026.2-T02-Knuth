@@ -36,12 +36,11 @@ class TrajetosRepository {
     const query = `
       WITH leg1 AS (
         SELECT 
-          v.id AS viagem_1_id,
           l.codigo AS linha_1,
           hp1.partida AS hora_origem,
-          hp1.sequencia AS seq_origem,
           hpt.parada_id AS parada_transfer_id,
           hpt.partida AS hora_chegada_transfer,
+          hp1.sequencia AS seq_origem,
           hpt.sequencia AS seq_transfer,
           po.nome AS nome_origem
         FROM horarios_paradas hp1
@@ -50,16 +49,14 @@ class TrajetosRepository {
         INNER JOIN horarios_paradas hpt ON hpt.viagem_id = v.id
         INNER JOIN paradas po ON po.id = hp1.parada_id
         WHERE hp1.parada_id = $1 AND hpt.sequencia > hp1.sequencia
-        LIMIT 50
       ),
       leg2 AS (
-        SELECT
-          v.id AS viagem_2_id,
+        SELECT 
           l.codigo AS linha_2,
           hpt.parada_id AS parada_transfer_id,
           hpt.partida AS hora_saida_transfer,
-          hpt.sequencia AS seq_saida_transfer,
           hpd.partida AS hora_destino,
+          hpt.sequencia AS seq_saida_transfer,
           hpd.sequencia AS seq_destino,
           pd.nome AS nome_destino
         FROM horarios_paradas hpd
@@ -68,7 +65,6 @@ class TrajetosRepository {
         INNER JOIN horarios_paradas hpt ON hpt.viagem_id = v.id
         INNER JOIN paradas pd ON pd.id = hpd.parada_id
         WHERE hpd.parada_id = $2 AND hpd.sequencia > hpt.sequencia
-        LIMIT 100
       )
       SELECT 
         leg1.linha_1,
