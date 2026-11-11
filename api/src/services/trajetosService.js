@@ -12,12 +12,11 @@ class TrajetosService {
     const idOrigem = paradasOrigem[0].id;
     const nomeOrigem = paradasOrigem[0].nome;
     const idDestino = paradasDestino[0].id;
-    const nomeDestino = paradasDestino[0].nome;
     const latDestino = parseFloat(paradasDestino[0].latitude);
     const lngDestino = parseFloat(paradasDestino[0].longitude);
 
-    const MAX_BALDEACOES = 3;
-    const MAX_PARADAS_POR_NIVEL = 15;
+    const MAX_BALDEACOES = 2; 
+    const MAX_PARADAS_POR_NIVEL = 5; 
 
     const fila = [{
       paradaAtual: idOrigem,
@@ -30,7 +29,7 @@ class TrajetosService {
 
     const caminhosEncontrados = [];
 
-    while (fila.length > 0 && caminhosEncontrados.length < 5) {
+    while (fila.length > 0 && caminhosEncontrados.length < 3) {
       const no = fila.shift();
 
       if (no.baldeacoes >= MAX_BALDEACOES) continue;
