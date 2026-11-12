@@ -5,8 +5,8 @@ from pyproj import Transformer
 from shapely import wkt
 import os
 
-DB_USER = "admin"
-DB_PASSWORD = "adminpassword"
+DB_USER = "postgres"
+DB_PASSWORD = "postgres"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 DB_NAME = "rotasdf"
