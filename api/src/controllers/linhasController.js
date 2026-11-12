@@ -1,10 +1,9 @@
 const linhasService = require('../services/linhasService');
 
 class LinhasController {
-  
   async getLinhas(req, res) {
     try {
-      const { busca } = req.query;
+      const { busca } = req.query || {};
       const data = await linhasService.obterLinhas(busca);
       return res.status(200).json(data);
     } catch (error) {
@@ -16,22 +15,20 @@ class LinhasController {
     }
   }
 
-  // RF08 - Itinerário
   async getItinerario(req, res) {
     try {
-      const { id } = req.params;
-      const { sentido = 'IDA' } = req.query; 
+      const { id } = req.params || {};
 
-      if (!id || id.trim() === '') {
+      if (!id || String(id).trim() === '') {
         return res.status(400).json({
           erro: 'BAD_REQUEST',
           detalhes: 'O ID da linha é obrigatório.'
         });
       }
 
-      const data = await linhasService.obterItinerario(id, sentido);
+      const data = await linhasService.obterItinerario(id);
 
-      if (!data || data.length === 0) {
+      if (!data) {
         return res.status(404).json({
           erro: 'NOT_FOUND',
           detalhes: 'Itinerário não encontrado para a linha informada.'
@@ -50,19 +47,18 @@ class LinhasController {
 
   async getHorarios(req, res) {
     try {
-      const { id } = req.params;
-      const { sentido = 'IDA' } = req.query; 
+      const { id } = req.params || {};
 
-      if (!id || id.trim() === '') {
+      if (!id || String(id).trim() === '') {
         return res.status(400).json({
           erro: 'BAD_REQUEST',
           detalhes: 'O ID da linha é obrigatório.'
         });
       }
 
-      const data = await linhasService.obterQuadroHorarios(id, sentido);
+      const data = await linhasService.obterQuadroHorarios(id);
 
-      if (!data || data.length === 0) {
+      if (!data) {
         return res.status(404).json({
           erro: 'NOT_FOUND',
           detalhes: 'Quadro de horários não encontrado para a linha informada.'

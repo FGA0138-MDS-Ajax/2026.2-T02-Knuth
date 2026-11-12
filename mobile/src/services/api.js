@@ -13,12 +13,30 @@ export const getLinhas = async (busca) => {
   return response.data;
 };
 
-export const getItinerario = async (linhaId) => {
-  const response = await axios.get(`${API_BASE_URL}/linhas/${linhaId}/itinerario`);
+export const getItinerario = async (linhaId, sentido = 'IDA') => {
+  const response = await axios.get(`${API_BASE_URL}/linhas/${linhaId}/itinerario`, {
+    params: { sentido }
+  });
   return response.data;
 };
 
-export const getHorarios = async (linhaId) => {
-  const response = await axios.get(`${API_BASE_URL}/linhas/${linhaId}/horarios`);
+export const getHorarios = async (linhaId, sentido = 'IDA') => {
+  const response = await axios.get(`${API_BASE_URL}/linhas/${linhaId}/horarios`, {
+    params: { sentido }
+  });
+  return response.data;
+};
+
+export const getTrajetos = async (origem, destino) => {
+  const response = await axios.get(`${API_BASE_URL}/trajetos`, {
+    params: { origem, destino }
+  });
+  return response.data;
+};
+
+export const getParadaProxima = async (lat, lng) => {
+  const response = await axios.get(`${API_BASE_URL}/paradas/proximas`, {
+    params: { lat, lng }
+  });
   return response.data;
 };

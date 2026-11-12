@@ -1,8 +1,14 @@
 const linhasRepository = require('../repositories/linhasRepository');
 
 class LinhasService {
-  async obterLinhas(busca) {
-    return await linhasRepository.findLinhas(busca);
+  // RF02 / Busca Geral: aceita tanto busca por texto quanto objeto de filtros (bacia, regiao, tipo)
+  async obterLinhas(filtros) {
+    return await linhasRepository.findLinhas(filtros);
+  }
+
+  // Alias para garantir compatibilidade caso o controller chame por este nome
+  async listarLinhasComFiltros(filtros) {
+    return await this.obterLinhas(filtros);
   }
 
   // RF08: Agrupa e formata as paradas no JSON do itinerário
@@ -66,6 +72,7 @@ class LinhasService {
 
     return resultado;
   }
+  
 }
 
 module.exports = new LinhasService();
