@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: RotasDF API
-  description: API REST para a plataforma de transporte público RotasDF. Desenvolvido pela equipe Knuth.
-  version: 1.1.0
+  description: API REST para a plataforma de transporte público RotasDF. Desenvolvido pela equipe Knuth (T02_KNUTH).
+  version: 1.2.0
   contact:
     name: Equipe de Desenvolvimento Knuth
 servers:
@@ -31,102 +31,72 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Linha'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
 
   /linhas/{id}/itinerario:
     get:
       summary: Consultar Itinerário
-      description: Retorna a sequência de paradas de uma linha (RF08).
+      description: Retorna a sequência de paradas de uma linha agrupadas por sentido (RF08).
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: string
-          description: Código da linha
-        - in: query
-          name: sentido
-          schema:
-            type: string
-            enum: [IDA, VOLTA]
-            default: IDA
+          description: Código da linha (ex. 0.110)
       responses:
         '200':
-          description: Lista de paradas.
+          description: Itinerário agrupado por sentido.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Parada'
+                $ref: '#/components/schemas/ItinerarioResponse'
         '404':
-          description: Itinerário não encontrado.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Erro'
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
 
   /linhas/{id}/horarios:
     get:
       summary: Consultar Horários
-      description: Retorna os horários de partida de uma linha (RF10).
+      description: Retorna os horários de partida de uma linha agrupados por sentido e tipo de dia (RF10).
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: string
-          description: Código da linha
-        - in: query
-          name: sentido
-          schema:
-            type: string
-            enum: [IDA, VOLTA]
-            default: IDA
-        - in: query
-          name: tipoDia
-          schema:
-            type: string
-            enum: [DIA_UTIL, SABADO, DOMINGO_FERIADO]
-            default: DIA_UTIL
+          description: Código da linha (ex. 0.110)
       responses:
         '200':
-          description: Lista de horários.
+          description: Quadro de horários agrupado.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Horario'
+                $ref: '#/components/schemas/HorariosResponse'
         '404':
-          description: Horários não encontrados.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Erro'
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
 
   /trajetos:
     get:
       summary: Busca de Trajetos
-      description: Calcula e retorna as opções de trajeto entre uma origem e um destino (RF01, RF05).
+      description: Calcula e retorna as opções de trajeto entre uma origem e um destino (RF01, RF02).
       parameters:
         - in: query
           name: origem
           required: true
           schema:
             type: string
+          description: Nome da parada de origem
         - in: query
           name: destino
           required: true
           schema:
             type: string
-        - in: query
-          name: criterio
-          schema:
-            type: string
-            enum: 
-              - MENOR_TEMPO
-              - MENOS_BALDEACOES
-              - MENOR_CAMINHADA
+          description: Nome da parada de destino
       responses:
         '200':
           description: Lista de opções de trajeto encontradas.
@@ -137,27 +107,64 @@ paths:
                 items:
                   $ref: '#/components/schemas/OpcaoTrajeto'
         '400':
-          description: Erro de validação nos parâmetros
+          description: Erro de validação nos parâmetros (Ex. origem ou destino ausentes).
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
 
-  /alertas:
+  /paradas/proximas:
     get:
-      summary: Alertas Vigentes
-      description: Retorna os alertas de alteração de serviço ativos (RF13).
+      summary: Busca a parada mais próxima
+      description: Retorna a parada mais próxima dada uma coordenada de GPS (RF03).
+      parameters:
+        - in: query
+          name: lat
+          required: true
+          schema:
+            type: number
+          description: Latitude do dispositivo
+        - in: query
+          name: lng
+          required: true
+          schema:
+            type: number
+          description: Longitude do dispositivo
       responses:
         '200':
-          description: Sucesso.
+          description: Parada encontrada com sucesso.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Alerta'
+                $ref: '#/components/schemas/ParadaProxima'
+        '400':
+          description: Latitude ou longitude ausentes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
 
 components:
+  responses:
+    ErroInterno:
+      description: Erro interno no servidor.
+      content:
+        application/json:
+          schema:
+        $ref: '#/components/schemas/Erro'
+    ErroNaoEncontrado:
+      description: Recurso não encontrado.
+      content:
+        application/json:
+          schema:
+        $ref: '#/components/schemas/Erro'
+
   schemas:
     Linha:
       type: object
@@ -171,25 +178,133 @@ components:
         cor:
           type: string
 
-    Parada:
+    ItinerarioResponse:
+      type: object
+      properties:
+        linhaId:
+          type: string
+        codigo:
+          type: string
+        nome:
+          type: string
+        cor:
+          type: string
+        itinerario:
+          type: object
+          properties:
+            IDA:
+              type: array
+              items:
+                $ref: '#/components/schemas/ParadaItinerario'
+            VOLTA:
+              type: array
+              items:
+                $ref: '#/components/schemas/ParadaItinerario'
+
+    ParadaItinerario:
       type: object
       properties:
         sequencia:
           type: integer
-          example: 1
-        parada:
+        paradaId:
           type: string
-          example: "Terminal Rodoviário do Plano Piloto"
+        codigo:
+          type: string
+        nome:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
 
-    Horario:
+    HorariosResponse:
+      type: object
+      properties:
+        linhaId:
+          type: string
+        codigo:
+          type: string
+        nome:
+          type: string
+        quadroHorarios:
+          type: object
+          properties:
+            IDA:
+              $ref: '#/components/schemas/HorariosPorDia'
+            VOLTA:
+              $ref: '#/components/schemas/HorariosPorDia'
+
+    HorariosPorDia:
+      type: object
+      properties:
+        DIA_UTIL:
+          type: array
+          items:
+            type: string
+        SABADO:
+          type: array
+          items:
+            type: string
+        DOMINGO_FERIADO:
+          type: array
+          items:
+            type: string
+
+    OpcaoTrajeto:
       type: object
       properties:
         partida:
           type: string
           example: "05:00"
-        parada:
+        chegada:
           type: string
-          example: "Terminal Rodoviário do Plano Piloto"
+          example: "05:15"
+        duracaoMinutos:
+          type: integer
+          example: 15
+        baldeacoes:
+          type: integer
+          example: 0
+        caminhadaMetros:
+          type: integer
+          example: 0
+        afetadaPorAlerta:
+          type: boolean
+          example: false
+        etapas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Etapa'
+
+    Etapa:
+      type: object
+      properties:
+        ordem:
+          type: integer
+          example: 1
+        duracaoMinutos:
+          type: integer
+          example: 15
+        instrucao:
+          type: string
+          example: 'Embarque na linha 0.600 em "TERMINAL DO GAMA" e desça em "RODOVIARIA" após 5 paradas.'
+        tipo:
+          type: string
+          enum: [CAMINHADA, ONIBUS]
+
+    ParadaProxima:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        distancia:
+          type: number
 
     Erro:
       type: object
@@ -199,46 +314,4 @@ components:
           example: "NOT_FOUND"
         detalhes:
           type: string
-          example: "Itinerário não encontrado para a linha informada."
-
-    Alerta:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        tipo:
-          type: string
-          enum: 
-            - DESVIO
-            - SUSPENSAO
-            - ALTERACAO_HORARIO
-            - PARALISACAO
-        titulo:
-          type: string
-        descricao:
-          type: string
-        inicioVigencia:
-          type: string
-          format: date-time
-        fimVigencia:
-          type: string
-          format: date-time
-
-    OpcaoTrajeto:
-      type: object
-      properties:
-        partida:
-          type: string
-          format: date-time
-        chegada:
-          type: string
-          format: date-time
-        baldeacoes:
-          type: integer
-        caminhadaMetros:
-          type: integer
-        duracaoMinutos:
-          type: integer
-        afetadaPorAlerta:
-          type: boolean
+          example: "Recurso não encontrado."
