@@ -11,29 +11,29 @@ import ItinerarioScreen from './src/screens/ItinerarioScreen';
 import BuscarTrajetoScreen from './src/screens/BuscarTrajetoScreen';
 import ResultadoTrajetoScreen from './src/screens/ResultadoTrajetoScreen';
 import TrajetoDetalheScreen from './src/screens/TrajetoDetalheScreen';
+import ConfiguracoesScreen from './src/screens/ConfiguracoesScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        
-        <Stack.Screen 
-          name="Login" 
-          component={LoginScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="Cadastro" 
-          component={CadastroScreen} 
-          options={{ title: 'Criar Conta' }} 
-        />
-
+      <Stack.Navigator 
+        initialRouteName="Linhas"
+        screenOptions={{
+          headerStyle: { backgroundColor: '#006666' },
+          headerTintColor: '#FFF',
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}
+      >
         <Stack.Screen
           name="Linhas"
           component={LinhasScreen}
-          options={{ title: 'RotasDF - Linhas' }}
+          options={{ 
+            title: 'RotasDF - Linhas',
+            headerBackVisible: false,
+            headerLeft: () => null
+          }}
         />
         <Stack.Screen
           name="Horarios"
@@ -59,6 +59,21 @@ export default function App() {
           name="TrajetoDetalhe"
           component={TrajetoDetalheScreen}
           options={{ title: 'Detalhes do Trajeto' }}
+        />
+        <Stack.Screen 
+          name="Configuracoes" 
+          component={ConfiguracoesScreen} 
+          options={{ title: 'Configurações' }} 
+        />
+        <Stack.Screen 
+          name="Login" 
+          component={LoginScreen} 
+          options={{ title: 'Entrar na Conta' }} 
+        />
+        <Stack.Screen 
+          name="Cadastro" 
+          component={CadastroScreen} 
+          options={{ title: 'Criar Conta' }} 
         />
       </Stack.Navigator>
     </NavigationContainer>
