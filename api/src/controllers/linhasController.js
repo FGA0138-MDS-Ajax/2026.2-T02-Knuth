@@ -3,8 +3,11 @@ const linhasService = require('../services/linhasService');
 class LinhasController {
   async getLinhas(req, res) {
     try {
-      const { busca } = req.query || {};
-      const data = await linhasService.obterLinhas(busca);
+      const { busca, bacia, regiao, tipo } = req.query || {};
+      const filtros = (bacia !== undefined || regiao !== undefined || tipo !== undefined)
+        ? { busca, bacia, regiao, tipo }
+        : busca;
+      const data = await linhasService.obterLinhas(filtros);
       return res.status(200).json(data);
     } catch (error) {
       console.error('Erro na busca de linhas:', error);
@@ -19,7 +22,7 @@ class LinhasController {
     try {
       const { id } = req.params || {};
 
-      if (!id || String(id).trim() === '') {
+      if (!id || String(id).trim() === '' || !/^[0-9.]+$/.test(String(id).trim())) {
         return res.status(400).json({
           erro: 'BAD_REQUEST',
           detalhes: 'O ID da linha é obrigatório.'
