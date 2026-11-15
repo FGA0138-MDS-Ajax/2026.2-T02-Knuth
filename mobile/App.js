@@ -3,6 +3,8 @@ import { registerRootComponent } from 'expo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import LoginScreen from './src/screens/LoginScreen';
+import CadastroScreen from './src/screens/CadastroScreen';
 import LinhasScreen from './src/screens/LinhasScreen';
 import HorariosScreen from './src/screens/HorariosScreen';
 import ItinerarioScreen from './src/screens/ItinerarioScreen';
@@ -15,7 +17,19 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Linhas">
+      <Stack.Navigator initialRouteName="Login">
+        
+        <Stack.Screen 
+          name="Login" 
+          component={LoginScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="Cadastro" 
+          component={CadastroScreen} 
+          options={{ title: 'Criar Conta' }} 
+        />
+
         <Stack.Screen
           name="Linhas"
           component={LinhasScreen}
