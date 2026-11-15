@@ -12,6 +12,7 @@ import BuscarTrajetoScreen from './src/screens/BuscarTrajetoScreen';
 import ResultadoTrajetoScreen from './src/screens/ResultadoTrajetoScreen';
 import TrajetoDetalheScreen from './src/screens/TrajetoDetalheScreen';
 import ConfiguracoesScreen from './src/screens/ConfiguracoesScreen';
+import AlertasScreen from './src/screens/AlertasScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +65,11 @@ export default function App() {
           name="Configuracoes" 
           component={ConfiguracoesScreen} 
           options={{ title: 'Configurações' }} 
+        />
+        <Stack.Screen 
+          name="Alertas" 
+          component={AlertasScreen} 
+          options={{ title: 'Alertas de Serviço' }} 
         />
         <Stack.Screen 
           name="Login" 

@@ -11,9 +11,14 @@ export default function LinhasScreen({ navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Configuracoes')} style={{ marginRight: 16 }}>
-          <Ionicons name="settings-outline" size={24} color="#FFF" />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity onPress={() => navigation.navigate('Alertas')} style={{ marginRight: 16 }}>
+            <Ionicons name="warning-outline" size={24} color="#FFF" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Configuracoes')} style={{ marginRight: 16 }}>
+            <Ionicons name="settings-outline" size={24} color="#FFF" />
+          </TouchableOpacity>
+        </View>
       ),
     });
   }, [navigation]);
@@ -54,13 +59,23 @@ export default function LinhasScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View>
-            <TouchableOpacity 
-              style={styles.botaoTrajeto}
-              onPress={() => navigation.navigate('BuscarTrajeto')}
-            >
-              <Ionicons name="navigate-outline" size={20} color="#FFF" style={{ marginRight: 8 }} />
-              <Text style={styles.botaoTrajetoTexto}>Planejar Viagem</Text>
-            </TouchableOpacity>
+            <View style={styles.botoesAcaoContainer}>
+              <TouchableOpacity 
+                style={styles.botaoTrajeto}
+                onPress={() => navigation.navigate('BuscarTrajeto')}
+              >
+                <Ionicons name="navigate-outline" size={18} color="#FFF" style={{ marginRight: 6 }} />
+                <Text style={styles.botaoTrajetoTexto}>Planejar Viagem</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.botaoAlertas}
+                onPress={() => navigation.navigate('Alertas')}
+              >
+                <Ionicons name="warning-outline" size={18} color="#FFF" style={{ marginRight: 6 }} />
+                <Text style={styles.botaoAlertasTexto}>Alertas</Text>
+              </TouchableOpacity>
+            </View>
 
             <View style={styles.searchContainer}>
               <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
@@ -107,8 +122,11 @@ export default function LinhasScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingTop: 16 },
   containerCentered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
-  botaoTrajeto: { flexDirection: 'row', backgroundColor: '#004C4C', padding: 16, borderRadius: 8, marginBottom: 16, alignItems: 'center', justifyContent: 'center' },
-  botaoTrajetoTexto: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
+  botoesAcaoContainer: { flexDirection: 'row', gap: 10, marginBottom: 16 },
+  botaoTrajeto: { flex: 1, flexDirection: 'row', backgroundColor: '#004C4C', padding: 14, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  botaoTrajetoTexto: { color: '#FFF', fontSize: 15, fontWeight: 'bold' },
+  botaoAlertas: { flexDirection: 'row', backgroundColor: '#D97706', padding: 14, borderRadius: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 },
+  botaoAlertasTexto: { color: '#FFF', fontSize: 15, fontWeight: 'bold' },
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF', borderRadius: 8, borderWidth: 1, borderColor: '#DDD', marginBottom: 16, paddingHorizontal: 12 },
   searchIcon: { marginRight: 8 },
   searchInput: { flex: 1, paddingVertical: 14, fontSize: 16, color: '#333' },
