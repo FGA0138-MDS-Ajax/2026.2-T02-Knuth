@@ -68,7 +68,10 @@ export default function AdminScreen({ navigation }) {
         <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('CriarAdmin')}>
         <Text style={styles.botaoTexto}>Cadastrar administrador</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.botao} onPress={sair}>
+        <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('GerenciarUsuarios')}>
+        <Text style={styles.botaoTexto}>Gerenciar usuários</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.botao} onPress={sair}>
         <Text style={styles.botaoTexto}>Sair</Text>
       </TouchableOpacity>
     </View>
