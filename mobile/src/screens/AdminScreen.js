@@ -65,6 +65,9 @@ export default function AdminScreen({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.titulo}>Área do Administrador</Text>
       <Text style={styles.texto}>Olá, {nome}. Seu acesso de administrador está liberado.</Text>
+        <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('CriarAdmin')}>
+        <Text style={styles.botaoTexto}>Cadastrar administrador</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.botao} onPress={sair}>
         <Text style={styles.botaoTexto}>Sair</Text>
       </TouchableOpacity>
@@ -76,6 +79,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5', padding: 24, justifyContent: 'center' },
   titulo: { fontSize: 22, fontWeight: 'bold', color: '#333', marginBottom: 16, textAlign: 'center' },
   texto: { fontSize: 16, color: '#555', marginBottom: 24, textAlign: 'center' },
-  botao: { backgroundColor: '#006666', padding: 18, borderRadius: 8, alignItems: 'center' },
+    botao: { backgroundColor: '#006666', padding: 18, borderRadius: 8, alignItems: 'center', marginBottom: 12 },
   botaoTexto: { color: '#FFF', fontSize: 18, fontWeight: 'bold' }
 });

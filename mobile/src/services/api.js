@@ -57,3 +57,12 @@ export const getPerfilAdmin = async (token) => {
   });
   return response.data;
 };
+
+export const criarAdministrador = async (token, nome, email, senha) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/usuarios`,
+    { nome, email, senha },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};

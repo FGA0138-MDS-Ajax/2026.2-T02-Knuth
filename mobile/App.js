@@ -13,6 +13,7 @@ import ResultadoTrajetoScreen from './src/screens/ResultadoTrajetoScreen';
 import TrajetoDetalheScreen from './src/screens/TrajetoDetalheScreen';
 import ConfiguracoesScreen from './src/screens/ConfiguracoesScreen';
 import AdminScreen from './src/screens/AdminScreen';
+import CriarAdminScreen from './src/screens/CriarAdminScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -80,6 +81,11 @@ export default function App() {
           name="Admin"
           component={AdminScreen}
           options={{ title: 'Área do Administrador' }}
+        />
+                <Stack.Screen
+          name="CriarAdmin"
+          component={CriarAdminScreen}
+          options={{ title: 'Novo Administrador' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
