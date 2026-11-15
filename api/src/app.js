@@ -6,7 +6,6 @@ const buscasRecentesRoutes = require('./routes/buscasRecentesRoutes');
 const trajetosRoutes = require('./routes/trajetosRoutes');
 const paradasRoutes = require('./routes/paradasRoutes');
 const usuariosRoutes = require('./routes/usuariosRoutes');
-const alertasRoutes = require('./routes/alertasRoutes');
 
 const app = express();
 
@@ -18,6 +17,5 @@ app.use('/api/v1', buscasRecentesRoutes);
 app.use('/api/v1/trajetos', trajetosRoutes);
 app.use('/api/v1/paradas', paradasRoutes);
 app.use('/api/v1/usuarios', usuariosRoutes);
-app.use('/api/v1/alertas', alertasRoutes);
 
 module.exports = app;
