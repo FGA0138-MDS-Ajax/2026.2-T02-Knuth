@@ -16,7 +16,7 @@ class BuscasRecentesRepository {
     const query = `
       SELECT id, origem, destino, usuario_id, realizada_em AS "realizadaEm"
       FROM buscas_recentes
-      WHERE ($1::uuid IS NULL OR usuario_id = $1)
+      WHERE ($1::integer IS NULL OR usuario_id = $1)
       ORDER BY realizada_em DESC
       LIMIT $2;
     `;

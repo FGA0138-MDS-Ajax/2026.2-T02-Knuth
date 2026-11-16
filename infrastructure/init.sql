@@ -46,6 +46,38 @@ CREATE TABLE IF NOT EXISTS usuarios (
     criado_em TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS buscas_recentes (
+    id SERIAL PRIMARY KEY,
+    origem VARCHAR(255) NOT NULL,
+    destino VARCHAR(255) NOT NULL,
+    usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
+    realizada_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS alertas (
+    id SERIAL PRIMARY KEY,
+    tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('DESVIO', 'SUSPENSAO', 'ALTERACAO_HORARIO', 'PARALISACAO')),
+    titulo VARCHAR(255),
+    descricao TEXT NOT NULL,
+    data_inicio TIMESTAMP WITH TIME ZONE NOT NULL,
+    data_fim TIMESTAMP WITH TIME ZONE NOT NULL,
+    encerrado_em TIMESTAMP WITH TIME ZONE,
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS alertas_linhas (
+    alerta_id INTEGER REFERENCES alertas(id) ON DELETE CASCADE,
+    linha_id VARCHAR(50) NOT NULL,
+    PRIMARY KEY (alerta_id, linha_id)
+);
+
+CREATE TABLE IF NOT EXISTS alertas_paradas (
+    alerta_id INTEGER REFERENCES alertas(id) ON DELETE CASCADE,
+    parada_id VARCHAR(50) NOT NULL,
+    PRIMARY KEY (alerta_id, parada_id)
+);
+
+
 INSERT INTO usuarios (nome, email, senha_hash, tipo)
 VALUES ('Administrador', 'admin@rotasdf.com', '$2b$10$YIRTlYFXqX9MpSOHqjSjceSTXG500o8cWkapw3nG5til7lxW38HWC', 'ADMIN')
 ON CONFLICT (email) DO NOTHING;

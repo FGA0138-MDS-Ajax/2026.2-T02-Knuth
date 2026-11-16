@@ -12,6 +12,7 @@ import BuscarTrajetoScreen from './src/screens/BuscarTrajetoScreen';
 import ResultadoTrajetoScreen from './src/screens/ResultadoTrajetoScreen';
 import TrajetoDetalheScreen from './src/screens/TrajetoDetalheScreen';
 import ConfiguracoesScreen from './src/screens/ConfiguracoesScreen';
+import AlertasScreen from './src/screens/AlertasScreen';
 import AdminScreen from './src/screens/AdminScreen';
 import CriarAdminScreen from './src/screens/CriarAdminScreen';
 import GerenciarUsuariosScreen from './src/screens/GerenciarUsuariosScreen';
@@ -68,6 +69,11 @@ export default function App() {
           name="Configuracoes" 
           component={ConfiguracoesScreen} 
           options={{ title: 'Configurações' }} 
+        />
+        <Stack.Screen 
+          name="Alertas" 
+          component={AlertasScreen} 
+          options={{ title: 'Alertas de Serviço' }} 
         />
         <Stack.Screen 
           name="Login" 
