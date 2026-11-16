@@ -12,6 +12,10 @@ import BuscarTrajetoScreen from './src/screens/BuscarTrajetoScreen';
 import ResultadoTrajetoScreen from './src/screens/ResultadoTrajetoScreen';
 import TrajetoDetalheScreen from './src/screens/TrajetoDetalheScreen';
 import ConfiguracoesScreen from './src/screens/ConfiguracoesScreen';
+import AdminScreen from './src/screens/AdminScreen';
+import CriarAdminScreen from './src/screens/CriarAdminScreen';
+import GerenciarUsuariosScreen from './src/screens/GerenciarUsuariosScreen';
+import EditarUsuarioScreen from './src/screens/EditarUsuarioScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +79,18 @@ export default function App() {
           component={CadastroScreen} 
           options={{ title: 'Criar Conta' }} 
         />
+        <Stack.Screen
+          name="Admin"
+          component={AdminScreen}
+          options={{ title: 'Área do Administrador' }}
+        />
+        <Stack.Screen
+          name="CriarAdmin"
+          component={CriarAdminScreen}
+          options={{ title: 'Novo Administrador' }}
+        />
+        <Stack.Screen name="GerenciarUsuarios" component={GerenciarUsuariosScreen} options={{ title: 'Usuários' }} />
+        <Stack.Screen name="EditarUsuario" component={EditarUsuarioScreen} options={{ title: 'Editar usuário' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
