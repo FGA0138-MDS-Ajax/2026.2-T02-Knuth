@@ -82,6 +82,10 @@ export default function ConfiguracoesScreen({ navigation }) {
           <Ionicons name="trash-outline" size={24} color="#666" />
           <Text style={styles.opcaoTexto}>Limpar histórico de buscas</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.opcaoItem} onPress={() => navigation.navigate('Admin')}>
+            <Ionicons name="shield-checkmark-outline" size={24} color="#666" />
+            <Text style={styles.opcaoTexto}>Área do administrador</Text>
+          </TouchableOpacity>
 
         {usuario && (
           <TouchableOpacity style={styles.opcaoItem} onPress={sair}>

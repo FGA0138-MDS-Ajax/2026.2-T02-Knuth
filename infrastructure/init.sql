@@ -78,3 +78,6 @@ CREATE TABLE IF NOT EXISTS alertas_paradas (
 );
 
 
+INSERT INTO usuarios (nome, email, senha_hash, tipo)
+VALUES ('Administrador', 'admin@rotasdf.com', '$2b$10$YIRTlYFXqX9MpSOHqjSjceSTXG500o8cWkapw3nG5til7lxW38HWC', 'ADMIN')
+ON CONFLICT (email) DO NOTHING;

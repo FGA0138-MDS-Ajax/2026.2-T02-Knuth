@@ -53,5 +53,40 @@ export const loginUsuario = async (email, senha) => {
 
 export const getAlertas = async () => {
   const response = await axios.get(`${API_BASE_URL}/alertas`);
+export const getPerfilAdmin = async (token) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/perfil`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const criarAdministrador = async (token, nome, email, senha) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/usuarios`,
+    { nome, email, senha },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+export const listarUsuarios = async (token, tipo) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/usuarios`, {
+    params: { tipo },
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const atualizarUsuario = async (token, id, dados) => {
+  const response = await axios.put(`${API_BASE_URL}/admin/usuarios/${id}`, dados, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const excluirUsuario = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/usuarios/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
   return response.data;
 };
