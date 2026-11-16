@@ -4,6 +4,8 @@ nav:
   - Início: "index.md"
   - Visão do Produto: "docs/Documento_de_Visao_do_Produto.md"
   - Arquitetura: "docs/Documento_de_Arquitetura.md"
+  - Política de commits: "docs/Política_de_Commits"
+  - Métricas: "docs/Plano_de_Metricas.md"
   - Atas de Reunião:
     - Ata 1: "atas-reuniao/ata-reuniao-1.md"
 
