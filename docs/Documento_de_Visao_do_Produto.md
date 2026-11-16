@@ -20,6 +20,7 @@
 |---|---|---|---|
 | 30/09/2026 | 1.0.0 | Visão inicial do produto | Todos |
 | 27/10/2026 | 1.1.0 | Alinhamento do modelo de branches e retirada do método TDD | Gabriel Sakai e Silva |
+| 15/11/2026 | 1.2.0 | Reformula a parte de métricas e de teste além de atualizar a progressão do documento  | Gabriel Sakai e Silva
 
 ## Sumário
 
@@ -60,7 +61,10 @@ No entanto, muitos usuários passam por dificuldades para obter e interpretar as
 
 <p align="center"><i>Fonte: Elaborado pelos autores (2026)</i></p>
 
-Diante do cenário apresentado, propõe-se o desenvolvimento de uma plataforma digital capaz de fornecer informações essenciais para o planejamento dos deslocamentos dos usuários de transporte público, contribuindo para a mitigação do efeito apresentado no diagrama, por meio do tratamento das causas relacionadas à informação, à comunicação e ao usuário.
+O Diagrama de Ishikawa (Causa x Efeito), apresentado na Figura 1, foi estruturado para mapear as raízes do problema central que o RotasDF se propõe a resolver: a dificuldade de obter e compreender informações para planejar deslocamentos no transporte público. Para uma análise aprofundada, as causas foram divididas em quatro grandes eixos: Usuário, Comunicação, Informação e Gestão e Administração. No eixo do Usuário, destacam-se a exclusão digital, que atinge pessoas com diferentes níveis de familiaridade tecnológica; as barreiras sensoriais de indivíduos com limitações visuais ou auditivas; e o desconhecimento do sistema por parte de passageiros não habituados com a dinâmica do transporte. No eixo de Comunicação, evidencia-se a falha na emissão de avisos durante crises, onde imprevistos em rotas não são comunicados ou o são de forma tardia, somado à existência de poucos canais de comunicação que impedem a informação de chegar de forma clara aos usuários.
+
+No que tange ao eixo de Informação, o diagrama aponta a baixa confiabilidade como um fator crítico, gerado por informações incorretas sobre linhas e pontos de parada, além da circulação escassa de dados, onde a informação demora a ser disseminada. Por fim, o eixo de Gestão e Administração revela falhas estruturais, como a falta de planejamento em mobilidade urbana e os erros de logística decorrentes da falta de integração entre municípios e regiões metropolitanas. Diante desse cenário, o RotasDF posiciona-se como uma solução por meio de uma plataforma mobile, o produto combate a exclusão digital; mitiga a falha de comunicação ao centralizar avisos e alertas de alteração em tempo real; garante a confiabilidade da informação ao consumir dados oficiais e validados (GTFS); e auxilia na gestão de trajetos ao integrar as linhas e paradas de diferentes regiões em uma única interface.
+ 
 
 ### 1.2 Declaração de posição do produto
 
@@ -76,6 +80,8 @@ O produto irá se diferenciar por sua acessibilidade e facilidade de uso, permit
 | Que | Disponibiliza informações confiáveis sobre linhas, horários e alterações nos serviços |
 | Ao contrário | Escassez de informação transformando o transporte público mais imprevisível para os usuários |
 | Nosso produto | Entrega informações acessíveis e de fácil entendimento |
+
+O RotasDF tem como propósito central democratizar o acesso às informações do transporte público no Distrito Federal. Para isso, o produto disponibiliza uma interface mobile na qual o usuário pode consultar todas as linhas da região e visualizar seus itinerários completos. Além disso, a plataforma implementa um sistema de planejamento de viagens que captura a localização geográfica atual do usuário para definir a origem e solicita a inserção de um destino, a fim de calcular e sugerir as melhores rotas. Com essa abordagem, o sistema centraliza os dados de mobilidade urbana, mitigando a desinformação e facilitando o deslocamento.
 
 *Fonte: Elaborado pelos autores (2026)*
 
@@ -96,6 +102,16 @@ Serão utilizadas as seguintes tecnologias:
 - CSS3
 - PostgreSQL
 - Docker
+
+- **Gestão e versionamento:** Utiliza-se o **GitHub** para controle de versão distribuído. Como a equipe é composta por 6 pessoas trabalhando em paralelo, o GitHub garante a integridade do código e o acompanhamento transparente do fluxo de tarefas (via Kanban/GitHub Projects). Além disso, permite a revisão de código por pares através de Pull Requests, o que é essencial para manter a qualidade e evitar conflitos.
+
+- **Ambiente e automação:** Utiliza-se o **Visual Studio Code** como ambiente integrado de desenvolvimento. O VS Code foi escolhido por ser leve, altamente customizável e possuir excelente integração nativa com Git e terminal.
+
+- **Linguagens e frameworks (Back-end):** Utiliza-se **Python** e **Node.js**. O Python foi escolhido especificamente para a camada de importação de dados, pois suas bibliotecas são ótimas para ler, tratar e cruzar os arquivos massivos do governo (GTFS) e validar coordenadas geográficas. O Node.js foi adotado para a construção da API REST por ser rápido, lidar muito bem com requisições simultâneas e permitir que a equipe use JavaScript tanto no back-end quanto no front-end.
+
+- **Linguagens e frameworks (Front-end):** Utiliza-se **React** (com React Native), **HTML5** e **CSS3**. O React Native permite criar o aplicativo mobile para Android e iOS a partir de uma única base de código, o que otimiza o tempo da equipe. Ele também possibilita o uso de APIs nativas e foca em acessibilidade. O HTML5 e CSS3 servem de base para a renderização web e para a documentação do projeto.
+
+- **Banco de dados e containerização:** Utiliza-se o **PostgreSQL** e o **Docker**. O PostgreSQL é um banco de dados relacional extremamente robusto, essencial para suportar os milhões de registros de horários e itinerários gerados pelo GTFS, além de possuir funções matemáticas que permitem calcular a distância exata entre o GPS do usuário e as paradas. O Docker foi adotado para padronizar o ambiente; ele empacota o banco e a API em contêineres, garantindo que todos os 6 integrantes rodem o sistema com a mesma configuração.
 
 ---
 
@@ -152,27 +168,26 @@ O planejamento do projeto está organizado em cinco Sprints semanais, executadas
 
 **Tabela 4: Planejamento das Sprints do projeto**
 
-| Sprint | Produto (Entrega) | Início | Fim | Entregável(eis) | Responsáveis | % conclusão |
-|---|---|---|---|---|---|---|
-| S1 | Módulo Base | 26/10/2026 | 01/11/2026 | Busca de linha por número ou nome; itinerário da linha; quadro de horários da linha; importação de dados de transporte | Equipe de Desenvolvimento e Analista de Qualidade | 0% |
-| S2 | Núcleo de trajetos (MVP) | 02/11/2026 | 08/11/2026 | Busca de trajeto entre origem e destino; trajeto detalhado em etapas; localização atual como origem; linhas que atendem uma parada; buscas recentes | Equipe de Desenvolvimento e Dono do Produto | 0% |
-| S3 | Alertas, Gestão Administrativa | 09/11/2026 | 15/11/2026 | Consulta de alertas vigentes; autenticação de administrador; cadastro e gestão de alertas; manutenção de linhas, paradas e horários; apresentação no ponto de controle | Equipe de Desenvolvimento e Analista de Qualidade | 0% |
-| S4 | Inspeção de Software, Qualidade & Personalização | 16/11/2026 | 22/11/2026 | Sinalização de alertas nos itens afetados; cadastro e autenticação de passageiro; favoritos; reporte de divergências; análise de reportes; inspeção do repositório e início da correção dos defeitos | Equipe de Desenvolvimento e Analista de Qualidade | 0% |
-| S5 | Recursos Avançados, Refinamento & Entrega Final | 23/11/2026 | 29/11/2026 | Trajeto no mapa; comparação e ordenação de trajetos; planejamento por horário de partida ou chegada; próximas partidas em uma parada; previsão de chegada em tempo real; notificação de alterações em favoritos; correção dos defeitos restantes; versão final | Todos os papéis | 0% |
+| Sprint | Produto (Entrega) | Início | Fim | Entregável(eis) | Responsáveis | 
+|---|---|---|---|---|---|
+| S1 | Módulo Base | 26/10/2026 | 01/11/2026 | Busca de linha por número ou nome; itinerário da linha; quadro de horários da linha; importação de dados de transporte | Equipe de Desenvolvimento e Analista de Qualidade | 
+| S2 | Núcleo de trajetos | 02/11/2026 | 08/11/2026 | Busca de trajeto entre origem e destino; trajeto detalhado em etapas; localização atual como origem; linhas que atendem uma parada; buscas recentes | Equipe de Desenvolvimento e Dono do Produto |
+| S3 | Alertas, Gestão Administrativa | 09/11/2026 | 15/11/2026 | Consulta de alertas vigentes; autenticação de administrador; cadastro e gestão de alertas; manutenção de linhas, paradas e horários; apresentação no ponto de controle | Equipe de Desenvolvimento e Analista de Qualidade |
+| S4 | Inspeção de Software, Qualidade & Personalização | 16/11/2026 | 22/11/2026 | Sinalização de alertas nos itens afetados; cadastro e autenticação de passageiro; favoritos; reporte de divergências; análise de reportes; inspeção do repositório e início da correção dos defeitos; realização do teste funcional de sistema | Equipe de Desenvolvimento e Analista de Qualidade |
+| S5 | Recursos Avançados, Refinamento & Entrega Final | 23/11/2026 | 29/11/2026 | Trajeto no mapa; comparação e ordenação de trajetos; planejamento por horário de partida ou chegada; próximas partidas em uma parada; previsão de chegada em tempo real; notificação de alterações em favoritos; correção dos defeitos restantes; versão final | Todos os papéis |
 
 *Fonte: Elaborado pelos autores (2026)*
 
-Como mostra a Tabela 4, as Sprints foram alinhadas aos marcos do cronograma da disciplina. O ponto de controle ocorre no início da Sprint 3, quando o módulo base e o núcleo de trajetos (Sprints 1 e 2) já estão disponíveis, e a inspeção dos repositórios ocorre no início da Sprint 4, o que permite corrigir os defeitos apontados antes da apresentação final. As funcionalidades de prioridade *Must* concentram-se nas quatro primeiras Sprints, e as classificadas como *Should* e *Could* ficam, em sua maioria, para as finais.
+Como mostra a tabela 4, as Sprints foram estrategicamente alinhadas aos marcos do cronograma da disciplina. O ponto de controle ocorre no início da Sprint 3, momento em que o módulo base e o núcleo de trajetos (Sprints 1 e 2) já estão operacionais. O feedback recebidos neste ponto de controle serão tratados como prioridade máxima pela equipe; eles serão discutidos na Sprint 3 e corrigidos ao longo das iterações seguintes, garantindo que os ajustes de usabilidade e as correções de rotas sejam validados pelo Dono do Produto antes de avançar. Posteriormente, a inspeção dos repositórios ocorre no início da Sprint 4, etapa em que a equipe dedicará a semana para sanar os defeitos apontados pelos inspetores, assegurando uma versão estável e polida para a apresentação final.
 
 ### 2.4 Matriz de comunicação
 
 **Tabela 5: Matriz de comunicação**
+A matriz de comunicação do RotasDF foi desenhada combinando ferramentas formais de alinhamento e canais ágeis de resolução de problemas. Para a governança e acompanhamento semanal, adotamos encontros síncronos via Microsoft Teams. Nessas reuniões, a equipe realiza o planejamento do que deve ser feito na sprint e revisar o que já foi feito. O objetivo é alinhar o andamento do projeto e garantir que todos tenham clareza das próximas tarefas.
 
-| Descrição | Área / Envolvidos | Periodicidade | Produtos gerados |
-|---|---|---|---|
-| Acompanhamento das atividades em andamento; acompanhamento dos riscos, compromissos, ações pendentes, indicadores | Equipe do Projeto | Semanal | Ata de reunião; relatório de situação do projeto |
-| Acompanhamento das necessidades e prioridades do produto | Product Owner; Equipe de Desenvolvimento | Semanal | Backlog do Produto atualizado |
-| Comunicar situação do projeto | Equipe; Prof./Monitor | Semanal | Ata de reunião; relatório de situação do projeto |
+De forma complementar e contínua, o grupo utiliza um canal no WhatsApp como ferramenta de comunicação rápida. Esse ambiente é focado na resolução de problemas técnicos do dia a dia e no bloqueio de impedimentos. É por meio dele que a equipe resolve dúvidas ágeis relacionadas ao Git e alinha a integração de código entre o Frontend e o Backend, garantindo que nenhum desenvolvedor fique travado por muito tempo.
+
+A matriz de comunicação do RotasDF passará por uma atualização nas Sprints 4 e 5. A partir dessas etapas, todas as reuniões semanais contarão com o registro formal de atas de reunião. Essa melhoria tem como objetivo aprimorar o rastreamento das decisões tomadas pela equipe, além de garantir que todo o histórico de informações, alinhamentos e revisões do projeto fique devidamente documentado e acessível a todos os membros.
 
 *Fonte: Elaborado pelos autores (2026)*
 
@@ -180,18 +195,19 @@ Como mostra a Tabela 4, as Sprints foram alinhadas aos marcos do cronograma da d
 
 **Tabela 6: Riscos**
 
-| Risco | Grau de exposição | Mitigação | Plano de contingência |
-|---|---|---|---|
-| Falhas na integração ou obtenção dos dados de transporte | Alto | Realização de testes prévios | Realizar possíveis mudanças nas sprints |
-| Membros do grupo trancar matéria | Médio | Realizar sprints em pares | Reajustar a distribuição das sprints |
-| Desenvolvedores não saberem o que fazer na sprint | Alto | Realizar sprints em pares | Realizar possíveis mudanças nas sprints |
+| Risco | Mitigação | Plano de contingência |
+|---|---|---|
+| Obtenção dos dados de transporte | Alto | Procura constante de dados pelo Analista de Qualidade  | Realizar possíveis mudanças nas sprints |
+| Desenvolvedores com pouco  | Alto | Reuniões semanais | Realizar mais reuniões durante as sprints para manter a equipe engajada |
 | Atraso na conclusão das atividades da sprint | Médio | Acompanhar as atividades durante a sprint e identificar impedimentos antecipadamente | Repriorizar atividades e transferir itens não concluídos para uma sprint posterior |
 
 *Fonte: Elaborado pelos autores (2026)*
 
-#### Critérios de replanejamento
+O gerenciamento de riscos do RotasDF foi estruturado para antecipar e mitigar os principais desafios que podem comprometer o cronograma do projeto. O primeiro risco mapeado é a obtenção dos dados de transporte. Para mitigar esse problema, o Analista de Qualidade realizará uma procura e validação constante das fontes de dados. Caso essa obtenção falhe, o escopo do projeto irá ser reduzido sem afetar as funcionalidades.
 
-O replanejamento do projeto será realizado quando forem identificadas situações que possam comprometer o cumprimento do cronograma, dos requisitos ou dos objetivos estabelecidos. Entre os principais critérios para o replanejamento estão: ocorrência de riscos de alto grau de exposição; atrasos significativos nas atividades previstas; alterações nos requisitos do projeto. Quando um desses critérios for identificado, a equipe irá avaliar seu impacto sobre o escopo, prazo e atividades previstas, realizando os ajustes necessários no planejamento, e as possíveis alterações realizadas deverão ser registradas.
+O segundo risco refere-se à possibilidade de desenvolvedores não saberem o que fazer na sprint. A estratégia de mitigação adotada são as reuniões semanais de alinhamento, que garantem que as tarefas e os objetivos estejam claros para todos. Se, durante a semana, a equipe apresentar dúvidas ou desalinhamento, o plano de contingência prevê a realização de reuniões extras para manter a equipe engajada e destravar o desenvolvimento.
+
+Por fim, o terceiro risco é o atraso na conclusão das atividades da sprint. Para mitigar isso, a equipe acompanhará ativamente o andamento das tarefas e identificará impedimentos antecipadamente. Se o atraso for inevitável, o plano de contingência determina a repriorização das atividades, transferindo os itens não concluídos para uma sprint posterior, garantindo que o foco permaneça nas entregas mais críticas para a disciplina.
 
 ---
 
@@ -199,24 +215,17 @@ O replanejamento do projeto será realizado quando forem identificadas situaçõ
 
 Esta seção registra, de forma objetiva e orientadora, as decisões da equipe quanto ao processo de desenvolvimento de software, com base no Scrum e no Extreme Programming (XP), em alinhamento com o ciclo de vida descrito na seção 2.1. Entende-se por processo um conjunto de atividades logicamente encadeadas, com início e fim, que consomem recursos, geram resultados e possuem papéis responsáveis.
 
-No projeto, o desenvolvimento ocorre de 26/10/2026 a 29/11/2026, período definido pelo cronograma da disciplina, e é organizado em cinco Sprints semanais, iniciadas às segundas-feiras. Cada Sprint começa com o Backlog do Produto priorizado e termina com um incremento validado e entregue, utilizando como recursos o repositório no GitHub, o quadro Kanban e o *pipeline* de integração contínua. O fluxo de trabalho de cada Sprint está ilustrado na Figura 2.
+No projeto, o desenvolvimento ocorre de 26/10/2026 a 29/11/2026, período definido pelo cronograma da disciplina, e é organizado em cinco Sprints semanais, iniciadas às segundas-feiras. Cada Sprint começa com o Backlog do Produto priorizado e termina com um incremento validado e entregue, utilizando como recursos o repositório no GitHub.
 
-<p align="center"><b>Figura 2: Fluxo de trabalho de uma Sprint do projeto</b></p>
-
-![Ciclo de uma Sprint (7 a 10 dias): Backlog, Sprint Planning, Desenvolvimento, Pull Request e Code Review, Integração contínua, Sprint Review, Retrospective e Incremento entregue](imagens/visao-fig2-fluxo-sprint.png)
-
-<p align="center"><i>Fonte: Elaborada pelos autores (2026)</i></p>
-
-As atividades do fluxo, com seus responsáveis e resultados, são:
+As atividades, com seus responsáveis e resultados, são:
 
 - **a) Refinamento e priorização do Backlog:** o Dono do Produto prioriza as *User Stories*, gerando o Backlog do Produto priorizado;
-- **b) Sprint Planning:** toda a equipe seleciona os itens que serão desenvolvidos, gerando o Sprint Backlog e a meta da Sprint;
-- **c) Desenvolvimento:** a Equipe de Desenvolvimento codifica aplicando *Pair Programming* e *Coding Standards*, gerando um incremento de código validado por testes unitários;
-- **d) Daily Meeting:** a equipe, facilitada pelo Scrum Master, alinha o andamento das tarefas no quadro Kanban e identifica impedimentos;
-- **e) Pull Request e Code Review:** o Analista de Qualidade e os desenvolvedores revisam o código, que, uma vez aprovado, é integrado ao ramo principal (`main`);
-- **f) Integração contínua:** o *pipeline* do GitHub Actions executa os testes automatizados a cada integração;
-- **g) Sprint Review:** a equipe apresenta o incremento ao Dono do Produto e, nos marcos do cronograma da disciplina (pontos de controle, inspeções e apresentações), ao Cliente / Usuário (simulação), que registram seus *feedbacks*;
-- **h) Retrospective:** a equipe, facilitada pelo Scrum Master, define ações de melhoria para a próxima Sprint.
+- **b) Sprint Planning:** toda a equipe seleciona os itens que serão desenvolvidos;
+- **c) Desenvolvimento:** a Equipe de Desenvolvimento codifica aplicando *Pair Programming* , gerando um incremento de código;
+- **d) Reuniões semanais:** a equipe, facilitada pelo Scrum Master, alinha o andamento das tarefas e identifica impedimentos;
+- **e) Pull Request e Code Review:** o Analista de Qualidade e os desenvolvedores revisam o código, que, uma vez aprovado, é integrado ao ramo developer;
+- **f) Sprint Review:** a equipe revisa o que foi realizado na sprint;
+- **g) Retrospective:** a equipe, facilitada pelo Scrum Master, define ações de melhoria para a próxima Sprint.
 
 Além do fluxo interno de cada Sprint, o processo considera os marcos definidos no cronograma da disciplina:
 
@@ -226,14 +235,13 @@ Além do fluxo interno de cada Sprint, o processo considera os marcos definidos 
 - **d) Correção de defeitos (a partir de 18/11/2026):** a equipe repara os defeitos apontados nas inspeções;
 - **e) Apresentação do software em funcionamento (30/11/2026 ou 02/12/2026):** a equipe apresenta a versão final do produto.
 
-Como os repositórios são inspecionados e auditados, o quadro Kanban, os Pull Requests e o planejamento da seção 2.3 devem ser mantidos atualizados a cada Sprint.
+Como os repositórios são inspecionados e auditados, os Pull Requests e o planejamento da seção 2.3 devem ser mantidos atualizados a cada Sprint.
 
 Para garantir o alinhamento entre as etapas, a equipe adota um conceito de pronto (*Definition of Done*). Considera-se pronto o item do Backlog que atender cumulativamente aos seguintes critérios:
 
-- a) testes unitários implementados e aprovados;
-- b) integração contínua executada sem falhas;
-- c) revisão por pares aprovada por meio de Pull Request;
-- d) critérios de aceitação validados pelo Dono do Produto.
+- a) testes unitários implementados;
+- b) Código implementado;
+- c) Revisão e merge via Pull Request na branch developer dentro do prazo da Sprint;
 
 ---
 
@@ -344,120 +352,37 @@ Abaixo é apresentado o detalhamento dos requisitos funcionais (RF) e gerais nã
 
 ### 5.1 GQM de medições
 
-#### Objetivo de medição 1
-
-- **Objeto:** acompanhamento do progresso de conclusão de histórias de usuário
-- **Finalidade:** avaliar o quanto foi possível render durante o projeto
-- **Foco:** capacidade de implementação dos membros em cada sprint
-- **Viewpoint:** do ponto de vista da equipe do projeto
-- **Contexto:** projeto de mobilidade urbana desenvolvido com ciclos de sprints semanais
-
-**Questão 1:** Qual percentual de histórias de usuário os membros conseguem implementar em cada sprint?
-
-**Métrica 1 — Histórias de usuário concluídas por sprint**
-
-- **5W+1H:**
-  - *What:* histórias concluídas.
-  - *Why:* acompanhar a capacidade de desenvolvimento da equipe.
-  - *Who:* equipe de desenvolvimento.
-  - *When:* ao final de cada sprint.
-  - *Where:* Sprint Backlog.
-  - *How:* contabilizando as histórias concluídas.
-- **Definição:** quantidade de histórias de usuário concluídas ao final de cada sprint.
-- **Forma de cálculo:** contagem das histórias que foram concluídas na sprint.
-- **Unidade/escala:** (Histórias concluídas ÷ Histórias planejadas) × 100
-- **Valor esperado:** pelo menos 80%
-- **Forma de análise:** comparar a quantidade de histórias concluídas entre as sprints e observar a evolução ao final.
-
-#### Objetivo de medição 2
-
-- **Objeto:** acompanhamento da cobertura dos testes sobre o código desenvolvido
-- **Finalidade:** avaliar o quanto foi possível render durante o projeto
-- **Foco:** cobertura do código pelos testes realizados em cada sprint
-- **Viewpoint:** do ponto de vista da equipe do projeto
-- **Contexto:** projeto de mobilidade urbana desenvolvido com ciclos de sprints semanais
-
-**Questão 2:** Qual percentual do código desenvolvido é coberto pelos testes em cada sprint?
-
-**Métrica 2 — Cobertura do código**
-
-- **5W+1H:**
-  - *What:* código coberto pelos testes.
-  - *Why:* acompanhar a cobertura dos testes sobre o código desenvolvido.
-  - *Who:* equipe de desenvolvimento.
-  - *When:* ao final de cada sprint.
-  - *Where:* código-fonte do projeto.
-  - *How:* comparando o código executado pelos testes com o código total analisado.
-- **Forma de cálculo:** percentual do código desenvolvido que é executado durante a realização dos testes.
-- **Unidade/escala:** (Código executado pelos testes ÷ Código total analisado) × 100
-- **Valor esperado:** pelo menos 80%
-- **Forma de análise:** comparar o percentual de cobertura de código entre as sprints e verificar se a cobertura está se mantendo ou evoluindo ao longo do projeto.
+O primeiro objetivo de medição do projeto, estruturado com base na metodologia GQM , tem como objeto as histórias de usuário assumidas no Sprint Backlog. A finalidade dessa medição é avaliar o cumprimento do planejamento e a real capacidade de entrega da equipe ao longo do projeto. Para isso, o foco está em acompanhar o percentual de histórias concluídas, garantindo que elas atendam rigorosamente aos critérios da Definição de Pronto . Essa análise é realizada a partir do ponto de vista da equipe de desenvolvimento, do Scrum Master e do Dono do Produto. Todo esse processo está inserido no contexto do RotasDF, que adota os frameworks Scrum e XP e é executado ao longo de cinco Sprints semanais, no período de 26 de outubro a 29 de novembro de 2026.
 
 ---
 
 ## 6 Testes de software
 
-### 6.1 Estratégia de testes
+## 6 TESTES DE SOFTWARE
 
-A estratégia de testes visa assegurar a estabilidade, a corretude e a facilidade de uso da plataforma de transporte público. As diretrizes adotadas para a execução são:
+### 6.1 Estratégia de Testes
 
-**Níveis de testes abordados:**
+A estratégia de testes do RotasDF foi desenhada para se adequar às práticas ágeis (Scrum e XP) e às peculiaridades do projeto, garantindo a estabilidade, a confiabilidade das informações de transporte e a acessibilidade da plataforma.
 
-- **Unitário:** testes focados em validar isoladamente as menores partes do código, como a função matemática que calcula a distância entre o usuário e o ponto de ônibus.
-- **Integração:** testes destinados a verificar a comunicação correta entre os diferentes módulos, como a integração do aplicativo (front-end) com a API de mapas e servidores de horários das viações de ônibus.
-- **Sistema:** testes globais para verificar o fluxo completo da aplicação em simulação de uso real, validando o comportamento do sistema inteiro desde a busca da rota até a chegada ao destino.
+**Níveis e Abordagens de Testes:**
+* **Testes Unitários:** São a base da qualidade do software. Os desenvolvedores utilizam bibliotecas como *Jest* (Node.js/React Native) e *Pytest* (Python) para testar isoladamente as menores funções do sistema, como o cálculo matemático de baldeações, a conversão de horários e a renderização de componentes visuais. A meta é manter uma **cobertura mínima de 80%** do código.
+* **Testes de Integração:** Realizados continuamente, visam garantir que o aplicativo consiga consumir a API REST e que a API se comunique corretamente com o banco de dados PostgreSQL via Docker.
+* **Testes de Sistema Funcional (Sprint 4):** Os testes de ponta a ponta, que simulam a jornada real do usuário, **serão executados especificamente na Sprint 4**. A justificativa é que, nesta etapa, todo o ecossistema já estará interligado, permitindo validar a busca de rotas, a precisão do GPS e o tratamento de erros de forma realista, sem que módulos inacabados interfiram no resultado.
 
-**Tipos de testes abordados:**
+**Tipos de Testes Abordados:**
+* **Funcionais:** Validação das regras de negócio e do contrato OpenAPI.
 
-- **Funcionais:** validação das regras de negócio. Exemplo: garantir que o sistema não indique rotas inexistentes ou horários incorretos.
+**Ambientes e Ferramentas Manuais:**
+A execução dos testes ocorre em ambientes padronizados por Docker. Para os testes de integração e sistema, o Analista de Qualidade utiliza ferramentas como **Postman/Insomnia** para validar os endpoints da API e o **DBeaver** para auditar a integridade dos dados no banco.
 
-**Ambientes de testes usados:** o ambiente de testes seguirá estritamente a política de branches e commits do projeto:
+**Critérios de Aceitação:**
+O parâmetro para aprovação de qualquer funcionalidade é a comparação exata entre o "Resultado Previsto" e o "Resultado Realizado". Se houver divergência, um defeito é registrado e a funcionalidade é reprovada até ser corrigida.
 
-- **Ambiente de Desenvolvimento (branches `feature/*`):** onde os desenvolvedores criarão funcionalidades e executarão os testes unitários locais.
-- **Ambiente de Integração (branch `developer`):** ambiente interno da equipe de desenvolvimento para consolidar os commits, rodar testes de integração e realizar os últimos testes e validações antes da apresentação.
-- **Ambiente de Produção (branch `main`):** versão estável liberada para o usuário final.
-- **Ambiente de documentação (branch `main`):** onde a documentação do projeto é mantida e atualizada.
-
-**Formas de análise dos testes propostos:** a análise será realizada por meio da execução metódica do roteiro de testes em homologação. Para as questões funcionais, será feita inspeção de resultados. Para os testes de usabilidade, utilizaremos o método de observação direta do usuário interagindo com as telas de rotas e horários.
-
-**Resultados obtidos (Previstos × Realizados):** o parâmetro para aprovação de qualquer funcionalidade será a comparação exata entre o "Resultado Previsto" (como o sistema foi projetado para agir) e o "Resultado Realizado" (como o sistema agiu de fato durante a execução do roteiro). A lógica de aprovação obedecerá à seguinte regra: se o resultado previsto for diferente do realizado, o teste não passou e um defeito (*bug*) foi identificado. Esse defeito será registrado, reparado pela equipe e o teste será executado em novos ciclos até que o resultado Previsto seja igual ao Realizado, caracterizando a aprovação e a ausência de defeitos.
-
-### 6.2 Roteiro de testes
-
-#### CT-01 — Busca de Trajeto Completo
-
-- **Objetivo do teste:** validar se o sistema retorna as rotas e opções de ônibus corretas.
-- **Nível do teste:** Sistema
-- **Tipo de teste:** Funcional
-- **Precondições:** aparelho com acesso à internet no ambiente *staging*. GPS ativado.
-- **Definição de aceite (Previsto):** o sistema deve exibir as opções de linhas disponíveis, tempo total e paradas de forma exata.
-- **Registro do realizado (evidências):** *[espaço — ex.: exibiu rota corretamente. Evidência: print da tela]*
-- **Reparos executados:** *[espaço — ex.: nenhum]*
-- **Ciclos de testes executados:** 1
-
-#### CT-02 — Cálculo do Tempo de Chegada
-
-- **Objetivo do teste:** verificar se a fórmula prevê corretamente o horário que o veículo chegará ao ponto.
-- **Nível do teste:** Unitário
-- **Tipo de teste:** Funcional
-- **Precondições:** código rodando em ambiente local (branch `feature/*`) recebendo dados brutos de velocidade e coordenadas.
-- **Definição de aceite (Previsto):** o cálculo deve retornar o tempo exato com margem de erro máxima aceitável de 1 minuto.
-- **Registro do realizado (evidências):**
-- **Reparos executados:**
-- **Ciclos de testes executados:**
-
-#### CT-03 — Alertas de Interrupção no Serviço
-
-- **Objetivo do teste:** confirmar se o sistema notifica o usuário sobre atrasos graves, greves ou ruas fechadas.
-- **Nível do teste:** Integração
-- **Tipo de teste:** Funcional
-- **Precondições:** linha cadastrada como favorita pelo usuário. API da central de trânsito enviar evento de falha simulada.
-- **Definição de aceite (Previsto):** o aplicativo deve processar a falha da API e mostrar uma notificação visual informando o erro e sugerindo rotas alternativas.
-- **Registro do realizado (evidências):**
-- **Reparos executados:**
-- **Ciclos de testes executados:**
+**Automação e Integração Contínua:**
+Embora a validação visual e de usabilidade seja manual, a equipe preza pela automação da qualidade do código. Para isso, o projeto utiliza o **GitHub Actions** para orquestrar a Integração Contínua. A cada *Pull Request*, o sistema executa automaticamente os testes unitários e de integração. Caso algum teste falhe ou a cobertura de código caia abaixo da meta de 80%, o código é automaticamente barrado e não pode ser integrado à branch principal, garantindo a saúde do repositório.
 
 ---
+
 
 ## 7 Referências bibliográficas
 
