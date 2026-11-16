@@ -364,7 +364,6 @@ A estratégia de testes do RotasDF foi desenhada para se adequar às práticas �
 
 **Níveis e Abordagens de Testes:**
 * **Testes Unitários:** São a base da qualidade do software. Os desenvolvedores utilizam bibliotecas como *Jest* (Node.js/React Native) e *Pytest* (Python) para testar isoladamente as menores funções do sistema, como o cálculo matemático de baldeações, a conversão de horários e a renderização de componentes visuais. A meta é manter uma **cobertura mínima de 80%** do código.
-* **Testes de Integração:** Realizados continuamente, visam garantir que o aplicativo consiga consumir a API REST e que a API se comunique corretamente com o banco de dados PostgreSQL via Docker.
 * **Testes de Sistema Funcional (Sprint 4):** Os testes de ponta a ponta, que simulam a jornada real do usuário, **serão executados especificamente na Sprint 4**. A justificativa é que, nesta etapa, todo o ecossistema já estará interligado, permitindo validar a busca de rotas, a precisão do GPS e o tratamento de erros de forma realista, sem que módulos inacabados interfiram no resultado.
 
 **Tipos de Testes Abordados:**
