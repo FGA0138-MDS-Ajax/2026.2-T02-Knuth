@@ -358,8 +358,6 @@ O primeiro objetivo de medição do projeto, estruturado com base na metodologia
 
 ## 6 Testes de software
 
-## 6 TESTES DE SOFTWARE
-
 ### 6.1 Estratégia de Testes
 
 A estratégia de testes do RotasDF foi desenhada para se adequar às práticas ágeis (Scrum e XP) e às peculiaridades do projeto, garantindo a estabilidade, a confiabilidade das informações de transporte e a acessibilidade da plataforma.
