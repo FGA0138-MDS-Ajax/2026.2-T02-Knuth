@@ -148,9 +148,9 @@ Assim, a combinação entre entregas semanais, práticas de qualidade de código
 
 ### 2.2 Organização do projeto
 
-A estrutura organizacional da equipe foi planejada para promover a responsabilidade compartilhada e a colaboração contínua ao longo de todo o ciclo de vida do desenvolvimento do software. Visando evitar gargalos operacionais e garantir a aplicação das práticas ágeis do Scrum e do Extreme Programming (XP), os papéis e as responsabilidades foram distribuídos de forma transparente entre os integrantes do grupo, conforme detalhado na Tabela 3. Ressalta-se que essa divisão de atribuições não estabelece qualquer relação de hierarquia ou grau de importância: todos os integrantes são igualmente importantes e responsáveis pelo sucesso do projeto.
+A estrutura organizacional da equipe foi planejada para promover a responsabilidade compartilhada e a colaboração contínua ao longo de todo o ciclo de vida do desenvolvimento do software. Visando evitar gargalos operacionais e garantir a aplicação das práticas ágeis do Scrum e do Extreme Programming (XP), os papéis e as responsabilidades foram distribuídos de forma transparente entre os integrantes do grupo, conforme detalhado na Tabela 2. Ressalta-se que essa divisão de atribuições não estabelece qualquer relação de hierarquia ou grau de importância: todos os integrantes são igualmente importantes e responsáveis pelo sucesso do projeto.
 
-**Tabela 3: Divisão de papéis e responsabilidades da equipe do projeto**
+**Tabela 2: Divisão de papéis e responsabilidades da equipe do projeto**
 
 | Papel | Atribuições | Responsável | Participantes |
 |---|---|---|---|
@@ -164,9 +164,9 @@ A estrutura organizacional da equipe foi planejada para promover a responsabilid
 
 ### 2.3 Planejamento das fases e/ou iterações do projeto
 
-O planejamento do projeto está organizado em cinco Sprints semanais, executadas de 26/10/2026 a 29/11/2026, período definido pelo cronograma da disciplina para o desenvolvimento do software. Cada Sprint está associada a um produto (entrega) e a entregáveis específicos, conforme apresentado na Tabela 4, e a distribuição das funcionalidades segue o Backlog do Produto (seção 4.4). Esse planejamento é atualizado de maneira sucessiva, a cada ciclo de desenvolvimento, com base nos resultados da Sprint Review e da Retrospective, de modo que datas, entregáveis e percentuais de conclusão reflitam sempre a situação real do projeto.
+O planejamento do projeto está organizado em cinco Sprints semanais, executadas de 26/10/2026 a 29/11/2026, período definido pelo cronograma da disciplina para o desenvolvimento do software. Cada Sprint está associada a um produto (entrega) e a entregáveis específicos, conforme apresentado na Tabela 3, e a distribuição das funcionalidades segue o Backlog do Produto (seção 4.4). Esse planejamento é atualizado de maneira sucessiva, a cada ciclo de desenvolvimento, com base nos resultados da Sprint Review e da Retrospective, de modo que datas, entregáveis e percentuais de conclusão reflitam sempre a situação real do projeto.
 
-**Tabela 4: Planejamento das Sprints do projeto**
+**Tabela 3: Planejamento das Sprints do projeto**
 
 | Sprint | Produto (Entrega) | Início | Fim | Entregável(eis) | Responsáveis | 
 |---|---|---|---|---|---|
@@ -178,11 +178,10 @@ O planejamento do projeto está organizado em cinco Sprints semanais, executadas
 
 *Fonte: Elaborado pelos autores (2026)*
 
-Como mostra a tabela 4, as Sprints foram estrategicamente alinhadas aos marcos do cronograma da disciplina. O ponto de controle ocorre no início da Sprint 3, momento em que o módulo base e o núcleo de trajetos (Sprints 1 e 2) já estão operacionais. O feedback recebidos neste ponto de controle serão tratados como prioridade máxima pela equipe; eles serão discutidos na Sprint 3 e corrigidos ao longo das iterações seguintes, garantindo que os ajustes de usabilidade e as correções de rotas sejam validados pelo Dono do Produto antes de avançar. Posteriormente, a inspeção dos repositórios ocorre no início da Sprint 4, etapa em que a equipe dedicará a semana para sanar os defeitos apontados pelos inspetores, assegurando uma versão estável e polida para a apresentação final.
+Como mostra a tabela 3, as Sprints foram estrategicamente alinhadas aos marcos do cronograma da disciplina. O ponto de controle ocorre no início da Sprint 3, momento em que o módulo base e o núcleo de trajetos (Sprints 1 e 2) já estão operacionais. O feedback recebidos neste ponto de controle serão tratados como prioridade máxima pela equipe; eles serão discutidos na Sprint 3 e corrigidos ao longo das iterações seguintes, garantindo que os ajustes de usabilidade e as correções de rotas sejam validados pelo Dono do Produto antes de avançar. Posteriormente, a inspeção dos repositórios ocorre no início da Sprint 4, etapa em que a equipe dedicará a semana para sanar os defeitos apontados pelos inspetores, assegurando uma versão estável e polida para a apresentação final.
 
 ### 2.4 Matriz de comunicação
 
-**Tabela 5: Matriz de comunicação**
 A matriz de comunicação do RotasDF foi desenhada combinando ferramentas formais de alinhamento e canais ágeis de resolução de problemas. Para a governança e acompanhamento semanal, adotamos encontros síncronos via Microsoft Teams. Nessas reuniões, a equipe realiza o planejamento do que deve ser feito na sprint e revisar o que já foi feito. O objetivo é alinhar o andamento do projeto e garantir que todos tenham clareza das próximas tarefas.
 
 De forma complementar e contínua, o grupo utiliza um canal no WhatsApp como ferramenta de comunicação rápida. Esse ambiente é focado na resolução de problemas técnicos do dia a dia e no bloqueio de impedimentos. É por meio dele que a equipe resolve dúvidas ágeis relacionadas ao Git e alinha a integração de código entre o Frontend e o Backend, garantindo que nenhum desenvolvedor fique travado por muito tempo.
@@ -193,7 +192,7 @@ A matriz de comunicação do RotasDF passará por uma atualização nas Sprints 
 
 ### 2.5 Gerenciamento de riscos
 
-**Tabela 6: Riscos**
+**Tabela 4: Riscos**
 
 | Risco | Mitigação | Plano de contingência |
 |---|---|---|
@@ -259,7 +258,7 @@ O backlog do produto consiste na lista priorizada de todas as funcionalidades e 
 
 ### 4.2 Perfis
 
-**Tabela 7: Perfis de acesso**
+**Tabela 5: Perfis de acesso**
 
 | # | Nome do perfil | Características do perfil | Permissões de acesso |
 |---|---|---|---|
@@ -271,7 +270,7 @@ O backlog do produto consiste na lista priorizada de todas as funcionalidades e 
 
 ### 4.3 Cenários
 
-**Tabela 8: Cenários funcionais** — Sistema: Plataforma de Transporte Público
+**Tabela 6: Cenários funcionais** — Sistema: Plataforma de Transporte Público
 
 | Cenário | Nome do cenário | Sprints |
 |---|---|---|
@@ -288,7 +287,7 @@ O backlog do produto consiste na lista priorizada de todas as funcionalidades e 
 
 Abaixo é apresentado o detalhamento dos requisitos funcionais (RF) e gerais não funcionais (RNF), vinculados aos seus cenários, Sprints estimadas e respectivas Histórias de Usuário.
 
-**Tabela 9: Backlog do produto** — Sistema: Plataforma de Transporte Público
+**Tabela 7: Backlog do produto** — Sistema: Plataforma de Transporte Público
 
 #### C1 – Planejamento de trajetos
 

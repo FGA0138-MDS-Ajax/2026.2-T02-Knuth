@@ -19,6 +19,7 @@
 |---|---|---|---|
 | 07/10/2026 | 1.0 | Versão inicial do Documento de Arquitetura | Todos |
 | 27/10/2026 | 1.1.0 | Revisão do Sumário, correção da formatação ABNT em cabeçalhos e referências, e inserção do Diagrama de Implantação | Denilson Lima Santos |
+|15/11/2026 | 1.1.1 | Atualização do documento de acordo com o progresso feito | Gabriel Sakai e Silva |
 
 ## Sumário
 
@@ -93,8 +94,7 @@ A escolha considera os seguintes pontos do Documento de Visão do Produto e do P
 - **Entregas incrementais em Sprints semanais (Visão, seções 2.1 e 2.3).** Os módulos são entregues progressivamente, do módulo base (S1) aos recursos avançados (S5). Módulos independentes dentro de um único monólito permitem que cada Sprint entregue um incremento sem a sobrecarga operacional de vários serviços.
 - **Equipe de 6 integrantes e prazo curto (26/10 a 29/11/2026).** O monólito modular reduz a complexidade de implantação e de integração em comparação a microsserviços e mantém baixo acoplamento entre os módulos, o que facilita uma eventual separação futura (RICHARDS, 2015).
 - **Dados oficiais em formato padronizado (Visão, RF20).** Um serviço de importação isolado das consultas permite validar e carregar os dados GTFS sem afetar a experiência do passageiro.
-- **Picos de acesso (Visão, seção 6.1).** A estratégia de testes prevê desempenho em horários de pico. Uma camada de aplicação única permite concentrar cache, paginação e controle de carga em um só lugar (MR01).
-- **Práticas de XP e qualidade (Visão, seções 2.1, 3 e 5.1).** Camadas e módulos bem delimitados favorecem os testes unitários por módulo, os testes de integração entre camadas e a meta de 80% de cobertura (MR06).
+- **Práticas de XP e qualidade (Visão, seções 2.1, 3 e 5.1).** Camadas e módulos bem delimitados favorecem os testes unitários por módulo e a meta de 80% de cobertura (MR06).
 
 #### Alternativas consideradas e descartadas
 
@@ -153,52 +153,47 @@ A figura a seguir apresenta o estilo arquitetural escolhido, com as camadas, os 
 
 Cada item abaixo traz a meta ou restrição e sua justificativa, com a seção da Visão de onde ela decorre. Quando o valor ou o mecanismo é decisão da equipe, e não consta na Visão, isso está indicado.
 
-#### MR01 — Desempenho e capacidade
-
-- **Meta:** 95% das consultas de linhas, horários e alertas respondidas em até 2 segundos, e a busca de trajeto em até 5 segundos, com até 500 usuários simultâneos em horários de pico. Cache e paginação são obrigatórios nas consultas frequentes.
-- **Justificativa:** a Visão (seção 6.1) exige garantir estabilidade em horários de pico. O público busca informação rápida, e a demora reproduz o problema que o produto quer resolver.
-
-#### MR02 — Responsividade e acessibilidade
+#### MR01 — Responsividade e acessibilidade
 
 - **Meta:** aplicativo mobile responsivo e adaptável a diferentes tamanhos de tela (Android e iOS), em conformidade com diretrizes de acessibilidade mobile (WCAG 2.1 nível AA / diretrizes de acessibilidade Android e iOS).
 - **Justificativa:** a acessibilidade é o diferencial do produto (Visão, seções 1.2 e 4.1) e responde às causas "exclusão digital" e "barreiras sensoriais" do Diagrama de Ishikawa. A escolha pelo aplicativo mobile em React Native é da equipe para garantir boa experiência em dispositivos móveis.
 
-#### MR03 — Padrão de API
+#### MR02 — Padrão de API
 
 - **Restrição:** API REST em JSON, com verbos e códigos HTTP adequados, prefixo `/api/v1`, formato único de erro e documentação em OpenAPI (FIELDING, 2000; OPENAPI INITIATIVE, 2021).
 - **Justificativa:** um contrato único entre front-end e back-end reduz retrabalho e facilita os testes de integração previstos na Visão (seção 6.1).
 
-#### MR04 — Padrão de codificação
+#### MR03 — Padrão de codificação
 
 - **Restrição:** ESLint e Prettier para JavaScript/React Native e PEP 8 para Python (VAN ROSSUM; WARSAW; COGHLAN, 2001), com Clean Code (MARTIN, 2009); funções curtas, nomes em camelCase (JavaScript) e snake_case (Python), um módulo por funcionalidade.
 - **Justificativa:** a Visão (seções 2.1 e 3) exige Coding Standards e Clean Code, sem definir as ferramentas, que são escolha da equipe. As ferramentas rodam no pipeline de CI, e código fora do padrão não é integrado.
 
-#### MR05 — Revisão por pares, integração contínua e branches
+#### MR04 — Revisão por pares, integração contínua e branches
 
-- **Restrição:** todo código entra pela `main` apenas por Pull Request revisado (Analista de Qualidade e outro desenvolvedor) e com o pipeline do GitHub Actions sem falhas. As branches são `feature/*`, `develop`, `staging` e `main`, sem commits diretos na `main`.
-- **Justificativa:** é a Definição de Pronto e a política de branches da Visão (seções 3 e 6.1), e reduz defeitos antes das inspeções de repositório.
+- **Restrição:** todo código entra pela `main` apenas por Pull Request revisado (Analista de Qualidade). As branches são `feature/*`, `developer`, `main` e `docs`, sem commits diretos na `main`.
+- **Justificativa:** é a Definição de Pronto e a política de branches da Visão, e reduz defeitos antes das inspeções de repositório.
 
-#### MR06 — Cobertura de testes
+#### MR05 — Cobertura de testes
 
 - **Meta:** cobertura mínima de 80% do código desenvolvido, medida ao final de cada Sprint pelo pipeline, principalmente nas regras de negócio.
-- **Justificativa:** é o valor esperado da Métrica 2 do GQM (Visão, seção 5.1). A separação em camadas permite testar as regras sem HTTP nem banco.
+- **Justificativa:** A separação em camadas permite testar as regras sem HTTP nem banco.
 
-#### MR07 — Segurança e privacidade
+#### MR06 — Segurança e privacidade
 
 - **Meta:** comunicação por HTTPS; senhas armazenadas apenas como hash (bcrypt); acesso por tokens com expiração e por perfil, validado no servidor; entradas validadas e consultas parametrizadas; segredos em variáveis de ambiente. A geolocalização só é usada com autorização do usuário e os dados pessoais seguem a LGPD (BRASIL, 2018): coleta mínima e exclusão de conta.
 - **Justificativa:** a Visão define os três perfis (seção 4.2) e exige autorização para a localização (RF03), autenticação (RF16, RF21) e exclusão de conta (RF16); os mecanismos citados são escolha da equipe. O sistema trata dados pessoais, como e-mail e localização.
 
-#### MR08 — Ambientes padronizados com Docker
+#### MR07 — Ambientes padronizados com Docker
 
 - **Restrição:** servidor de aplicação e banco de dados executam em contêineres descritos em arquivos versionados (Dockerfile e Docker Compose) para suporte ao back-end da aplicação mobile nos ambientes de desenvolvimento, homologação e produção.
 - **Justificativa:** a Visão (seções 1.4 e 2.1) prevê o Docker para padronizar os ambientes de desenvolvimento e implantação, o que reduz diferenças entre máquinas e facilita o pipeline.
 
-#### MR09 — Dados oficiais validados e tolerância a falhas externas
+#### MR08 — Dados oficiais validados e tolerância a falhas externas
 
 - **Restrição:** os dados de transporte são importados de fonte oficial em formato GTFS e validados antes de atualizar a base (GTFS, 2026); se a validação falhar, a base não é alterada. Falhas de serviços externos passam pelos adaptadores de integração e não podem tornar o sistema indisponível: o sistema segue com os dados programados e avisa o usuário.
 - **Justificativa:** a Visão prevê a importação com validação (RF20), classifica como alto o risco de falhas na integração ou obtenção dos dados (seção 2.5). Dados incorretos ou indisponíveis reproduzem a causa "baixa confiabilidade" do Ishikawa.
 
-#### MR10 — Tecnologias e prazo
+#### MR09 — Tecnologias e prazo
 
 - **Restrição:** GitHub, VS Code, Python, Node.js, React Native, PostgreSQL e Docker; entrega em cinco Sprints semanais, de 26/10 a 29/11/2026, com ponto de controle, inspeção e apresentação final. A Visão lista Python e Node.js sem dividir suas funções; a equipe decidiu usar Node.js na API, React Native no aplicativo mobile e Python na importação. Mudanças são avaliadas pelos critérios de replanejamento (Visão, seção 2.5) e registradas no histórico de revisões.
 - **Justificativa:** tecnologias (seção 1.4) e cronograma (seções 2.3 e 3) já estão definidos na Visão; o monólito modular permite entregar um módulo por Sprint e reduz o risco de chegar às inspeções sem versão funcional.
