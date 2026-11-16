@@ -15,7 +15,7 @@ A equipe adota a prática de *commits* atômicos. Cada *commit* deve representar
 * Todo trabalho é realizado em branches isoladas (`feature/nome-da-tarefa`).
 * Os *commits* são enviados via `push` para a branch remota.
 * A integração com a branch `developer` ocorre exclusivamente por meio de um **Pull Request (PR)**, que deve passar pela revisão de código do Analista de Qualidade.
+* Os *commits* enviados a branch `docs` não precisam ser revisados pelo analista de qualidade.
 
 ### 4. Segurança e Higiene do Repositório
 É terminantemente proibido o envio de credenciais, senhas, chaves de API ou arquivos de ambiente em qualquer *commit*. O arquivo `.gitignore` deve ser rigorosamente mantido para evitar que pastas pesadas e desnecessárias ou arquivos locais de configuração sejam versionados.
-
