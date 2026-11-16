@@ -1,7 +1,11 @@
-site_name: Documentação
+site_name: RotasDF - Documentação
 
 nav:
-  - Instruções mkdocs: "index.md"
+  - Início: "index.md"
+  - Visão do Produto: "Documento_de_Visao_do_Produto.md"
+  - Arquitetura: "Documento_de_Arquitetura.md"
+  - Política de commits: "Política_de_Commits"
+  - Métricas: "Plano_de_Metricas.md"
   - Atas de Reunião:
     - Ata 1: "atas-reuniao/ata-reuniao-1.md"
 
