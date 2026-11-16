@@ -2,11 +2,24 @@
 
 **Equipe Knuth (T02_KNUTH)** — Métodos de Desenvolvimento de Software, UnB/FCTE, 2026/2
 
+## Integrantes do Grupo
+
+| Matrícula | Nome | Função (responsabilidade) | Pontos de participação |
+| :--- | :--- | :--- | :---: |
+| 252014223 | Gabriel Sakai e Silva | Analista de qualidade / desenvolvedor | 16,6 |
+| 242015601 | Emanuele Victor Santos | Scrum master / Líder do grupo / desenvolvedor | 16,6 |
+| 232013990 | Gabriel Felix Mota Soares | Dono do produto / desenvolvedor | 16,6 |
+| 190128160 | Guilherme Maciel de Meneses | Desenvolvedor | 16,6 |
+| 222024819 | Gabriela Xavier Rodrigues | Desenvolvedor | 16,6 |
+| 242015460 | Denilson Lima Santos | Desenvolvedor | 16,6 |
+| | | **Total** | **100** |
+
 ## Histórico de Revisões
 
 | Data | Versão | Descrição | Autor(es) |
 | :--- | :---: | :--- | :--- |
 | 15/11/2026 | 1.0 | Plano de Métricas (GQM) com uma métrica de negócio (TSTP) e uma métrica de projeto (TCH) | Emanuele Victor Santos |
+| 15/11/2026 | 1.1 | Inclusão da tabela de integrantes do grupo | Emanuele Victor Santos |
 
 ---
 
