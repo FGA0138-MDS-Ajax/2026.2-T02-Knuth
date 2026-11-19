@@ -17,6 +17,8 @@ import AdminScreen from './src/screens/AdminScreen';
 import CriarAdminScreen from './src/screens/CriarAdminScreen';
 import GerenciarUsuariosScreen from './src/screens/GerenciarUsuariosScreen';
 import EditarUsuarioScreen from './src/screens/EditarUsuarioScreen';
+import GerenciarAlertasScreen from './src/screens/GerenciarAlertasScreen';
+import NovoAlertaScreen from './src/screens/NovoAlertaScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -97,6 +99,8 @@ export default function App() {
         />
         <Stack.Screen name="GerenciarUsuarios" component={GerenciarUsuariosScreen} options={{ title: 'Usuários' }} />
         <Stack.Screen name="EditarUsuario" component={EditarUsuarioScreen} options={{ title: 'Editar usuário' }} />
+        <Stack.Screen name="GerenciarAlertas" component={GerenciarAlertasScreen} options={{ title: 'Alertas' }} />
+        <Stack.Screen name="NovoAlerta" component={NovoAlertaScreen} options={{ title: 'Novo alerta' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
