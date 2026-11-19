@@ -1,3 +1,4 @@
-| Versão | Data | Descrição da Alteração | Nome(s) Integrante(s) |
-| :----: | :--: | :--------------------: | :-------------------: |
-| 1.0 | 25/02/2024 | Mudei isso e aquilo | Fulano de Tal |
+|Sprint| Data | Pauta | Participantes |
+|:--:| :--: | :--------------------: | :-------------------: |
+| 4 | 16/11/2026 | Planejamento da sprint 4 ( divisão de tarefas ), do teste funcional sistemático e discussão sobre o plano de testes | Todos os integrantes do grupo |
+| 4 | 18/11/2026 | Discussão do andamento da sprint 4 e revisão dos defeitos críticos e altos da inspenção | Todos os integrantes do grupo |
