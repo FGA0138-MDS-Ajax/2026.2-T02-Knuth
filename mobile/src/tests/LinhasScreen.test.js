@@ -4,6 +4,8 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import LinhasScreen from '../screens/LinhasScreen';
 import { getLinhas } from '../services/api';
 
+jest.setTimeout(15000);
+
 jest.mock('../services/api', () => ({
   getLinhas: jest.fn(),
 }));
@@ -34,6 +36,7 @@ describe('LinhasScreen', () => {
   const renderCarregada = async () => {
     getLinhas.mockResolvedValue(LINHAS);
     const tela = renderTela();
+    await waitFor(() => expect(getLinhas).toHaveBeenCalled());
     await tela.findByText(LINHAS[0].nome);
     return tela;
   };

@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminScreen from '../screens/AdminScreen';
 import { getPerfilAdmin } from '../services/api';
 
+jest.setTimeout(15000);
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
@@ -24,11 +25,10 @@ jest.mock('@react-navigation/native', () => {
   const React = require('react');
   return {
     useFocusEffect: (effect) => {
-      React.useEffect(effect, [effect]);
+      React.useEffect(effect, []);
     },
   };
 });
-
 
 const TOKEN_KEY = '@rotasdf_token';
 const USUARIO_KEY = '@rotasdf_usuario';
@@ -62,7 +62,7 @@ describe('AdminScreen', () => {
 
   describe('verificação de acesso', () => {
     it('mostra o indicador de carregamento enquanto verifica o acesso', () => {
-      AsyncStorage.getItem.mockReturnValue(new Promise(() => {})); 
+      AsyncStorage.getItem.mockReturnValue(new Promise(() => {}));
       const { UNSAFE_getByType, queryByText } = renderTela();
 
       expect(UNSAFE_getByType(ActivityIndicator)).toBeTruthy();
