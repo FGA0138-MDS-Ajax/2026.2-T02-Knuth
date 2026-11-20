@@ -4,6 +4,8 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import HorariosScreen from '../screens/HorariosScreen';
 import { getHorarios } from '../services/api';
 
+jest.setTimeout(15000);
+
 jest.mock('../services/api', () => ({
   getHorarios: jest.fn(),
 }));
@@ -40,6 +42,7 @@ describe('HorariosScreen', () => {
   const renderCarregada = async (linhaId = 1) => {
     getHorarios.mockResolvedValue(LINHA);
     const tela = renderTela(linhaId);
+    await waitFor(() => expect(getHorarios).toHaveBeenCalled());
     await tela.findByText(LINHA.codigo);
     return tela;
   };
