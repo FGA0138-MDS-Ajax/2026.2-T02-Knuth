@@ -1,0 +1,93 @@
+const trajetosService = require('../src/services/trajetosService');
+const trajetosController = require('../src/controllers/trajetosController');
+
+jest.mock('../src/services/trajetosService', () => ({
+  obterTrajetos: jest.fn(),
+}));
+
+function criarRes() {
+  const res = {};
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
+  return res;
+}
+
+// -----testes------
+describe('TrajetosController', () => {
+  let erroSpy;
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    erroSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    erroSpy.mockRestore();
+  });
+
+  describe('getTrajetos', () => {
+    it.each([
+      [{}],
+      [{ origem: 'Asa Sul' }],
+      [{ destino: 'Rodoviária' }],
+      [{ origem: '', destino: '' }],
+    ])('responde 400 quando faltam parâmetros (%j)', async (query) => {
+      const res = criarRes();
+
+      await trajetosController.getTrajetos({ query }, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'BAD_REQUEST',
+        detalhes: 'Os parâmetros origem e destino são obrigatórios.',
+      });
+      expect(trajetosService.obterTrajetos).not.toHaveBeenCalled();
+    });
+
+    it('repassa origem e destino ao serviço e responde 200 com as opções', async () => {
+      const opcoes = [{ duracaoMinutos: 25, baldeacoes: 0 }];
+      trajetosService.obterTrajetos.mockResolvedValue(opcoes);
+      const res = criarRes();
+
+      await trajetosController.getTrajetos(
+        { query: { origem: 'Asa Sul', destino: 'Rodoviária' } },
+        res
+      );
+
+      expect(trajetosService.obterTrajetos).toHaveBeenCalledWith('Asa Sul', 'Rodoviária');
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(opcoes);
+    });
+
+    it('responde 200 com lista vazia quando não há rotas', async () => {
+      trajetosService.obterTrajetos.mockResolvedValue([]);
+      const res = criarRes();
+
+      await trajetosController.getTrajetos(
+        { query: { origem: 'Asa Sul', destino: 'Lugar Nenhum' } },
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith([]);
+    });
+
+    it('responde 500 e registra o erro quando o serviço falha', async () => {
+      const erro = new Error('falha no cálculo');
+      trajetosService.obterTrajetos.mockRejectedValue(erro);
+      const res = criarRes();
+
+      await trajetosController.getTrajetos(
+        { query: { origem: 'Asa Sul', destino: 'Rodoviária' } },
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'INTERNAL_ERROR',
+        detalhes: 'Erro interno ao calcular trajetos.',
+      });
+      expect(erroSpy).toHaveBeenCalledWith('Erro na busca de trajetos:', erro);
+    });
+  });
+});
