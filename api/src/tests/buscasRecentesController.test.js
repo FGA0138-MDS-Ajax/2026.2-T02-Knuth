@@ -1,50 +1,100 @@
 const buscasRecentesService = require('../services/buscasRecentesService');
 const buscasRecentesController = require('../controllers/buscasRecentesController');
 
-jest.mock('../services/buscasRecentesService');
+jest.mock('../services/buscasRecentesService', () => ({
+  registrarBusca: jest.fn(),
+  obterBuscasRecentes: jest.fn(),
+}));
 
+function criarRes() {
+  const res = {};
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
+  return res;
+}
+
+// -----testes------
 describe('BuscasRecentesController', () => {
-  let req, res;
-
   beforeEach(() => {
-    req = { body: {}, query: {} };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
+    jest.resetAllMocks();
   });
 
-  test('Deve registrar uma busca recente com sucesso (HTTP 201)', async () => {
-    req.body = { origem: 'Taguatinga', destino: 'Plano Piloto' };
-    const mockResultado = { id: 1, origem: 'Taguatinga', destino: 'Plano Piloto', realizadaEm: new Date() };
+  describe('salvar', () => {
+    const body = { origem: 'Asa Sul', destino: 'Rodoviária', usuarioId: 1 };
 
-    buscasRecentesService.registrarBusca.mockResolvedValue(mockResultado);
+    it('repassa origem, destino e usuário do corpo ao serviço', async () => {
+      buscasRecentesService.registrarBusca.mockResolvedValue({ id: 1 });
 
-    await buscasRecentesController.salvar(req, res);
+      await buscasRecentesController.salvar({ body }, criarRes());
 
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(mockResultado);
+      expect(buscasRecentesService.registrarBusca).toHaveBeenCalledWith('Asa Sul', 'Rodoviária', 1);
+    });
+
+    it('responde 201 com a busca registrada', async () => {
+      const novaBusca = { id: 1, ...body };
+      buscasRecentesService.registrarBusca.mockResolvedValue(novaBusca);
+      const res = criarRes();
+
+      await buscasRecentesController.salvar({ body }, res);
+
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(novaBusca);
+    });
+
+    it('responde 400 com a mensagem do erro quando o registro é recusado', async () => {
+      buscasRecentesService.registrarBusca.mockRejectedValue(
+        new Error('Origem e destino são obrigatórios.')
+      );
+      const res = criarRes();
+
+      await buscasRecentesController.salvar({ body }, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ erro: 'Origem e destino são obrigatórios.' });
+    });
   });
 
-  test('Deve retornar erro HTTP 400 se faltar origem ou destino', async () => {
-    req.body = { origem: 'Taguatinga' };
-    buscasRecentesService.registrarBusca.mockRejectedValue(new Error('Origem e destino são obrigatórios.'));
+  describe('listar', () => {
+    it('repassa usuário e limite da query ao serviço', async () => {
+      buscasRecentesService.obterBuscasRecentes.mockResolvedValue([]);
 
-    await buscasRecentesController.salvar(req, res);
+      await buscasRecentesController.listar({ query: { usuarioId: '1', limite: '5' } }, criarRes());
 
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ erro: 'Origem e destino são obrigatórios.' });
-  });
+      expect(buscasRecentesService.obterBuscasRecentes).toHaveBeenCalledWith('1', '5');
+    });
 
-  test('Deve listar as buscas recentes com sucesso (HTTP 200)', async () => {
-    const mockLista = [
-      { id: 1, origem: 'Gama', destino: 'Plano Piloto', realizadaEm: new Date() }
-    ];
-    buscasRecentesService.obterBuscasRecentes.mockResolvedValue(mockLista);
+    it('chama o serviço sem limite quando a query não informa', async () => {
+      buscasRecentesService.obterBuscasRecentes.mockResolvedValue([]);
 
-    await buscasRecentesController.listar(req, res);
+      await buscasRecentesController.listar({ query: { usuarioId: '1' } }, criarRes());
 
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(mockLista);
+      expect(buscasRecentesService.obterBuscasRecentes).toHaveBeenCalledWith('1', undefined);
+    });
+
+    it('responde 200 com as buscas recentes', async () => {
+      const buscas = [
+        { id: 1, origem: 'Asa Sul', destino: 'Rodoviária' },
+        { id: 2, origem: 'Taguatinga', destino: 'Aeroporto' },
+      ];
+      buscasRecentesService.obterBuscasRecentes.mockResolvedValue(buscas);
+      const res = criarRes();
+
+      await buscasRecentesController.listar({ query: { usuarioId: '1' } }, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(buscas);
+    });
+
+    it('responde 500 com mensagem genérica quando o serviço falha', async () => {
+      buscasRecentesService.obterBuscasRecentes.mockRejectedValue(new Error('falha no banco'));
+      const res = criarRes();
+
+      await buscasRecentesController.listar({ query: { usuarioId: '1' } }, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'Erro interno ao consultar buscas recentes.',
+      });
+    });
   });
 });

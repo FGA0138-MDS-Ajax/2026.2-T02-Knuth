@@ -1,83 +1,129 @@
-jest.mock('../services/gerenciarUsuariosService');
-
 const service = require('../services/gerenciarUsuariosService');
 const controller = require('../controllers/gerenciarUsuariosController');
 
-describe('GerenciarUsuariosController', () => {
-  let req, res;
+jest.mock('../services/gerenciarUsuariosService', () => ({
+  listar: jest.fn(),
+  atualizar: jest.fn(),
+  excluir: jest.fn(),
+}));
 
+function criarRes() {
+  const res = {};
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
+  return res;
+}
+
+const criarReq = (extra = {}) => ({
+  query: {},
+  params: { id: '7' },
+  body: {},
+  usuario: { id: 1, tipo: 'ADMIN' },
+  ...extra,
+});
+
+// -----testes------
+describe('GerenciarUsuariosController', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    req = { query: {}, params: {}, body: {}, usuario: { id: 1, tipo: 'ADMIN' } };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
   });
 
-  test('Deve listar usuários com HTTP 200', async () => {
-    req.query = { tipo: 'ADMIN' };
-    const lista = [{ id: 1, nome: 'Admin', tipo: 'ADMIN' }];
-    service.listar.mockResolvedValue(lista);
+  describe('listar', () => {
+    it('responde 200 com os usuários devolvidos pelo serviço', async () => {
+      const usuarios = [{ id: 1, nome: 'Maria' }, { id: 2, nome: 'João' }];
+      service.listar.mockResolvedValue(usuarios);
+      const res = criarRes();
 
-    await controller.listar(req, res);
+      await controller.listar(criarReq(), res);
 
-    expect(service.listar).toHaveBeenCalledWith('ADMIN');
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(lista);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(usuarios);
+    });
+
+    it('repassa o filtro de tipo da query ao serviço', async () => {
+      service.listar.mockResolvedValue([]);
+
+      await controller.listar(criarReq({ query: { tipo: 'ADMIN' } }), criarRes());
+
+      expect(service.listar).toHaveBeenCalledWith('ADMIN');
+    });
+
+    it('chama o serviço sem tipo quando a query não tem filtro', async () => {
+      service.listar.mockResolvedValue([]);
+
+      await controller.listar(criarReq(), criarRes());
+
+      expect(service.listar).toHaveBeenCalledWith(undefined);
+    });
   });
 
-  test('Deve atualizar um usuário com HTTP 200', async () => {
-    req.params = { id: '7' };
-    req.body = { nome: 'João', email: 'joao@teste.com' };
-    const atualizado = { id: 7, nome: 'João', email: 'joao@teste.com', tipo: 'PASSAGEIRO' };
-    service.atualizar.mockResolvedValue(atualizado);
+  describe('atualizar', () => {
+    it('converte o id para número e repassa corpo e id de quem está logado', async () => {
+      const body = { nome: 'Maria Souza', email: 'maria@email.com', tipo: 'ADMIN' };
+      service.atualizar.mockResolvedValue({ id: 7, ...body });
 
-    await controller.atualizar(req, res);
+      await controller.atualizar(criarReq({ body }), criarRes());
 
-    expect(service.atualizar).toHaveBeenCalledWith(7, req.body, 1);
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(atualizado);
+      expect(service.atualizar).toHaveBeenCalledWith(7, body, 1);
+    });
+
+    it('responde 200 com o usuário atualizado', async () => {
+      const atualizado = { id: 7, nome: 'Maria Souza' };
+      service.atualizar.mockResolvedValue(atualizado);
+      const res = criarRes();
+
+      await controller.atualizar(criarReq(), res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(atualizado);
+    });
   });
 
-  test('Deve retornar HTTP 404 se o usuário não for encontrado', async () => {
-    req.params = { id: '99' };
-    service.atualizar.mockRejectedValue(new Error('Usuário não encontrado.'));
+  describe('excluir', () => {
+    it('converte o id para número e repassa o id de quem está logado', async () => {
+      service.excluir.mockResolvedValue();
 
-    await controller.atualizar(req, res);
+      await controller.excluir(criarReq(), criarRes());
 
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ erro: 'NOT_FOUND', detalhes: 'Usuário não encontrado.' });
+      expect(service.excluir).toHaveBeenCalledWith(7, 1);
+    });
+
+    it('responde 200 com a mensagem de confirmação', async () => {
+      service.excluir.mockResolvedValue();
+      const res = criarRes();
+
+      await controller.excluir(criarReq(), res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ mensagem: 'Usuário excluído.' });
+    });
   });
 
-  test('Deve retornar HTTP 400 quando uma regra for violada na atualização', async () => {
-    req.params = { id: '7' };
-    service.atualizar.mockRejectedValue(new Error('Este email já está cadastrado.'));
+  describe.each([['listar'], ['atualizar'], ['excluir']])('erros em %s', (metodo) => {
+    it('responde 404 quando o usuário não existe', async () => {
+      service[metodo].mockRejectedValue(new Error('Usuário não encontrado.'));
+      const res = criarRes();
 
-    await controller.atualizar(req, res);
+      await controller[metodo](criarReq(), res);
 
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ erro: 'BAD_REQUEST', detalhes: 'Este email já está cadastrado.' });
-  });
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'NOT_FOUND',
+        detalhes: 'Usuário não encontrado.',
+      });
+    });
 
-  test('Deve excluir um usuário com HTTP 200', async () => {
-    req.params = { id: '7' };
-    service.excluir.mockResolvedValue();
+    it('responde 400 com a mensagem do erro nos demais casos', async () => {
+      service[metodo].mockRejectedValue(new Error('Você não pode excluir sua própria conta.'));
+      const res = criarRes();
 
-    await controller.excluir(req, res);
+      await controller[metodo](criarReq(), res);
 
-    expect(service.excluir).toHaveBeenCalledWith(7, 1);
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ mensagem: 'Usuário excluído.' });
-  });
-
-  test('Deve retornar HTTP 400 ao tentar excluir a própria conta', async () => {
-    req.params = { id: '1' };
-    service.excluir.mockRejectedValue(new Error('Você não pode excluir a própria conta.'));
-
-    await controller.excluir(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ erro: 'BAD_REQUEST', detalhes: 'Você não pode excluir a própria conta.' });
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'BAD_REQUEST',
+        detalhes: 'Você não pode excluir sua própria conta.',
+      });
+    });
   });
 });

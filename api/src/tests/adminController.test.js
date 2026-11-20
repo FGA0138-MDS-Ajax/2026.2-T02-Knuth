@@ -1,41 +1,60 @@
-jest.mock('../services/adminService');
-
 const adminService = require('../services/adminService');
 const adminController = require('../controllers/adminController');
 
+jest.mock('../services/adminService', () => ({
+  criarAdministrador: jest.fn(),
+}));
+
+function criarRes() {
+  const res = {};
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
+  return res;
+}
+
+const CORPO = { nome: 'Carlos Souza', email: 'carlos@email.com', senha: 'senha123' };
+
+// -----testes------
 describe('AdminController', () => {
-  let req, res;
-
   beforeEach(() => {
-    req = { body: {} };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
+    jest.resetAllMocks();
   });
 
-  test('Deve criar um administrador com sucesso (HTTP 201)', async () => {
-    req.body = { nome: 'Maria', email: 'maria@teste.com', senha: '123456' };
-    const mockAdmin = { id: 5, nome: 'Maria', email: 'maria@teste.com', tipo: 'ADMIN' };
-    adminService.criarAdministrador.mockResolvedValue(mockAdmin);
+  describe('criarAdministrador', () => {
+    it('repassa nome, e-mail e senha do corpo ao serviço', async () => {
+      adminService.criarAdministrador.mockResolvedValue({ id: 5 });
 
-    await adminController.criarAdministrador(req, res);
+      await adminController.criarAdministrador({ body: CORPO }, criarRes());
 
-    expect(adminService.criarAdministrador).toHaveBeenCalledWith('Maria', 'maria@teste.com', '123456');
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(mockAdmin);
-  });
+      expect(adminService.criarAdministrador).toHaveBeenCalledWith(
+        CORPO.nome,
+        CORPO.email,
+        CORPO.senha
+      );
+    });
 
-  test('Deve retornar HTTP 400 quando o service lançar erro', async () => {
-    req.body = { nome: 'Maria', email: 'maria@teste.com', senha: '123' };
-    adminService.criarAdministrador.mockRejectedValue(new Error('A senha deve ter pelo menos 6 caracteres.'));
+    it('responde 201 com o administrador criado', async () => {
+      const admin = { id: 5, nome: CORPO.nome, email: CORPO.email, tipo: 'ADMIN' };
+      adminService.criarAdministrador.mockResolvedValue(admin);
+      const res = criarRes();
 
-    await adminController.criarAdministrador(req, res);
+      await adminController.criarAdministrador({ body: CORPO }, res);
 
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      erro: 'BAD_REQUEST',
-      detalhes: 'A senha deve ter pelo menos 6 caracteres.'
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(admin);
+    });
+
+    it('responde 400 com a mensagem do erro quando o cadastro é recusado', async () => {
+      adminService.criarAdministrador.mockRejectedValue(new Error('E-mail já cadastrado.'));
+      const res = criarRes();
+
+      await adminController.criarAdministrador({ body: CORPO }, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'BAD_REQUEST',
+        detalhes: 'E-mail já cadastrado.',
+      });
     });
   });
 });
