@@ -4,7 +4,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import ItinerarioScreen from '../screens/ItinerarioScreen';
 import { getItinerario } from '../services/api';
 
-jest.mock('../src/services/api', () => ({
+jest.mock('../services/api', () => ({
   getItinerario: jest.fn(),
 }));
 

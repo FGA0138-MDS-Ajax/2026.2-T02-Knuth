@@ -5,7 +5,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import CadastroScreen from '../screens/CadastroScreen';
 import { cadastrarUsuario } from '../services/api';
 
-jest.mock('../src/services/api', () => ({
+jest.mock('../services/api', () => ({
   cadastrarUsuario: jest.fn(),
 }));
 

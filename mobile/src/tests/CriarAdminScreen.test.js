@@ -14,7 +14,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   },
 }));
 
-jest.mock('../src/services/api', () => ({
+jest.mock('../services/api', () => ({
   criarAdministrador: jest.fn(),
 }));
 
