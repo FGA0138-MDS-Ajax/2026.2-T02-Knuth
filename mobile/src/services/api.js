@@ -121,3 +121,18 @@ export const excluirAlerta = async (token, id) => {
   });
   return response.data;
 };
+
+export const editarAlerta = async (token, id, dados) => {
+  const response = await axios.put(`${API_BASE_URL}/admin/alertas/${id}`, dados, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const buscarParadasAdmin = async (token, busca) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/paradas`, {
+    params: { busca },
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};

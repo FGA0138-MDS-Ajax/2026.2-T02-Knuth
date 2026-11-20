@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { criarAlerta, getLinhas } from '../services/api';
+import { criarAlerta, editarAlerta, getLinhas, buscarParadasAdmin } from '../services/api';
 
 const TIPOS = [
   { rotulo: 'Desvio', valor: 'DESVIO' },
@@ -25,24 +25,56 @@ const textoParaData = (texto) => {
   return data;
 };
 
-export default function NovoAlertaScreen({ navigation }) {
+export default function NovoAlertaScreen({ navigation, route }) {
+  const alertaEdicao = route?.params?.alerta;
   const agora = new Date();
   const amanha = new Date(agora.getTime() + 24 * 60 * 60 * 1000);
 
-  const [tipo, setTipo] = useState('DESVIO');
-  const [descricao, setDescricao] = useState('');
-  const [inicio, setInicio] = useState(dataParaTexto(agora));
-  const [fim, setFim] = useState(dataParaTexto(amanha));
+  const [tipo, setTipo] = useState(alertaEdicao?.tipo || 'DESVIO');
+  const [descricao, setDescricao] = useState(alertaEdicao?.descricao || '');
+  const [inicio, setInicio] = useState(dataParaTexto(alertaEdicao ? new Date(alertaEdicao.data_inicio) : agora));
+  const [fim, setFim] = useState(dataParaTexto(alertaEdicao ? new Date(alertaEdicao.data_fim) : amanha));
   const [todasLinhas, setTodasLinhas] = useState([]);
   const [busca, setBusca] = useState('');
-  const [selecionadas, setSelecionadas] = useState([]);
+  const [selecionadas, setSelecionadas] = useState(alertaEdicao?.linhas_ids || []);
+  const [buscaParada, setBuscaParada] = useState('');
+  const [paradasEncontradas, setParadasEncontradas] = useState([]);
+  const [paradasSelecionadas, setParadasSelecionadas] = useState(alertaEdicao?.paradas || []);
   const [salvando, setSalvando] = useState(false);
+
+  useEffect(() => {
+    navigation.setOptions({ title: alertaEdicao ? 'Editar alerta' : 'Novo alerta' });
+  }, [navigation, alertaEdicao]);
 
   useEffect(() => {
     getLinhas()
       .then(setTodasLinhas)
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const texto = buscaParada.trim();
+    if (texto.length < 2) {
+      setParadasEncontradas([]);
+      return undefined;
+    }
+    let cancelado = false;
+    const timer = setTimeout(async () => {
+      try {
+        const token = await AsyncStorage.getItem('@rotasdf_token');
+        const resultado = await buscarParadasAdmin(token, texto);
+        if (!cancelado) {
+          setParadasEncontradas(resultado.filter((p) => !paradasSelecionadas.some((s) => s.id === p.id)));
+        }
+      } catch (error) {
+        // sem resultado
+      }
+    }, 400);
+    return () => {
+      cancelado = true;
+      clearTimeout(timer);
+    };
+  }, [buscaParada]);
 
   const resultados = busca.trim()
     ? todasLinhas
@@ -62,6 +94,14 @@ export default function NovoAlertaScreen({ navigation }) {
 
   const removerLinha = (id) => setSelecionadas(selecionadas.filter((s) => s !== id));
 
+  const adicionarParada = (parada) => {
+    setParadasSelecionadas([...paradasSelecionadas, { id: parada.id, nome: parada.nome }]);
+    setBuscaParada('');
+    setParadasEncontradas([]);
+  };
+
+  const removerParada = (id) => setParadasSelecionadas(paradasSelecionadas.filter((p) => p.id !== id));
+
   const salvar = async () => {
     const dataInicio = textoParaData(inicio);
     const dataFim = textoParaData(fim);
@@ -73,18 +113,24 @@ export default function NovoAlertaScreen({ navigation }) {
     setSalvando(true);
     try {
       const token = await AsyncStorage.getItem('@rotasdf_token');
-      await criarAlerta(token, {
+      const dados = {
         tipo,
         titulo: descricao.trim().slice(0, 60),
         descricao,
         data_inicio: dataInicio.toISOString(),
         data_fim: dataFim.toISOString(),
-        linhas: selecionadas
-      });
-      Alert.alert('Pronto', 'Alerta criado.');
+        linhas: selecionadas,
+        paradas: paradasSelecionadas.map((p) => p.id)
+      };
+      if (alertaEdicao) {
+        await editarAlerta(token, alertaEdicao.id, dados);
+      } else {
+        await criarAlerta(token, dados);
+      }
+      Alert.alert('Pronto', alertaEdicao ? 'Alerta atualizado.' : 'Alerta criado.');
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', error?.response?.data?.detalhes || 'Não foi possível criar o alerta.');
+      Alert.alert('Erro', error?.response?.data?.detalhes || 'Não foi possível salvar o alerta.');
     } finally {
       setSalvando(false);
     }
@@ -142,8 +188,32 @@ export default function NovoAlertaScreen({ navigation }) {
         </TouchableOpacity>
       ))}
 
+      <Text style={styles.label}>Paradas afetadas</Text>
+      <View style={styles.chips}>
+        {paradasSelecionadas.map((p) => (
+          <TouchableOpacity key={p.id} style={[styles.chip, styles.chipAtivo]} onPress={() => removerParada(p.id)}>
+            <Text style={styles.chipTextoAtivo} numberOfLines={1}>
+              {p.nome}  ✕
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <TextInput
+        style={styles.input}
+        value={buscaParada}
+        onChangeText={setBuscaParada}
+        placeholder="Buscar parada pelo nome (mín. 2 letras)"
+      />
+      {paradasEncontradas.map((parada) => (
+        <TouchableOpacity key={parada.id} style={styles.resultado} onPress={() => adicionarParada(parada)}>
+          <Text style={styles.resultadoTexto}>{parada.nome}</Text>
+        </TouchableOpacity>
+      ))}
+
       <TouchableOpacity style={styles.botaoSalvar} onPress={salvar} disabled={salvando}>
-        <Text style={styles.botaoSalvarTexto}>{salvando ? 'Salvando...' : 'Criar alerta'}</Text>
+        <Text style={styles.botaoSalvarTexto}>
+          {salvando ? 'Salvando...' : alertaEdicao ? 'Salvar alterações' : 'Criar alerta'}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -154,7 +224,7 @@ const styles = StyleSheet.create({
   label: { fontSize: 14, fontWeight: 'bold', color: '#333', marginBottom: 6, marginTop: 16 },
   input: { backgroundColor: '#FFF', borderRadius: 8, borderWidth: 1, borderColor: '#DDD', padding: 12, fontSize: 16 },
   chips: { flexDirection: 'row', flexWrap: 'wrap' },
-  chip: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 20, backgroundColor: '#FFF', borderWidth: 1, borderColor: '#DDD', marginRight: 8, marginBottom: 8 },
+  chip: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 20, backgroundColor: '#FFF', borderWidth: 1, borderColor: '#DDD', marginRight: 8, marginBottom: 8, maxWidth: '100%' },
   chipAtivo: { backgroundColor: '#006666', borderColor: '#006666' },
   chipTexto: { color: '#333', fontSize: 14 },
   chipTextoAtivo: { color: '#FFF', fontWeight: 'bold' },

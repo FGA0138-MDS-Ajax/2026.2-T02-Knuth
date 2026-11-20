@@ -52,4 +52,26 @@ const excluir = async (req, res) => {
     return responderErro(res, error);
   }
 };
-module.exports = { listar, criar, encerrar, excluir };
+const editar = async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ erro: 'BAD_REQUEST', detalhes: 'ID inválido.' });
+  }
+
+  try {
+    const alerta = await service.editar(id, req.body);
+    return res.status(200).json(alerta);
+  } catch (error) {
+    return responderErro(res, error);
+  }
+};
+
+const buscarParadas = async (req, res) => {
+  try {
+    const paradas = await service.buscarParadas(req.query.busca || '');
+    return res.status(200).json(paradas);
+  } catch (error) {
+    return responderErro(res, error);
+  }
+};
+module.exports = { listar, criar, editar, encerrar, excluir, buscarParadas };

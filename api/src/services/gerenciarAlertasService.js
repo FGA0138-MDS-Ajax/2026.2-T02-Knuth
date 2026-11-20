@@ -2,9 +2,10 @@ const repo = require('../repositories/gerenciarAlertasRepository');
 
 const TIPOS_VALIDOS = ['DESVIO', 'SUSPENSAO', 'ALTERACAO_HORARIO', 'PARALISACAO'];
 
-const criar = async (dados) => {
+const validar = (dados) => {
   const { tipo, titulo, descricao, data_inicio, data_fim } = dados;
   const linhas = dados.linhas === undefined ? [] : dados.linhas;
+  const paradas = dados.paradas === undefined ? [] : dados.paradas;
 
   if (!TIPOS_VALIDOS.includes(tipo)) throw new Error('Tipo de alerta inválido.');
   if (typeof titulo !== 'string' || !titulo.trim()) throw new Error('O título é obrigatório.');
@@ -17,15 +18,28 @@ const criar = async (dados) => {
   }
   if (fim <= inicio) throw new Error('A data de fim deve ser depois da data de início.');
   if (!Array.isArray(linhas)) throw new Error('As linhas afetadas devem ser uma lista.');
+  if (!Array.isArray(paradas)) throw new Error('As paradas afetadas devem ser uma lista.');
 
-  return await repo.criar({
+  return {
     tipo,
     titulo: titulo.trim(),
     descricao: descricao.trim(),
     dataInicio: data_inicio,
     dataFim: data_fim,
-    linhas
-  });
+    linhas,
+    paradas
+  };
+};
+
+const criar = async (dados) => {
+  return await repo.criar(validar(dados));
+};
+
+const editar = async (id, dados) => {
+  const alerta = await repo.buscarPorId(id);
+  if (!alerta) throw new Error('Alerta não encontrado.');
+  if (alerta.encerrado_em) throw new Error('Alerta encerrado não pode ser editado.');
+  return await repo.atualizar(id, validar(dados));
 };
 
 const listar = async () => {
@@ -46,4 +60,9 @@ const excluir = async (id) => {
   if (emAndamento) throw new Error('Encerre o alerta antes de excluí-lo.');
   await repo.excluir(id);
 };
-module.exports = { criar, listar, encerrar, excluir };
+const buscarParadas = async (busca) => {
+  const texto = typeof busca === 'string' ? busca.trim() : '';
+  if (texto.length < 2) return [];
+  return await repo.buscarParadas(texto);
+};
+module.exports = { criar, editar, listar, encerrar, excluir, buscarParadas };

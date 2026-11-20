@@ -96,10 +96,21 @@ export default function GerenciarAlertasScreen({ navigation }) {
         {item.linhas && item.linhas.length > 0 && (
           <Text style={styles.detalhe}>Linhas: {item.linhas.join(', ')}</Text>
         )}
+        {item.paradas && item.paradas.length > 0 && (
+          <Text style={styles.detalhe}>Paradas: {item.paradas.map((p) => p.nome).join(', ')}</Text>
+        )}
         {estado === 'Vigente' || estado === 'Agendado' ? (
-          <TouchableOpacity style={styles.botaoEncerrar} onPress={() => confirmarEncerramento(item)}>
-            <Text style={styles.botaoEncerrarTexto}>Encerrar alerta</Text>
-          </TouchableOpacity>
+                    <>
+            <TouchableOpacity
+              style={styles.botaoEditar}
+              onPress={() => navigation.navigate('NovoAlerta', { alerta: item })}
+            >
+              <Text style={styles.botaoEditarTexto}>Editar alerta</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botaoEncerrar} onPress={() => confirmarEncerramento(item)}>
+              <Text style={styles.botaoEncerrarTexto}>Encerrar alerta</Text>
+            </TouchableOpacity>
+          </>
         ) : (
           <TouchableOpacity style={styles.botaoEncerrar} onPress={() => confirmarExclusao(item)}>
             <Text style={styles.botaoEncerrarTexto}>Excluir alerta</Text>
@@ -143,5 +154,7 @@ const styles = StyleSheet.create({
   detalhe: { fontSize: 13, color: '#666', marginTop: 2 },
   botaoEncerrar: { borderRadius: 8, borderWidth: 1, borderColor: '#C62828', padding: 10, alignItems: 'center', marginTop: 12 },
   botaoEncerrarTexto: { color: '#C62828', fontWeight: 'bold' },
-  vazio: { textAlign: 'center', color: '#666', marginTop: 40, fontSize: 16 }
+  vazio: { textAlign: 'center', color: '#666', marginTop: 40, fontSize: 16 },
+  botaoEditar: { borderRadius: 8, borderWidth: 1, borderColor: '#006666', padding: 10, alignItems: 'center', marginTop: 12 },
+  botaoEditarTexto: { color: '#006666', fontWeight: 'bold' },
 });

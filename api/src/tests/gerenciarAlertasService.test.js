@@ -50,13 +50,14 @@ describe('gerenciarAlertasService', () => {
 
       const resultado = await service.criar({ ...dadosValidos, titulo: '  Desvio na Epia  ' });
 
-      expect(repo.criar).toHaveBeenCalledWith({
+            expect(repo.criar).toHaveBeenCalledWith({
         tipo: 'DESVIO',
         titulo: 'Desvio na Epia',
         descricao: 'Linhas desviadas por causa de obras.',
         dataInicio: '2026-11-20T08:00:00Z',
         dataFim: '2026-11-25T18:00:00Z',
-        linhas: ['0.782']
+        linhas: ['0.782'],
+        paradas: []
       });
       expect(resultado).toEqual({ id: 1 });
     });
@@ -137,6 +138,77 @@ describe('gerenciarAlertasService', () => {
       await service.excluir(2);
 
       expect(repo.excluir).toHaveBeenCalledWith(2);
+    });
+  });
+    describe('paradas afetadas', () => {
+    it('deve exigir que as paradas sejam uma lista', async () => {
+      await expect(service.criar({ ...dadosValidos, paradas: 'P1' })).rejects.toThrow('As paradas afetadas devem ser uma lista.');
+    });
+
+    it('deve repassar as paradas ao criar', async () => {
+      repo.criar.mockResolvedValue({ id: 3 });
+
+      await service.criar({ ...dadosValidos, paradas: ['P1', 'P2'] });
+
+      expect(repo.criar).toHaveBeenCalledWith(expect.objectContaining({ paradas: ['P1', 'P2'] }));
+    });
+  });
+
+  describe('editar', () => {
+    it('deve falhar se o alerta não existir', async () => {
+      repo.buscarPorId.mockResolvedValue(null);
+
+      await expect(service.editar(99, dadosValidos)).rejects.toThrow('Alerta não encontrado.');
+      expect(repo.atualizar).not.toHaveBeenCalled();
+    });
+
+    it('deve impedir editar um alerta encerrado', async () => {
+      repo.buscarPorId.mockResolvedValue({ id: 1, encerrado_em: '2026-11-19T10:00:00Z' });
+
+      await expect(service.editar(1, dadosValidos)).rejects.toThrow('Alerta encerrado não pode ser editado.');
+      expect(repo.atualizar).not.toHaveBeenCalled();
+    });
+
+    it('deve validar os dados como na criação', async () => {
+      repo.buscarPorId.mockResolvedValue({ id: 1, encerrado_em: null });
+
+      await expect(service.editar(1, { ...dadosValidos, tipo: 'OUTRO' })).rejects.toThrow('Tipo de alerta inválido.');
+      expect(repo.atualizar).not.toHaveBeenCalled();
+    });
+
+    it('deve atualizar o alerta com dados válidos', async () => {
+      repo.buscarPorId.mockResolvedValue({ id: 1, encerrado_em: null });
+      repo.atualizar.mockResolvedValue({ id: 1 });
+
+      const resultado = await service.editar(1, { ...dadosValidos, paradas: ['P1'] });
+
+      expect(repo.atualizar).toHaveBeenCalledWith(1, {
+        tipo: 'DESVIO',
+        titulo: 'Desvio na Epia',
+        descricao: 'Linhas desviadas por causa de obras.',
+        dataInicio: '2026-11-20T08:00:00Z',
+        dataFim: '2026-11-25T18:00:00Z',
+        linhas: ['0.782'],
+        paradas: ['P1']
+      });
+      expect(resultado).toEqual({ id: 1 });
+    });
+  });
+    describe('buscarParadas', () => {
+    it('deve devolver lista vazia quando a busca for curta', async () => {
+      const resultado = await service.buscarParadas('a');
+
+      expect(resultado).toEqual([]);
+      expect(repo.buscarParadas).not.toHaveBeenCalled();
+    });
+
+    it('deve buscar as paradas pelo texto sem espaços nas pontas', async () => {
+      repo.buscarParadas.mockResolvedValue([{ id: 'P1', nome: 'Asa Sul' }]);
+
+      const resultado = await service.buscarParadas('  asa  ');
+
+      expect(repo.buscarParadas).toHaveBeenCalledWith('asa');
+      expect(resultado).toEqual([{ id: 'P1', nome: 'Asa Sul' }]);
     });
   });
 });
