@@ -181,6 +181,28 @@
 | `UsuariosController.redefinirSenha` | Recebe `POST /api/v1/usuarios/redefinir-senha` com `email`, `codigo` e `novaSenha`. | Responde `200` ao redefinir a senha, `400` para dados/código inválidos ou `500` em erro interno. |
 | `UsuariosController.excluirConta` | Recebe `DELETE /api/v1/usuarios/me` autenticado com a senha de confirmação no corpo. | Responde `200` ao excluir a conta, ou `400`/`401`/`403`/`404`/`500` conforme a validação. |
 
+### 3.11. `GerenciarAlertasService` (RF22)
+
+| Método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `criar` | Valida tipo, título, descrição, datas e listas de linhas/paradas antes de gravar. | Rejeita tipo inválido, título ou descrição ausentes, datas inválidas, fim não posterior ao início e linhas/paradas que não sejam lista. |
+| `criar` | Cria o alerta com dados válidos, com ou sem linhas e com paradas afetadas. | Chama o repositório com os dados normalizados (lista vazia quando não há linhas) e retorna o alerta criado. |
+| `listar` | Lista todos os alertas para o administrador. | Retorna todos os alertas, inclusive encerrados e expirados. |
+| `editar` | Altera um alerta existente com as mesmas validações da criação. | Retorna o alerta atualizado; falha se o alerta não existir, se estiver encerrado ou se os dados forem inválidos. |
+| `encerrar` | Encerra um alerta em andamento. | Encerra o alerta; falha se não existir ou se já estiver encerrado. |
+| `excluir` | Exclui alertas encerrados ou expirados. | Exclui o alerta; falha se não existir e impede a exclusão de alerta ainda em andamento. |
+| `buscarParadas` | Busca paradas pelo texto para escolha das paradas afetadas. | Retorna lista vazia quando a busca é curta e consulta o repositório com o texto sem espaços nas pontas. |
+
+### 3.12. `GerenciarAlertasController` (RF22)
+
+| Controlador / método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `listar` | Recebe `GET /api/v1/admin/alertas`. | Responde `200` com a lista de alertas. |
+| `criar` | Recebe `POST /api/v1/admin/alertas`. | Responde `201` ao criar ou `400` quando o serviço rejeita os dados. |
+| `editar` | Recebe `PUT /api/v1/admin/alertas/:id`. | Responde `200` ao editar, `404` se o alerta não existir ou `400` se estiver encerrado ou o id não for numérico. |
+| `encerrar` | Recebe `PUT /api/v1/admin/alertas/:id/encerrar`. | Responde `200` ao encerrar, `404` se o alerta não existir ou `400` se já estiver encerrado ou o id for inválido. |
+| `buscarParadas` | Recebe `GET /api/v1/admin/paradas?busca=`. | Responde `200` com as paradas encontradas e aceita busca ausente. |
+
 ---
 
 ## 4. Testes de middleware
