@@ -1,4 +1,15 @@
 const linhasService = require('../services/linhasService');
+const alertasService = require('../services/alertasService');
+
+async function consultarAlertasSeguro(fn) {
+  try {
+    const resultado = await fn();
+    return Array.isArray(resultado) ? resultado : [];
+  } catch (error) {
+    console.error('Erro ao consultar alertas para sinalização:', error);
+    return [];
+  }
+}
 
 class LinhasController {
   async getLinhas(req, res) {
@@ -8,7 +19,27 @@ class LinhasController {
         ? { busca, bacia, regiao, tipo }
         : busca;
       const data = await linhasService.obterLinhas(filtros);
-      return res.status(200).json(data);
+
+      if (!Array.isArray(data) || data.length === 0) {
+        return res.status(200).json(data);
+      }
+
+      const alertasVigentes = await consultarAlertasSeguro(() =>
+        alertasService.listarAlertasVigentes()
+      );
+
+      const linhasComAlertas = data.map((linha) => {
+        const alertas = alertasService.filtrarAlertasParaItens(alertasVigentes, {
+          linhasIds: [linha.id, linha.codigo],
+        });
+        return {
+          ...linha,
+          afetadaPorAlerta: alertas.length > 0,
+          alertas,
+        };
+      });
+
+      return res.status(200).json(linhasComAlertas);
     } catch (error) {
       console.error('Erro na busca de linhas:', error);
       return res.status(500).json({
@@ -38,7 +69,44 @@ class LinhasController {
         });
       }
 
-      return res.status(200).json(data);
+      const paradasIda = Array.isArray(data.itinerario?.IDA) ? data.itinerario.IDA : [];
+      const paradasVolta = Array.isArray(data.itinerario?.VOLTA) ? data.itinerario.VOLTA : [];
+      const paradasIds = [...paradasIda, ...paradasVolta]
+        .flatMap((p) => [p.paradaId, p.codigo])
+        .filter((v) => v !== undefined && v !== null);
+
+      const alertasVigentes = await consultarAlertasSeguro(() =>
+        alertasService.vigentesPara([id, data.codigo], paradasIds)
+      );
+
+      const alertasLinha = alertasService.filtrarAlertasParaItens(alertasVigentes, {
+        linhasIds: [id, data.codigo],
+      });
+
+      const enriquecerParada = (parada) => {
+        const alertas = alertasService.filtrarAlertasParaItens(alertasVigentes, {
+          paradasIds: [parada.paradaId, parada.codigo],
+          paradasNomes: [parada.nome],
+        });
+        return {
+          ...parada,
+          afetadaPorAlerta: alertas.length > 0,
+          alertas,
+        };
+      };
+
+      const resultado = {
+        ...data,
+        afetadaPorAlerta: alertasLinha.length > 0,
+        alertas: alertasLinha,
+        itinerario: {
+          ...data.itinerario,
+          IDA: paradasIda.map(enriquecerParada),
+          VOLTA: paradasVolta.map(enriquecerParada),
+        },
+      };
+
+      return res.status(200).json(resultado);
     } catch (error) {
       console.error('Erro na consulta do itinerario:', error);
       return res.status(500).json({
@@ -68,7 +136,15 @@ class LinhasController {
         });
       }
 
-      return res.status(200).json(data);
+      const alertasLinha = await consultarAlertasSeguro(() =>
+        alertasService.vigentesPara([id, data.codigo], [])
+      );
+
+      return res.status(200).json({
+        ...data,
+        afetadaPorAlerta: alertasLinha.length > 0,
+        alertas: alertasLinha,
+      });
     } catch (error) {
       console.error('Erro na consulta de horarios:', error);
       return res.status(500).json({
