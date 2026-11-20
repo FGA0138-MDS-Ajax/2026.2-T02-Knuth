@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUsuario } from '../services/api';
+import { mostrarAviso } from '../utils/dialogos';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ export default function LoginScreen({ navigation }) {
 
   const entrar = async () => {
     if (!email || !senha) {
-      Alert.alert("Atenção", "Preencha todos os campos.");
+      mostrarAviso("Atenção", "Preencha todos os campos.");
       return;
     }
 
@@ -21,11 +22,11 @@ export default function LoginScreen({ navigation }) {
       await AsyncStorage.setItem('@rotasdf_token', dados.token);
       await AsyncStorage.setItem('@rotasdf_usuario', JSON.stringify(dados.usuario));
 
-      Alert.alert("Bem-vindo!", `Olá, ${dados.usuario.nome}`);
+      mostrarAviso("Bem-vindo!", `Olá, ${dados.usuario.nome}`);
       navigation.goBack(); 
     } catch (error) {
       const msg = error.response?.data?.detalhes || "Email ou senha incorretos.";
-      Alert.alert("Erro", msg);
+      mostrarAviso("Erro", msg);
     } finally {
       setCarregando(false);
     }
