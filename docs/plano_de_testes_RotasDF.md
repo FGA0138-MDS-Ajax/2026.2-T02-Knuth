@@ -27,8 +27,9 @@
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
-| `findAlertasVigentes` | Retorna todos os alertas vigentes. | Retorna uma lista ou propaga o erro. |
+| `findAlertasVigentes` | Retorna todos os alertas vigentes (considerando vigência e não encerrados). | Retorna uma lista ou propaga o erro. |
 | `findAlertaVigenteById` | Retorna um alerta ativo pelo ID. | Retorna o alerta ou `null`; trata erros. |
+| `findAlertasVigentesPorItens` | Retorna alertas vigentes que afetam uma lista de linhas e/ou paradas (RF14). | Retorna os alertas correspondentes, lista vazia sem ir ao banco quando os parâmetros são vazios, ou propaga o erro. |
 
 ### 2.2. `BuscasRecentesRepository`
 
@@ -92,6 +93,9 @@
 |---|---|---|
 | `listarAlertasVigentes` | Retorna alertas ou erros. | Retorna a lista correta ou um erro. |
 | `obterAlertaVigente` | Retorna um alerta ativo pelo ID ou `null`. | Retorna os dados ou `null`; trata erros. |
+| `vigentesPara` | Normaliza/deduplica IDs de linhas e paradas e busca alertas vigentes afetados (RF14). | Consulta o repositório com listas normalizadas ou retorna lista vazia quando não há itens válidos. |
+| `filtrarAlertasParaItens` | Filtra alertas vigentes por linhas (ID/código) e paradas (ID/código/nome) (RF14). | Retorna apenas os alertas que afetam os itens informados. |
+| `extrairItensDoTrajeto` | Extrai códigos de linhas e nomes/IDs de paradas das etapas de uma opção de trajeto (RF14). | Retorna as listas normalizadas de linhas e paradas envolvidas no trajeto. |
 
 ### 3.2. `BuscasRecentesService`
 
@@ -141,6 +145,17 @@
 |---|---|---|
 | `criarAdministrador` | Valida os dados e cria um administrador. | Cria o administrador ou retorna um erro. |
 
+### 3.9. Controladores — Sinalização de Alertas nos Itens Afetados (RF14)
+
+| Controlador / método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `AlertasController.getAlertasVigentes` | Lista todos os alertas vigentes ou filtra por `?linhaId` e `?paradaId`. | Chama `vigentesPara` quando há filtros na query ou `listarAlertasVigentes` caso contrário, respondendo `200`. |
+| `LinhasController.getLinhas` | Enriquece cada linha retornada com `afetadaPorAlerta` e `alertas`. | Responde `200` com a lista de linhas sinalizadas; mantém resposta `200` sem alertas caso a consulta de alertas falhe. |
+| `LinhasController.getItinerario` | Sinaliza alertas vigentes tanto na linha quanto individualmente nas paradas de `IDA` e `VOLTA`. | Responde `200` com `afetadaPorAlerta` e `alertas` no cabeçalho da linha e em cada parada afetada. |
+| `LinhasController.getHorarios` | Anexa `afetadaPorAlerta` e `alertas` vigentes ao quadro de horários da linha. | Responde `200` com o quadro de horários enriquecido com os alertas da linha. |
+| `ParadasController.getParadaProxima` | Anexa `afetadaPorAlerta` e `alertas` vigentes à parada mais próxima encontrada pelo GPS. | Responde `200` com a parada sinalizada; degrada graciosamente se a consulta de alertas falhar. |
+| `TrajetosController.getTrajetos` | Extrai linhas e paradas das etapas de cada opção e associa os alertas vigentes correspondentes. | Responde `200` com cada opção enriquecida com `afetadaPorAlerta` e `alertas`; mantém funcionamento caso o serviço de alertas falhe. |
+
 ---
 
 ## 4. Testes de middleware
@@ -156,17 +171,19 @@
 
 ## 5. Testes de interface (React Native)
 
-| Tela | Caso / cenário | Resultado esperado |
+| Tela / Componente | Caso / cenário | Resultado esperado |
 |---|---|---|
-| `LinhasScreen` | Carregamento, filtro, listagem e navegação. | Exibe indicador de carregamento, permite filtrar por código ou nome, lista as linhas e navega corretamente. |
-| `HorariosScreen` | Carregamento e filtro por sentido e tipo de dia. | Exibe os horários corretos, apresenta mensagem quando não há resultados e permite navegar para o itinerário. |
-| `AlertasScreen` | Listagem, filtros, mensagens de erro e atualizações. | Exibe alertas, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza `AsyncStorage`. |
+| `AlertaBanner` e `AlertaBadge` | Renderização de banners e badges de sinalização de alertas (RF14). | Exibe cores e rótulos por tipo (`Desvio`, `Suspensão`, `Paralisação`, `Alteração de Horário`), contagem de múltiplos alertas, oculta quando não há alertas e aciona `onPress` para detalhes. |
+| `LinhasScreen` | Carregamento, filtro, listagem, navegação e sinalização de alertas (RF14). | Exibe indicador de carregamento, permite filtrar por código ou nome, destaca visualmente linhas com `afetadaPorAlerta` (`AlertaBadge`) e navega corretamente. |
+| `HorariosScreen` | Carregamento, filtro por sentido/tipo de dia e banner de alerta da linha (RF14). | Exibe os horários corretos, renderiza o `AlertaBanner` quando a linha possui alertas vigentes (com navegação para `Alertas`) e permite navegar para o itinerário. |
+| `ItinerarioScreen` | Carregamento do itinerário por sentido e sinalização de alertas na linha e paradas (RF14). | Lista as paradas em `IDA`/`VOLTA`, exibe o `AlertaBanner` da linha no topo e destaca individualmente as paradas afetadas com badge e descrição do alerta. |
+| `AlertasScreen` | Listagem, filtros, título/descrição, mensagens de erro e atualizações. | Exibe alertas vigentes com título, descrição e itens afetados, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza `AsyncStorage`. |
 | `AdminScreen` | Acesso, logout e navegação. | Exibe *spinner*, controla o acesso restrito ou liberado e remove os dados no logout. |
 | `CadastroScreen` | Validação, cadastro e navegação. | Valida campos obrigatórios, exibe mensagens e indicador de carregamento e realiza a navegação. |
 | `LoginScreen` | Validação, login, armazenamento e falhas. | Valida campos, exibe mensagens, salva o token e apresenta erros e indicador de carregamento. |
-| `BuscarTrajetoScreen` | GPS, permissão, buscas e erros. | Trata a permissão de GPS e a localização, apresenta erros, valida a busca e realiza a navegação. |
-| `ResultadoTrajetoScreen` | Exibição e navegação por opções. | Exibe cartões de opções, apresenta baldeações e realiza a navegação corretamente. |
-| `TrajetoDetalheScreen` | Exibição detalhada das etapas. | Exibe etapas ordenadas e ícones e apresenta mensagem quando não há etapas. |
+| `BuscarTrajetoScreen` | GPS, permissão, buscas, erros e alerta na parada de origem (RF14). | Trata a permissão de GPS e a localização, exibe `AlertaBanner` compacto quando a parada de origem possui alerta vigente, valida a busca e realiza a navegação. |
+| `ResultadoTrajetoScreen` | Exibição, navegação por opções e destaque de trajetos com alerta (RF14). | Exibe cartões de opções, baldeações, destaca opções com `afetadaPorAlerta` (`AlertaBadge` e resumo do alerta) e navega para os detalhes. |
+| `TrajetoDetalheScreen` | Exibição detalhada das etapas e banner de alertas do trajeto (RF14). | Exibe `AlertaBanner` quando o trajeto é afetado por alerta vigente, lista etapas ordenadas com ícones e apresenta mensagem quando não há etapas. |
 | `GerenciarUsuariosScreen` | Listagem, filtros, navegação e erros. | Lista usuários, identifica o usuário atual, aplica filtros e apresenta alertas. |
 | `CriarAdminScreen` | Cadastro, validação, mensagens e navegação. | Exibe campos e mensagens, indicador de carregamento e retorna após o sucesso. |
 | `EditarUsuarioScreen` | Edição, validação, exclusão e mensagens. | Exibe campos, realiza validações, solicita confirmação de exclusão e apresenta alertas. |
