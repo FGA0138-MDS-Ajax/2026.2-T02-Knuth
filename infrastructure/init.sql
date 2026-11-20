@@ -54,6 +54,19 @@ CREATE TABLE IF NOT EXISTS buscas_recentes (
     realizada_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- RF16 - Recuperação de senha do passageiro (código temporário de uso único)
+CREATE TABLE IF NOT EXISTS recuperacoes_senha (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    codigo_hash VARCHAR(255) NOT NULL,
+    expira_em TIMESTAMP WITH TIME ZONE NOT NULL,
+    usado_em TIMESTAMP WITH TIME ZONE,
+    tentativas INTEGER NOT NULL DEFAULT 0,
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_recuperacoes_senha_usuario ON recuperacoes_senha(usuario_id);
+
 CREATE TABLE IF NOT EXISTS alertas (
     id SERIAL PRIMARY KEY,
     tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('DESVIO', 'SUSPENSAO', 'ALTERACAO_HORARIO', 'PARALISACAO')),
