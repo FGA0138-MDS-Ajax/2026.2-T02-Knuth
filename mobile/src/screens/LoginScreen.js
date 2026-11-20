@@ -43,6 +43,10 @@ export default function LoginScreen({ navigation }) {
           {carregando ? <ActivityIndicator color="#FFF" /> : <Text style={styles.botaoTexto}>Entrar</Text>}
         </TouchableOpacity>
 
+        <TouchableOpacity onPress={() => navigation.navigate('RecuperarSenha', { email: email.trim() })}>
+          <Text style={styles.link}>Esqueci minha senha</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
           <Text style={styles.link}>Não tem conta? Cadastre-se.</Text>
         </TouchableOpacity>

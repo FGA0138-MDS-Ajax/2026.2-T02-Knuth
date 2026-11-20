@@ -201,5 +201,22 @@ describe('LoginScreen', () => {
 
       expect(navigation.navigate).toHaveBeenCalledWith('Cadastro');
     });
+
+    it('"Esqueci minha senha" leva para a recuperação levando o e-mail digitado', () => {
+      const tela = renderTela();
+      preencher(tela, { email: ` ${CREDENCIAIS.email} ` });
+
+      fireEvent.press(tela.getByText('Esqueci minha senha'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('RecuperarSenha', { email: CREDENCIAIS.email });
+    });
+
+    it('"Esqueci minha senha" funciona mesmo sem e-mail digitado', () => {
+      const { getByText } = renderTela();
+
+      fireEvent.press(getByText('Esqueci minha senha'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('RecuperarSenha', { email: '' });
+    });
   });
 });
