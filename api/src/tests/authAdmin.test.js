@@ -169,7 +169,7 @@ describe('authAdmin', () => {
       delete process.env.JWT_SECRET;
       let middlewareSemEnv;
       jest.isolateModules(() => {
-        middlewareSemEnv = require('../src/middlewares/authAdmin');
+        middlewareSemEnv = require('../middlewares/authAdmin');
       });
       process.env.JWT_SECRET = SEGREDO;
       const token = assinar({ id: 1, tipo: 'ADMIN' }, 'chave_secreta_padrao');
