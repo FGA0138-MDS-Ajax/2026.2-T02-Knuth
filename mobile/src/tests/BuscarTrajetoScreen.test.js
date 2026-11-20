@@ -14,7 +14,7 @@ jest.mock('expo-location', () => ({
   Accuracy: { High: 4 },
 }));
 
-jest.mock('../src/services/api', () => ({
+jest.mock('../services/api', () => ({
   getTrajetos: jest.fn(),
   getParadaProxima: jest.fn(),
 }));
