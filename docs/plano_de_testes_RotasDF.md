@@ -44,6 +44,9 @@
 |---|---|---|
 | `criar` | Insere um usuário sem expor a senha. | Executa a consulta corretamente e retorna o usuário. |
 | `buscarPorEmail` | Busca um usuário pelo e-mail. | Retorna o usuário ou `null`. |
+| `buscarPorId` | Busca um usuário pelo ID (RF16). | Retorna o usuário encontrado ou `null`. |
+| `atualizarSenha` | Atualiza o hash da senha de um usuário pelo ID (RF16). | Executa `UPDATE usuarios SET senha_hash = $2 WHERE id = $1`. |
+| `excluir` | Remove o registro do usuário pelo ID (RF16). | Executa a exclusão ou propaga o erro do banco. |
 
 ### 2.4. `ParadasRepository`
 
@@ -83,6 +86,16 @@
 |---|---|---|
 | `criar` | Cria um administrador com tipo fixo. | Executa a consulta corretamente e retorna o resultado esperado. |
 
+### 2.9. `RecuperacaoSenhaRepository` (RF16)
+
+| Método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `invalidarPendentes` | Marca como usados todos os códigos de recuperação pendentes do usuário. | Atualiza `usado_em = NOW()` nos registros não utilizados do `usuario_id`. |
+| `criar` | Armazena o hash do código de 6 dígitos com data de expiração. | Insere na tabela `recuperacoes_senha` e retorna os metadados sem expor `codigo_hash`. |
+| `buscarAtiva` | Consulta o código mais recente ainda válido (não usado e não expirado). | Retorna o registro ativo ou `null`. |
+| `registrarTentativa` | Incrementa o contador de tentativas inválidas de um código. | Atualiza `tentativas = tentativas + 1` e retorna o total atualizado. |
+| `marcarUsada` | Marca um código de recuperação como utilizado ou bloqueado. | Atualiza `usado_em = NOW()` para o registro informado. |
+
 ---
 
 ## 3. Testes de serviços e controladores
@@ -110,6 +123,9 @@
 |---|---|---|
 | `cadastrar` | Valida os dados e realiza o cadastro. | Cria o usuário ou lança erros. |
 | `login` | Realiza a autenticação e emite um token. | Retorna o token e o usuário, ou um erro. |
+| `solicitarRecuperacaoSenha` | Gera código de 6 dígitos, invalida códigos anteriores, salva o hash com expiração de 15 min e dispara o envio por e-mail sem revelar se o e-mail existe (RF16). | Retorna mensagem padrão; rejeita com `400` se o e-mail estiver vazio. |
+| `redefinirSenha` | Valida e-mail, código de 6 dígitos, limite de 5 tentativas e tamanho mínimo da nova senha (6 caracteres), atualizando o hash da senha (RF16). | Atualiza a senha e invalida o código utilizado, ou lança erro `400` para código inválido/expirado/excedido. |
+| `excluirConta` | Valida a senha atual do passageiro autenticado e remove sua própria conta, bloqueando autoexclusão de administradores (RF16). | Exclui o passageiro com confirmação de senha ou lança erro `400`/`401`/`403`/`404`. |
 
 ### 3.4. `ParadasService`
 
@@ -156,6 +172,15 @@
 | `ParadasController.getParadaProxima` | Anexa `afetadaPorAlerta` e `alertas` vigentes à parada mais próxima encontrada pelo GPS. | Responde `200` com a parada sinalizada; degrada graciosamente se a consulta de alertas falhar. |
 | `TrajetosController.getTrajetos` | Extrai linhas e paradas das etapas de cada opção e associa os alertas vigentes correspondentes. | Responde `200` com cada opção enriquecida com `afetadaPorAlerta` e `alertas`; mantém funcionamento caso o serviço de alertas falhe. |
 
+### 3.10. Controladores e Serviços — Recuperação de Senha e Exclusão de Conta (RF16)
+
+| Componente / método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `EmailService.enviarCodigoRecuperacao` | Registra/dispara o envio do código temporário de recuperação com destinatário e tempo de validade. | Registra a mensagem contendo nome, e-mail, código de 6 dígitos e validade em minutos. |
+| `UsuariosController.solicitarRecuperacaoSenha` | Recebe `POST /api/v1/usuarios/recuperar-senha` e aciona o serviço de recuperação. | Responde `200` com a mensagem de confirmação, `400` quando falta o e-mail ou `500` em falha inesperada. |
+| `UsuariosController.redefinirSenha` | Recebe `POST /api/v1/usuarios/redefinir-senha` com `email`, `codigo` e `novaSenha`. | Responde `200` ao redefinir a senha, `400` para dados/código inválidos ou `500` em erro interno. |
+| `UsuariosController.excluirConta` | Recebe `DELETE /api/v1/usuarios/me` autenticado com a senha de confirmação no corpo. | Responde `200` ao excluir a conta, ou `400`/`401`/`403`/`404`/`500` conforme a validação. |
+
 ---
 
 ## 4. Testes de middleware
@@ -166,6 +191,8 @@
 | `authAdmin` | Token expirado ou inválido. | Retorna `401 Unauthorized`. |
 | `authAdmin` | Usuário sem permissão de administrador. | Retorna `403 Forbidden`. |
 | `authAdmin` | Token válido e usuário administrador. | Continua a requisição e adiciona os dados a `req.usuario`. |
+| `authUsuario` | Cabeçalho `Authorization` ausente, sem esquema `Bearer`, token malformado, expirado ou sem `id` (RF16). | Retorna `401 Unauthorized`. |
+| `authUsuario` | Token JWT válido de passageiro ou administrador (RF16). | Continua a requisição e popula `req.usuario` com os dados decodificados. |
 
 ---
 
@@ -180,7 +207,11 @@
 | `AlertasScreen` | Listagem, filtros, título/descrição, mensagens de erro e atualizações. | Exibe alertas vigentes com título, descrição e itens afetados, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza `AsyncStorage`. |
 | `AdminScreen` | Acesso, logout e navegação. | Exibe *spinner*, controla o acesso restrito ou liberado e remove os dados no logout. |
 | `CadastroScreen` | Validação, cadastro e navegação. | Valida campos obrigatórios, exibe mensagens e indicador de carregamento e realiza a navegação. |
-| `LoginScreen` | Validação, login, armazenamento e falhas. | Valida campos, exibe mensagens, salva o token e apresenta erros e indicador de carregamento. |
+| `LoginScreen` | Validação, login, armazenamento, falhas e atalho de recuperação de senha (RF16). | Valida campos, exibe mensagens, salva o token, navega para `RecuperarSenha` levando o e-mail preenchido e apresenta erros e indicador de carregamento. |
+| `RecuperarSenhaScreen` | Fluxo em duas etapas para solicitar código por e-mail e redefinir a senha (RF16). | Valida formato de e-mail, código de 6 dígitos, tamanho mínimo e confirmação da nova senha, permite reenviar código ou trocar e-mail e redireciona ao login após sucesso. |
+| `ExcluirContaScreen` | Confirmação de senha e diálogo destrutivo para exclusão definitiva da própria conta (RF16). | Exige senha atual, solicita confirmação, chama `DELETE /usuarios/me`, limpa `AsyncStorage` (`@rotasdf_token`, `@rotasdf_usuario`, `@rotasdf_buscas_recentes`) e redireciona para `Linhas`. |
+| `ConfiguracoesScreen` | Exibição de perfil, limpeza de histórico, logout e opção de exclusão de conta para passageiros (RF16). | Exibe dados do passageiro logado, mostra a opção *"Excluir minha conta"* apenas para passageiros autenticados (ocultando para anônimos e administradores) e executa logout. |
+| `dialogos` | Utilitário multiplataforma de alertas e confirmações (`mostrarAviso` e `confirmarAcao`) (RF16). | Utiliza `Alert.alert` no Android/iOS e `window.alert`/`window.confirm` na Web. |
 | `BuscarTrajetoScreen` | GPS, permissão, buscas, erros e alerta na parada de origem (RF14). | Trata a permissão de GPS e a localização, exibe `AlertaBanner` compacto quando a parada de origem possui alerta vigente, valida a busca e realiza a navegação. |
 | `ResultadoTrajetoScreen` | Exibição, navegação por opções e destaque de trajetos com alerta (RF14). | Exibe cartões de opções, baldeações, destaca opções com `afetadaPorAlerta` (`AlertaBadge` e resumo do alerta) e navega para os detalhes. |
 | `TrajetoDetalheScreen` | Exibição detalhada das etapas e banner de alertas do trajeto (RF14). | Exibe `AlertaBanner` quando o trajeto é afetado por alerta vigente, lista etapas ordenadas com ícones e apresenta mensagem quando não há etapas. |
