@@ -1,7 +1,7 @@
-const linhasService = require('../src/services/linhasService');
-const linhasController = require('../src/controllers/linhasController');
+const linhasService = require('../services/linhasService');
+const linhasController = require('../controllers/linhasController');
 
-jest.mock('../src/services/linhasService', () => ({
+jest.mock('../services/linhasService', () => ({
   obterLinhas: jest.fn(),
   obterItinerario: jest.fn(),
   obterQuadroHorarios: jest.fn(),

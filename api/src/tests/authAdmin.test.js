@@ -3,7 +3,7 @@ const SEGREDO_ORIGINAL = process.env.JWT_SECRET;
 process.env.JWT_SECRET = SEGREDO;
 
 const jwt = require('jsonwebtoken');
-const authAdmin = require('../src/middlewares/authAdmin');
+const authAdmin = require('../middlewares/authAdmin');
 
 function criarRes() {
   const res = {};

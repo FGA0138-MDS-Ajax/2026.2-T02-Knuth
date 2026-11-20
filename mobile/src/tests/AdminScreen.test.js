@@ -3,8 +3,8 @@ import { ActivityIndicator } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import AdminScreen from '../src/screens/AdminScreen';
-import { getPerfilAdmin } from '../src/services/api';
+import AdminScreen from '../screens/AdminScreen';
+import { getPerfilAdmin } from '../services/api';
 
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
@@ -16,7 +16,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   },
 }));
 
-jest.mock('../src/services/api', () => ({
+jest.mock('../services/api', () => ({
   getPerfilAdmin: jest.fn(),
 }));
 

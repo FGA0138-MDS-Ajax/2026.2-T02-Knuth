@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import ResultadoTrajetoScreen from '../src/screens/ResultadoTrajetoScreen';
+import ResultadoTrajetoScreen from '../screens/ResultadoTrajetoScreen';
 
 const OPCOES = [
   { duracaoMinutos: 25, partida: '08:00', chegada: '08:25', baldeacoes: 0 },

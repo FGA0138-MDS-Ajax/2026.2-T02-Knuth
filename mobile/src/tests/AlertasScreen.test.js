@@ -3,8 +3,8 @@ import { ActivityIndicator } from 'react-native';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import AlertasScreen from '../src/screens/AlertasScreen';
-import { getAlertas } from '../src/services/api';
+import AlertasScreen from '../screens/AlertasScreen';
+import { getAlertas } from '../services/api';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
@@ -19,7 +19,6 @@ jest.mock('../src/services/api', () => ({
   getAlertas: jest.fn(),
 }));
 
-// Os ícones não importam para a lógica da tela; evita carregar fontes nos testes.
 jest.mock('@expo/vector-icons', () => ({
   Ionicons: () => null,
 }));

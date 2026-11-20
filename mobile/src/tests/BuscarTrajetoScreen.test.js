@@ -3,8 +3,8 @@ import { ActivityIndicator } from 'react-native';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import * as Location from 'expo-location';
 
-import BuscarTrajetoScreen from '../src/screens/BuscarTrajetoScreen';
-import { getTrajetos, getParadaProxima } from '../src/services/api';
+import BuscarTrajetoScreen from '../screens/BuscarTrajetoScreen';
+import { getTrajetos, getParadaProxima } from '../services/api';
 
 
 jest.mock('expo-location', () => ({
