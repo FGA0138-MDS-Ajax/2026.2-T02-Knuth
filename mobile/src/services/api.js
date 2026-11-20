@@ -51,8 +51,8 @@ export const loginUsuario = async (email, senha) => {
   return response.data;
 };
 
-export const getAlertas = async () => {
-  const response = await axios.get(`${API_BASE_URL}/alertas`);
+export const getAlertas = async (filtros) => {
+  const response = await axios.get(`${API_BASE_URL}/alertas`, filtros ? { params: filtros } : undefined);
   return response.data;
 };
 

@@ -214,6 +214,31 @@ describe('HorariosScreen', () => {
     });
   });
 
+  describe('sinalização de alertas (RF14)', () => {
+    it('exibe banner de alerta quando a linha possui alertas vigentes e navega para Alertas ao tocar', async () => {
+      getHorarios.mockResolvedValue({
+        ...LINHA,
+        afetadaPorAlerta: true,
+        alertas: [
+          {
+            id: 1,
+            tipo: 'ALTERACAO_HORARIO',
+            titulo: 'Intervalo alterado',
+            descricao: 'Saídas a cada 30 minutos hoje.',
+          },
+        ],
+      });
+      const { findByText, getByText } = renderTela();
+
+      expect(await findByText('⚠ Alerta vigente')).toBeTruthy();
+      expect(getByText('Alteração de Horário — Intervalo alterado')).toBeTruthy();
+      expect(getByText('Saídas a cada 30 minutos hoje.')).toBeTruthy();
+
+      fireEvent.press(getByText('Ver detalhes ›'));
+      expect(navigation.navigate).toHaveBeenCalledWith('Alertas');
+    });
+  });
+
   describe('erro ao carregar', () => {
     it('registra o erro, sai do carregamento e mostra a tela sem dados', async () => {
       getHorarios.mockRejectedValue(new Error('Network Error'));

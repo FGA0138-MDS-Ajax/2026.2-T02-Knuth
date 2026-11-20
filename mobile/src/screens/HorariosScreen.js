@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { getHorarios } from '../services/api';
+import AlertaBanner from '../components/AlertaBanner';
 
 export default function HorariosScreen({ route, navigation }) {
   const { linhaId } = route?.params || { linhaId: 1 };
@@ -40,6 +41,12 @@ export default function HorariosScreen({ route, navigation }) {
         <Text style={styles.numeroLinha}>{dados?.codigo || '---'}</Text>
         <Text style={styles.nomeLinha}>{dados?.nome || 'Linha'}</Text>
       </View>
+
+      <AlertaBanner
+        alertas={dados?.alertas}
+        afetadaPorAlerta={Boolean(dados?.afetadaPorAlerta)}
+        onPress={navigation ? () => navigation.navigate('Alertas') : undefined}
+      />
 
       <TouchableOpacity
         style={styles.botaoItinerario}

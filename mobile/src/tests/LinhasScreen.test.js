@@ -126,6 +126,20 @@ describe('LinhasScreen', () => {
 
       expect(navigation.navigate).toHaveBeenCalledWith('Horarios', { linhaId: 2 });
     });
+
+    it('destaca visualmente linhas afetadas por alertas vigentes (RF14)', async () => {
+      getLinhas.mockResolvedValue([
+        {
+          ...LINHAS[0],
+          afetadaPorAlerta: true,
+          alertas: [{ id: 1, tipo: 'DESVIO', descricao: 'Desvio na via' }],
+        },
+        { ...LINHAS[1], afetadaPorAlerta: false, alertas: [] },
+      ]);
+      const { findByText } = renderTela();
+
+      expect(await findByText('⚠ Alerta: Desvio')).toBeTruthy();
+    });
   });
 
   describe('botões de ação', () => {

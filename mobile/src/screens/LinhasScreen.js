@@ -2,6 +2,7 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getLinhas } from '../services/api';
+import { AlertaBadge } from '../components/AlertaBanner';
 
 export default function LinhasScreen({ navigation }) {
   const [busca, setBusca] = useState('');
@@ -100,20 +101,26 @@ export default function LinhasScreen({ navigation }) {
             <Text style={styles.textoVazio}>Nenhuma linha encontrada para "{busca}"</Text>
           </View>
         }
-        renderItem={({ item }) => (
-          <TouchableOpacity 
-            style={styles.card}
-            onPress={() => navigation.navigate('Horarios', { linhaId: item.id })}>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{item.codigo}</Text>
-            </View>
-            <View style={styles.infoContainer}>
-              <Text style={styles.nomeLinha} numberOfLines={2}>{item.nome}</Text>
-              <Text style={styles.toqueDetalhes}>Toque para ver horários</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color="#CCC" />
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => {
+          const temAlerta = Boolean(
+            item.afetadaPorAlerta || (Array.isArray(item.alertas) && item.alertas.length > 0)
+          );
+          return (
+            <TouchableOpacity 
+              style={[styles.card, temAlerta && styles.cardComAlerta]}
+              onPress={() => navigation.navigate('Horarios', { linhaId: item.id })}>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{item.codigo}</Text>
+              </View>
+              <View style={styles.infoContainer}>
+                <Text style={styles.nomeLinha} numberOfLines={2}>{item.nome}</Text>
+                <Text style={styles.toqueDetalhes}>Toque para ver horários</Text>
+                <AlertaBadge alertas={item.alertas} afetadaPorAlerta={item.afetadaPorAlerta} />
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="#CCC" />
+            </TouchableOpacity>
+          );
+        }}
       />
     </View>
   );
@@ -133,6 +140,7 @@ const styles = StyleSheet.create({
   clearIcon: { padding: 4 },
   textoVazio: { fontSize: 16, color: '#888', textAlign: 'center', marginTop: 12 },
   card: { flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 8, marginBottom: 12, alignItems: 'center', elevation: 1 },
+  cardComAlerta: { backgroundColor: '#FFFBEB', borderLeftWidth: 4, borderLeftColor: '#D97706' },
   badge: { backgroundColor: '#006666', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 6, marginRight: 16 },
   badgeText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
   infoContainer: { flex: 1 },

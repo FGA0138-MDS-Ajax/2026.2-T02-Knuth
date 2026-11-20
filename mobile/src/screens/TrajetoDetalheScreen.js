@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
+import AlertaBanner from '../components/AlertaBanner';
 
-export default function TrajetoDetalheScreen({ route }) {
+export default function TrajetoDetalheScreen({ route, navigation }) {
   const { opcaoTrajeto } = route.params;
 
   const renderEtapa = ({ item, index }) => {
@@ -33,6 +34,12 @@ export default function TrajetoDetalheScreen({ route }) {
           Partida: {opcaoTrajeto.partida} | Chegada: {opcaoTrajeto.chegada}
         </Text>
       </View>
+
+      <AlertaBanner
+        alertas={opcaoTrajeto.alertas}
+        afetadaPorAlerta={Boolean(opcaoTrajeto.afetadaPorAlerta)}
+        onPress={navigation ? () => navigation.navigate('Alertas') : undefined}
+      />
 
       <Text style={styles.tituloPassoAPasso}>Passo a passo:</Text>
 
