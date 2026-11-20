@@ -1,5 +1,5 @@
-const pool = require('../src/config/database');
-const repository = require('../src/repositories/buscasRecentesRepository');
+const pool = require('../config/database');
+const repository = require('../repositories/buscasRecentesRepository');
 
 jest.mock('../src/config/database', () => ({
   query: jest.fn(),

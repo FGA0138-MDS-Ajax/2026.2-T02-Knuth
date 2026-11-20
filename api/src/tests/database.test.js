@@ -8,7 +8,7 @@ function carregar() {
   jest.isolateModules(() => {
     const { Pool } = require('pg');
     const dotenv = require('dotenv');
-    const pool = require('../src/config/database');
+    const pool = require('../config/database');
     resultado = { Pool, dotenv, pool };
   });
   return resultado;

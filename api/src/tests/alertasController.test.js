@@ -1,7 +1,7 @@
-const alertasService = require('../src/services/alertasService');
-const alertasController = require('../src/controllers/alertasController');
+const alertasService = require('../services/alertasService');
+const alertasController = require('../controllers/alertasController');
 
-jest.mock('../src/services/alertasService', () => ({
+jest.mock('../services/alertasService', () => ({
   listarAlertasVigentes: jest.fn(),
   obterAlertaVigente: jest.fn(),
 }));

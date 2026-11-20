@@ -2,8 +2,8 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import EditarUsuarioScreen from '../src/screens/EditarUsuarioScreen';
-import { atualizarUsuario, excluirUsuario } from '../src/services/api';
+import EditarUsuarioScreen from '../screens/EditarUsuarioScreen';
+import { atualizarUsuario, excluirUsuario } from '../services/api';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,

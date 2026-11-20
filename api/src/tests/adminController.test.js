@@ -1,7 +1,7 @@
-const adminService = require('../src/services/adminService');
-const adminController = require('../src/controllers/adminController');
+const adminService = require('../services/adminService');
+const adminController = require('../controllers/adminController');
 
-jest.mock('../src/services/adminService', () => ({
+jest.mock('../services/adminService', () => ({
   criarAdministrador: jest.fn(),
 }));
 

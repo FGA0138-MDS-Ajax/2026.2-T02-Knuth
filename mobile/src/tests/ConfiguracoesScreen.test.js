@@ -3,7 +3,7 @@ import { Alert, Platform } from 'react-native';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import ConfiguracoesScreen from '../src/screens/ConfiguracoesScreen';
+import ConfiguracoesScreen from '../screens/ConfiguracoesScreen';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
@@ -56,7 +56,6 @@ describe('ConfiguracoesScreen', () => {
     return tela;
   };
 
-  // Renderiza a tela já com o usuário logado carregado do AsyncStorage.
   const renderLogado = async () => {
     mockStorage({ [USUARIO_KEY]: JSON.stringify(USUARIO) });
     const tela = await renderTela();

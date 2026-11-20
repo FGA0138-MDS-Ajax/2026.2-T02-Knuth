@@ -1,10 +1,10 @@
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import LinhasScreen from '../src/screens/LinhasScreen';
-import { getLinhas } from '../src/services/api';
+import LinhasScreen from '../screens/LinhasScreen';
+import { getLinhas } from '../services/api';
 
-jest.mock('../src/services/api', () => ({
+jest.mock('../services/api', () => ({
   getLinhas: jest.fn(),
 }));
 

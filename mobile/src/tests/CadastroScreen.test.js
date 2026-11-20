@@ -2,8 +2,8 @@ import React from 'react';
 import { Alert, ActivityIndicator } from 'react-native';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 
-import CadastroScreen from '../src/screens/CadastroScreen';
-import { cadastrarUsuario } from '../src/services/api';
+import CadastroScreen from '../screens/CadastroScreen';
+import { cadastrarUsuario } from '../services/api';
 
 jest.mock('../src/services/api', () => ({
   cadastrarUsuario: jest.fn(),

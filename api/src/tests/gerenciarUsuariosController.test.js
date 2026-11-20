@@ -1,7 +1,7 @@
-const service = require('../src/services/gerenciarUsuariosService');
-const controller = require('../src/controllers/gerenciarUsuariosController');
+const service = require('../services/gerenciarUsuariosService');
+const controller = require('../controllers/gerenciarUsuariosController');
 
-jest.mock('../src/services/gerenciarUsuariosService', () => ({
+jest.mock('../services/gerenciarUsuariosService', () => ({
   listar: jest.fn(),
   atualizar: jest.fn(),
   excluir: jest.fn(),

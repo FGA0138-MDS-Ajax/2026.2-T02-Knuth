@@ -1,7 +1,7 @@
-const buscasRecentesService = require('../src/services/buscasRecentesService');
-const buscasRecentesController = require('../src/controllers/buscasRecentesController');
+const buscasRecentesService = require('../services/buscasRecentesService');
+const buscasRecentesController = require('../controllers/buscasRecentesController');
 
-jest.mock('../src/services/buscasRecentesService', () => ({
+jest.mock('../services/buscasRecentesService', () => ({
   registrarBusca: jest.fn(),
   obterBuscasRecentes: jest.fn(),
 }));

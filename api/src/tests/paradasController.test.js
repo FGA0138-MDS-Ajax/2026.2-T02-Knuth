@@ -1,7 +1,7 @@
-const paradasService = require('../src/services/paradasService');
-const paradasController = require('../src/controllers/paradasController');
+const paradasService = require('../services/paradasService');
+const paradasController = require('../controllers/paradasController');
 
-jest.mock('../src/services/paradasService', () => ({
+jest.mock('../services/paradasService', () => ({
   obterParadaMaisProxima: jest.fn(),
 }));
 

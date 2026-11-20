@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import TrajetoDetalheScreen from '../src/screens/TrajetoDetalheScreen';
+import TrajetoDetalheScreen from '../screens/TrajetoDetalheScreen';
 
 const OPCAO = {
   duracaoMinutos: 45,

@@ -1,7 +1,7 @@
-const pool = require('../src/config/database');
-const repository = require('../src/repositories/linhasRepository');
+const pool = require('../config/database');
+const repository = require('../repositories/linhasRepository');
 
-jest.mock('../src/config/database', () => ({
+jest.mock('../config/database', () => ({
   query: jest.fn(),
 }));
 

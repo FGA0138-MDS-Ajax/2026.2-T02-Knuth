@@ -1,7 +1,7 @@
-const usuariosService = require('../src/services/usuariosService');
-const usuariosController = require('../src/controllers/usuariosController');
+const usuariosService = require('../services/usuariosService');
+const usuariosController = require('../controllers/usuariosController');
 
-jest.mock('../src/services/usuariosService', () => ({
+jest.mock('../services/usuariosService', () => ({
   cadastrar: jest.fn(),
   login: jest.fn(),
 }));

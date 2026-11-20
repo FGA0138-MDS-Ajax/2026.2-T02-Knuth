@@ -1,7 +1,7 @@
-const trajetosService = require('../src/services/trajetosService');
-const trajetosController = require('../src/controllers/trajetosController');
+const trajetosService = require('../services/trajetosService');
+const trajetosController = require('../controllers/trajetosController');
 
-jest.mock('../src/services/trajetosService', () => ({
+jest.mock('../services/trajetosService', () => ({
   obterTrajetos: jest.fn(),
 }));
 

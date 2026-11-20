@@ -2,8 +2,8 @@ import React from 'react';
 import { Alert, ActivityIndicator } from 'react-native';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoginScreen from '../src/screens/LoginScreen';
-import { loginUsuario } from '../src/services/api';
+import LoginScreen from '../screens/LoginScreen';
+import { loginUsuario } from '../services/api';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
@@ -14,7 +14,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   },
 }));
 
-jest.mock('../src/services/api', () => ({
+jest.mock('../services/api', () => ({
   loginUsuario: jest.fn(),
 }));
 

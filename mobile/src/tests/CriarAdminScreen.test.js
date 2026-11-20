@@ -2,8 +2,8 @@ import React from 'react';
 import { Alert, ActivityIndicator } from 'react-native';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CriarAdminScreen from '../src/screens/CriarAdminScreen';
-import { criarAdministrador } from '../src/services/api';
+import CriarAdminScreen from '../screens/CriarAdminScreen';
+import { criarAdministrador } from '../services/api';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
