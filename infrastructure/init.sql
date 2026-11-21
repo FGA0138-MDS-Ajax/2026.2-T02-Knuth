@@ -110,3 +110,23 @@ CREATE INDEX IF NOT EXISTS idx_reportes_divergencia_status ON reportes_divergenc
 INSERT INTO usuarios (nome, email, senha_hash, tipo)
 VALUES ('Administrador', 'admin@rotasdf.com', '$2b$10$YIRTlYFXqX9MpSOHqjSjceSTXG500o8cWkapw3nG5til7lxW38HWC', 'ADMIN')
 ON CONFLICT (email) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS favoritos (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('LINHA', 'PARADA', 'TRAJETO')),
+    linha_id VARCHAR(50) REFERENCES linhas(id) ON DELETE CASCADE,
+    parada_id VARCHAR(50) REFERENCES paradas(id) ON DELETE CASCADE,
+    origem VARCHAR(255),
+    destino VARCHAR(255),
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CHECK (
+        (tipo = 'LINHA' AND linha_id IS NOT NULL)
+        OR (tipo = 'PARADA' AND parada_id IS NOT NULL)
+        OR (tipo = 'TRAJETO' AND origem IS NOT NULL AND destino IS NOT NULL)
+    )
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_linha ON favoritos(usuario_id, linha_id) WHERE tipo = 'LINHA';
+CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_parada ON favoritos(usuario_id, parada_id) WHERE tipo = 'PARADA';
+CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_trajeto ON favoritos(usuario_id, origem, destino) WHERE tipo = 'TRAJETO';
