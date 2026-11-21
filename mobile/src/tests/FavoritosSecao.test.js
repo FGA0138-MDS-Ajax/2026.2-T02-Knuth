@@ -32,14 +32,11 @@ describe('FavoritosSecao', () => {
   let avisarMudanca;
   let cancelarStore;
   let navigation;
-  let aoGanharFoco;
-  let cancelarFoco;
 
   beforeEach(() => {
     jest.resetAllMocks();
     estado = { logado: true, favoritos: [] };
     cancelarStore = jest.fn();
-    cancelarFoco = jest.fn();
     store = {
       obter: jest.fn(() => estado),
       carregar: jest.fn().mockResolvedValue(),
@@ -50,16 +47,10 @@ describe('FavoritosSecao', () => {
         return cancelarStore;
       }),
     };
-    navigation = {
-      navigate: jest.fn(),
-      addListener: jest.fn((evento, funcao) => {
-        aoGanharFoco = funcao;
-        return cancelarFoco;
-      }),
-    };
+    navigation = { navigate: jest.fn() };
   });
 
-  const renderSecao = (nav = navigation) => render(<FavoritosSecao navigation={nav} store={store} />);
+  const renderSecao = () => render(<FavoritosSecao navigation={navigation} store={store} />);
 
   it('não mostra nada quando não há passageiro logado', () => {
     estado = { logado: false, favoritos: [] };
@@ -96,28 +87,10 @@ describe('FavoritosSecao', () => {
     expect(navigation.navigate).toHaveBeenCalledWith('Horarios', { linhaId: '0.782' });
   });
 
-  it('carrega os favoritos ao abrir', () => {
+  it('não carrega os favoritos por conta própria', () => {
     renderSecao();
 
-    expect(store.carregar).toHaveBeenCalledTimes(1);
-  });
-
-  it('recarrega quando a tela volta ao foco', () => {
-    renderSecao();
-
-    act(() => {
-      aoGanharFoco();
-    });
-
-    expect(navigation.addListener).toHaveBeenCalledWith('focus', expect.any(Function));
-    expect(store.carregar).toHaveBeenCalledTimes(2);
-  });
-
-  it('funciona quando a navegação não tem addListener', () => {
-    const { getByText } = renderSecao({ navigate: jest.fn() });
-
-    expect(getByText('Favoritos')).toBeTruthy();
-    expect(store.carregar).toHaveBeenCalledTimes(1);
+    expect(store.carregar).not.toHaveBeenCalled();
   });
 
   it('atualiza a lista quando o store avisa que mudou', () => {
@@ -132,12 +105,11 @@ describe('FavoritosSecao', () => {
     expect(getByText('0.782')).toBeTruthy();
   });
 
-  it('cancela as inscrições ao sair da tela', () => {
+  it('cancela a inscrição no store ao sair da tela', () => {
     const { unmount } = renderSecao();
 
     unmount();
 
     expect(cancelarStore).toHaveBeenCalled();
-    expect(cancelarFoco).toHaveBeenCalled();
   });
 });

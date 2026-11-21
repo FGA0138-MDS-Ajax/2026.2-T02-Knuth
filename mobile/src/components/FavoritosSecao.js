@@ -9,18 +9,9 @@ export default function FavoritosSecao({ navigation, store = favoritosStore }) {
 
   useEffect(() => {
     const atualizar = () => setEstado(store.obter());
-    const cancelarStore = store.inscrever(atualizar);
-    store.carregar();
-    const cancelarFoco =
-      navigation && navigation.addListener
-        ? navigation.addListener('focus', () => store.carregar())
-        : undefined;
-
-    return () => {
-      cancelarStore();
-      if (cancelarFoco) cancelarFoco();
-    };
-  }, [store, navigation]);
+    atualizar();
+    return store.inscrever(atualizar);
+  }, [store]);
 
   if (!estado.logado) {
     return null;
