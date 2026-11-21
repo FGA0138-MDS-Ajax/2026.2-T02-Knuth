@@ -23,7 +23,7 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 | DEF-017 | Alto | Visão | Inconsistência | Planejamento da Visão não reflete o replanejamento registrado separadamente | Até a entrega final, com rechecagem | Não há evidência |
 | DEF-019 | Alto | Testes | Inconsistência | Automação de testes declarada sem implementação publicada correspondente | Até a entrega final, com rechecagem | Não há evidência |
 | DEF-020 | Alto | Testes | Omissão | Planejamento de testes com definição operacional incompleta | Até a entrega final, com rechecagem | Não há evidência |
-| DEF-021 | Alto | Testes | Omissão | Meta de cobertura de testes sem evidência publicada de medição | Até a entrega final, com rechecagem | Não há evidência |
+| DEF-021 | Alto | Testes | Omissão | Meta de cobertura de testes sem evidência publicada de medição | Até a entrega final, com rechecagem | docs/plano_de_testes_RotasDF.md, seção 8 — cobertura medida: API 94,84% e mobile 89,32% (statements) |
 | DEF-022 | Alto | Testes | Inconsistência | Exclusão de teste e lacunas de verificação no incremento integrado | Até a entrega final, com rechecagem | Não há evidência |
 | DEF-025 | Alto | Arquitetura | Inconsistência | Referências cruzadas às MR não acompanham a numeração atual do Markdown | Até a entrega final, com rechecagem | Não há evidência |
 | DEF-027 | Alto | Arquitetura | Inconsistência | Uso de ORM declarado na arquitetura diverge do acesso a dados implementado | Até a entrega final, com rechecagem | Não há evidência |

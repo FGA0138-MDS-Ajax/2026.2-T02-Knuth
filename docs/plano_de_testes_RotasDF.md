@@ -9,6 +9,7 @@
 5. [Testes de interface (React Native)](#5-testes-de-interface-react-native)
 6. [Tratamento de erros e condições especiais](#6-tratamento-de-erros-e-condições-especiais)
 7. [Considerações finais](#7-considerações-finais)
+8. [Cobertura de testes](#8-cobertura-de-testes)
 
 ---
 
@@ -321,3 +322,16 @@
 - Uso de *mocks* para isolar os testes e garantir confiabilidade.
 - Inclusão dos casos de teste nos pipelines de CI/CD para feedback contínuo.
 - Documentação colaborativa para evolução contínua do plano de testes.
+
+---
+
+## 8. Cobertura de testes
+
+A cobertura foi medida com `npx jest --coverage` nas pastas `api` e `mobile`, sobre a branch `developer` no commit `ae272234` (21/11/2026). A meta definida na seção 6.1 do Documento de Visão é de 80%.
+
+| Módulo | Suítes | Testes | Statements | Branches | Funções | Linhas |
+|---|---|---|---|---|---|---|
+| API | 49 | 513 | 94,84% | 91,83% | 94,11% | 95,38% |
+| Mobile | 28 | 344 | 89,32% | 83,23% | 81,96% | 89,84% |
+
+Os dois módulos atendem à meta de 80% em todas as métricas. A medição é feita manualmente: o workflow de CI executa `npm test` sem a opção `--coverage`.
