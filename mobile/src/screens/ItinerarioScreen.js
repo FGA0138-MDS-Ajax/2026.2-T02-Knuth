@@ -89,23 +89,21 @@ export default function ItinerarioScreen({ route, navigation }) {
                   </Text>
                 ) : null}
               </View>
+              <TouchableOpacity
+                style={styles.botaoReportarParada}
+                onPress={() =>
+                  navigation?.navigate('ReportarDivergencia', {
+                    tipo: 'PARADA',
+                    linhaId: linhaRef,
+                    paradaId: item.codigo || String(item.paradaId),
+                  })
+                }
+              >
+                <Text style={styles.botaoReportarParadaTexto}>Reportar</Text>
+              </TouchableOpacity>
             </View>
           );
         }}
-            <TouchableOpacity
-              style={styles.botaoReportarParada}
-              onPress={() =>
-                navigation?.navigate('ReportarDivergencia', {
-                  tipo: 'PARADA',
-                  linhaId: linhaRef,
-                  paradaId: item.codigo || String(item.paradaId),
-                })
-              }
-            >
-              <Text style={styles.botaoReportarParadaTexto}>Reportar</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       />
     </View>
   );

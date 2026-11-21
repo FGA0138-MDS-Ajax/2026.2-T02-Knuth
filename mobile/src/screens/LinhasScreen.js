@@ -121,25 +121,11 @@ export default function LinhasScreen({ navigation }) {
                 <Text style={styles.toqueDetalhes}>Toque para ver horários</Text>
                 <AlertaBadge alertas={item.alertas} afetadaPorAlerta={item.afetadaPorAlerta} />
               </View>
+              <FavoritoEstrela item={{ tipo: 'LINHA', linhaId: item.id }} />
               <Ionicons name="chevron-forward" size={20} color="#CCC" />
             </TouchableOpacity>
           );
         }}
-        renderItem={({ item }) => (
-          <TouchableOpacity 
-            style={styles.card}
-            onPress={() => navigation.navigate('Horarios', { linhaId: item.id })}>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{item.codigo}</Text>
-            </View>
-            <View style={styles.infoContainer}>
-              <Text style={styles.nomeLinha} numberOfLines={2}>{item.nome}</Text>
-              <Text style={styles.toqueDetalhes}>Toque para ver horários</Text>
-            </View>
-            <FavoritoEstrela item={{ tipo: 'LINHA', linhaId: item.id }} />
-            <Ionicons name="chevron-forward" size={20} color="#CCC" />
-          </TouchableOpacity>
-        )}
       />
      <RodapeNavegacao navigation={navigation} ativa="Linhas" />
     </View>

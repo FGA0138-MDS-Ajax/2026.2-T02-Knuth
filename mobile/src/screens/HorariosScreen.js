@@ -48,12 +48,6 @@ export default function HorariosScreen({ route, navigation }) {
         onPress={navigation ? () => navigation.navigate('Alertas') : undefined}
       />
 
-      <TouchableOpacity
-        style={styles.botaoItinerario}
-        onPress={() => navigation.navigate('Itinerario', { linhaId })}
-      >
-        <Text style={styles.botaoItinerarioTexto}>Ver itinerário</Text>
-      </TouchableOpacity>
       <View style={styles.acoesLinha}>
         <TouchableOpacity
           style={styles.botaoItinerario}
