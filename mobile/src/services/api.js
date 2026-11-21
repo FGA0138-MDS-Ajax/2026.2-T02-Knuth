@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import Constants from 'expo-constants';
 
@@ -42,23 +43,36 @@ export const getParadaProxima = async (lat, lng) => {
 };
 
 export const cadastrarUsuario = async (nome, email, senha) => {
-  const response = await axios.post(`${API_BASE_URL}/usuarios/cadastro`, { nome, email, senha });
+  const response = await axios.post(`${API_BASE_URL}/usuarios/cadastro`, {
+    nome,
+    email,
+    senha
+  });
   return response.data;
 };
 
 export const loginUsuario = async (email, senha) => {
-  const response = await axios.post(`${API_BASE_URL}/usuarios/login`, { email, senha });
+  const response = await axios.post(`${API_BASE_URL}/usuarios/login`, {
+    email,
+    senha
+  });
   return response.data;
 };
 
 // RF16 - Recuperação de senha e exclusão da própria conta
 export const solicitarRecuperacaoSenha = async (email) => {
-  const response = await axios.post(`${API_BASE_URL}/usuarios/recuperar-senha`, { email });
+  const response = await axios.post(`${API_BASE_URL}/usuarios/recuperar-senha`, {
+    email
+  });
   return response.data;
 };
 
 export const redefinirSenha = async (email, codigo, novaSenha) => {
-  const response = await axios.post(`${API_BASE_URL}/usuarios/redefinir-senha`, { email, codigo, novaSenha });
+  const response = await axios.post(`${API_BASE_URL}/usuarios/redefinir-senha`, {
+    email,
+    codigo,
+    novaSenha
+  });
   return response.data;
 };
 
@@ -76,7 +90,13 @@ export const getAlertas = async () => {
 };
 
 // RF19 - Reportar divergência na informação (Passageiro)
-export const reportarDivergencia = async ({ tipo, descricao, linhaId, paradaId, usuarioId }) => {
+export const reportarDivergencia = async ({
+  tipo,
+  descricao,
+  linhaId,
+  paradaId,
+  usuarioId
+}) => {
   const response = await axios.post(`${API_BASE_URL}/reportes`, {
     tipo,
     descricao,
@@ -125,8 +145,72 @@ export const excluirUsuario = async (token, id) => {
   return response.data;
 };
 
+// RF - Gerenciamento de alertas pelo administrador
+export const listarAlertasAdmin = async (token) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/alertas`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const criarAlerta = async (token, dados) => {
+  const response = await axios.post(`${API_BASE_URL}/admin/alertas`, dados, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const encerrarAlerta = async (token, id) => {
+  const response = await axios.put(`${API_BASE_URL}/admin/alertas/${id}/encerrar`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const excluirAlerta = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/alertas/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const editarAlerta = async (token, id, dados) => {
+  const response = await axios.put(`${API_BASE_URL}/admin/alertas/${id}`, dados, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const buscarParadasAdmin = async (token, busca) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/paradas`, {
+    params: { busca },
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+// RF - Gerenciamento de favoritos
 export const getFavoritos = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/favoritos`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const adicionarFavorito = async (token, dados) => {
+  const response = await axios.post(`${API_BASE_URL}/favoritos`, dados, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const removerFavorito = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/favoritos/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
 // RF24 - Analisar reportes de usuários (Administrador)
 export const listarReportesAdmin = async (token, filtros = {}) => {
   const response = await axios.get(`${API_BASE_URL}/admin/reportes`, {
@@ -136,8 +220,6 @@ export const listarReportesAdmin = async (token, filtros = {}) => {
   return response.data;
 };
 
-export const adicionarFavorito = async (token, dados) => {
-  const response = await axios.post(`${API_BASE_URL}/favoritos`, dados, {
 export const obterReporteAdmin = async (token, id) => {
   const response = await axios.get(`${API_BASE_URL}/admin/reportes/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
@@ -145,8 +227,6 @@ export const obterReporteAdmin = async (token, id) => {
   return response.data;
 };
 
-export const removerFavorito = async (token, id) => {
-  const response = await axios.delete(`${API_BASE_URL}/favoritos/${id}`, {
 export const analisarReporteAdmin = async (token, id, dados) => {
   const response = await axios.patch(`${API_BASE_URL}/admin/reportes/${id}`, dados, {
     headers: { Authorization: `Bearer ${token}` }

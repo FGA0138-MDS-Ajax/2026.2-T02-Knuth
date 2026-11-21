@@ -20,6 +20,8 @@ import AdminScreen from './src/screens/AdminScreen';
 import CriarAdminScreen from './src/screens/CriarAdminScreen';
 import GerenciarUsuariosScreen from './src/screens/GerenciarUsuariosScreen';
 import EditarUsuarioScreen from './src/screens/EditarUsuarioScreen';
+import GerenciarAlertasScreen from './src/screens/GerenciarAlertasScreen';
+import NovoAlertaScreen from './src/screens/NovoAlertaScreen';
 import FavoritosScreen from './src/screens/FavoritosScreen';
 import AnalisarReportesScreen from './src/screens/AnalisarReportesScreen';
 import DetalheReporteScreen from './src/screens/DetalheReporteScreen';
@@ -118,6 +120,8 @@ export default function App() {
         />
         <Stack.Screen name="GerenciarUsuarios" component={GerenciarUsuariosScreen} options={{ title: 'Usuários' }} />
         <Stack.Screen name="EditarUsuario" component={EditarUsuarioScreen} options={{ title: 'Editar usuário' }} />
+        <Stack.Screen name="GerenciarAlertas" component={GerenciarAlertasScreen} options={{ title: 'Alertas' }} />
+        <Stack.Screen name="NovoAlerta" component={NovoAlertaScreen} options={{ title: 'Novo alerta' }} />
                 <Stack.Screen name="Favoritos" component={FavoritosScreen} options={{ title: 'Favoritos', headerBackVisible: false, headerLeft: () => null }} />
         <Stack.Screen name="AnalisarReportes" component={AnalisarReportesScreen} options={{ title: 'Analisar Reportes' }} />
         <Stack.Screen name="DetalheReporte" component={DetalheReporteScreen} options={{ title: 'Análise do Reporte' }} />
