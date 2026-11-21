@@ -111,12 +111,42 @@ describe('ConfiguracoesScreen', () => {
   });
 
   describe('opções de navegação', () => {
+    it('não mostra "Excluir minha conta" para o passageiro anônimo', async () => {
+      const { queryByText } = await renderTela();
+
+      expect(queryByText('Excluir minha conta')).toBeNull();
+    });
+
+    it('mostra "Excluir minha conta" para o passageiro logado e leva para a tela ExcluirConta', async () => {
+      const { getByText } = await renderLogado();
+
+      fireEvent.press(getByText('Excluir minha conta'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ExcluirConta');
+    });
+
+    it('não mostra "Excluir minha conta" para administradores', async () => {
+      mockStorage({ [USUARIO_KEY]: JSON.stringify({ ...USUARIO, tipo: 'ADMIN' }) });
+      const tela = await renderTela();
+      await tela.findByText(USUARIO.nome);
+
+      expect(tela.queryByText('Excluir minha conta')).toBeNull();
+      expect(tela.getByText('Sair da conta')).toBeTruthy();
+    });
     it('"Alertas de serviço" leva para a tela de Alertas', async () => {
       const { getByText } = await renderTela();
 
       fireEvent.press(getByText('Alertas de serviço'));
 
       expect(navigation.navigate).toHaveBeenCalledWith('Alertas');
+    });
+
+    it('"Reportar divergência" leva para a tela ReportarDivergencia', async () => {
+      const { getByText } = await renderTela();
+
+      fireEvent.press(getByText('Reportar divergência'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ReportarDivergencia');
     });
 
     it('"Área do administrador" leva para a tela Admin', async () => {
