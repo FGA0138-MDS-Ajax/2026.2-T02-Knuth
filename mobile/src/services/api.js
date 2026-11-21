@@ -112,3 +112,24 @@ export const excluirUsuario = async (token, id) => {
   });
   return response.data;
 };
+
+export const getFavoritos = async (token) => {
+  const response = await axios.get(`${API_BASE_URL}/favoritos`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const adicionarFavorito = async (token, dados) => {
+  const response = await axios.post(`${API_BASE_URL}/favoritos`, dados, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const removerFavorito = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/favoritos/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
