@@ -4,8 +4,8 @@ const MENSAGEM_SEM_LOGIN = 'Entre na sua conta para usar favoritos.';
 
 const mesmoItem = (a, b) => {
   if (a.tipo !== b.tipo) return false;
-  if (a.tipo === 'LINHA') return a.linhaId === b.linhaId;
-  if (a.tipo === 'PARADA') return a.paradaId === b.paradaId;
+  if (a.tipo === 'LINHA') return String(a.linhaId) === String(b.linhaId);
+  if (a.tipo === 'PARADA') return String(a.paradaId) === String(b.paradaId);
   return a.origem === b.origem && a.destino === b.destino;
 };
 
