@@ -24,7 +24,7 @@ const LINHA = {
   linhaNome: 'Circular Itapoã / Paranoá',
 };
 
-const DICA = 'Toque na estrela de uma linha para salvá-la aqui.';
+const DICA = 'Toque na estrela de uma linha, parada ou trajeto para salvá-lo aqui.';
 const AVISO_SEM_LOGIN = 'Entre na sua conta para ver seus favoritos.';
 
 describe('FavoritosScreen', () => {

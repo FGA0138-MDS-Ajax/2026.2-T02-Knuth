@@ -9,8 +9,12 @@ class FavoritosRepository {
              l.codigo AS "linhaCodigo", l.nome AS "linhaNome", l.cor AS "linhaCor",
              p.codigo AS "paradaCodigo", p.nome AS "paradaNome"
       FROM favoritos f
-      LEFT JOIN linhas l ON l.id = f.linha_id
-      LEFT JOIN paradas p ON p.id = f.parada_id
+      LEFT JOIN LATERAL (
+        SELECT codigo, nome, cor FROM linhas WHERE id = f.linha_id LIMIT 1
+      ) l ON true
+      LEFT JOIN LATERAL (
+        SELECT codigo, nome FROM paradas WHERE id = f.parada_id LIMIT 1
+      ) p ON true
       WHERE f.usuario_id = $1
       ORDER BY f.criado_em DESC;
     `;

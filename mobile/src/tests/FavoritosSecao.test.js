@@ -64,18 +64,32 @@ describe('FavoritosSecao', () => {
     const { getByText } = renderSecao();
 
     expect(getByText('Favoritos')).toBeTruthy();
-    expect(getByText('Toque na estrela de uma linha para salvá-la aqui.')).toBeTruthy();
+    expect(
+      getByText('Toque na estrela de uma linha, parada ou trajeto para salvá-lo aqui.')
+    ).toBeTruthy();
   });
 
-  it('lista as linhas favoritas e ignora os outros tipos', () => {
-    estado = { logado: true, favoritos: [LINHA, PARADA, TRAJETO] };
+  it('lista linhas, paradas e trajetos favoritos', () => {
+    estado = {
+      logado: true,
+      favoritos: [
+        LINHA,
+        { ...PARADA, paradaCodigo: 'P-101' },
+        TRAJETO,
+      ],
+    };
 
     const { getByText, queryByText } = renderSecao();
 
     expect(getByText('0.782')).toBeTruthy();
     expect(getByText('Circular Itapoã / Paranoá')).toBeTruthy();
-    expect(queryByText('Rodoviária')).toBeNull();
-    expect(queryByText('Toque na estrela de uma linha para salvá-la aqui.')).toBeNull();
+    expect(getByText('P-101')).toBeTruthy();
+    expect(getByText('Rodoviária')).toBeTruthy();
+    expect(getByText('Trajeto')).toBeTruthy();
+    expect(getByText('Asa Sul → Rodoviária')).toBeTruthy();
+    expect(
+      queryByText('Toque na estrela de uma linha, parada ou trajeto para salvá-lo aqui.')
+    ).toBeNull();
   });
 
   it('abre os horários da linha ao tocar no cartão', () => {
@@ -85,6 +99,27 @@ describe('FavoritosSecao', () => {
     fireEvent.press(getByText('Circular Itapoã / Paranoá'));
 
     expect(navigation.navigate).toHaveBeenCalledWith('Horarios', { linhaId: '0.782' });
+  });
+
+  it('abre o planejador com a parada favorita como origem ao tocar no cartão da parada', () => {
+    estado = { logado: true, favoritos: [PARADA] };
+
+    const { getByText } = renderSecao();
+    fireEvent.press(getByText('Rodoviária'));
+
+    expect(navigation.navigate).toHaveBeenCalledWith('BuscarTrajeto', { origem: 'Rodoviária' });
+  });
+
+  it('abre o planejador com origem e destino preenchidos ao tocar no cartão do trajeto', () => {
+    estado = { logado: true, favoritos: [TRAJETO] };
+
+    const { getByText } = renderSecao();
+    fireEvent.press(getByText('Asa Sul → Rodoviária'));
+
+    expect(navigation.navigate).toHaveBeenCalledWith('BuscarTrajeto', {
+      origem: 'Asa Sul',
+      destino: 'Rodoviária',
+    });
   });
 
   it('não carrega os favoritos por conta própria', () => {

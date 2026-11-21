@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { favoritosStore } from '../utils/favoritosStore';
 import FavoritoEstrela from './FavoritoEstrela';
 
+// RF17 - Exibe linhas, paradas e trajetos favoritos em destaque para consulta em um toque
 export default function FavoritosSecao({ navigation, store = favoritosStore }) {
   const [estado, setEstado] = useState(store.obter());
 
@@ -18,6 +19,9 @@ export default function FavoritosSecao({ navigation, store = favoritosStore }) {
   }
 
   const linhas = estado.favoritos.filter((favorito) => favorito.tipo === 'LINHA');
+  const paradas = estado.favoritos.filter((favorito) => favorito.tipo === 'PARADA');
+  const trajetos = estado.favoritos.filter((favorito) => favorito.tipo === 'TRAJETO');
+  const semFavoritos = linhas.length === 0 && paradas.length === 0 && trajetos.length === 0;
 
   return (
     <View style={styles.secao}>
@@ -26,22 +30,76 @@ export default function FavoritosSecao({ navigation, store = favoritosStore }) {
         <Text style={styles.tituloTexto}>Favoritos</Text>
       </View>
 
-      {linhas.length === 0 ? (
-        <Text style={styles.dica}>Toque na estrela de uma linha para salvá-la aqui.</Text>
+      {semFavoritos ? (
+        <Text style={styles.dica}>
+          Toque na estrela de uma linha, parada ou trajeto para salvá-lo aqui.
+        </Text>
       ) : (
-        linhas.map((favorito) => (
-          <TouchableOpacity
-            key={favorito.id}
-            style={styles.card}
-            onPress={() => navigation.navigate('Horarios', { linhaId: favorito.linhaId })}
-          >
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{favorito.linhaCodigo}</Text>
-            </View>
-            <Text style={styles.nomeLinha} numberOfLines={2}>{favorito.linhaNome}</Text>
-            <FavoritoEstrela item={{ tipo: 'LINHA', linhaId: favorito.linhaId }} store={store} />
-          </TouchableOpacity>
-        ))
+        <View>
+          {linhas.map((favorito) => (
+            <TouchableOpacity
+              key={favorito.id}
+              style={styles.card}
+              onPress={() => navigation.navigate('Horarios', { linhaId: favorito.linhaId })}
+            >
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{favorito.linhaCodigo}</Text>
+              </View>
+              <Text style={styles.nomeItem} numberOfLines={2}>{favorito.linhaNome}</Text>
+              <FavoritoEstrela item={{ tipo: 'LINHA', linhaId: favorito.linhaId }} store={store} />
+            </TouchableOpacity>
+          ))}
+
+          {paradas.map((favorito) => {
+            const nomeParada = favorito.paradaNome || favorito.paradaCodigo || favorito.paradaId;
+            return (
+              <TouchableOpacity
+                key={favorito.id}
+                style={styles.card}
+                onPress={() => navigation.navigate('BuscarTrajeto', { origem: nomeParada })}
+              >
+                <View style={[styles.badge, styles.badgeParada]}>
+                  <Text style={styles.badgeText}>{favorito.paradaCodigo || 'Parada'}</Text>
+                </View>
+                <View style={styles.infoItem}>
+                  <Text style={styles.nomeItem} numberOfLines={2}>{nomeParada}</Text>
+                  <Text style={styles.subtituloItem}>Parada favorita • Toque para planejar</Text>
+                </View>
+                <FavoritoEstrela
+                  item={{ tipo: 'PARADA', paradaId: favorito.paradaId }}
+                  store={store}
+                />
+              </TouchableOpacity>
+            );
+          })}
+
+          {trajetos.map((favorito) => (
+            <TouchableOpacity
+              key={favorito.id}
+              style={styles.card}
+              onPress={() =>
+                navigation.navigate('BuscarTrajeto', {
+                  origem: favorito.origem,
+                  destino: favorito.destino,
+                })
+              }
+            >
+              <View style={[styles.badge, styles.badgeTrajeto]}>
+                <Text style={styles.badgeText}>Trajeto</Text>
+              </View>
+              <View style={styles.infoItem}>
+                <Text style={styles.nomeItem} numberOfLines={2}>
+                  {favorito.origem} → {favorito.destino}
+                </Text>
+                <Text style={styles.subtituloItem}>Trajeto favorito • Toque para consultar</Text>
+              </View>
+              <FavoritoEstrela
+                item={{ tipo: 'TRAJETO', origem: favorito.origem, destino: favorito.destino }}
+                store={store}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
       )}
     </View>
   );
@@ -54,6 +112,10 @@ const styles = StyleSheet.create({
   dica: { fontSize: 13, color: '#666' },
   card: { flexDirection: 'row', backgroundColor: '#FFF7E6', padding: 12, borderRadius: 8, marginBottom: 8, alignItems: 'center', borderWidth: 1, borderColor: '#F3D9A4' },
   badge: { backgroundColor: '#006666', paddingVertical: 6, paddingHorizontal: 10, borderRadius: 6, marginRight: 12 },
-  badgeText: { color: '#FFF', fontWeight: 'bold', fontSize: 15 },
-  nomeLinha: { flex: 1, fontSize: 14, fontWeight: '600', color: '#333', marginRight: 8 }
+  badgeParada: { backgroundColor: '#004C4C' },
+  badgeTrajeto: { backgroundColor: '#B45309' },
+  badgeText: { color: '#FFF', fontWeight: 'bold', fontSize: 14 },
+  infoItem: { flex: 1, marginRight: 8 },
+  nomeItem: { flex: 1, fontSize: 14, fontWeight: '600', color: '#333', marginRight: 8 },
+  subtituloItem: { fontSize: 12, color: '#666', marginTop: 2 }
 });

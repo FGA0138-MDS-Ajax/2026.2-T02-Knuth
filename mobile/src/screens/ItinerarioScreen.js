@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { getItinerario } from '../services/api';
 import AlertaBanner, { AlertaBadge } from '../components/AlertaBanner';
+import FavoritoEstrela from '../components/FavoritoEstrela';
+import FavoritosCarregador from '../components/FavoritosCarregador';
 
 export default function ItinerarioScreen({ route, navigation }) {
   const { linhaId } = route.params;
@@ -27,6 +29,7 @@ export default function ItinerarioScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      <FavoritosCarregador navigation={navigation} />
       <View style={styles.header}>
         <Text style={styles.numeroLinha}>{dados?.codigo || '---'}</Text>
         <Text style={styles.nomeLinha}>{dados?.nome || 'Carregando...'}</Text>
@@ -89,6 +92,10 @@ export default function ItinerarioScreen({ route, navigation }) {
                   </Text>
                 ) : null}
               </View>
+              <FavoritoEstrela
+                item={{ tipo: 'PARADA', paradaId: String(item.paradaId) }}
+                tamanho={20}
+              />
               <TouchableOpacity
                 style={styles.botaoReportarParada}
                 onPress={() =>

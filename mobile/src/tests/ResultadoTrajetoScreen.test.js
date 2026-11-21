@@ -2,6 +2,14 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import ResultadoTrajetoScreen from '../screens/ResultadoTrajetoScreen';
 
+jest.mock('@expo/vector-icons', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return {
+    Ionicons: ({ name }) => React.createElement(Text, null, name),
+  };
+});
+
 const OPCOES = [
   { duracaoMinutos: 25, partida: '08:00', chegada: '08:25', baldeacoes: 0 },
   { duracaoMinutos: 40, partida: '08:10', chegada: '08:50', baldeacoes: 2 },
@@ -90,6 +98,18 @@ describe('ResultadoTrajetoScreen', () => {
 
       expect(getByText('⚠ Alerta: Desvio')).toBeTruthy();
       expect(getByText('Desvio na W3 Sul')).toBeTruthy();
+    });
+
+    it('exibe resumo do trajeto e estrela para favoritar quando origem e destino são informados (RF17)', () => {
+      const { getByText, getByLabelText } = render(
+        <ResultadoTrajetoScreen
+          route={{ params: { opcoes: OPCOES, origem: 'Asa Sul', destino: 'Rodoviária' } }}
+          navigation={navigation}
+        />
+      );
+
+      expect(getByText('Asa Sul → Rodoviária')).toBeTruthy();
+      expect(getByLabelText('Adicionar aos favoritos')).toBeTruthy();
     });
   });
 

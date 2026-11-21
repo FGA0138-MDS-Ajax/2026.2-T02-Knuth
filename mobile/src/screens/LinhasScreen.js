@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getLinhas } from '../services/api';
 import { AlertaBadge } from '../components/AlertaBanner';
 import FavoritosCarregador from '../components/FavoritosCarregador';
+import FavoritosSecao from '../components/FavoritosSecao';
 import FavoritoEstrela from '../components/FavoritoEstrela';
 import RodapeNavegacao from '../components/RodapeNavegacao';
 
@@ -64,6 +65,7 @@ export default function LinhasScreen({ navigation }) {
         ListHeaderComponent={
           <View>
             <FavoritosCarregador navigation={navigation} />
+            <FavoritosSecao navigation={navigation} />
             <View style={styles.botoesAcaoContainer}>
               <TouchableOpacity 
                 style={styles.botaoTrajeto}

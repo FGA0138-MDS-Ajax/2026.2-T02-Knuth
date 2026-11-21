@@ -3,24 +3,40 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator 
 import * as Location from 'expo-location';
 import { getTrajetos, getParadaProxima } from '../services/api';
 import AlertaBanner from '../components/AlertaBanner';
+import FavoritoEstrela from '../components/FavoritoEstrela';
+import FavoritosCarregador from '../components/FavoritosCarregador';
 
-export default function BuscarTrajetoScreen({ navigation }) {
-  const [origem, setOrigem] = useState('');
+export default function BuscarTrajetoScreen({ route, navigation }) {
+  const origemInicial = route?.params?.origem || '';
+  const destinoInicial = route?.params?.destino || '';
+
+  const [origem, setOrigem] = useState(origemInicial);
+  const [paradaOrigemId, setParadaOrigemId] = useState(null);
   const [alertasOrigem, setAlertasOrigem] = useState([]);
   const [origemAfetadaPorAlerta, setOrigemAfetadaPorAlerta] = useState(false);
-  const [destino, setDestino] = useState('');
+  const [destino, setDestino] = useState(destinoInicial);
   const [carregando, setCarregando] = useState(false);
-  const [buscandoGps, setBuscandoGps] = useState(true);
+  const [buscandoGps, setBuscandoGps] = useState(!origemInicial);
   const [erro, setErro] = useState('');
 
   useEffect(() => {
+    if (origemInicial) {
+      setOrigem(origemInicial);
+      setParadaOrigemId(null);
+      setBuscandoGps(false);
+      if (destinoInicial) {
+        setDestino(destinoInicial);
+      }
+      return;
+    }
     buscarLocalizacao();
-  }, []);
+  }, [origemInicial, destinoInicial]);
 
   const buscarLocalizacao = async () => {
     setBuscandoGps(true);
     setErro('');
     setOrigem('');
+    setParadaOrigemId(null);
     setAlertasOrigem([]);
     setOrigemAfetadaPorAlerta(false);
     
@@ -38,6 +54,7 @@ export default function BuscarTrajetoScreen({ navigation }) {
 
       if (parada && parada.nome) {
         setOrigem(parada.nome);
+        setParadaOrigemId(parada.id !== undefined && parada.id !== null ? String(parada.id) : null);
         setAlertasOrigem(Array.isArray(parada.alertas) ? parada.alertas : []);
         setOrigemAfetadaPorAlerta(Boolean(parada.afetadaPorAlerta));
       } else {
@@ -58,13 +75,14 @@ export default function BuscarTrajetoScreen({ navigation }) {
       return;
     }
 
+    const destinoLimpo = destino.trim();
     setCarregando(true);
     try {
       const opcoes = await getTrajetos(origem, destino);
       if (!opcoes || opcoes.length === 0) {
         setErro("Nenhuma rota encontrada para esses locais.");
       } else {
-        navigation.navigate('ResultadoTrajeto', { opcoes });
+        navigation.navigate('ResultadoTrajeto', { opcoes, origem, destino: destinoLimpo });
       }
     } catch (error) {
       console.error(error);
@@ -74,12 +92,20 @@ export default function BuscarTrajetoScreen({ navigation }) {
     }
   };
 
+  const podeFavoritarTrajeto = Boolean(origem && destino.trim());
+
   return (
     <View style={styles.container}>
+      <FavoritosCarregador navigation={navigation} />
       <Text style={styles.titulo}>Planejar Viagem</Text>
 
       <View style={styles.localizacaoCard}>
-        <Text style={styles.labelOrigem}>Sua localização (Origem):</Text>
+        <View style={styles.origemCabecalho}>
+          <Text style={styles.labelOrigem}>Sua localização (Origem):</Text>
+          {paradaOrigemId && !buscandoGps ? (
+            <FavoritoEstrela item={{ tipo: 'PARADA', paradaId: paradaOrigemId }} tamanho={22} />
+          ) : null}
+        </View>
         
         {buscandoGps ? (
           <View style={styles.loadingGps}>
@@ -113,6 +139,16 @@ export default function BuscarTrajetoScreen({ navigation }) {
         />
       </View>
 
+      {podeFavoritarTrajeto ? (
+        <View style={styles.favoritarTrajetoRow}>
+          <Text style={styles.favoritarTrajetoTexto}>Salvar este trajeto nos favoritos</Text>
+          <FavoritoEstrela
+            item={{ tipo: 'TRAJETO', origem, destino: destino.trim() }}
+            tamanho={22}
+          />
+        </View>
+      ) : null}
+
       {erro ? <Text style={styles.textoErro}>{erro}</Text> : null}
 
       <TouchableOpacity 
@@ -130,7 +166,10 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5', padding: 20, justifyContent: 'center' },
   titulo: { fontSize: 26, fontWeight: 'bold', color: '#006666', marginBottom: 30, textAlign: 'center' },
   localizacaoCard: { backgroundColor: '#E0F2F1', padding: 16, borderRadius: 8, borderWidth: 1, borderColor: '#B2DFDB', marginBottom: 20 },
-  labelOrigem: { fontSize: 14, color: '#006666', fontWeight: 'bold', marginBottom: 8 },
+  origemCabecalho: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  labelOrigem: { fontSize: 14, color: '#006666', fontWeight: 'bold' },
+  favoritarTrajetoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#FFF7E6', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#F3D9A4', marginBottom: 16 },
+  favoritarTrajetoTexto: { fontSize: 14, color: '#333', fontWeight: '600' },
   textoOrigem: { fontSize: 18, color: '#333', fontWeight: '600', marginBottom: 12 },
   loadingGps: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   textoLoading: { marginLeft: 8, color: '#666' },
