@@ -19,6 +19,8 @@ describe('FavoritosRepository', () => {
 
       const [sql, valores] = pool.query.mock.calls[0];
       expect(sql).toContain('FROM favoritos');
+      expect(sql).toContain('LEFT JOIN LATERAL');
+      expect(sql).toContain('LIMIT 1');
       expect(sql).toContain('WHERE f.usuario_id = $1');
       expect(sql).toContain('ORDER BY f.criado_em DESC');
       expect(valores).toEqual([3]);
