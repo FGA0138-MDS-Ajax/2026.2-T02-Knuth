@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getFavoritos, adicionarFavorito, removerFavorito } from '../services/api';
 
 const MENSAGEM_SEM_LOGIN = 'Entre na sua conta para usar favoritos.';
@@ -22,6 +21,7 @@ export function criarFavoritosStore() {
 
   const lerSessao = async () => {
     try {
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
       const tokenSalvo = await AsyncStorage.getItem('@rotasdf_token');
       const usuarioSalvo = await AsyncStorage.getItem('@rotasdf_usuario');
       const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
