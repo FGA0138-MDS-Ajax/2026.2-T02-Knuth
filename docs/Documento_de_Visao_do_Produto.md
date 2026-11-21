@@ -1,17 +1,17 @@
 # RotasDF — Visão do Produto e do Projeto
 
-**T02_KNUTH — RotasDF** · Versão 1.3.0
+**T02_KNUTH — RotasDF** · Versão 1.3.1
 
 ## Integrantes do Grupo
 
 | Matrícula | Nome | Função (responsabilidade) | Pontos de participação |
 |---|---|---|---|
-| 252014223 | Gabriel Sakai e Silva | Analista de qualidade / desenvolvedor | 16,6 |
-| 242015601 | Emanuele Victor Santos | Scrum Master / Líder do grupo / desenvolvedor | 16,6 |
-| 232013990 | Gabriel Felix Mota Soares | Dono do produto | 16,6 |
-| 190128160 | Guilherme Maciel de Meneses | Desenvolvedor | 16,6 |
-| 222024819 | Gabriela Xavier Rodrigues | Desenvolvedor | 16,6 |
-| 242015460 | Denilson Lima Santos | Desenvolvedor | 16,6 |
+| 252014223 | Gabriel Sakai e Silva | Analista de qualidade / desenvolvedor | 16,67 |
+| 242015601 | Emanuele Victor Santos | Scrum Master / Líder do grupo / desenvolvedor | 16,67 |
+| 232013990 | Gabriel Felix Mota Soares | Dono do produto | 16,67 |
+| 190128160 | Guilherme Maciel de Meneses | Desenvolvedor | 16,67 |
+| 222024819 | Gabriela Xavier Rodrigues | Desenvolvedor | 16,66 |
+| 242015460 | Denilson Lima Santos | Desenvolvedor | 16,66 |
 | | **Total de pontos** (devem fechar 100 para toda a equipe) | | **100** |
 
 ## Histórico de Revisões
@@ -22,6 +22,7 @@
 | 27/10/2026 | 1.1.0 | Alinhamento do modelo de branches e retirada do método TDD | Gabriel Sakai e Silva |
 | 15/11/2026 | 1.2.0 | Reformula a parte de métricas e de teste além de atualizar a progressão do documento | Gabriel Sakai e Silva |
 | 21/11/2026 | 1.3.0 | Inclui critérios de aceitação verificáveis para todas as 24 histórias do backlog (reparo do DEF-041) | Denilson Lima Santos |
+| 21/11/2026 | 1.3.1 | Corrige posição de fontes, ordem alfabética das referências e soma exata dos pontos de participação (reparo dos DEF-004, DEF-009 e DEF-012) | Denilson Lima Santos |
 
 ## Sumário
 
@@ -82,9 +83,9 @@ O produto irá se diferenciar por sua acessibilidade e facilidade de uso, permit
 | Ao contrário | Escassez de informação transformando o transporte público mais imprevisível para os usuários |
 | Nosso produto | Entrega informações acessíveis e de fácil entendimento |
 
-O RotasDF tem como propósito central democratizar o acesso às informações do transporte público no Distrito Federal. Para isso, o produto disponibiliza uma interface mobile na qual o usuário pode consultar todas as linhas da região e visualizar seus itinerários completos. Além disso, a plataforma implementa um sistema de planejamento de viagens que captura a localização geográfica atual do usuário para definir a origem e solicita a inserção de um destino, a fim de calcular e sugerir as melhores rotas. Com essa abordagem, o sistema centraliza os dados de mobilidade urbana, mitigando a desinformação e facilitando o deslocamento.
-
 *Fonte: Elaborado pelos autores (2026)*
+
+O RotasDF tem como propósito central democratizar o acesso às informações do transporte público no Distrito Federal. Para isso, o produto disponibiliza uma interface mobile na qual o usuário pode consultar todas as linhas da região e visualizar seus itinerários completos. Além disso, a plataforma implementa um sistema de planejamento de viagens que captura a localização geográfica atual do usuário para definir a origem e solicita a inserção de um destino, a fim de calcular e sugerir as melhores rotas. Com essa abordagem, o sistema centraliza os dados de mobilidade urbana, mitigando a desinformação e facilitando o deslocamento.
 
 ### 1.3 Objetivos do produto
 
@@ -188,8 +189,6 @@ A matriz de comunicação do RotasDF foi desenhada combinando ferramentas formai
 De forma complementar e contínua, o grupo utiliza um canal no WhatsApp como ferramenta de comunicação rápida. Esse ambiente é focado na resolução de problemas técnicos do dia a dia e no bloqueio de impedimentos. É por meio dele que a equipe resolve dúvidas ágeis relacionadas ao Git e alinha a integração de código entre o Frontend e o Backend, garantindo que nenhum desenvolvedor fique travado por muito tempo.
 
 A matriz de comunicação do RotasDF passará por uma atualização nas Sprints 4 e 5. A partir dessas etapas, todas as reuniões semanais contarão com o registro formal de atas de reunião. Essa melhoria tem como objetivo aprimorar o rastreamento das decisões tomadas pela equipe, além de garantir que todo o histórico de informações, alinhamentos e revisões do projeto fique devidamente documentado e acessível a todos os membros.
-
-*Fonte: Elaborado pelos autores (2026)*
 
 ### 2.5 Gerenciamento de riscos
 
@@ -422,10 +421,10 @@ ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. **ABNT NBR 10520**: Informação e 
 
 BOREKI, Vinicius. O impacto da previsibilidade do transporte público. **Gazeta do Povo**, Curitiba, 30 out. 2023. Disponível em: <https://www.gazetadopovo.com.br/gpbc/metrocard/o-impacto-da-previsibilidade-do-transporte-publico/>. Acesso em: 30 set. 2026.
 
+INTERNATIONAL SOFTWARE TESTING QUALIFICATIONS BOARD (ISTQB). **Syllabus do nível fundamental**. Versão 4.0. [S. l.]: ISTQB, 2023. Disponível em: <https://bstqb.org.br>. Acesso em: 29 set. 2026.
+
 KRUG, Steve. **Não me faça pensar**: uma abordagem de bom senso à usabilidade na web e no mobile. 3. ed. Rio de Janeiro: Alta Books, 2014.
 
 PRESSMAN, Roger S.; MAXIM, Bruce R. **Engenharia de Software**: uma abordagem profissional. 8. ed. Porto Alegre: AMGH, 2016.
 
 SOMMERVILLE, Ian. **Engenharia de Software**. 10. ed. São Paulo: Pearson Education do Brasil, 2019.
-
-INTERNATIONAL SOFTWARE TESTING QUALIFICATIONS BOARD (ISTQB). **Syllabus do nível fundamental**. Versão 4.0. [S. l.]: ISTQB, 2023. Disponível em: <https://bstqb.org.br>. Acesso em: 29 set. 2026.
