@@ -138,14 +138,14 @@ A figura a seguir apresenta o estilo arquitetural escolhido, com as camadas, os 
 
 **Camada de persistência (banco de dados)**
 
-- **Repositórios (ORM):** isolam o acesso ao banco.
+- **Repositórios (driver pg, SQL direto):** isolam o acesso ao banco.
 - **Banco de dados (PostgreSQL):** persiste linhas, paradas, itinerários, horários, alertas, usuários, favoritos e reportes.
 
 **Interfaces e conectores**
 
 - **API REST (aplicativo mobile → controladores):** recebe requisições HTTPS com JSON/parâmetros e devolve JSON com código HTTP padronizado.
 - **Chamada de módulo (controladores → módulos):** recebe objetos já validados e devolve o resultado da regra de negócio.
-- **Acesso a dados (módulos → repositórios → PostgreSQL):** comandos de leitura e escrita via ORM.
+- **Acesso a dados (módulos → repositórios → PostgreSQL):** comandos de leitura e escrita via driver pg, com SQL direto.
 - **Importação (fonte oficial GTFS → serviço de importação):** valida arquivos GTFS antes da persistência no banco.
 - **Notificação (módulo Conta → e-mail / push no aplicativo mobile):** notificação enviada a usuários cadastrados sobre alterações nos favoritos (RF15).
 
@@ -355,7 +355,7 @@ O Quadro 1 resume a responsabilidade de cada componente e as interfaces que ele 
 | Importação GTFS (Python) | Lê o pacote GTFS, valida estrutura e consistência e carrega a base em transação única, em processo separado do servidor (RF20, MR09). | ServicoImportacao | Fonte oficial GTFS; PostgreSQL |
 | Adaptadores de integração | Comunicação com a posição da frota e a central de trânsito, com tempo limite e tratamento de falhas (MR09). | ProvedorPosicaoFrota; ProvedorCentralTransito | Serviços externos (HTTPS) |
 | **Camada de persistência** | | | |
-| Repositórios (ORM) | Isolam o acesso ao banco; cada módulo usa só os repositórios das suas tabelas. | AcessoDados | PostgreSQL (SQL, porta 5432) |
+| Repositórios (driver pg, SQL direto) | Isolam o acesso ao banco; cada módulo usa só os repositórios das suas tabelas. | AcessoDados | PostgreSQL (SQL, porta 5432) |
 | PostgreSQL | Armazena dados de transporte, alertas, usuários, favoritos, buscas, reportes e o histórico de importações. | Conexão SQL (porta 5432) | — |
 
 *Fonte: Elaborado pelos autores (2026).*
