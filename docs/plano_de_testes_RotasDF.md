@@ -53,6 +53,7 @@
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
 | `findNearestParada` | Busca a parada mais próxima. | Retorna a parada ou `null`. |
+| `buscarPorNome` | Busca paradas ignorando acentos/caixa, com fronteira de palavras curtas e limite configurável. | Retorna as paradas correspondentes ordenadas por relevância ou lista vazia para termo vazio. |
 
 ### 2.5. `LinhasRepository`
 
@@ -66,9 +67,9 @@
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
-| `buscarParadasPorNome` | Busca paradas pelo nome. | Retorna uma lista ou uma lista vazia. |
-| `buscarRotasDiretas` | Busca rotas diretas. | Retorna as rotas ou uma lista vazia. |
-| `buscarRotasComBaldeacao` | Busca rotas com baldeação. | Retorna as rotas ou uma lista vazia. |
+| `buscarParadasPorNome` | Busca múltiplas paradas candidatas ignorando acentos, com aliases locais (ex.: *Rodoviária do Plano Piloto* → `ROD.PP`) e expansão em raio de 350 m para parada única. | Retorna até 15 paradas candidatas ordenadas por relevância ou lista vazia para termo vazio/inexistente. |
+| `buscarRotasDiretas` | Busca rotas diretas aceitando listas ou IDs unitários de origem/destino, com ajuste de virada de meia-noite e diversidade de linhas. | Retorna até 8 opções diretas ordenadas por duração/horário ou lista vazia sem consultar o banco quando algum lado está vazio. |
+| `buscarRotasComBaldeacao` | Busca rotas com 1 baldeação via CTEs materializadas por padrão `(linha_id, sentido)` e janela de espera de até 60 minutos. | Retorna até 5 opções com baldeação distintas por par de linhas ou lista vazia. |
 
 ### 2.7. `GerenciarUsuariosRepository`
 
@@ -148,6 +149,7 @@
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
 | `obterParadaMaisProxima` | Busca a parada mais próxima usando latitude e longitude. | Retorna a parada, `null` ou um erro. |
+| `buscarParadas` | Valida o termo mínimo (2 caracteres) e o limite (1–25) para autocomplete (`GET /paradas`). | Retorna lista vazia para termos curtos/vazios ou repassa termo aparado e limite ao repositório. |
 
 ### 3.5. `LinhasService`
 
@@ -161,7 +163,7 @@
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
-| `obterTrajetos` | Valida a origem e o destino e retorna rotas. | Retorna uma lista combinada de trajetos ou um erro. |
+| `obterTrajetos` | Resolve todas as paradas candidatas de origem e destino e combina rotas diretas e com baldeação. | Repassa todos os IDs candidatos ao repositório, retorna lista combinada de trajetos (diretas antes de baldeações) ou propaga erro. |
 
 ### 3.7. `GerenciarUsuariosService`
 
@@ -286,7 +288,7 @@
 | `ExcluirContaScreen` | Confirmação de senha e diálogo destrutivo para exclusão definitiva da própria conta (RF16). | Exige senha atual, solicita confirmação, chama `DELETE /usuarios/me`, limpa `AsyncStorage` (`@rotasdf_token`, `@rotasdf_usuario`, `@rotasdf_buscas_recentes`) e redireciona para `Linhas`. |
 | `ConfiguracoesScreen` | Exibição de perfil, limpeza de histórico, logout, atalho para reporte (RF19) e exclusão de conta para passageiros (RF16). | Exibe dados do passageiro logado, navega para `ReportarDivergencia`, mostra *"Excluir minha conta"* apenas para passageiros autenticados e executa logout. |
 | `dialogos` | Utilitário multiplataforma de alertas e confirmações (`mostrarAviso` e `confirmarAcao`) (RF16). | Utiliza `Alert.alert` no Android/iOS e `window.alert`/`window.confirm` na Web. |
-| `BuscarTrajetoScreen` | GPS, permissão, buscas, alerta na parada de origem (RF14) e favoritos de parada/trajeto (RF17). | Trata permissão de GPS e localização, exibe `AlertaBanner`, aceita origem/destino pré-preenchidos por rota, permite favoritar a parada próxima ou o trajeto e navega com `{ opcoes, origem, destino }`. |
+| `BuscarTrajetoScreen` | GPS, permissão, edição manual de origem, autocomplete de paradas (`GET /paradas`), buscas, alerta na parada de origem (RF14) e favoritos de parada/trajeto (RF17). | Trata permissão de GPS e localização, permite digitar outra origem manualmente e selecionar sugestões de paradas no destino, exibe `AlertaBanner`, aceita origem/destino pré-preenchidos por rota, permite favoritar a parada próxima ou o trajeto e navega com `{ opcoes, origem, destino }`. |
 | `ResultadoTrajetoScreen` | Exibição, navegação por opções, destaque de alertas (RF14) e favoritar trajeto pesquisado (RF17). | Exibe cartões de opções, baldeações, destaque `afetadaPorAlerta`, resumo `Origem → Destino` com `FavoritoEstrela` e navega para os detalhes. |
 | `TrajetoDetalheScreen` | Exibição detalhada das etapas e banner de alertas do trajeto (RF14). | Exibe `AlertaBanner` quando o trajeto é afetado por alerta vigente, lista etapas ordenadas com ícones e apresenta mensagem quando não há etapas. |
 | `GerenciarUsuariosScreen` | Listagem, filtros, navegação e erros. | Lista usuários, identifica o usuário atual, aplica filtros e apresenta alertas. |
