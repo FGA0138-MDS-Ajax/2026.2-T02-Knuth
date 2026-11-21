@@ -16,6 +16,9 @@ export default function ItinerarioScreen({ route, navigation }) {
       try {
         const res = await getItinerario(linhaId);
         setDados(res);
+        const temIdaRes = Array.isArray(res?.itinerario?.IDA) && res.itinerario.IDA.length > 0;
+        const temVoltaRes = Array.isArray(res?.itinerario?.VOLTA) && res.itinerario.VOLTA.length > 0;
+        setSentido(!temIdaRes && temVoltaRes ? 'VOLTA' : 'IDA');
       } catch (err) {
         console.error('Erro ao carregar itinerário:', err);
         setErro('Não foi possível carregar o itinerário.');
@@ -23,6 +26,16 @@ export default function ItinerarioScreen({ route, navigation }) {
     }
     carregar();
   }, [linhaId]);
+
+  const temIda = Array.isArray(dados?.itinerario?.IDA) && dados.itinerario.IDA.length > 0;
+  const temVolta = Array.isArray(dados?.itinerario?.VOLTA) && dados.itinerario.VOLTA.length > 0;
+  const sentidoUnico = (temIda && !temVolta) || (!temIda && temVolta);
+  const ehCircular = /circular/i.test(dados?.nome || '');
+  const rotuloSentidoUnico = temIda
+    ? ehCircular
+      ? 'Circular (sentido único)'
+      : 'Sentido único (Ida)'
+    : 'Sentido único (Volta)';
 
   const paradas = dados?.itinerario?.[sentido] || [];
   const linhaRef = dados?.codigo || String(linhaId);
@@ -52,17 +65,23 @@ export default function ItinerarioScreen({ route, navigation }) {
         <Text style={styles.botaoReportarLinhaTexto}>Reportar divergência</Text>
       </TouchableOpacity>
 
-      <View style={styles.tabContainer}>
-        {['IDA', 'VOLTA'].map((s) => (
-          <TouchableOpacity
-            key={s}
-            style={[styles.tab, sentido === s && styles.tabAtiva]}
-            onPress={() => setSentido(s)}
-          >
-            <Text style={styles.tabTexto}>{s === 'IDA' ? 'Ida' : 'Volta'}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      {sentidoUnico ? (
+        <View style={styles.sentidoUnicoBadge}>
+          <Text style={styles.sentidoUnicoTexto}>{rotuloSentidoUnico}</Text>
+        </View>
+      ) : (
+        <View style={styles.tabContainer}>
+          {['IDA', 'VOLTA'].map((s) => (
+            <TouchableOpacity
+              key={s}
+              style={[styles.tab, sentido === s && styles.tabAtiva]}
+              onPress={() => setSentido(s)}
+            >
+              <Text style={styles.tabTexto}>{s === 'IDA' ? 'Ida' : 'Volta'}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
 
       {erro && <Text style={styles.erro}>{erro}</Text>}
       {!dados && !erro && <ActivityIndicator size="large" color="#006666" />}
@@ -124,6 +143,8 @@ const styles = StyleSheet.create({
   botaoReportarLinha: { alignSelf: 'center', paddingVertical: 6, paddingHorizontal: 16, borderRadius: 20, borderWidth: 1, borderColor: '#C62828', marginBottom: 14 },
   botaoReportarLinhaTexto: { color: '#C62828', fontWeight: 'bold', fontSize: 13 },
   tabContainer: { flexDirection: 'row', marginBottom: 16 },
+  sentidoUnicoBadge: { alignSelf: 'flex-start', backgroundColor: '#E0F2F1', borderWidth: 1, borderColor: '#B2DFDB', borderRadius: 16, paddingVertical: 6, paddingHorizontal: 16, marginBottom: 16 },
+  sentidoUnicoTexto: { color: '#006666', fontWeight: 'bold', fontSize: 13 },
   tab: { paddingVertical: 8, paddingHorizontal: 24, borderRadius: 20, backgroundColor: '#E0E0E0', marginRight: 8 },
   tabAtiva: { backgroundColor: '#006666' },
   tabTexto: { color: '#FFF', fontWeight: 'bold' },

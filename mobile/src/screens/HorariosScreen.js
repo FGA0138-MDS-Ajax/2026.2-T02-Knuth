@@ -3,6 +3,15 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator }
 import { getHorarios } from '../services/api';
 import AlertaBanner from '../components/AlertaBanner';
 
+function sentidoTemHorarios(quadroSentido) {
+  if (!quadroSentido) return false;
+  return (
+    (Array.isArray(quadroSentido.DIA_UTIL) && quadroSentido.DIA_UTIL.length > 0) ||
+    (Array.isArray(quadroSentido.SABADO) && quadroSentido.SABADO.length > 0) ||
+    (Array.isArray(quadroSentido.DOMINGO_FERIADO) && quadroSentido.DOMINGO_FERIADO.length > 0)
+  );
+}
+
 export default function HorariosScreen({ route, navigation }) {
   const { linhaId } = route?.params || { linhaId: 1 };
   const [dados, setDados] = useState(null);
@@ -15,6 +24,9 @@ export default function HorariosScreen({ route, navigation }) {
       try {
         const res = await getHorarios(linhaId);
         setDados(res);
+        const temIdaRes = sentidoTemHorarios(res?.quadroHorarios?.IDA);
+        const temVoltaRes = sentidoTemHorarios(res?.quadroHorarios?.VOLTA);
+        setSentido(!temIdaRes && temVoltaRes ? 'VOLTA' : 'IDA');
       } catch (err) {
         console.error("Erro ao carregar horários:", err);
       } finally {
@@ -23,6 +35,16 @@ export default function HorariosScreen({ route, navigation }) {
     }
     carregarHorarios();
   }, [linhaId]);
+
+  const temIda = sentidoTemHorarios(dados?.quadroHorarios?.IDA);
+  const temVolta = sentidoTemHorarios(dados?.quadroHorarios?.VOLTA);
+  const sentidoUnico = (temIda && !temVolta) || (!temIda && temVolta);
+  const ehCircular = /circular/i.test(dados?.nome || '');
+  const rotuloSentidoUnico = temIda
+    ? ehCircular
+      ? 'Circular (sentido único)'
+      : 'Sentido único (Ida)'
+    : 'Sentido único (Volta)';
 
   const horariosAtuais = dados?.quadroHorarios?.[sentido]?.[tipoDia] || [];
 
@@ -69,19 +91,25 @@ export default function HorariosScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.sentidoContainer}>
-        {['IDA', 'VOLTA'].map((s) => (
-          <TouchableOpacity
-            key={s}
-            style={[styles.botaoSentido, sentido === s && styles.botaoSentidoAtivo]}
-            onPress={() => setSentido(s)}
-          >
-            <Text style={[styles.textoSentido, sentido === s && styles.textoSentidoAtivo]}>
-              {s === 'IDA' ? 'Ida' : 'Volta'}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      {sentidoUnico ? (
+        <View style={styles.sentidoUnicoBadge}>
+          <Text style={styles.sentidoUnicoTexto}>{rotuloSentidoUnico}</Text>
+        </View>
+      ) : (
+        <View style={styles.sentidoContainer}>
+          {['IDA', 'VOLTA'].map((s) => (
+            <TouchableOpacity
+              key={s}
+              style={[styles.botaoSentido, sentido === s && styles.botaoSentidoAtivo]}
+              onPress={() => setSentido(s)}
+            >
+              <Text style={[styles.textoSentido, sentido === s && styles.textoSentidoAtivo]}>
+                {s === 'IDA' ? 'Ida' : 'Volta'}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
 
       <View style={styles.tabContainer}>
         <TouchableOpacity style={[styles.tab, tipoDia === 'DIA_UTIL' && styles.tabAtiva]} onPress={() => setTipoDia('DIA_UTIL')}>
@@ -126,6 +154,8 @@ const styles = StyleSheet.create({
   botaoReportarTexto: { color: '#C62828', fontWeight: 'bold' },
   
   sentidoContainer: { flexDirection: 'row', justifyContent: 'center', marginBottom: 16, backgroundColor: '#E0E0E0', borderRadius: 8, alignSelf: 'center' },
+  sentidoUnicoBadge: { alignSelf: 'center', backgroundColor: '#E0F2F1', borderWidth: 1, borderColor: '#B2DFDB', borderRadius: 16, paddingVertical: 6, paddingHorizontal: 16, marginBottom: 16 },
+  sentidoUnicoTexto: { color: '#006666', fontWeight: 'bold', fontSize: 13 },
   botaoSentido: { paddingVertical: 8, paddingHorizontal: 32, borderRadius: 8 },
   botaoSentidoAtivo: { backgroundColor: '#FFF', shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 2, elevation: 2 },
   textoSentido: { color: '#666', fontWeight: 'bold' },
