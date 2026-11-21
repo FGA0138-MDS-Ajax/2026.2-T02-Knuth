@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { getItinerario } from '../services/api';
 
-export default function ItinerarioScreen({ route }) {
+export default function ItinerarioScreen({ route, navigation }) {
   const { linhaId } = route.params;
   const [dados, setDados] = useState(null);
   const [sentido, setSentido] = useState('IDA');
@@ -22,6 +22,7 @@ export default function ItinerarioScreen({ route }) {
   }, [linhaId]);
 
   const paradas = dados?.itinerario?.[sentido] || [];
+  const linhaRef = dados?.codigo || String(linhaId);
 
   return (
     <View style={styles.container}>
@@ -29,6 +30,18 @@ export default function ItinerarioScreen({ route }) {
         <Text style={styles.numeroLinha}>{dados?.codigo || '---'}</Text>
         <Text style={styles.nomeLinha}>{dados?.nome || 'Carregando...'}</Text>
       </View>
+
+      <TouchableOpacity
+        style={styles.botaoReportarLinha}
+        onPress={() =>
+          navigation?.navigate('ReportarDivergencia', {
+            tipo: 'ITINERARIO',
+            linhaId: linhaRef,
+          })
+        }
+      >
+        <Text style={styles.botaoReportarLinhaTexto}>Reportar divergência</Text>
+      </TouchableOpacity>
 
       <View style={styles.tabContainer}>
         {['IDA', 'VOLTA'].map((s) => (
@@ -60,6 +73,18 @@ export default function ItinerarioScreen({ route }) {
               <Text style={styles.paradaNome}>{item.nome}</Text>
               <Text style={styles.paradaCodigo}>Parada {item.codigo}</Text>
             </View>
+            <TouchableOpacity
+              style={styles.botaoReportarParada}
+              onPress={() =>
+                navigation?.navigate('ReportarDivergencia', {
+                  tipo: 'PARADA',
+                  linhaId: linhaRef,
+                  paradaId: item.codigo || String(item.paradaId),
+                })
+              }
+            >
+              <Text style={styles.botaoReportarParadaTexto}>Reportar</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
@@ -69,9 +94,11 @@ export default function ItinerarioScreen({ route }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5', padding: 16 },
-  header: { marginBottom: 16, alignItems: 'center' },
+  header: { marginBottom: 12, alignItems: 'center' },
   numeroLinha: { fontSize: 24, fontWeight: 'bold', color: '#006666' },
   nomeLinha: { fontSize: 16, color: '#666' },
+  botaoReportarLinha: { alignSelf: 'center', paddingVertical: 6, paddingHorizontal: 16, borderRadius: 20, borderWidth: 1, borderColor: '#C62828', marginBottom: 14 },
+  botaoReportarLinhaTexto: { color: '#C62828', fontWeight: 'bold', fontSize: 13 },
   tabContainer: { flexDirection: 'row', marginBottom: 16 },
   tab: { paddingVertical: 8, paddingHorizontal: 24, borderRadius: 20, backgroundColor: '#E0E0E0', marginRight: 8 },
   tabAtiva: { backgroundColor: '#006666' },
@@ -84,4 +111,6 @@ const styles = StyleSheet.create({
   paradaInfo: { flex: 1 },
   paradaNome: { fontSize: 15, fontWeight: '600', color: '#333' },
   paradaCodigo: { fontSize: 12, color: '#666' },
+  botaoReportarParada: { paddingVertical: 4, paddingHorizontal: 10, borderRadius: 12, borderWidth: 1, borderColor: '#C62828', marginLeft: 8 },
+  botaoReportarParadaTexto: { color: '#C62828', fontSize: 12, fontWeight: '600' },
 });
