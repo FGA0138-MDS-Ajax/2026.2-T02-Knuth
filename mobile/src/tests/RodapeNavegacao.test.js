@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import RodapeNavegacao from '../components/RodapeNavegacao';
 
 jest.mock('@expo/vector-icons', () => {
@@ -63,5 +64,17 @@ describe('RodapeNavegacao', () => {
     fireEvent.press(getByLabelText('Aba Linhas'));
 
     expect(navigation.navigate).not.toHaveBeenCalled();
+  });
+
+  it('aplica paddingBottom respeitando o recuo inferior da safe area do dispositivo', () => {
+    const { getByTestId } = render(
+      <SafeAreaInsetsContext.Provider value={{ top: 0, right: 0, bottom: 48, left: 0 }}>
+        <RodapeNavegacao navigation={navigation} ativa="Linhas" />
+      </SafeAreaInsetsContext.Provider>
+    );
+
+    expect(getByTestId('rodape-navegacao').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ paddingBottom: 54 })])
+    );
   });
 });

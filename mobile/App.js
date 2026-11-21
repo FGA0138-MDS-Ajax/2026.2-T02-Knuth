@@ -2,6 +2,7 @@ import React from 'react';
 import { registerRootComponent } from 'expo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import LoginScreen from './src/screens/LoginScreen';
 import CadastroScreen from './src/screens/CadastroScreen';
@@ -30,7 +31,8 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
       <Stack.Navigator 
         initialRouteName="Linhas"
         screenOptions={{
@@ -127,6 +129,7 @@ export default function App() {
         <Stack.Screen name="DetalheReporte" component={DetalheReporteScreen} options={{ title: 'Análise do Reporte' }} />
       </Stack.Navigator>
     </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 

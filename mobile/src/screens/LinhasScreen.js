@@ -110,6 +110,7 @@ export default function LinhasScreen({ navigation }) {
         data={linhasFiltradas}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listaConteudo}
         ListHeaderComponent={
           <View>
             <FavoritosCarregador navigation={navigation} />
@@ -204,7 +205,8 @@ export default function LinhasScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingTop: 16 },
+  container: { flex: 1, backgroundColor: '#F5F5F5' },
+  listaConteudo: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
   containerCentered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
   botoesAcaoContainer: { flexDirection: 'row', gap: 10, marginBottom: 16 },
   botaoTrajeto: { flex: 1, flexDirection: 'row', backgroundColor: '#004C4C', padding: 14, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
