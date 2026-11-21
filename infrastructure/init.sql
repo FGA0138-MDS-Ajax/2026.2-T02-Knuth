@@ -90,6 +90,22 @@ CREATE TABLE IF NOT EXISTS alertas_paradas (
     PRIMARY KEY (alerta_id, parada_id)
 );
 
+-- RF19 / RF24 - Reportes de divergência e análise pelo administrador
+CREATE TABLE IF NOT EXISTS reportes_divergencia (
+    id SERIAL PRIMARY KEY,
+    tipo VARCHAR(30) NOT NULL CHECK (tipo IN ('HORARIO', 'PARADA', 'ITINERARIO')),
+    descricao TEXT NOT NULL,
+    linha_id VARCHAR(50),
+    parada_id VARCHAR(50),
+    usuario_id INTEGER REFERENCES usuarios(id) ON DELETE SET NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'PROCEDENTE', 'IMPROCEDENTE')),
+    observacao_admin TEXT,
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    analisado_em TIMESTAMP WITH TIME ZONE
+);
+
+CREATE INDEX IF NOT EXISTS idx_reportes_divergencia_status ON reportes_divergencia(status);
+
 
 INSERT INTO usuarios (nome, email, senha_hash, tipo)
 VALUES ('Administrador', 'admin@rotasdf.com', '$2b$10$YIRTlYFXqX9MpSOHqjSjceSTXG500o8cWkapw3nG5til7lxW38HWC', 'ADMIN')

@@ -78,6 +78,11 @@ export default function ConfiguracoesScreen({ navigation }) {
           <Text style={styles.opcaoTexto}>Alertas de serviço</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity style={styles.opcaoItem} onPress={() => navigation.navigate('ReportarDivergencia')}>
+          <Ionicons name="flag-outline" size={24} color="#666" />
+          <Text style={styles.opcaoTexto}>Reportar divergência</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.opcaoItem} onPress={limparHistorico}>
           <Ionicons name="trash-outline" size={24} color="#666" />
           <Text style={styles.opcaoTexto}>Limpar histórico de buscas</Text>

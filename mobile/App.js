@@ -15,11 +15,14 @@ import ResultadoTrajetoScreen from './src/screens/ResultadoTrajetoScreen';
 import TrajetoDetalheScreen from './src/screens/TrajetoDetalheScreen';
 import ConfiguracoesScreen from './src/screens/ConfiguracoesScreen';
 import AlertasScreen from './src/screens/AlertasScreen';
+import ReportarDivergenciaScreen from './src/screens/ReportarDivergenciaScreen';
 import AdminScreen from './src/screens/AdminScreen';
 import CriarAdminScreen from './src/screens/CriarAdminScreen';
 import GerenciarUsuariosScreen from './src/screens/GerenciarUsuariosScreen';
 import EditarUsuarioScreen from './src/screens/EditarUsuarioScreen';
 import FavoritosScreen from './src/screens/FavoritosScreen';
+import AnalisarReportesScreen from './src/screens/AnalisarReportesScreen';
+import DetalheReporteScreen from './src/screens/DetalheReporteScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -78,6 +81,11 @@ export default function App() {
           component={AlertasScreen} 
           options={{ title: 'Alertas de Serviço' }} 
         />
+        <Stack.Screen
+          name="ReportarDivergencia"
+          component={ReportarDivergenciaScreen}
+          options={{ title: 'Reportar Divergência' }}
+        />
         <Stack.Screen 
           name="Login" 
           component={LoginScreen} 
@@ -111,6 +119,8 @@ export default function App() {
         <Stack.Screen name="GerenciarUsuarios" component={GerenciarUsuariosScreen} options={{ title: 'Usuários' }} />
         <Stack.Screen name="EditarUsuario" component={EditarUsuarioScreen} options={{ title: 'Editar usuário' }} />
                 <Stack.Screen name="Favoritos" component={FavoritosScreen} options={{ title: 'Favoritos', headerBackVisible: false, headerLeft: () => null }} />
+        <Stack.Screen name="AnalisarReportes" component={AnalisarReportesScreen} options={{ title: 'Analisar Reportes' }} />
+        <Stack.Screen name="DetalheReporte" component={DetalheReporteScreen} options={{ title: 'Análise do Reporte' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

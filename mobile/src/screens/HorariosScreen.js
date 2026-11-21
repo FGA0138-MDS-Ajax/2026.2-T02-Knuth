@@ -41,12 +41,26 @@ export default function HorariosScreen({ route, navigation }) {
         <Text style={styles.nomeLinha}>{dados?.nome || 'Linha'}</Text>
       </View>
 
-      <TouchableOpacity
-        style={styles.botaoItinerario}
-        onPress={() => navigation.navigate('Itinerario', { linhaId })}
-      >
-        <Text style={styles.botaoItinerarioTexto}>Ver itinerário</Text>
-      </TouchableOpacity>
+      <View style={styles.acoesLinha}>
+        <TouchableOpacity
+          style={styles.botaoItinerario}
+          onPress={() => navigation.navigate('Itinerario', { linhaId })}
+        >
+          <Text style={styles.botaoItinerarioTexto}>Ver itinerário</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.botaoReportar}
+          onPress={() =>
+            navigation.navigate('ReportarDivergencia', {
+              tipo: 'HORARIO',
+              linhaId: dados?.codigo || String(linhaId),
+            })
+          }
+        >
+          <Text style={styles.botaoReportarTexto}>Reportar divergência</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.sentidoContainer}>
         {['IDA', 'VOLTA'].map((s) => (
@@ -98,8 +112,11 @@ const styles = StyleSheet.create({
   header: { marginBottom: 16, alignItems: 'center' },
   numeroLinha: { fontSize: 24, fontWeight: 'bold', color: '#006666' },
   nomeLinha: { fontSize: 16, color: '#666', textAlign: 'center' },
-  botaoItinerario: { alignSelf: 'center', paddingVertical: 8, paddingHorizontal: 20, borderRadius: 20, borderWidth: 1, borderColor: '#006666', marginBottom: 16 },
+  acoesLinha: { flexDirection: 'row', justifyContent: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' },
+  botaoItinerario: { paddingVertical: 8, paddingHorizontal: 18, borderRadius: 20, borderWidth: 1, borderColor: '#006666' },
   botaoItinerarioTexto: { color: '#006666', fontWeight: 'bold' },
+  botaoReportar: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, borderWidth: 1, borderColor: '#C62828' },
+  botaoReportarTexto: { color: '#C62828', fontWeight: 'bold' },
   
   sentidoContainer: { flexDirection: 'row', justifyContent: 'center', marginBottom: 16, backgroundColor: '#E0E0E0', borderRadius: 8, alignSelf: 'center' },
   botaoSentido: { paddingVertical: 8, paddingHorizontal: 32, borderRadius: 8 },
