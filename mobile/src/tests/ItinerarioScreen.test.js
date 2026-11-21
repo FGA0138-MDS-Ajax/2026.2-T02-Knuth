@@ -155,6 +155,31 @@ describe('ItinerarioScreen', () => {
       expect(getByText(MSG_VAZIO)).toBeTruthy();
       expect(queryByText('W3 Sul Quadra 502')).toBeNull();
     });
+
+    it('sinaliza alertas na linha e nas paradas afetadas do itinerário (RF14)', async () => {
+      getItinerario.mockResolvedValue({
+        ...LINHA,
+        afetadaPorAlerta: true,
+        alertas: [{ id: 1, tipo: 'DESVIO', descricao: 'Desvio no percurso principal.' }],
+        itinerario: {
+          ...LINHA.itinerario,
+          IDA: [
+            {
+              ...LINHA.itinerario.IDA[0],
+              afetadaPorAlerta: true,
+              alertas: [{ id: 2, tipo: 'SUSPENSAO', descricao: 'Parada interditada para obras.' }],
+            },
+            LINHA.itinerario.IDA[1],
+          ],
+        },
+      });
+      const { findByText, getByText } = renderTela();
+
+      expect(await findByText('⚠ Alerta vigente')).toBeTruthy();
+      expect(getByText('Desvio no percurso principal.')).toBeTruthy();
+      expect(getByText('⚠ Alerta: Suspensão')).toBeTruthy();
+      expect(getByText('Parada interditada para obras.')).toBeTruthy();
+    });
   });
 
   describe('erro ao carregar', () => {

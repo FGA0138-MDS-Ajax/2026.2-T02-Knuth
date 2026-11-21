@@ -59,6 +59,8 @@ export const loginUsuario = async (email, senha) => {
   return response.data;
 };
 
+export const getAlertas = async (filtros) => {
+  const response = await axios.get(`${API_BASE_URL}/alertas`, filtros ? { params: filtros } : undefined);
 // RF16 - Recuperação de senha e exclusão da própria conta
 export const solicitarRecuperacaoSenha = async (email) => {
   const response = await axios.post(`${API_BASE_URL}/usuarios/recuperar-senha`, {

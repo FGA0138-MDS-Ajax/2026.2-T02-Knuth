@@ -118,7 +118,7 @@ paths:
   /paradas/proximas:
     get:
       summary: Busca a parada mais próxima
-      description: Retorna a parada mais próxima dada uma coordenada de GPS (RF03).
+      description: Retorna a parada mais próxima dada uma coordenada de GPS (RF03) com alertas vigentes associados (RF14).
       parameters:
         - in: query
           name: lat
@@ -150,6 +150,24 @@ paths:
         '500':
           $ref: '#/components/responses/ErroInterno'
 
+  /alertas:
+    get:
+      summary: Consultar alertas vigentes
+      description: Retorna os alertas vigentes no serviço (RF13), podendo ser filtrados por linhaId e/ou paradaId (RF14).
+      parameters:
+        - in: query
+          name: linhaId
+          schema:
+            type: string
+          description: Código(s) de linha separado(s) por vírgula
+        - in: query
+          name: paradaId
+          schema:
+            type: string
+          description: ID(s) de parada separado(s) por vírgula
+      responses:
+        '200':
+          description: Lista de alertas vigentes.
   /usuarios/cadastro:
     post:
       summary: Cadastrar novo passageiro (RF16)
@@ -363,6 +381,27 @@ paths:
               schema:
                 type: array
                 items:
+                  $ref: '#/components/schemas/Alerta'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /alertas/{id}:
+    get:
+      summary: Consultar alerta vigente por ID
+      description: Retorna detalhes de um alerta vigente específico (RF13).
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Alerta encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alerta'
                   $ref: '#/components/schemas/ReporteDivergencia'
         '400':
           description: Filtro de status ou tipo inválido.
@@ -498,6 +537,12 @@ components:
           type: string
         cor:
           type: string
+        afetadaPorAlerta:
+          type: boolean
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alerta'
 
     ItinerarioResponse:
       type: object
@@ -510,6 +555,12 @@ components:
           type: string
         cor:
           type: string
+        afetadaPorAlerta:
+          type: boolean
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alerta'
         itinerario:
           type: object
           properties:
@@ -537,6 +588,12 @@ components:
           type: number
         longitude:
           type: number
+        afetadaPorAlerta:
+          type: boolean
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alerta'
 
     HorariosResponse:
       type: object
@@ -547,6 +604,12 @@ components:
           type: string
         nome:
           type: string
+        afetadaPorAlerta:
+          type: boolean
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alerta'
         quadroHorarios:
           type: object
           properties:
@@ -592,6 +655,10 @@ components:
         afetadaPorAlerta:
           type: boolean
           example: false
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alerta'
         etapas:
           type: array
           items:
@@ -626,6 +693,37 @@ components:
           type: number
         distancia:
           type: number
+        afetadaPorAlerta:
+          type: boolean
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alerta'
+
+    Alerta:
+      type: object
+      properties:
+        id:
+          type: integer
+        tipo:
+          type: string
+          enum: [DESVIO, SUSPENSAO, ALTERACAO_HORARIO, PARALISACAO]
+        titulo:
+          type: string
+        descricao:
+          type: string
+        data_inicio:
+          type: string
+        data_fim:
+          type: string
+        linhas_afetadas:
+          type: array
+          items:
+            type: object
+        paradas_afetadas:
+          type: array
+          items:
+            type: object
 
     Erro:
       type: object

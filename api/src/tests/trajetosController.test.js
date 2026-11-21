@@ -1,8 +1,15 @@
 const trajetosService = require('../services/trajetosService');
+const alertasService = require('../services/alertasService');
 const trajetosController = require('../controllers/trajetosController');
 
 jest.mock('../services/trajetosService', () => ({
   obterTrajetos: jest.fn(),
+}));
+
+jest.mock('../services/alertasService', () => ({
+  listarAlertasVigentes: jest.fn(),
+  extrairItensDoTrajeto: jest.fn(),
+  filtrarAlertasParaItens: jest.fn(),
 }));
 
 function criarRes() {
@@ -19,6 +26,13 @@ describe('TrajetosController', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     erroSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    alertasService.listarAlertasVigentes.mockResolvedValue([]);
+    alertasService.extrairItensDoTrajeto.mockReturnValue({
+      linhasIds: [],
+      paradasIds: [],
+      paradasNomes: [],
+    });
+    alertasService.filtrarAlertasParaItens.mockReturnValue([]);
   });
 
   afterEach(() => {
@@ -44,9 +58,12 @@ describe('TrajetosController', () => {
       expect(trajetosService.obterTrajetos).not.toHaveBeenCalled();
     });
 
-    it('repassa origem e destino ao serviço e responde 200 com as opções', async () => {
+    it('repassa origem e destino ao serviço e responde 200 com as opções e alertas (RF14)', async () => {
       const opcoes = [{ duracaoMinutos: 25, baldeacoes: 0 }];
+      const alerta = { id: 1, tipo: 'DESVIO', descricao: 'Desvio na W3' };
       trajetosService.obterTrajetos.mockResolvedValue(opcoes);
+      alertasService.listarAlertasVigentes.mockResolvedValue([alerta]);
+      alertasService.filtrarAlertasParaItens.mockReturnValue([alerta]);
       const res = criarRes();
 
       await trajetosController.getTrajetos(
@@ -56,7 +73,26 @@ describe('TrajetosController', () => {
 
       expect(trajetosService.obterTrajetos).toHaveBeenCalledWith('Asa Sul', 'Rodoviária');
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(opcoes);
+      expect(res.json).toHaveBeenCalledWith([
+        { duracaoMinutos: 25, baldeacoes: 0, afetadaPorAlerta: true, alertas: [alerta] },
+      ]);
+    });
+
+    it('mantém a resposta 200 sem alertas quando a consulta de alertas falha', async () => {
+      const opcoes = [{ duracaoMinutos: 25, baldeacoes: 0 }];
+      trajetosService.obterTrajetos.mockResolvedValue(opcoes);
+      alertasService.listarAlertasVigentes.mockRejectedValue(new Error('erro alertas'));
+      const res = criarRes();
+
+      await trajetosController.getTrajetos(
+        { query: { origem: 'Asa Sul', destino: 'Rodoviária' } },
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith([
+        { duracaoMinutos: 25, baldeacoes: 0, afetadaPorAlerta: false, alertas: [] },
+      ]);
     });
 
     it('responde 200 com lista vazia quando não há rotas', async () => {

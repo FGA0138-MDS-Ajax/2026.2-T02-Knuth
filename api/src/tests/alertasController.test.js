@@ -4,6 +4,7 @@ const alertasController = require('../controllers/alertasController');
 jest.mock('../services/alertasService', () => ({
   listarAlertasVigentes: jest.fn(),
   obterAlertaVigente: jest.fn(),
+  vigentesPara: jest.fn(),
 }));
 
 function criarRes() {
@@ -34,6 +35,22 @@ describe('AlertasController', () => {
 
       await alertasController.getAlertasVigentes({}, res);
 
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(alertas);
+    });
+
+    it('filtra por linhaId e paradaId via vigentesPara quando informados na query (RF14)', async () => {
+      const alertas = [{ id: 1, tipo: 'DESVIO' }];
+      alertasService.vigentesPara.mockResolvedValue(alertas);
+      const res = criarRes();
+
+      await alertasController.getAlertasVigentes(
+        { query: { linhaId: '0.346,0.110', paradaId: '3368' } },
+        res
+      );
+
+      expect(alertasService.vigentesPara).toHaveBeenCalledWith(['0.346', '0.110'], ['3368']);
+      expect(alertasService.listarAlertasVigentes).not.toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(alertas);
     });

@@ -77,6 +77,20 @@ describe('ResultadoTrajetoScreen', () => {
       expect(getByText('Opções Encontradas')).toBeTruthy();
       expect(queryAllByText(/ min$/)).toHaveLength(0);
     });
+
+    it('destaca opções de trajeto afetadas por alertas vigentes (RF14)', () => {
+      const { getByText } = renderTela([
+        {
+          ...OPCOES[0],
+          afetadaPorAlerta: true,
+          alertas: [{ id: 1, tipo: 'DESVIO', titulo: 'Desvio na W3 Sul', descricao: 'Obras na via' }],
+        },
+        { ...OPCOES[1], afetadaPorAlerta: false, alertas: [] },
+      ]);
+
+      expect(getByText('⚠ Alerta: Desvio')).toBeTruthy();
+      expect(getByText('Desvio na W3 Sul')).toBeTruthy();
+    });
   });
 
   describe('navegação', () => {
