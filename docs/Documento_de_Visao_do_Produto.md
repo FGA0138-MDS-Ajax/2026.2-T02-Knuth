@@ -1,6 +1,6 @@
 # RotasDF — Visão do Produto e do Projeto
 
-**T02_KNUTH — RotasDF** · Versão 1.1.0
+**T02_KNUTH — RotasDF** · Versão 1.3.0
 
 ## Integrantes do Grupo
 
@@ -20,7 +20,8 @@
 |---|---|---|---|
 | 30/09/2026 | 1.0.0 | Visão inicial do produto | Todos |
 | 27/10/2026 | 1.1.0 | Alinhamento do modelo de branches e retirada do método TDD | Gabriel Sakai e Silva |
-| 15/11/2026 | 1.2.0 | Reformula a parte de métricas e de teste além de atualizar a progressão do documento  | Gabriel Sakai e Silva
+| 15/11/2026 | 1.2.0 | Reformula a parte de métricas e de teste além de atualizar a progressão do documento | Gabriel Sakai e Silva |
+| 21/11/2026 | 1.3.0 | Inclui critérios de aceitação verificáveis para todas as 24 histórias do backlog (reparo do DEF-041) | Denilson Lima Santos |
 
 ## Sumário
 
@@ -285,7 +286,7 @@ O backlog do produto consiste na lista priorizada de todas as funcionalidades e 
 
 ### 4.4 Tabela de backlog do produto
 
-Abaixo é apresentado o detalhamento dos requisitos funcionais (RF) e gerais não funcionais (RNF), vinculados aos seus cenários, Sprints estimadas e respectivas Histórias de Usuário.
+Abaixo é apresentado o detalhamento dos requisitos funcionais (RF), vinculados aos seus cenários, Sprints estimadas e respectivas Histórias de Usuário (Tabela 7). Para tornar verificável a aprovação de cada entrega na estratégia de testes (seção 6.1) e na medição da Taxa de Conclusão de Histórias por Sprint (TCH), os critérios de aceitação operacionais de todas as 24 histórias (US01 a US24) estão detalhados na subseção 4.4.1 (Tabela 8); uma história só é considerada concluída quando todos os seus critérios de aceitação correspondentes são satisfeitos.
 
 **Tabela 7: Backlog do produto** — Sistema: Plataforma de Transporte Público
 
@@ -342,6 +343,41 @@ Abaixo é apresentado o detalhamento dos requisitos funcionais (RF) e gerais nã
 | C6 / RF22 | S3 | Cadastrar e gerenciar alertas | Funcional | Must | O sistema deve permitir ao administrador cadastrar, editar e encerrar alertas, informando tipo, descrição, linhas e paradas afetadas e período de vigência; alertas vencidos devem ser retirados automaticamente. | **US22** – Como administrador, quero cadastrar alertas com tipo, itens afetados e período de vigência para comunicar as alterações no serviço aos passageiros. |
 | C6 / RF23 | S3 | Manter linhas, paradas e horários | Funcional | Should | O sistema deve permitir ao administrador incluir, alterar e excluir linhas, paradas, itinerários e horários manualmente. | **US23** – Como administrador, quero corrigir manualmente dados de linhas, paradas e horários para tratar divergências sem aguardar uma nova importação. |
 | C6 / RF24 | S4 | Analisar reportes de usuários | Funcional | Could | O sistema deve listar os reportes recebidos, permitindo ao administrador classificá-los (pendente, procedente ou improcedente) e registrar a correção realizada. | **US24** – Como administrador, quero analisar os reportes enviados pelos passageiros para identificar e corrigir informações incorretas. |
+
+*Fonte: Elaborado pelos autores (2026)*
+
+#### 4.4.1 Critérios de aceitação por história de usuário
+
+A Tabela 8 especifica as condições verificáveis de aceitação e os resultados esperados para cada história de usuário do backlog (US01 a US24), servindo de referência objetiva para os testes (seção 6.1), para a validação pelo Dono do Produto e para a apuração da TCH.
+
+**Tabela 8: Critérios de aceitação verificáveis do backlog (US01 a US24)** — Sistema: Plataforma de Transporte Público
+
+| Requisito / História | Cenário | Critérios de aceitação verificáveis (condições de aprovação) |
+|---|---|---|
+| **RF01 / US01** | C1 | 1. Ao informar origem e destino válidos, o sistema retorna ao menos uma opção de trajeto contendo linhas utilizadas, quantidade de baldeações e tempo total estimado.<br>2. Ao tentar buscar com origem ou destino vazios, o sistema bloqueia a consulta e exibe mensagem de validação.<br>3. Quando não houver rota disponível entre os pontos informados, o sistema exibe mensagem informativa sem erro de execução. |
+| **RF02 / US02** | C1 | 1. Ao selecionar uma opção de trajeto, todas as etapas são exibidas em ordem sequencial, diferenciando caminhada e deslocamento de ônibus.<br>2. Cada etapa de ônibus informa a linha, o ponto de embarque, o percurso/paradas, o ponto de desembarque e eventuais baldeações em linguagem clara.<br>3. Na ausência de etapas detalhadas, o sistema exibe mensagem de estado vazio sem falha de renderização. |
+| **RF03 / US03** | C1 | 1. Mediante autorização de acesso à localização do dispositivo, o sistema consulta a parada mais próxima das coordenadas obtidas e preenche automaticamente a origem da busca.<br>2. Caso a permissão de GPS seja negada ou indisponível, o sistema informa o usuário e mantém ativa a digitação manual da origem. |
+| **RF04 / US04** | C1 | 1. Ao abrir a visualização em mapa do trajeto selecionado, o sistema desenha o percurso completo diferenciando visualmente trechos a pé e trechos de cada linha.<br>2. As paradas de embarque, baldeação e desembarque são exibidas com marcadores identificáveis no mapa. |
+| **RF05 / US05** | C1 | 1. Na tela de resultados de trajeto, o usuário consegue ordenar ou filtrar as opções por menor tempo total, menor número de baldeações e menor distância de caminhada.<br>2. A lista é reordenada corretamente conforme o critério selecionado, preservando os dados de cada opção. |
+| **RF06 / US06** | C1 | 1. O usuário pode definir o modo de planejamento ("partida às" ou "chegada até") informando o horário desejado antes de executar a busca.<br>2. As opções retornadas consideram o quadro de horários vigente para o horário informado, exibindo horários coerentes ou aviso caso não haja atendimento no período. |
+| **RF07 / US07** | C2 | 1. Ao digitar parte do número/código ou do nome de uma linha, o sistema filtra e exibe as linhas correspondentes em tempo real.<br>2. Ao limpar a busca, todas as linhas voltam a ser listadas; quando nenhuma linha corresponder ao termo, o sistema exibe mensagem de resultado vazio. |
+| **RF08 / US08** | C2 | 1. Ao selecionar uma linha, o sistema exibe a sequência ordenada de paradas com nome e código identificador, permitindo alternar entre os sentidos `IDA` e `VOLTA` (em lista e em mapa quando habilitado).<br>2. Quando o sentido selecionado não possuir paradas cadastradas, o sistema exibe mensagem informativa. |
+| **RF09 / US09** | C2 | 1. Ao selecionar uma parada (por busca ou mapa), o sistema lista todas as linhas cadastradas que a atendem, exibindo código e nome de cada linha.<br>2. Se a parada não existir ou não possuir linhas associadas, o sistema retorna resposta adequada com mensagem clara ao passageiro. |
+| **RF10 / US10** | C3 | 1. Ao abrir o quadro de horários de uma linha, os horários são exibidos separados por sentido (`IDA` e `VOLTA`) e por tipo de dia (`Dias úteis`, `Sábados` e `Domingos/Feriados`).<br>2. Ao alternar qualquer combinação de sentido e tipo de dia, apenas os horários daquela seleção são exibidos, apresentando mensagem de ausência quando não houver partidas. |
+| **RF11 / US11** | C3 | 1. Para uma parada selecionada, o sistema lista os próximos horários programados de passagem de cada linha que a atende em ordem cronológica a partir do horário atual.<br>2. Caso não existam mais partidas previstas para o dia, o sistema informa explicitamente a ausência de próximas saídas. |
+| **RF12 / US12** | C3 | 1. Quando os dados de localização em tempo real da frota estiverem disponíveis na fonte oficial, o sistema exibe o tempo estimado de chegada junto à linha/parada consultada.<br>2. Na indisponibilidade da fonte em tempo real, o sistema informa essa condição e mantém visível a previsão programada sem interromper o uso. |
+| **RF13 / US13** | C4 | 1. A área de alertas exibe somente alertas dentro da vigência e não encerrados, apresentando tipo (`Desvio`, `Suspensão`, `Alteração de Horário` ou `Paralisação`), descrição, período e linhas/paradas afetadas.<br>2. O passageiro consegue filtrar os alertas por tipo e visualizar estado vazio quando não houver ocorrências vigentes. |
+| **RF14 / US14** | C4 | 1. Linhas, paradas (itinerário e parada próxima) e opções de trajeto afetados por alertas vigentes exibem destaque visual (`badge` ou `banner`) indicando o alerta e seu tipo.<br>2. Itens sem alertas vigentes não exibem sinalização, e o acionamento do destaque permite consultar os detalhes dos alertas vigentes. |
+| **RF15 / US15** | C4 | 1. Ao publicar um alerta vigente que afete linha ou parada salva como favorita por um passageiro cadastrado, o sistema dispara notificação (e-mail ou notificação do app/navegador) identificando o item afetado e o resumo do alerta.<br>2. Passageiros sem o item favoritado não recebem notificação indevida. |
+| **RF16 / US16** | C5 | 1. O cadastro exige nome, e-mail único e senha (armazenada com hash criptográfico), rejeitando campos ausentes ou e-mail duplicado com status `400`.<br>2. A autenticação com e-mail e senha válidos retorna token JWT e dados do usuário sem expor o hash da senha; credenciais inválidas retornam `401 Unauthorized`.<br>3. O passageiro consegue recuperar a senha por código temporário de uso único (com validade e limite de tentativas) e excluir definitivamente sua própria conta mediante confirmação da senha atual (autoexclusão bloqueada para perfil administrador com `403`). |
+| **RF17 / US17** | C5 | 1. O passageiro autenticado consegue adicionar e remover linhas, paradas e trajetos favoritos persistidos em sua conta, impedindo duplicidade (`409 Conflict`).<br>2. Os favoritos salvos são exibidos com destaque na tela inicial/aba de favoritos para acesso em um toque; requisições sem autenticação ou com perfil administrador são bloqueadas (`401`/`403`). |
+| **RF18 / US18** | C5 | 1. Buscas de trajeto e de linha realizadas pelo usuário são armazenadas e exibidas em ordem da mais recente para a mais antiga.<br>2. Ao selecionar um item do histórico exibido, o sistema repete ou preenche automaticamente a consulta correspondente. |
+| **RF19 / US19** | C5 | 1. O passageiro consegue registrar um reporte escolhendo o tipo (`HORARIO`, `PARADA` ou `ITINERARIO`), informando ao menos uma linha ou parada relacionada e descrição com no mínimo 10 caracteres.<br>2. Reportes válidos são gravados com status inicial `PENDENTE` e confirmação exibida ao usuário; dados inválidos retornam erro `400` com mensagem explicativa. |
+| **RF20 / US20** | C6 | 1. O importador valida a estrutura dos arquivos GTFS antes de atualizar a base e persiste linhas, paradas, itinerários e horários sem duplicação de registros.<br>2. Arquivos ausentes ou inválidos são rejeitados com erro registrado, preservando a integridade dos dados previamente armazenados. |
+| **RF21 / US21** | C6 | 1. Todas as rotas e telas de gestão administrativa exigem autenticação com token JWT válido cujo perfil seja `ADMIN`.<br>2. Acessos sem token ou com token inválido/expirado retornam `401 Unauthorized`, e acessos com perfil `PASSAGEIRO` retornam `403 Forbidden` e são bloqueados na interface administrativa. |
+| **RF22 / US22** | C6 | 1. O administrador autenticado consegue cadastrar, listar, editar e encerrar alertas com tipo válido, descrição, itens afetados e vigência com data final posterior à inicial.<br>2. Alertas encerrados ou expirados deixam automaticamente de aparecer nas consultas públicas de alertas vigentes e na sinalização aos passageiros. |
+| **RF23 / US23** | C6 | 1. O administrador autenticado consegue incluir, alterar e excluir manualmente linhas, paradas, itinerários e horários mediante validação de campos obrigatórios e integridade dos vínculos.<br>2. As alterações gravadas passam a ser refletidas nas consultas públicas de linhas, itinerários, horários e trajetos. |
+| **RF24 / US24** | C6 | 1. O administrador autenticado consegue listar todos os reportes recebidos (com filtros opcionais por status e tipo) e visualizar os detalhes de cada reporte.<br>2. O administrador consegue classificar cada reporte como `PENDENTE`, `PROCEDENTE` ou `IMPROCEDENTE` e registrar a correção realizada, sendo obrigatório informar a correção quando classificado como `PROCEDENTE` (retornando `400` em caso de omissão). |
 
 *Fonte: Elaborado pelos autores (2026)*
 
