@@ -8,6 +8,7 @@ const paradasRoutes = require('./routes/paradasRoutes');
 const usuariosRoutes = require('./routes/usuariosRoutes');
 const alertasRoutes = require('./routes/alertasRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const reportesDivergenciaRoutes = require('./routes/reportesDivergenciaRoutes');
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use('/api/v1/paradas', paradasRoutes);
 app.use('/api/v1/usuarios', usuariosRoutes);
 app.use('/api/v1/alertas', alertasRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/reportes', reportesDivergenciaRoutes);
 
 module.exports = app;
