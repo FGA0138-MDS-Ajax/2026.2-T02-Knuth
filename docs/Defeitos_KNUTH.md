@@ -45,7 +45,7 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 | DEF-023 | Médio | Arquitetura | Inconsistência | Notação de generalização de atores inconsistente no diagrama | No ciclo de revisão | Não há evidência |
 | DEF-024 | Médio | Arquitetura | Inconsistência | Extensão de gerenciamento de alertas para importação GTFS sem justificativa | No ciclo de revisão | Não há evidência |
 | DEF-026 | Médio | Arquitetura | Inconsistência | Configuração versionada de contêineres cobre apenas parte da restrição MR07 | No ciclo de revisão | Não há evidência |
-| DEF-028 | Médio | Arquitetura | Ambiguidade | Visão de implantação deixa indefinido o modo de execução do importador | No ciclo de revisão | Não há evidência |
+| DEF-028 | Médio | Arquitetura | Ambiguidade | Visão de implantação deixa indefinido o modo de execução do importador | No ciclo de revisão | docs/Documento_de_Arquitetura.md, linha 423 (seção 2.6) — importador executado sob demanda por linha de comando (gtfs/importador.py), com disparo manual |
 | DEF-031 | Médio | Outros | Omissão | Identificação dos itens de configuração não está consolidada | No ciclo de revisão | Não há evidência |
 | DEF-032 | Médio | Outros | Ambiguidade | Exceções ao fluxo obrigatório de PR são ambíguas | No ciclo de revisão | Não há evidência |
 | DEF-033 | Médio | Outros | Inconsistência | Mensagem de commit não representa adequadamente as alterações realizadas | No ciclo de revisão | Não há evidência |

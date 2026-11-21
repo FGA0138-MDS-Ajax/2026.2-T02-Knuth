@@ -420,7 +420,7 @@ O sistema RotasDF será implantado em um ambiente de computação em nuvem (*Clo
 
 **Nó Servidor de Aplicação (`<<Execution Environment>>`):** representa o servidor virtual em plataforma de nuvem (PaaS — ex.: Render, Heroku ou AWS) responsável pela hospedagem da lógica de negócio.
 
-- **Tecnologia:** ambiente de execução Node.js conteinerizado via Docker. O serviço de importação de dados GTFS, desenvolvido em Python, será executado sob demanda no mesmo ambiente (ou via cron job/worker).
+- **Tecnologia:** ambiente de execução Node.js conteinerizado via Docker. O serviço de importação de dados GTFS, desenvolvido em Python, é executado sob demanda, por linha de comando, em processo separado do servidor: o script `gtfs/importador.py` lê os arquivos CSV da pasta `gtfs/data` e grava no PostgreSQL configurado pelas variáveis de ambiente DB_USER, DB_PASSWORD, DB_HOST, DB_PORT e DB_NAME. No incremento atual o disparo é manual, sem agendamento nem acionamento pela API.
 - **Artefato:** monólito modular da API REST.
 - **Justificativa:** o uso de contêineres em uma plataforma gerenciada facilita as práticas de Integração e Entrega Contínuas (CI/CD) automatizadas pelo GitHub Actions (MR04). Essa abordagem permite que a equipe realize implantações contínuas de novos testes e funcionalidades sem a necessidade de gerenciar uma infraestrutura de baixo nível.
 
