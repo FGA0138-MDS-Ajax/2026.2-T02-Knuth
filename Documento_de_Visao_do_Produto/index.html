@@ -1,0 +1,2290 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../Documento_de_Arquitetura/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Visão do Produto - RotasDF - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rotasdf-visao-do-produto-e-do-projeto" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="RotasDF - Documentação" class="md-header__button md-logo" aria-label="RotasDF - Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RotasDF - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Visão do Produto
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="RotasDF - Documentação" class="md-nav__button md-logo" aria-label="RotasDF - Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RotasDF - Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão do Produto
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão do Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integrantes-do-grupo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrantes do Grupo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#historico-de-revisoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Histórico de Revisões
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sumario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sumário
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-visao-geral-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 Visão geral do produto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Visão geral do produto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-problema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Problema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-declaracao-de-posicao-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Declaração de posição do produto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-objetivos-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Objetivos do produto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-tecnologias-a-serem-utilizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Tecnologias a serem utilizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-visao-geral-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 Visão geral do projeto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Visão geral do projeto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-ciclo-de-vida-do-projeto-de-desenvolvimento-de-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Ciclo de vida do projeto de desenvolvimento de software
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-organizacao-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Organização do projeto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-planejamento-das-fases-eou-iteracoes-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Planejamento das fases e/ou iterações do projeto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-matriz-de-comunicacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Matriz de comunicação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-gerenciamento-de-riscos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Gerenciamento de riscos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-processo-de-desenvolvimento-de-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 Processo de desenvolvimento de software
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-declaracao-de-escopo-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 Declaração de escopo do projeto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Declaração de escopo do projeto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-backlog-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Backlog do produto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-perfis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Perfis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-cenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Cenários
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-tabela-de-backlog-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Tabela de backlog do produto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 Tabela de backlog do produto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c1-planejamento-de-trajetos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C1 – Planejamento de trajetos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c2-consulta-de-linhas-e-paradas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C2 – Consulta de linhas e paradas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c3-consulta-de-horarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C3 – Consulta de horários
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c4-alteracoes-no-servico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C4 – Alterações no serviço
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c5-conta-e-personalizacao-do-passageiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C5 – Conta e personalização do passageiro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c6-gestao-dos-dados-de-transporte-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C6 – Gestão dos dados de transporte (Administrador)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#441-criterios-de-aceitacao-por-historia-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4.1 Critérios de aceitação por história de usuário
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-metricas-e-medicoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 Métricas e medições
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5 Métricas e medições">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-gqm-de-medicoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 GQM de medições
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-testes-de-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 Testes de software
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6 Testes de software">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-estrategia-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Estratégia de Testes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-referencias-bibliograficas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 Referências bibliográficas
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Documento_de_Arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Política_de_Commits" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Política de commits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plano_de_Metricas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Métricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Atas de Reunião
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Atas de Reunião
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../atas-reuniao/ata-reuniao-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ata 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integrantes-do-grupo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrantes do Grupo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#historico-de-revisoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Histórico de Revisões
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sumario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sumário
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-visao-geral-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 Visão geral do produto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Visão geral do produto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-problema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Problema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-declaracao-de-posicao-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Declaração de posição do produto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-objetivos-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Objetivos do produto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-tecnologias-a-serem-utilizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Tecnologias a serem utilizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-visao-geral-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 Visão geral do projeto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Visão geral do projeto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-ciclo-de-vida-do-projeto-de-desenvolvimento-de-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Ciclo de vida do projeto de desenvolvimento de software
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-organizacao-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Organização do projeto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-planejamento-das-fases-eou-iteracoes-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Planejamento das fases e/ou iterações do projeto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-matriz-de-comunicacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Matriz de comunicação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-gerenciamento-de-riscos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Gerenciamento de riscos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-processo-de-desenvolvimento-de-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 Processo de desenvolvimento de software
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-declaracao-de-escopo-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 Declaração de escopo do projeto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Declaração de escopo do projeto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-backlog-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Backlog do produto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-perfis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Perfis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-cenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Cenários
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-tabela-de-backlog-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Tabela de backlog do produto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 Tabela de backlog do produto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c1-planejamento-de-trajetos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C1 – Planejamento de trajetos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c2-consulta-de-linhas-e-paradas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C2 – Consulta de linhas e paradas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c3-consulta-de-horarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C3 – Consulta de horários
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c4-alteracoes-no-servico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C4 – Alterações no serviço
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c5-conta-e-personalizacao-do-passageiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C5 – Conta e personalização do passageiro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c6-gestao-dos-dados-de-transporte-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C6 – Gestão dos dados de transporte (Administrador)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#441-criterios-de-aceitacao-por-historia-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4.1 Critérios de aceitação por história de usuário
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-metricas-e-medicoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 Métricas e medições
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5 Métricas e medições">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-gqm-de-medicoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 GQM de medições
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-testes-de-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 Testes de software
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6 Testes de software">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-estrategia-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Estratégia de Testes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-referencias-bibliograficas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 Referências bibliográficas
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="rotasdf-visao-do-produto-e-do-projeto">RotasDF — Visão do Produto e do Projeto</h1>
+<p><strong>T02_KNUTH — RotasDF</strong> · Versão 1.3.0</p>
+<h2 id="integrantes-do-grupo">Integrantes do Grupo</h2>
+<table>
+<thead>
+<tr>
+<th>Matrícula</th>
+<th>Nome</th>
+<th>Função (responsabilidade)</th>
+<th>Pontos de participação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>252014223</td>
+<td>Gabriel Sakai e Silva</td>
+<td>Analista de qualidade / desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>242015601</td>
+<td>Emanuele Victor Santos</td>
+<td>Scrum Master / Líder do grupo / desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>232013990</td>
+<td>Gabriel Felix Mota Soares</td>
+<td>Dono do produto</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>190128160</td>
+<td>Guilherme Maciel de Meneses</td>
+<td>Desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>222024819</td>
+<td>Gabriela Xavier Rodrigues</td>
+<td>Desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td>242015460</td>
+<td>Denilson Lima Santos</td>
+<td>Desenvolvedor</td>
+<td>16,6</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Total de pontos</strong> (devem fechar 100 para toda a equipe)</td>
+<td></td>
+<td><strong>100</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="historico-de-revisoes">Histórico de Revisões</h2>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Versão</th>
+<th>Descrição</th>
+<th>Autor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30/09/2026</td>
+<td>1.0.0</td>
+<td>Visão inicial do produto</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td>27/10/2026</td>
+<td>1.1.0</td>
+<td>Alinhamento do modelo de branches e retirada do método TDD</td>
+<td>Gabriel Sakai e Silva</td>
+</tr>
+<tr>
+<td>15/11/2026</td>
+<td>1.2.0</td>
+<td>Reformula a parte de métricas e de teste além de atualizar a progressão do documento</td>
+<td>Gabriel Sakai e Silva</td>
+</tr>
+<tr>
+<td>21/11/2026</td>
+<td>1.3.0</td>
+<td>Inclui critérios de aceitação verificáveis para todas as 24 histórias do backlog (reparo do DEF-041)</td>
+<td>Denilson Lima Santos</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sumario">Sumário</h2>
+<ol>
+<li><a href="#1-visão-geral-do-produto">Visão geral do produto</a></li>
+<li><a href="#11-problema">1.1 Problema</a></li>
+<li><a href="#12-declaração-de-posição-do-produto">1.2 Declaração de posição do produto</a></li>
+<li><a href="#13-objetivos-do-produto">1.3 Objetivos do produto</a></li>
+<li><a href="#14-tecnologias-a-serem-utilizadas">1.4 Tecnologias a serem utilizadas</a></li>
+<li><a href="#2-visão-geral-do-projeto">Visão geral do projeto</a></li>
+<li><a href="#21-ciclo-de-vida-do-projeto-de-desenvolvimento-de-software">2.1 Ciclo de vida do projeto</a></li>
+<li><a href="#22-organização-do-projeto">2.2 Organização do projeto</a></li>
+<li><a href="#23-planejamento-das-fases-eou-iterações-do-projeto">2.3 Planejamento das fases/iterações</a></li>
+<li><a href="#24-matriz-de-comunicação">2.4 Matriz de comunicação</a></li>
+<li><a href="#25-gerenciamento-de-riscos">2.5 Gerenciamento de riscos</a></li>
+<li><a href="#3-processo-de-desenvolvimento-de-software">Processo de desenvolvimento de software</a></li>
+<li><a href="#4-declaração-de-escopo-do-projeto">Declaração de escopo do projeto</a></li>
+<li><a href="#41-backlog-do-produto">4.1 Backlog do produto</a></li>
+<li><a href="#42-perfis">4.2 Perfis</a></li>
+<li><a href="#43-cenários">4.3 Cenários</a></li>
+<li><a href="#44-tabela-de-backlog-do-produto">4.4 Tabela de backlog do produto</a></li>
+<li><a href="#5-métricas-e-medições">Métricas e medições</a></li>
+<li><a href="#6-testes-de-software">Testes de software</a></li>
+<li><a href="#7-referências-bibliográficas">Referências bibliográficas</a></li>
+</ol>
+<hr />
+<h2 id="1-visao-geral-do-produto">1 Visão geral do produto</h2>
+<h3 id="11-problema">1.1 Problema</h3>
+<p>O transporte público é um dos principais meios de locomoção da população urbana, sendo a base essencial para a mobilidade de grande parte das pessoas nas cidades. Ademais, além de garantir o direito de locomoção da população, o transporte público contribui para a inclusão social ao oferecer uma alternativa de deslocamento acessível para pessoas que não possuem veículo próprio.</p>
+<p>No entanto, muitos usuários passam por dificuldades para obter e interpretar as informações necessárias para o planejamento de suas viagens devido a causas variáveis, conforme explicitado pela Figura 1.</p>
+<p align="center"><b>Figura 1: Diagrama de Ishikawa (Causa x Efeito)</b></p>
+
+<p><img alt="Diagrama de Ishikawa: dificuldade de obter e compreender informações para planejar deslocamentos no transporte público" src="../imagens/visao-fig1-ishikawa.png" /></p>
+<p align="center"><i>Fonte: Elaborado pelos autores (2026)</i></p>
+
+<p>O Diagrama de Ishikawa (Causa x Efeito), apresentado na Figura 1, foi estruturado para mapear as raízes do problema central que o RotasDF se propõe a resolver: a dificuldade de obter e compreender informações para planejar deslocamentos no transporte público. Para uma análise aprofundada, as causas foram divididas em quatro grandes eixos: Usuário, Comunicação, Informação e Gestão e Administração. No eixo do Usuário, destacam-se a exclusão digital, que atinge pessoas com diferentes níveis de familiaridade tecnológica; as barreiras sensoriais de indivíduos com limitações visuais ou auditivas; e o desconhecimento do sistema por parte de passageiros não habituados com a dinâmica do transporte. No eixo de Comunicação, evidencia-se a falha na emissão de avisos durante crises, onde imprevistos em rotas não são comunicados ou o são de forma tardia, somado à existência de poucos canais de comunicação que impedem a informação de chegar de forma clara aos usuários.</p>
+<p>No que tange ao eixo de Informação, o diagrama aponta a baixa confiabilidade como um fator crítico, gerado por informações incorretas sobre linhas e pontos de parada, além da circulação escassa de dados, onde a informação demora a ser disseminada. Por fim, o eixo de Gestão e Administração revela falhas estruturais, como a falta de planejamento em mobilidade urbana e os erros de logística decorrentes da falta de integração entre municípios e regiões metropolitanas. Diante desse cenário, o RotasDF posiciona-se como uma solução por meio de uma plataforma mobile, o produto combate a exclusão digital; mitiga a falha de comunicação ao centralizar avisos e alertas de alteração em tempo real; garante a confiabilidade da informação ao consumir dados oficiais e validados (GTFS); e auxilia na gestão de trajetos ao integrar as linhas e paradas de diferentes regiões em uma única interface.</p>
+<h3 id="12-declaracao-de-posicao-do-produto">1.2 Declaração de posição do produto</h3>
+<p>O produto irá se diferenciar por sua acessibilidade e facilidade de uso, permitindo que usuários com diferentes níveis de afinidade tecnológica tenham acesso rápido e intuitivo às informações. Dessa forma, o sistema busca promover a inclusão digital e facilitar o acesso a informações essenciais para o planejamento dos deslocamentos urbanos, conforme demonstrado na Tabela 1.</p>
+<p><strong>Tabela 1: Especificações do produto</strong></p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Para</td>
+<td>Usuários de transporte público</td>
+</tr>
+<tr>
+<td>Necessidade</td>
+<td>Uma plataforma que ajude os usuários a planejarem suas viagens</td>
+</tr>
+<tr>
+<td>Identificação do produto</td>
+<td>É um aplicativo mobile, com o nome de "RotasDF"</td>
+</tr>
+<tr>
+<td>Que</td>
+<td>Disponibiliza informações confiáveis sobre linhas, horários e alterações nos serviços</td>
+</tr>
+<tr>
+<td>Ao contrário</td>
+<td>Escassez de informação transformando o transporte público mais imprevisível para os usuários</td>
+</tr>
+<tr>
+<td>Nosso produto</td>
+<td>Entrega informações acessíveis e de fácil entendimento</td>
+</tr>
+</tbody>
+</table>
+<p>O RotasDF tem como propósito central democratizar o acesso às informações do transporte público no Distrito Federal. Para isso, o produto disponibiliza uma interface mobile na qual o usuário pode consultar todas as linhas da região e visualizar seus itinerários completos. Além disso, a plataforma implementa um sistema de planejamento de viagens que captura a localização geográfica atual do usuário para definir a origem e solicita a inserção de um destino, a fim de calcular e sugerir as melhores rotas. Com essa abordagem, o sistema centraliza os dados de mobilidade urbana, mitigando a desinformação e facilitando o deslocamento.</p>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<h3 id="13-objetivos-do-produto">1.3 Objetivos do produto</h3>
+<p>O produto busca reduzir as dificuldades enfrentadas pelos usuários de transporte público, disponibilizando dados sobre linhas, horários e alterações operacionais. Dessa maneira, o projeto contribui para um planejamento mais eficiente dos deslocamentos, reduzindo a imprevisibilidade do transporte público e melhorando a experiência dos usuários.</p>
+<h3 id="14-tecnologias-a-serem-utilizadas">1.4 Tecnologias a serem utilizadas</h3>
+<p>Serão utilizadas as seguintes tecnologias:</p>
+<ul>
+<li>GitHub</li>
+<li>VS Code</li>
+<li>Python</li>
+<li>Node.js</li>
+<li>React</li>
+<li>HTML5</li>
+<li>CSS3</li>
+<li>PostgreSQL</li>
+<li>
+<p>Docker</p>
+</li>
+<li>
+<p><strong>Gestão e versionamento:</strong> Utiliza-se o <strong>GitHub</strong> para controle de versão distribuído. Como a equipe é composta por 6 pessoas trabalhando em paralelo, o GitHub garante a integridade do código e o acompanhamento transparente do fluxo de tarefas (via Kanban/GitHub Projects). Além disso, permite a revisão de código por pares através de Pull Requests, o que é essencial para manter a qualidade e evitar conflitos.</p>
+</li>
+<li>
+<p><strong>Ambiente e automação:</strong> Utiliza-se o <strong>Visual Studio Code</strong> como ambiente integrado de desenvolvimento. O VS Code foi escolhido por ser leve, altamente customizável e possuir excelente integração nativa com Git e terminal.</p>
+</li>
+<li>
+<p><strong>Linguagens e frameworks (Back-end):</strong> Utiliza-se <strong>Python</strong> e <strong>Node.js</strong>. O Python foi escolhido especificamente para a camada de importação de dados, pois suas bibliotecas são ótimas para ler, tratar e cruzar os arquivos massivos do governo (GTFS) e validar coordenadas geográficas. O Node.js foi adotado para a construção da API REST por ser rápido, lidar muito bem com requisições simultâneas e permitir que a equipe use JavaScript tanto no back-end quanto no front-end.</p>
+</li>
+<li>
+<p><strong>Linguagens e frameworks (Front-end):</strong> Utiliza-se <strong>React</strong> (com React Native), <strong>HTML5</strong> e <strong>CSS3</strong>. O React Native permite criar o aplicativo mobile para Android e iOS a partir de uma única base de código, o que otimiza o tempo da equipe. Ele também possibilita o uso de APIs nativas e foca em acessibilidade. O HTML5 e CSS3 servem de base para a renderização web e para a documentação do projeto.</p>
+</li>
+<li>
+<p><strong>Banco de dados e containerização:</strong> Utiliza-se o <strong>PostgreSQL</strong> e o <strong>Docker</strong>. O PostgreSQL é um banco de dados relacional extremamente robusto, essencial para suportar os milhões de registros de horários e itinerários gerados pelo GTFS, além de possuir funções matemáticas que permitem calcular a distância exata entre o GPS do usuário e as paradas. O Docker foi adotado para padronizar o ambiente; ele empacota o banco e a API em contêineres, garantindo que todos os 6 integrantes rodem o sistema com a mesma configuração.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-visao-geral-do-projeto">2 Visão geral do projeto</h2>
+<h3 id="21-ciclo-de-vida-do-projeto-de-desenvolvimento-de-software">2.1 Ciclo de vida do projeto de desenvolvimento de software</h3>
+<p>O tema do projeto é a plataforma de transporte público, com foco na melhoria da experiência dos usuários. O problema identificado consiste na dificuldade que esses usuários têm para obter e interpretar as informações necessárias ao planejamento de seus deslocamentos, como opções de trajetos, linhas, horários e alterações no serviço. Nesse contexto, o projeto busca responder à seguinte questão de pesquisa: <strong>como facilitar o acesso e a compreensão das informações necessárias para que usuários do transporte público possam planejar seus deslocamentos?</strong> Como solução, propõe-se uma plataforma que reúna a consulta de rotas, linhas, horários e alertas de alteração do serviço em uma interface responsiva.</p>
+<p>Para a concepção e o desenvolvimento da plataforma, definiu-se um ciclo de vida de desenvolvimento de software ágil, estruturado com base em um modelo iterativo e incremental. A escolha por este modelo justifica-se pela necessidade de adaptação contínua diante da evolução dos requisitos, refinamento constante das funcionalidades de consulta de rotas e integração progressiva dos módulos do sistema.</p>
+<p>A estrutura do ciclo de vida desdobra-se nos seguintes componentes formais:</p>
+<p><strong>a) Metodologia:</strong> adotou-se o paradigma do Desenvolvimento Ágil de Software. A escolha fundamenta-se nos valores do Manifesto Ágil, que priorizam software em funcionamento, colaboração constante entre os membros e capacidade de resposta a mudanças em detrimento do acompanhamento rígido de um plano inicial. No contexto de um sistema de transporte público, no qual regras de negócio, linhas e horários podem sofrer alterações, essa abordagem minimiza riscos de retrabalho e garante entregas de valor contínuas a cada iteração.</p>
+<p><strong>b) Processo:</strong> a estrutura e a gestão do trabalho são regidas pelo framework Scrum. O ciclo de desenvolvimento organiza-se em Sprints semanais no período de codificação, nas quais o escopo do projeto é fatiado em incrementos funcionais do produto. A equipe realiza os rituais formais do framework: <em>Sprint Planning</em> para seleção e estimativa de itens do Backlog, <em>Daily Meetings</em> para alinhamento diário e identificação de impedimentos, e <em>Sprint Review</em> acompanhada de <em>Retrospective</em> ao final de cada iteração para avaliação dos entregáveis e melhoria contínua do processo.</p>
+<p><strong>c) Procedimentos (guia e modo de fazer):</strong> a execução técnica orienta-se pelas práticas do Extreme Programming (XP). Estabeleceram-se diretrizes formais de codificação, integração contínua a cada alteração aprovada no repositório, refatoração constante para manutenção do código limpo e a obrigatoriedade de revisão por pares (<em>Code Review</em>) por meio de Pull Requests antes da incorporação de qualquer funcionalidade ao ramo principal (<code>main</code>).</p>
+<p><strong>d) Métodos:</strong> são aplicadas as seguintes técnicas estruturadas durante o desenvolvimento:</p>
+<ul>
+<li><strong>Testes unitários:</strong> escrita de testes automatizados para validação das regras de negócio do sistema após a implementação do código funcional;</li>
+<li><strong>Programação em par (<em>Pair Programming</em>):</strong> atuação conjunta de dois desenvolvedores na construção de módulos mais complexos para redução de defeitos e disseminação de conhecimento técnico na equipe;</li>
+<li><strong>Elicitação e modelagem de requisitos via User Stories:</strong> especificação dos cenários funcionais e de uso no formato padronizado de Histórias de Usuário.</li>
+</ul>
+<p><strong>e) Ferramentas (instrumentos para realização das tarefas):</strong> a execução prática é suportada pelo seguinte ecossistema tecnológico:</p>
+<ul>
+<li><em>Gestão e versionamento:</em> GitHub para controle de versão distribuído (Git) e GitHub Projects para acompanhamento transparente do fluxo de tarefas (A Fazer, Em Andamento, Em Revisão, Concluído);</li>
+<li><em>Ambiente e automação:</em> Visual Studio Code (VS Code) como ambiente integrado de desenvolvimento (IDE) e GitHub Actions para automação do pipeline de Integração Contínua (CI/CD);</li>
+<li><em>Linguagens e frameworks:</em> Python / Node.js para construção das APIs e regras de negócio no back-end, e React / HTML5 / CSS3 para o desenvolvimento da interface responsiva no front-end;</li>
+<li><em>Banco de dados e containerização:</em> PostgreSQL para persistência e gestão dos dados de rotas, frotas e horários, e Docker para padronização dos ambientes de desenvolvimento e implantação.</li>
+</ul>
+<p>Assim, a combinação entre entregas semanais, práticas de qualidade de código e validação frequente nas inspeções e pontos de controle da disciplina permite que as funcionalidades de consulta sejam refinadas a cada iteração, aproximando a solução da necessidade real dos usuários e respondendo à questão de pesquisa de forma incremental.</p>
+<h3 id="22-organizacao-do-projeto">2.2 Organização do projeto</h3>
+<p>A estrutura organizacional da equipe foi planejada para promover a responsabilidade compartilhada e a colaboração contínua ao longo de todo o ciclo de vida do desenvolvimento do software. Visando evitar gargalos operacionais e garantir a aplicação das práticas ágeis do Scrum e do Extreme Programming (XP), os papéis e as responsabilidades foram distribuídos de forma transparente entre os integrantes do grupo, conforme detalhado na Tabela 2. Ressalta-se que essa divisão de atribuições não estabelece qualquer relação de hierarquia ou grau de importância: todos os integrantes são igualmente importantes e responsáveis pelo sucesso do projeto.</p>
+<p><strong>Tabela 2: Divisão de papéis e responsabilidades da equipe do projeto</strong></p>
+<table>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Atribuições</th>
+<th>Responsável</th>
+<th>Participantes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desenvolvedor</td>
+<td>Codificar o produto, codificar testes unitários, realizar refatoração</td>
+<td>Todos os integrantes do grupo</td>
+<td>Denilson, Emanuele, Gabriela, Gabriel Felix, Guilherme, Gabriel Sakai</td>
+</tr>
+<tr>
+<td>Dono do Produto</td>
+<td>Atualizar o escopo do produto, organizar o escopo das sprints, validar as entregas</td>
+<td>Gabriel Felix</td>
+<td>Gabriel Felix</td>
+</tr>
+<tr>
+<td>Analista de Qualidade</td>
+<td>Garantir a qualidade do produto, garantir o cumprimento do conceito de pronto, realizar inspeções de código</td>
+<td>Gabriel Sakai</td>
+<td>Gabriel Sakai, Gabriela</td>
+</tr>
+<tr>
+<td>Cliente</td>
+<td>Validar a usabilidade e fornecer feedbacks nas revisões de sprint</td>
+<td>Professor e monitor da disciplina</td>
+<td>Ricardo Ajax, Arthur</td>
+</tr>
+<tr>
+<td>Scrum Master</td>
+<td>Facilitar as cerimônias, garantir a aplicação das práticas ágeis, remover impedimentos</td>
+<td>Emanuele</td>
+<td>Emanuele</td>
+</tr>
+</tbody>
+</table>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<h3 id="23-planejamento-das-fases-eou-iteracoes-do-projeto">2.3 Planejamento das fases e/ou iterações do projeto</h3>
+<p>O planejamento do projeto está organizado em cinco Sprints semanais, executadas de 26/10/2026 a 29/11/2026, período definido pelo cronograma da disciplina para o desenvolvimento do software. Cada Sprint está associada a um produto (entrega) e a entregáveis específicos, conforme apresentado na Tabela 3, e a distribuição das funcionalidades segue o Backlog do Produto (seção 4.4). Esse planejamento é atualizado de maneira sucessiva, a cada ciclo de desenvolvimento, com base nos resultados da Sprint Review e da Retrospective, de modo que datas, entregáveis e percentuais de conclusão reflitam sempre a situação real do projeto.</p>
+<p><strong>Tabela 3: Planejamento das Sprints do projeto</strong></p>
+<table>
+<thead>
+<tr>
+<th>Sprint</th>
+<th>Produto (Entrega)</th>
+<th>Início</th>
+<th>Fim</th>
+<th>Entregável(eis)</th>
+<th>Responsáveis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>Módulo Base</td>
+<td>26/10/2026</td>
+<td>01/11/2026</td>
+<td>Busca de linha por número ou nome; itinerário da linha; quadro de horários da linha; importação de dados de transporte</td>
+<td>Equipe de Desenvolvimento e Analista de Qualidade</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>Núcleo de trajetos</td>
+<td>02/11/2026</td>
+<td>08/11/2026</td>
+<td>Busca de trajeto entre origem e destino; trajeto detalhado em etapas; localização atual como origem; linhas que atendem uma parada; buscas recentes</td>
+<td>Equipe de Desenvolvimento e Dono do Produto</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>Alertas, Gestão Administrativa</td>
+<td>09/11/2026</td>
+<td>15/11/2026</td>
+<td>Consulta de alertas vigentes; autenticação de administrador; cadastro e gestão de alertas; manutenção de linhas, paradas e horários; apresentação no ponto de controle</td>
+<td>Equipe de Desenvolvimento e Analista de Qualidade</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>Inspeção de Software, Qualidade &amp; Personalização</td>
+<td>16/11/2026</td>
+<td>22/11/2026</td>
+<td>Sinalização de alertas nos itens afetados; cadastro e autenticação de passageiro; favoritos; reporte de divergências; análise de reportes; inspeção do repositório e início da correção dos defeitos; realização do teste funcional de sistema</td>
+<td>Equipe de Desenvolvimento e Analista de Qualidade</td>
+</tr>
+<tr>
+<td>S5</td>
+<td>Recursos Avançados, Refinamento &amp; Entrega Final</td>
+<td>23/11/2026</td>
+<td>29/11/2026</td>
+<td>Trajeto no mapa; comparação e ordenação de trajetos; planejamento por horário de partida ou chegada; próximas partidas em uma parada; previsão de chegada em tempo real; notificação de alterações em favoritos; correção dos defeitos restantes; versão final</td>
+<td>Todos os papéis</td>
+</tr>
+</tbody>
+</table>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<p>Como mostra a tabela 3, as Sprints foram estrategicamente alinhadas aos marcos do cronograma da disciplina. O ponto de controle ocorre no início da Sprint 3, momento em que o módulo base e o núcleo de trajetos (Sprints 1 e 2) já estão operacionais. O feedback recebidos neste ponto de controle serão tratados como prioridade máxima pela equipe; eles serão discutidos na Sprint 3 e corrigidos ao longo das iterações seguintes, garantindo que os ajustes de usabilidade e as correções de rotas sejam validados pelo Dono do Produto antes de avançar. Posteriormente, a inspeção dos repositórios ocorre no início da Sprint 4, etapa em que a equipe dedicará a semana para sanar os defeitos apontados pelos inspetores, assegurando uma versão estável e polida para a apresentação final.</p>
+<h3 id="24-matriz-de-comunicacao">2.4 Matriz de comunicação</h3>
+<p>A matriz de comunicação do RotasDF foi desenhada combinando ferramentas formais de alinhamento e canais ágeis de resolução de problemas. Para a governança e acompanhamento semanal, adotamos encontros síncronos via Microsoft Teams. Nessas reuniões, a equipe realiza o planejamento do que deve ser feito na sprint e revisar o que já foi feito. O objetivo é alinhar o andamento do projeto e garantir que todos tenham clareza das próximas tarefas.</p>
+<p>De forma complementar e contínua, o grupo utiliza um canal no WhatsApp como ferramenta de comunicação rápida. Esse ambiente é focado na resolução de problemas técnicos do dia a dia e no bloqueio de impedimentos. É por meio dele que a equipe resolve dúvidas ágeis relacionadas ao Git e alinha a integração de código entre o Frontend e o Backend, garantindo que nenhum desenvolvedor fique travado por muito tempo.</p>
+<p>A matriz de comunicação do RotasDF passará por uma atualização nas Sprints 4 e 5. A partir dessas etapas, todas as reuniões semanais contarão com o registro formal de atas de reunião. Essa melhoria tem como objetivo aprimorar o rastreamento das decisões tomadas pela equipe, além de garantir que todo o histórico de informações, alinhamentos e revisões do projeto fique devidamente documentado e acessível a todos os membros.</p>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<h3 id="25-gerenciamento-de-riscos">2.5 Gerenciamento de riscos</h3>
+<p><strong>Tabela 4: Riscos</strong></p>
+<table>
+<thead>
+<tr>
+<th>Risco</th>
+<th>Mitigação</th>
+<th>Plano de contingência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Obtenção dos dados de transporte</td>
+<td>Alto</td>
+<td>Procura constante de dados pelo Analista de Qualidade</td>
+</tr>
+<tr>
+<td>Desenvolvedores com pouco</td>
+<td>Alto</td>
+<td>Reuniões semanais</td>
+</tr>
+<tr>
+<td>Atraso na conclusão das atividades da sprint</td>
+<td>Médio</td>
+<td>Acompanhar as atividades durante a sprint e identificar impedimentos antecipadamente</td>
+</tr>
+</tbody>
+</table>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<p>O gerenciamento de riscos do RotasDF foi estruturado para antecipar e mitigar os principais desafios que podem comprometer o cronograma do projeto. O primeiro risco mapeado é a obtenção dos dados de transporte. Para mitigar esse problema, o Analista de Qualidade realizará uma procura e validação constante das fontes de dados. Caso essa obtenção falhe, o escopo do projeto irá ser reduzido sem afetar as funcionalidades.</p>
+<p>O segundo risco refere-se à possibilidade de desenvolvedores não saberem o que fazer na sprint. A estratégia de mitigação adotada são as reuniões semanais de alinhamento, que garantem que as tarefas e os objetivos estejam claros para todos. Se, durante a semana, a equipe apresentar dúvidas ou desalinhamento, o plano de contingência prevê a realização de reuniões extras para manter a equipe engajada e destravar o desenvolvimento.</p>
+<p>Por fim, o terceiro risco é o atraso na conclusão das atividades da sprint. Para mitigar isso, a equipe acompanhará ativamente o andamento das tarefas e identificará impedimentos antecipadamente. Se o atraso for inevitável, o plano de contingência determina a repriorização das atividades, transferindo os itens não concluídos para uma sprint posterior, garantindo que o foco permaneça nas entregas mais críticas para a disciplina.</p>
+<hr />
+<h2 id="3-processo-de-desenvolvimento-de-software">3 Processo de desenvolvimento de software</h2>
+<p>Esta seção registra, de forma objetiva e orientadora, as decisões da equipe quanto ao processo de desenvolvimento de software, com base no Scrum e no Extreme Programming (XP), em alinhamento com o ciclo de vida descrito na seção 2.1. Entende-se por processo um conjunto de atividades logicamente encadeadas, com início e fim, que consomem recursos, geram resultados e possuem papéis responsáveis.</p>
+<p>No projeto, o desenvolvimento ocorre de 26/10/2026 a 29/11/2026, período definido pelo cronograma da disciplina, e é organizado em cinco Sprints semanais, iniciadas às segundas-feiras. Cada Sprint começa com o Backlog do Produto priorizado e termina com um incremento validado e entregue, utilizando como recursos o repositório no GitHub.</p>
+<p>As atividades, com seus responsáveis e resultados, são:</p>
+<ul>
+<li><strong>a) Refinamento e priorização do Backlog:</strong> o Dono do Produto prioriza as <em>User Stories</em>, gerando o Backlog do Produto priorizado;</li>
+<li><strong>b) Sprint Planning:</strong> toda a equipe seleciona os itens que serão desenvolvidos;</li>
+<li><strong>c) Desenvolvimento:</strong> a Equipe de Desenvolvimento codifica aplicando <em>Pair Programming</em> , gerando um incremento de código;</li>
+<li><strong>d) Reuniões semanais:</strong> a equipe, facilitada pelo Scrum Master, alinha o andamento das tarefas e identifica impedimentos;</li>
+<li><strong>e) Pull Request e Code Review:</strong> o Analista de Qualidade e os desenvolvedores revisam o código, que, uma vez aprovado, é integrado ao ramo developer;</li>
+<li><strong>f) Sprint Review:</strong> a equipe revisa o que foi realizado na sprint;</li>
+<li><strong>g) Retrospective:</strong> a equipe, facilitada pelo Scrum Master, define ações de melhoria para a próxima Sprint.</li>
+</ul>
+<p>Além do fluxo interno de cada Sprint, o processo considera os marcos definidos no cronograma da disciplina:</p>
+<ul>
+<li><strong>a) Início do desenvolvimento (26/10/2026):</strong> a equipe inicia de fato o desenvolvimento do software planejado;</li>
+<li><strong>b) Ponto de controle (09/11/2026 ou 11/11/2026):</strong> a equipe apresenta o que foi desenvolvido até o momento, em 15 minutos, com presença obrigatória da turma;</li>
+<li><strong>c) Inspeção (16/11/2026):</strong> equipes inspetoras avaliam os repositórios das equipes inspecionadas, e o professor divulga o resultado em 18/11/2026;</li>
+<li><strong>d) Correção de defeitos (a partir de 18/11/2026):</strong> a equipe repara os defeitos apontados nas inspeções;</li>
+<li><strong>e) Apresentação do software em funcionamento (30/11/2026 ou 02/12/2026):</strong> a equipe apresenta a versão final do produto.</li>
+</ul>
+<p>Como os repositórios são inspecionados e auditados, os Pull Requests e o planejamento da seção 2.3 devem ser mantidos atualizados a cada Sprint.</p>
+<p>Para garantir o alinhamento entre as etapas, a equipe adota um conceito de pronto (<em>Definition of Done</em>). Considera-se pronto o item do Backlog que atender cumulativamente aos seguintes critérios:</p>
+<ul>
+<li>a) testes unitários implementados;</li>
+<li>b) Código implementado;</li>
+<li>c) Revisão e merge via Pull Request na branch developer dentro do prazo da Sprint;</li>
+</ul>
+<hr />
+<h2 id="4-declaracao-de-escopo-do-projeto">4 Declaração de escopo do projeto</h2>
+<p>O escopo do projeto da plataforma de transporte público visa atender à necessidade de facilitar o acesso e a compreensão das informações para o planejamento de deslocamentos. O escopo é detalhado por meio da identificação dos perfis de usuários, mapeamento de cenários funcionais e construção do backlog do produto.</p>
+<h3 id="41-backlog-do-produto">4.1 Backlog do produto</h3>
+<p>O backlog do produto consiste na lista priorizada de todas as funcionalidades e requisitos técnicos necessários para a construção da plataforma. As funcionalidades foram priorizadas seguindo o método MoSCoW (<em>Must</em>, <em>Should</em>, <em>Could</em>) para alinhar as entregas de maior valor às Sprints do projeto.</p>
+<ul>
+<li><strong>Análise de documentos e padrões:</strong> estudo do formato de dados GTFS (fonte oficial de transporte) e análise de soluções similares no mercado para embasar os requisitos de gestão de dados e alertas de serviço.</li>
+<li><strong>Criação de personas e histórias de usuário (User Stories):</strong> utilizadas para mapear a jornada do "Passageiro" e do "Administrador", garantindo que os requisitos fossem escritos sob a ótica de quem utilizará o sistema.</li>
+<li><strong>Brainstorming com a equipe:</strong> reuniões com os desenvolvedores para levantamento e definição dos requisitos não funcionais, como responsividade, acessibilidade e regras de manutenibilidade do código.</li>
+</ul>
+<h3 id="42-perfis">4.2 Perfis</h3>
+<p><strong>Tabela 5: Perfis de acesso</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Nome do perfil</th>
+<th>Características do perfil</th>
+<th>Permissões de acesso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Passageiro Anônimo</td>
+<td>Usuário comum que utiliza o transporte público e busca informações de forma rápida, sem desejo de criar vínculo formal</td>
+<td>Acesso livre para buscar trajetos, consultar linhas, itinerários, horários e visualizar alertas de alterações no serviço</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Passageiro Cadastrado</td>
+<td>Usuário frequente que deseja personalizar sua experiência e manter um histórico de uso na plataforma (e-mail e senha)</td>
+<td>Todas as permissões do Passageiro Anônimo, acrescidas de: criar conta, autenticar-se, salvar linhas/paradas favoritas, consultar buscas recentes e reportar divergências de informação</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Administrador</td>
+<td>Usuário interno responsável pela manutenção da base</td>
+<td>Acesso restrito mediante login para importar dados de transporte (ex.: GTFS), cadastrar/gerenciar alertas de alteração, manter dados de linhas/horários e analisar os reportes enviados pelos passageiros</td>
+</tr>
+</tbody>
+</table>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<h3 id="43-cenarios">4.3 Cenários</h3>
+<p><strong>Tabela 6: Cenários funcionais</strong> — Sistema: Plataforma de Transporte Público</p>
+<table>
+<thead>
+<tr>
+<th>Cenário</th>
+<th>Nome do cenário</th>
+<th>Sprints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td>Planejamento de trajetos</td>
+<td>S2, S5</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>Consulta de linhas e paradas</td>
+<td>S1, S2</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>Consulta de horários</td>
+<td>S1, S5</td>
+</tr>
+<tr>
+<td>C4</td>
+<td>Alterações no serviço</td>
+<td>S3, S4, S5</td>
+</tr>
+<tr>
+<td>C5</td>
+<td>Conta e personalização do passageiro</td>
+<td>S2, S4</td>
+</tr>
+<tr>
+<td>C6</td>
+<td>Gestão dos dados de transporte (Administrador)</td>
+<td>S1, S3, S4</td>
+</tr>
+</tbody>
+</table>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<h3 id="44-tabela-de-backlog-do-produto">4.4 Tabela de backlog do produto</h3>
+<p>Abaixo é apresentado o detalhamento dos requisitos funcionais (RF), vinculados aos seus cenários, Sprints estimadas e respectivas Histórias de Usuário (Tabela 7). Para tornar verificável a aprovação de cada entrega na estratégia de testes (seção 6.1) e na medição da Taxa de Conclusão de Histórias por Sprint (TCH), os critérios de aceitação operacionais de todas as 24 histórias (US01 a US24) estão detalhados na subseção 4.4.1 (Tabela 8); uma história só é considerada concluída quando todos os seus critérios de aceitação correspondentes são satisfeitos.</p>
+<p><strong>Tabela 7: Backlog do produto</strong> — Sistema: Plataforma de Transporte Público</p>
+<h4 id="c1-planejamento-de-trajetos">C1 – Planejamento de trajetos</h4>
+<table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Sprint</th>
+<th>Nome</th>
+<th>Tipo</th>
+<th>Prioridade</th>
+<th>Descrição</th>
+<th>User Story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1 / RF01</td>
+<td>S2</td>
+<td>Buscar trajeto entre origem e destino</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve permitir que o usuário informe origem e destino (endereço, ponto de referência ou parada) e retornar as opções de trajeto disponíveis, com linhas, baldeações e tempo total estimado.</td>
+<td><strong>US01</strong> – Como passageiro, quero informar origem e destino para descobrir quais linhas e combinações me levam até onde preciso.</td>
+</tr>
+<tr>
+<td>C1 / RF02</td>
+<td>S2</td>
+<td>Exibir trajeto detalhado em etapas</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve apresentar cada opção de trajeto em etapas sequenciais (caminhada até a parada, linha a embarcar, quantidade de paradas, ponto de desembarque e baldeações), em linguagem simples.</td>
+<td><strong>US02</strong> – Como passageiro, quero ver o trajeto dividido em etapas para saber exatamente onde embarcar, onde descer e onde trocar de linha.</td>
+</tr>
+<tr>
+<td>C1 / RF03</td>
+<td>S2</td>
+<td>Usar localização atual como origem</td>
+<td>Funcional</td>
+<td>Should</td>
+<td>O sistema deve permitir, mediante autorização do usuário, utilizar a localização do dispositivo como ponto de origem da busca.</td>
+<td><strong>US03</strong> – Como passageiro, quero usar minha localização atual como origem para não precisar digitar o endereço de onde estou.</td>
+</tr>
+<tr>
+<td>C1 / RF04</td>
+<td>S5</td>
+<td>Visualizar trajeto no mapa</td>
+<td>Funcional</td>
+<td>Should</td>
+<td>O sistema deve exibir o trajeto selecionado em um mapa, destacando o percurso de cada linha, as paradas de embarque e desembarque e os trechos a pé.</td>
+<td><strong>US04</strong> – Como passageiro, quero ver o trajeto desenhado no mapa para localizar com facilidade as paradas de embarque e desembarque.</td>
+</tr>
+<tr>
+<td>C1 / RF05</td>
+<td>S5</td>
+<td>Comparar e ordenar opções de trajeto</td>
+<td>Funcional</td>
+<td>Should</td>
+<td>O sistema deve permitir ordenar e filtrar as opções de trajeto por menor tempo total, menor número de baldeações e menor distância de caminhada.</td>
+<td><strong>US05</strong> – Como passageiro, quero ordenar as opções por tempo, baldeações ou caminhada para escolher a que melhor atende à minha necessidade.</td>
+</tr>
+<tr>
+<td>C1 / RF06</td>
+<td>S5</td>
+<td>Planejar viagem por horário de partida ou chegada</td>
+<td>Funcional</td>
+<td>Could</td>
+<td>O sistema deve permitir que o usuário defina o horário desejado de partida ou de chegada, considerando o quadro de horários das linhas no cálculo do trajeto.</td>
+<td><strong>US06</strong> – Como passageiro, quero informar o horário em que desejo sair ou chegar para planejar minhas viagens com antecedência.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="c2-consulta-de-linhas-e-paradas">C2 – Consulta de linhas e paradas</h4>
+<table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Sprint</th>
+<th>Nome</th>
+<th>Tipo</th>
+<th>Prioridade</th>
+<th>Descrição</th>
+<th>User Story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C2 / RF07</td>
+<td>S1</td>
+<td>Buscar linha por número ou nome</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve permitir buscar linhas pelo número ou pelo nome, com sugestões automáticas durante a digitação.</td>
+<td><strong>US07</strong> – Como passageiro, quero buscar uma linha pelo número ou pelo nome para acessar rapidamente suas informações.</td>
+</tr>
+<tr>
+<td>C2 / RF08</td>
+<td>S1</td>
+<td>Consultar itinerário da linha</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve exibir o itinerário da linha, com a sequência de paradas em cada sentido, em formato de lista e de mapa.</td>
+<td><strong>US08</strong> – Como passageiro, quero ver as paradas da linha em cada sentido para confirmar se ela passa pelo local de que preciso.</td>
+</tr>
+<tr>
+<td>C2 / RF09</td>
+<td>S2</td>
+<td>Consultar linhas que atendem uma parada</td>
+<td>Funcional</td>
+<td>Should</td>
+<td>O sistema deve permitir selecionar uma parada, por busca ou pelo mapa, e listar todas as linhas que a atendem.</td>
+<td><strong>US09</strong> – Como passageiro, quero selecionar uma parada e ver quais linhas passam por ela para conhecer minhas opções a partir daquele ponto.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="c3-consulta-de-horarios">C3 – Consulta de horários</h4>
+<table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Sprint</th>
+<th>Nome</th>
+<th>Tipo</th>
+<th>Prioridade</th>
+<th>Descrição</th>
+<th>User Story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C3 / RF10</td>
+<td>S1</td>
+<td>Consultar quadro de horários da linha</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve exibir o quadro de horários da linha, separado por sentido e por tipo de dia (dias úteis, sábados, domingos e feriados).</td>
+<td><strong>US10</strong> – Como passageiro, quero consultar os horários da linha por sentido e tipo de dia para programar o momento da minha saída.</td>
+</tr>
+<tr>
+<td>C3 / RF11</td>
+<td>S5</td>
+<td>Consultar próximas partidas em uma parada</td>
+<td>Funcional</td>
+<td>Should</td>
+<td>O sistema deve exibir, para uma parada selecionada, os próximos horários programados de passagem de cada linha que a atende.</td>
+<td><strong>US11</strong> – Como passageiro, quero ver os próximos horários previstos em uma parada para saber quanto tempo vou esperar.</td>
+</tr>
+<tr>
+<td>C3 / RF12</td>
+<td>S5</td>
+<td>Exibir previsão de chegada em tempo real</td>
+<td>Funcional</td>
+<td>Could</td>
+<td>O sistema deve exibir a previsão de chegada dos veículos com base na localização em tempo real da frota, quando esse dado estiver disponível na fonte oficial.</td>
+<td><strong>US12</strong> – Como passageiro, quero ver a previsão de chegada do ônibus em tempo real para reduzir meu tempo de espera na parada.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="c4-alteracoes-no-servico">C4 – Alterações no serviço</h4>
+<table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Sprint</th>
+<th>Nome</th>
+<th>Tipo</th>
+<th>Prioridade</th>
+<th>Descrição</th>
+<th>User Story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C4 / RF13</td>
+<td>S3</td>
+<td>Consultar alertas de alteração vigentes</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve disponibilizar uma área com todos os alertas vigentes (desvios, suspensões, alterações de horário e paralisações), informando tipo, linhas e paradas afetadas, período e descrição.</td>
+<td><strong>US13</strong> – Como passageiro, quero ver em um só lugar as alterações vigentes no serviço para saber se meus deslocamentos serão afetados.</td>
+</tr>
+<tr>
+<td>C4 / RF14</td>
+<td>S4</td>
+<td>Sinalizar alterações nos itens afetados</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve destacar visualmente, nas telas de linha e de parada e nos resultados de trajeto, os alertas que afetam os itens exibidos.</td>
+<td><strong>US14</strong> – Como passageiro, quero ser avisado na tela da linha, da parada ou do trajeto quando houver alteração que os afete, para não ser surpreendido durante a viagem.</td>
+</tr>
+<tr>
+<td>C4 / RF15</td>
+<td>S5</td>
+<td>Notificar alterações em itens favoritos</td>
+<td>Funcional</td>
+<td>Could</td>
+<td>O sistema deve notificar o usuário cadastrado, por e-mail ou notificação do navegador, quando for publicado alerta que afete linhas ou paradas salvas como favoritas.</td>
+<td><strong>US15</strong> – Como passageiro cadastrado, quero ser notificado quando uma linha favorita sofrer alteração para me planejar com antecedência.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="c5-conta-e-personalizacao-do-passageiro">C5 – Conta e personalização do passageiro</h4>
+<table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Sprint</th>
+<th>Nome</th>
+<th>Tipo</th>
+<th>Prioridade</th>
+<th>Descrição</th>
+<th>User Story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C5 / RF16</td>
+<td>S4</td>
+<td>Cadastrar e autenticar passageiro</td>
+<td>Funcional</td>
+<td>Should</td>
+<td>O sistema deve permitir o cadastro de passageiros com e-mail e senha, bem como autenticação, recuperação de senha e exclusão da conta.</td>
+<td><strong>US16</strong> – Como passageiro, quero criar uma conta e acessá-la com e-mail e senha para manter minhas preferências salvas entre dispositivos.</td>
+</tr>
+<tr>
+<td>C5 / RF17</td>
+<td>S4</td>
+<td>Salvar linhas, paradas e trajetos favoritos</td>
+<td>Funcional</td>
+<td>Should</td>
+<td>O sistema deve permitir ao passageiro cadastrado salvar e remover linhas, paradas e trajetos favoritos, exibidos com destaque na tela inicial.</td>
+<td><strong>US17</strong> – Como passageiro cadastrado, quero salvar as linhas, paradas e trajetos que uso com frequência para consultá-los com um toque.</td>
+</tr>
+<tr>
+<td>C5 / RF18</td>
+<td>S2</td>
+<td>Consultar buscas recentes</td>
+<td>Funcional</td>
+<td>Could</td>
+<td>O sistema deve armazenar e exibir as últimas buscas de trajeto e de linha realizadas pelo usuário, permitindo repeti-las.</td>
+<td><strong>US18</strong> – Como passageiro, quero ver minhas buscas recentes para repetir uma consulta sem precisar digitar tudo novamente.</td>
+</tr>
+<tr>
+<td>C5 / RF19</td>
+<td>S4</td>
+<td>Reportar divergência na informação</td>
+<td>Funcional</td>
+<td>Could</td>
+<td>O sistema deve permitir ao usuário reportar divergências nas informações exibidas (horário, parada ou itinerário), indicando a linha ou parada relacionada.</td>
+<td><strong>US19</strong> – Como passageiro, quero reportar uma informação incorreta para ajudar a manter os dados da plataforma confiáveis.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="c6-gestao-dos-dados-de-transporte-administrador">C6 – Gestão dos dados de transporte (Administrador)</h4>
+<table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Sprint</th>
+<th>Nome</th>
+<th>Tipo</th>
+<th>Prioridade</th>
+<th>Descrição</th>
+<th>User Story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C6 / RF20</td>
+<td>S1</td>
+<td>Importar dados de transporte</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve importar dados de linhas, paradas, itinerários e horários a partir de fonte oficial em formato padronizado (ex.: GTFS), validando-os antes de atualizar a base.</td>
+<td><strong>US20</strong> – Como administrador, quero importar os dados oficiais de linhas, paradas, itinerários e horários para manter a base da plataforma atualizada.</td>
+</tr>
+<tr>
+<td>C6 / RF21</td>
+<td>S3</td>
+<td>Autenticar administrador</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve restringir as funcionalidades de gestão ao perfil Administrador, mediante autenticação.</td>
+<td><strong>US21</strong> – Como administrador, quero acessar uma área restrita com login próprio para gerenciar os dados sem que outros usuários possam alterá-los.</td>
+</tr>
+<tr>
+<td>C6 / RF22</td>
+<td>S3</td>
+<td>Cadastrar e gerenciar alertas</td>
+<td>Funcional</td>
+<td>Must</td>
+<td>O sistema deve permitir ao administrador cadastrar, editar e encerrar alertas, informando tipo, descrição, linhas e paradas afetadas e período de vigência; alertas vencidos devem ser retirados automaticamente.</td>
+<td><strong>US22</strong> – Como administrador, quero cadastrar alertas com tipo, itens afetados e período de vigência para comunicar as alterações no serviço aos passageiros.</td>
+</tr>
+<tr>
+<td>C6 / RF23</td>
+<td>S3</td>
+<td>Manter linhas, paradas e horários</td>
+<td>Funcional</td>
+<td>Should</td>
+<td>O sistema deve permitir ao administrador incluir, alterar e excluir linhas, paradas, itinerários e horários manualmente.</td>
+<td><strong>US23</strong> – Como administrador, quero corrigir manualmente dados de linhas, paradas e horários para tratar divergências sem aguardar uma nova importação.</td>
+</tr>
+<tr>
+<td>C6 / RF24</td>
+<td>S4</td>
+<td>Analisar reportes de usuários</td>
+<td>Funcional</td>
+<td>Could</td>
+<td>O sistema deve listar os reportes recebidos, permitindo ao administrador classificá-los (pendente, procedente ou improcedente) e registrar a correção realizada.</td>
+<td><strong>US24</strong> – Como administrador, quero analisar os reportes enviados pelos passageiros para identificar e corrigir informações incorretas.</td>
+</tr>
+</tbody>
+</table>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<h4 id="441-criterios-de-aceitacao-por-historia-de-usuario">4.4.1 Critérios de aceitação por história de usuário</h4>
+<p>A Tabela 8 especifica as condições verificáveis de aceitação e os resultados esperados para cada história de usuário do backlog (US01 a US24), servindo de referência objetiva para os testes (seção 6.1), para a validação pelo Dono do Produto e para a apuração da TCH.</p>
+<p><strong>Tabela 8: Critérios de aceitação verificáveis do backlog (US01 a US24)</strong> — Sistema: Plataforma de Transporte Público</p>
+<table>
+<thead>
+<tr>
+<th>Requisito / História</th>
+<th>Cenário</th>
+<th>Critérios de aceitação verificáveis (condições de aprovação)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RF01 / US01</strong></td>
+<td>C1</td>
+<td>1. Ao informar origem e destino válidos, o sistema retorna ao menos uma opção de trajeto contendo linhas utilizadas, quantidade de baldeações e tempo total estimado.<br>2. Ao tentar buscar com origem ou destino vazios, o sistema bloqueia a consulta e exibe mensagem de validação.<br>3. Quando não houver rota disponível entre os pontos informados, o sistema exibe mensagem informativa sem erro de execução.</td>
+</tr>
+<tr>
+<td><strong>RF02 / US02</strong></td>
+<td>C1</td>
+<td>1. Ao selecionar uma opção de trajeto, todas as etapas são exibidas em ordem sequencial, diferenciando caminhada e deslocamento de ônibus.<br>2. Cada etapa de ônibus informa a linha, o ponto de embarque, o percurso/paradas, o ponto de desembarque e eventuais baldeações em linguagem clara.<br>3. Na ausência de etapas detalhadas, o sistema exibe mensagem de estado vazio sem falha de renderização.</td>
+</tr>
+<tr>
+<td><strong>RF03 / US03</strong></td>
+<td>C1</td>
+<td>1. Mediante autorização de acesso à localização do dispositivo, o sistema consulta a parada mais próxima das coordenadas obtidas e preenche automaticamente a origem da busca.<br>2. Caso a permissão de GPS seja negada ou indisponível, o sistema informa o usuário e mantém ativa a digitação manual da origem.</td>
+</tr>
+<tr>
+<td><strong>RF04 / US04</strong></td>
+<td>C1</td>
+<td>1. Ao abrir a visualização em mapa do trajeto selecionado, o sistema desenha o percurso completo diferenciando visualmente trechos a pé e trechos de cada linha.<br>2. As paradas de embarque, baldeação e desembarque são exibidas com marcadores identificáveis no mapa.</td>
+</tr>
+<tr>
+<td><strong>RF05 / US05</strong></td>
+<td>C1</td>
+<td>1. Na tela de resultados de trajeto, o usuário consegue ordenar ou filtrar as opções por menor tempo total, menor número de baldeações e menor distância de caminhada.<br>2. A lista é reordenada corretamente conforme o critério selecionado, preservando os dados de cada opção.</td>
+</tr>
+<tr>
+<td><strong>RF06 / US06</strong></td>
+<td>C1</td>
+<td>1. O usuário pode definir o modo de planejamento ("partida às" ou "chegada até") informando o horário desejado antes de executar a busca.<br>2. As opções retornadas consideram o quadro de horários vigente para o horário informado, exibindo horários coerentes ou aviso caso não haja atendimento no período.</td>
+</tr>
+<tr>
+<td><strong>RF07 / US07</strong></td>
+<td>C2</td>
+<td>1. Ao digitar parte do número/código ou do nome de uma linha, o sistema filtra e exibe as linhas correspondentes em tempo real.<br>2. Ao limpar a busca, todas as linhas voltam a ser listadas; quando nenhuma linha corresponder ao termo, o sistema exibe mensagem de resultado vazio.</td>
+</tr>
+<tr>
+<td><strong>RF08 / US08</strong></td>
+<td>C2</td>
+<td>1. Ao selecionar uma linha, o sistema exibe a sequência ordenada de paradas com nome e código identificador, permitindo alternar entre os sentidos <code>IDA</code> e <code>VOLTA</code> (em lista e em mapa quando habilitado).<br>2. Quando o sentido selecionado não possuir paradas cadastradas, o sistema exibe mensagem informativa.</td>
+</tr>
+<tr>
+<td><strong>RF09 / US09</strong></td>
+<td>C2</td>
+<td>1. Ao selecionar uma parada (por busca ou mapa), o sistema lista todas as linhas cadastradas que a atendem, exibindo código e nome de cada linha.<br>2. Se a parada não existir ou não possuir linhas associadas, o sistema retorna resposta adequada com mensagem clara ao passageiro.</td>
+</tr>
+<tr>
+<td><strong>RF10 / US10</strong></td>
+<td>C3</td>
+<td>1. Ao abrir o quadro de horários de uma linha, os horários são exibidos separados por sentido (<code>IDA</code> e <code>VOLTA</code>) e por tipo de dia (<code>Dias úteis</code>, <code>Sábados</code> e <code>Domingos/Feriados</code>).<br>2. Ao alternar qualquer combinação de sentido e tipo de dia, apenas os horários daquela seleção são exibidos, apresentando mensagem de ausência quando não houver partidas.</td>
+</tr>
+<tr>
+<td><strong>RF11 / US11</strong></td>
+<td>C3</td>
+<td>1. Para uma parada selecionada, o sistema lista os próximos horários programados de passagem de cada linha que a atende em ordem cronológica a partir do horário atual.<br>2. Caso não existam mais partidas previstas para o dia, o sistema informa explicitamente a ausência de próximas saídas.</td>
+</tr>
+<tr>
+<td><strong>RF12 / US12</strong></td>
+<td>C3</td>
+<td>1. Quando os dados de localização em tempo real da frota estiverem disponíveis na fonte oficial, o sistema exibe o tempo estimado de chegada junto à linha/parada consultada.<br>2. Na indisponibilidade da fonte em tempo real, o sistema informa essa condição e mantém visível a previsão programada sem interromper o uso.</td>
+</tr>
+<tr>
+<td><strong>RF13 / US13</strong></td>
+<td>C4</td>
+<td>1. A área de alertas exibe somente alertas dentro da vigência e não encerrados, apresentando tipo (<code>Desvio</code>, <code>Suspensão</code>, <code>Alteração de Horário</code> ou <code>Paralisação</code>), descrição, período e linhas/paradas afetadas.<br>2. O passageiro consegue filtrar os alertas por tipo e visualizar estado vazio quando não houver ocorrências vigentes.</td>
+</tr>
+<tr>
+<td><strong>RF14 / US14</strong></td>
+<td>C4</td>
+<td>1. Linhas, paradas (itinerário e parada próxima) e opções de trajeto afetados por alertas vigentes exibem destaque visual (<code>badge</code> ou <code>banner</code>) indicando o alerta e seu tipo.<br>2. Itens sem alertas vigentes não exibem sinalização, e o acionamento do destaque permite consultar os detalhes dos alertas vigentes.</td>
+</tr>
+<tr>
+<td><strong>RF15 / US15</strong></td>
+<td>C4</td>
+<td>1. Ao publicar um alerta vigente que afete linha ou parada salva como favorita por um passageiro cadastrado, o sistema dispara notificação (e-mail ou notificação do app/navegador) identificando o item afetado e o resumo do alerta.<br>2. Passageiros sem o item favoritado não recebem notificação indevida.</td>
+</tr>
+<tr>
+<td><strong>RF16 / US16</strong></td>
+<td>C5</td>
+<td>1. O cadastro exige nome, e-mail único e senha (armazenada com hash criptográfico), rejeitando campos ausentes ou e-mail duplicado com status <code>400</code>.<br>2. A autenticação com e-mail e senha válidos retorna token JWT e dados do usuário sem expor o hash da senha; credenciais inválidas retornam <code>401 Unauthorized</code>.<br>3. O passageiro consegue recuperar a senha por código temporário de uso único (com validade e limite de tentativas) e excluir definitivamente sua própria conta mediante confirmação da senha atual (autoexclusão bloqueada para perfil administrador com <code>403</code>).</td>
+</tr>
+<tr>
+<td><strong>RF17 / US17</strong></td>
+<td>C5</td>
+<td>1. O passageiro autenticado consegue adicionar e remover linhas, paradas e trajetos favoritos persistidos em sua conta, impedindo duplicidade (<code>409 Conflict</code>).<br>2. Os favoritos salvos são exibidos com destaque na tela inicial/aba de favoritos para acesso em um toque; requisições sem autenticação ou com perfil administrador são bloqueadas (<code>401</code>/<code>403</code>).</td>
+</tr>
+<tr>
+<td><strong>RF18 / US18</strong></td>
+<td>C5</td>
+<td>1. Buscas de trajeto e de linha realizadas pelo usuário são armazenadas e exibidas em ordem da mais recente para a mais antiga.<br>2. Ao selecionar um item do histórico exibido, o sistema repete ou preenche automaticamente a consulta correspondente.</td>
+</tr>
+<tr>
+<td><strong>RF19 / US19</strong></td>
+<td>C5</td>
+<td>1. O passageiro consegue registrar um reporte escolhendo o tipo (<code>HORARIO</code>, <code>PARADA</code> ou <code>ITINERARIO</code>), informando ao menos uma linha ou parada relacionada e descrição com no mínimo 10 caracteres.<br>2. Reportes válidos são gravados com status inicial <code>PENDENTE</code> e confirmação exibida ao usuário; dados inválidos retornam erro <code>400</code> com mensagem explicativa.</td>
+</tr>
+<tr>
+<td><strong>RF20 / US20</strong></td>
+<td>C6</td>
+<td>1. O importador valida a estrutura dos arquivos GTFS antes de atualizar a base e persiste linhas, paradas, itinerários e horários sem duplicação de registros.<br>2. Arquivos ausentes ou inválidos são rejeitados com erro registrado, preservando a integridade dos dados previamente armazenados.</td>
+</tr>
+<tr>
+<td><strong>RF21 / US21</strong></td>
+<td>C6</td>
+<td>1. Todas as rotas e telas de gestão administrativa exigem autenticação com token JWT válido cujo perfil seja <code>ADMIN</code>.<br>2. Acessos sem token ou com token inválido/expirado retornam <code>401 Unauthorized</code>, e acessos com perfil <code>PASSAGEIRO</code> retornam <code>403 Forbidden</code> e são bloqueados na interface administrativa.</td>
+</tr>
+<tr>
+<td><strong>RF22 / US22</strong></td>
+<td>C6</td>
+<td>1. O administrador autenticado consegue cadastrar, listar, editar e encerrar alertas com tipo válido, descrição, itens afetados e vigência com data final posterior à inicial.<br>2. Alertas encerrados ou expirados deixam automaticamente de aparecer nas consultas públicas de alertas vigentes e na sinalização aos passageiros.</td>
+</tr>
+<tr>
+<td><strong>RF23 / US23</strong></td>
+<td>C6</td>
+<td>1. O administrador autenticado consegue incluir, alterar e excluir manualmente linhas, paradas, itinerários e horários mediante validação de campos obrigatórios e integridade dos vínculos.<br>2. As alterações gravadas passam a ser refletidas nas consultas públicas de linhas, itinerários, horários e trajetos.</td>
+</tr>
+<tr>
+<td><strong>RF24 / US24</strong></td>
+<td>C6</td>
+<td>1. O administrador autenticado consegue listar todos os reportes recebidos (com filtros opcionais por status e tipo) e visualizar os detalhes de cada reporte.<br>2. O administrador consegue classificar cada reporte como <code>PENDENTE</code>, <code>PROCEDENTE</code> ou <code>IMPROCEDENTE</code> e registrar a correção realizada, sendo obrigatório informar a correção quando classificado como <code>PROCEDENTE</code> (retornando <code>400</code> em caso de omissão).</td>
+</tr>
+</tbody>
+</table>
+<p><em>Fonte: Elaborado pelos autores (2026)</em></p>
+<hr />
+<h2 id="5-metricas-e-medicoes">5 Métricas e medições</h2>
+<h3 id="51-gqm-de-medicoes">5.1 GQM de medições</h3>
+<p>O primeiro objetivo de medição do projeto, estruturado com base na metodologia GQM , tem como objeto as histórias de usuário assumidas no Sprint Backlog. A finalidade dessa medição é avaliar o cumprimento do planejamento e a real capacidade de entrega da equipe ao longo do projeto. Para isso, o foco está em acompanhar o percentual de histórias concluídas, garantindo que elas atendam rigorosamente aos critérios da Definição de Pronto . Essa análise é realizada a partir do ponto de vista da equipe de desenvolvimento, do Scrum Master e do Dono do Produto. Todo esse processo está inserido no contexto do RotasDF, que adota os frameworks Scrum e XP e é executado ao longo de cinco Sprints semanais, no período de 26 de outubro a 29 de novembro de 2026.</p>
+<hr />
+<h2 id="6-testes-de-software">6 Testes de software</h2>
+<h3 id="61-estrategia-de-testes">6.1 Estratégia de Testes</h3>
+<p>A estratégia de testes do RotasDF foi desenhada para se adequar às práticas ágeis (Scrum e XP) e às peculiaridades do projeto, garantindo a estabilidade, a confiabilidade das informações de transporte e a acessibilidade da plataforma.</p>
+<p><strong>Níveis e Abordagens de Testes:</strong>
+* <strong>Testes Unitários:</strong> São a base da qualidade do software. Os desenvolvedores utilizam bibliotecas como <em>Jest</em> (Node.js/React Native) e <em>Pytest</em> (Python) para testar isoladamente as menores funções do sistema, como o cálculo matemático de baldeações, a conversão de horários e a renderização de componentes visuais. A meta é manter uma <strong>cobertura mínima de 80%</strong> do código.
+* <strong>Testes de Sistema Funcional (Sprint 4):</strong> Os testes de ponta a ponta, que simulam a jornada real do usuário, <strong>serão executados especificamente na Sprint 4</strong>. A justificativa é que, nesta etapa, todo o ecossistema já estará interligado, permitindo validar a busca de rotas, a precisão do GPS e o tratamento de erros de forma realista, sem que módulos inacabados interfiram no resultado.</p>
+<p><strong>Tipos de Testes Abordados:</strong>
+* <strong>Funcionais:</strong> Validação das regras de negócio e do contrato OpenAPI.</p>
+<p><strong>Ambientes e Ferramentas Manuais:</strong>
+A execução dos testes ocorre em ambientes padronizados por Docker. Para os testes de integração e sistema, o Analista de Qualidade utiliza ferramentas como <strong>Postman/Insomnia</strong> para validar os endpoints da API e o <strong>DBeaver</strong> para auditar a integridade dos dados no banco.</p>
+<p><strong>Critérios de Aceitação:</strong>
+O parâmetro para aprovação de qualquer funcionalidade é a comparação exata entre o "Resultado Previsto" e o "Resultado Realizado". Se houver divergência, um defeito é registrado e a funcionalidade é reprovada até ser corrigida.</p>
+<p><strong>Automação e Integração Contínua:</strong>
+Embora a validação visual e de usabilidade seja manual, a equipe preza pela automação da qualidade do código. Para isso, o projeto utiliza o <strong>GitHub Actions</strong> para orquestrar a Integração Contínua. A cada <em>Pull Request</em>, o sistema executa automaticamente os testes unitários e de integração. Caso algum teste falhe ou a cobertura de código caia abaixo da meta de 80%, o código é automaticamente barrado e não pode ser integrado à branch principal, garantindo a saúde do repositório.</p>
+<hr />
+<h2 id="7-referencias-bibliograficas">7 Referências bibliográficas</h2>
+<p>ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>ABNT NBR 10520</strong>: Informação e documentação — Citações em documentos — Apresentação. Rio de Janeiro: ABNT, 2023.</p>
+<p>BOREKI, Vinicius. O impacto da previsibilidade do transporte público. <strong>Gazeta do Povo</strong>, Curitiba, 30 out. 2023. Disponível em: <a href="https://www.gazetadopovo.com.br/gpbc/metrocard/o-impacto-da-previsibilidade-do-transporte-publico/">https://www.gazetadopovo.com.br/gpbc/metrocard/o-impacto-da-previsibilidade-do-transporte-publico/</a>. Acesso em: 30 set. 2026.</p>
+<p>KRUG, Steve. <strong>Não me faça pensar</strong>: uma abordagem de bom senso à usabilidade na web e no mobile. 3. ed. Rio de Janeiro: Alta Books, 2014.</p>
+<p>PRESSMAN, Roger S.; MAXIM, Bruce R. <strong>Engenharia de Software</strong>: uma abordagem profissional. 8. ed. Porto Alegre: AMGH, 2016.</p>
+<p>SOMMERVILLE, Ian. <strong>Engenharia de Software</strong>. 10. ed. São Paulo: Pearson Education do Brasil, 2019.</p>
+<p>INTERNATIONAL SOFTWARE TESTING QUALIFICATIONS BOARD (ISTQB). <strong>Syllabus do nível fundamental</strong>. Versão 4.0. [S. l.]: ISTQB, 2023. Disponível em: <a href="https://bstqb.org.br">https://bstqb.org.br</a>. Acesso em: 29 set. 2026.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

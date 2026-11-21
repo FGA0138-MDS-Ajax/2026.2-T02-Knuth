@@ -1,0 +1,1911 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Plano de Testes — RotasDF - RotasDF - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plano-de-testes-rotasdf" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="RotasDF - Documentação" class="md-header__button md-logo" aria-label="RotasDF - Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RotasDF - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plano de Testes — RotasDF
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="RotasDF - Documentação" class="md-nav__button md-logo" aria-label="RotasDF - Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RotasDF - Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Documento_de_Visao_do_Produto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão do Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Documento_de_Arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Política_de_Commits" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Política de commits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plano_de_Metricas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Métricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Atas de Reunião
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Atas de Reunião
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../atas-reuniao/ata-reuniao-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ata 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sumario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sumário
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-estrategia-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Estratégia de testes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-testes-de-repositorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Testes de repositórios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Testes de repositórios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-alertasrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. AlertasRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-buscasrecentesrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. BuscasRecentesRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-usuariosrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. UsuariosRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-paradasrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4. ParadasRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-linhasrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5. LinhasRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-trajetosrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6. TrajetosRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-gerenciarusuariosrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7. GerenciarUsuariosRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-adminrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8. AdminRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-recuperacaosenharepository-rf16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9. RecuperacaoSenhaRepository (RF16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-favoritosrepository-rf17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10. FavoritosRepository (RF17)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-analisarreportesrepository-rf24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11. AnalisarReportesRepository (RF24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-testes-de-servicos-e-controladores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Testes de serviços e controladores
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Testes de serviços e controladores">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-alertasservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. AlertasService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-buscasrecentesservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. BuscasRecentesService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-usuariosservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. UsuariosService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-paradasservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4. ParadasService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-linhasservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5. LinhasService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-trajetosservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6. TrajetosService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-gerenciarusuariosservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7. GerenciarUsuariosService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-adminservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8. AdminService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-controladores-sinalizacao-de-alertas-nos-itens-afetados-rf14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9. Controladores — Sinalização de Alertas nos Itens Afetados (RF14)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-controladores-e-servicos-recuperacao-de-senha-e-exclusao-de-conta-rf16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10. Controladores e Serviços — Recuperação de Senha e Exclusão de Conta (RF16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-gerenciaralertasservice-rf22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11. GerenciarAlertasService (RF22)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-gerenciaralertascontroller-rf22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12. GerenciarAlertasController (RF22)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-favoritosservice-rf17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13. FavoritosService (RF17)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-favoritoscontroller-e-rotas-rf17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14. FavoritosController e rotas (RF17)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#315-analisarreportesservice-rf24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.15. AnalisarReportesService (RF24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#316-analisarreportescontroller-e-rotas-administrativas-rf24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.16. AnalisarReportesController e rotas administrativas (RF24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-testes-de-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Testes de middleware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-testes-de-interface-react-native" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Testes de interface (React Native)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-tratamento-de-erros-e-condicoes-especiais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Tratamento de erros e condições especiais
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-consideracoes-finais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Considerações finais
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="plano-de-testes-rotasdf">Plano de Testes — RotasDF</h1>
+<h2 id="sumario">Sumário</h2>
+<ol>
+<li><a href="#1-estratégia-de-testes">Estratégia de testes</a></li>
+<li><a href="#2-testes-de-repositórios">Testes de repositórios</a></li>
+<li><a href="#3-testes-de-serviços-e-controladores">Testes de serviços e controladores</a></li>
+<li><a href="#4-testes-de-middleware">Testes de middleware</a></li>
+<li><a href="#5-testes-de-interface-react-native">Testes de interface (React Native)</a></li>
+<li><a href="#6-tratamento-de-erros-e-condições-especiais">Tratamento de erros e condições especiais</a></li>
+<li><a href="#7-considerações-finais">Considerações finais</a></li>
+</ol>
+<hr />
+<h2 id="1-estrategia-de-testes">1. Estratégia de testes</h2>
+<ul>
+<li><strong>Testes unitários:</strong> foco na validação isolada dos serviços, repositórios e controladores.</li>
+<li><strong>Testes funcionais de interface:</strong> validação das telas React Native quanto à renderização, às interações e ao estado da interface.</li>
+<li><strong>Testes de integração:</strong> não há testes de integração entre componentes distintos; as dependências são simuladas com <em>mocks</em>.</li>
+<li><strong>Teste de sistema:</strong> realizado na Sprint 4, com o objetivo de verificar a integração e a usabilidade do sistema.</li>
+</ul>
+<hr />
+<h2 id="2-testes-de-repositorios">2. Testes de repositórios</h2>
+<h3 id="21-alertasrepository">2.1. <code>AlertasRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findAlertasVigentes</code></td>
+<td>Retorna todos os alertas vigentes (considerando vigência e não encerrados).</td>
+<td>Retorna uma lista ou propaga o erro.</td>
+</tr>
+<tr>
+<td><code>findAlertaVigenteById</code></td>
+<td>Retorna um alerta ativo pelo ID.</td>
+<td>Retorna o alerta ou <code>null</code>; trata erros.</td>
+</tr>
+<tr>
+<td><code>findAlertasVigentesPorItens</code></td>
+<td>Retorna alertas vigentes que afetam uma lista de linhas e/ou paradas (RF14).</td>
+<td>Retorna os alertas correspondentes, lista vazia sem ir ao banco quando os parâmetros são vazios, ou propaga o erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-buscasrecentesrepository">2.2. <code>BuscasRecentesRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>salvarBusca</code></td>
+<td>Insere uma busca e retorna o registro.</td>
+<td>Executa a consulta com os valores corretos.</td>
+</tr>
+<tr>
+<td><code>listarBuscasRecentes</code></td>
+<td>Lista buscas recentes com filtro.</td>
+<td>Retorna uma lista ou uma lista vazia.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-usuariosrepository">2.3. <code>UsuariosRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criar</code></td>
+<td>Insere um usuário sem expor a senha.</td>
+<td>Executa a consulta corretamente e retorna o usuário.</td>
+</tr>
+<tr>
+<td><code>buscarPorEmail</code></td>
+<td>Busca um usuário pelo e-mail.</td>
+<td>Retorna o usuário ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>buscarPorId</code></td>
+<td>Busca um usuário pelo ID (RF16).</td>
+<td>Retorna o usuário encontrado ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>atualizarSenha</code></td>
+<td>Atualiza o hash da senha de um usuário pelo ID (RF16).</td>
+<td>Executa <code>UPDATE usuarios SET senha_hash = $2 WHERE id = $1</code>.</td>
+</tr>
+<tr>
+<td><code>excluir</code></td>
+<td>Remove o registro do usuário pelo ID (RF16).</td>
+<td>Executa a exclusão ou propaga o erro do banco.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-paradasrepository">2.4. <code>ParadasRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findNearestParada</code></td>
+<td>Busca a parada mais próxima.</td>
+<td>Retorna a parada ou <code>null</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="25-linhasrepository">2.5. <code>LinhasRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findLinhas</code></td>
+<td>Busca linhas com ou sem filtros.</td>
+<td>Retorna as linhas ou uma lista vazia.</td>
+</tr>
+<tr>
+<td><code>findItinerarioByLinhaId</code></td>
+<td>Busca o itinerário de uma linha.</td>
+<td>Retorna o resultado ou uma lista vazia.</td>
+</tr>
+<tr>
+<td><code>findHorariosByLinhaId</code></td>
+<td>Busca os horários de uma linha.</td>
+<td>Retorna os horários ou uma lista vazia.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="26-trajetosrepository">2.6. <code>TrajetosRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>buscarParadasPorNome</code></td>
+<td>Busca paradas pelo nome.</td>
+<td>Retorna uma lista ou uma lista vazia.</td>
+</tr>
+<tr>
+<td><code>buscarRotasDiretas</code></td>
+<td>Busca rotas diretas.</td>
+<td>Retorna as rotas ou uma lista vazia.</td>
+</tr>
+<tr>
+<td><code>buscarRotasComBaldeacao</code></td>
+<td>Busca rotas com baldeação.</td>
+<td>Retorna as rotas ou uma lista vazia.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="27-gerenciarusuariosrepository">2.7. <code>GerenciarUsuariosRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista usuários com filtro.</td>
+<td>Retorna a lista filtrada ou completa.</td>
+</tr>
+<tr>
+<td><code>buscarPorId</code></td>
+<td>Busca um usuário pelo ID.</td>
+<td>Retorna o usuário ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>contarAdmins</code></td>
+<td>Conta o total de administradores.</td>
+<td>Retorna a contagem.</td>
+</tr>
+<tr>
+<td><code>atualizar</code></td>
+<td>Atualiza os dados do usuário, incluindo senha opcional.</td>
+<td>Retorna o usuário atualizado.</td>
+</tr>
+<tr>
+<td><code>excluir</code></td>
+<td>Remove um usuário pelo ID.</td>
+<td>Confirma a remoção ou propaga o erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="28-adminrepository">2.8. <code>AdminRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criar</code></td>
+<td>Cria um administrador com tipo fixo.</td>
+<td>Executa a consulta corretamente e retorna o resultado esperado.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="29-recuperacaosenharepository-rf16">2.9. <code>RecuperacaoSenhaRepository</code> (RF16)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invalidarPendentes</code></td>
+<td>Marca como usados todos os códigos de recuperação pendentes do usuário.</td>
+<td>Atualiza <code>usado_em = NOW()</code> nos registros não utilizados do <code>usuario_id</code>.</td>
+</tr>
+<tr>
+<td><code>criar</code></td>
+<td>Armazena o hash do código de 6 dígitos com data de expiração.</td>
+<td>Insere na tabela <code>recuperacoes_senha</code> e retorna os metadados sem expor <code>codigo_hash</code>.</td>
+</tr>
+<tr>
+<td><code>buscarAtiva</code></td>
+<td>Consulta o código mais recente ainda válido (não usado e não expirado).</td>
+<td>Retorna o registro ativo ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>registrarTentativa</code></td>
+<td>Incrementa o contador de tentativas inválidas de um código.</td>
+<td>Atualiza <code>tentativas = tentativas + 1</code> e retorna o total atualizado.</td>
+</tr>
+<tr>
+<td><code>marcarUsada</code></td>
+<td>Marca um código de recuperação como utilizado ou bloqueado.</td>
+<td>Atualiza <code>usado_em = NOW()</code> para o registro informado.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="210-favoritosrepository-rf17">2.10. <code>FavoritosRepository</code> (RF17)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista os favoritos de um usuário, do mais recente ao mais antigo, com os dados da linha e da parada.</td>
+<td>Retorna apenas os favoritos do usuário ou lista vazia; propaga o erro do banco.</td>
+</tr>
+<tr>
+<td><code>adicionar</code></td>
+<td>Insere um favorito de linha, parada ou trajeto e devolve o registro já com os dados da linha e da parada.</td>
+<td>Devolve o favorito criado, ou <code>null</code> quando ele já existia; propaga o erro do banco.</td>
+</tr>
+<tr>
+<td><code>remover</code></td>
+<td>Remove o favorito somente se pertencer ao usuário.</td>
+<td>Retorna <code>true</code> quando removeu e <code>false</code> quando não havia favorito.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="211-analisarreportesrepository-rf24">2.11. <code>AnalisarReportesRepository</code> (RF24)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista os reportes de divergência com <code>LEFT JOIN</code> em <code>usuarios</code>, com filtros opcionais de <code>status</code> e <code>tipo</code>, priorizando pendentes e mais recentes.</td>
+<td>Executa a consulta com os filtros corretos e retorna a lista de reportes ou propaga o erro do banco.</td>
+</tr>
+<tr>
+<td><code>buscarPorId</code></td>
+<td>Busca um reporte específico pelo ID com dados do autor.</td>
+<td>Retorna o reporte encontrado ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>atualizarAnalise</code></td>
+<td>Atualiza <code>status</code>, <code>observacao_admin</code> e define <code>analisado_em</code> (<code>NULL</code> quando <code>PENDENTE</code>, <code>NOW()</code> nos demais).</td>
+<td>Retorna o reporte atualizado ou <code>null</code> caso o ID não exista.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-testes-de-servicos-e-controladores">3. Testes de serviços e controladores</h2>
+<h3 id="31-alertasservice">3.1. <code>AlertasService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listarAlertasVigentes</code></td>
+<td>Retorna alertas ou erros.</td>
+<td>Retorna a lista correta ou um erro.</td>
+</tr>
+<tr>
+<td><code>obterAlertaVigente</code></td>
+<td>Retorna um alerta ativo pelo ID ou <code>null</code>.</td>
+<td>Retorna os dados ou <code>null</code>; trata erros.</td>
+</tr>
+<tr>
+<td><code>vigentesPara</code></td>
+<td>Normaliza/deduplica IDs de linhas e paradas e busca alertas vigentes afetados (RF14).</td>
+<td>Consulta o repositório com listas normalizadas ou retorna lista vazia quando não há itens válidos.</td>
+</tr>
+<tr>
+<td><code>filtrarAlertasParaItens</code></td>
+<td>Filtra alertas vigentes por linhas (ID/código) e paradas (ID/código/nome) (RF14).</td>
+<td>Retorna apenas os alertas que afetam os itens informados.</td>
+</tr>
+<tr>
+<td><code>extrairItensDoTrajeto</code></td>
+<td>Extrai códigos de linhas e nomes/IDs de paradas das etapas de uma opção de trajeto (RF14).</td>
+<td>Retorna as listas normalizadas de linhas e paradas envolvidas no trajeto.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-buscasrecentesservice">3.2. <code>BuscasRecentesService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>registrarBusca</code></td>
+<td>Valida e registra buscas.</td>
+<td>Trata e retorna os dados corretamente.</td>
+</tr>
+<tr>
+<td><code>obterBuscasRecentes</code></td>
+<td>Lista buscas com parâmetros e valores padrão.</td>
+<td>Retorna as buscas ou uma lista vazia.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-usuariosservice">3.3. <code>UsuariosService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cadastrar</code></td>
+<td>Valida os dados e realiza o cadastro.</td>
+<td>Cria o usuário ou lança erros.</td>
+</tr>
+<tr>
+<td><code>login</code></td>
+<td>Realiza a autenticação e emite um token.</td>
+<td>Retorna o token e o usuário, ou um erro.</td>
+</tr>
+<tr>
+<td><code>solicitarRecuperacaoSenha</code></td>
+<td>Gera código de 6 dígitos, invalida códigos anteriores, salva o hash com expiração de 15 min e dispara o envio por e-mail sem revelar se o e-mail existe (RF16).</td>
+<td>Retorna mensagem padrão; rejeita com <code>400</code> se o e-mail estiver vazio.</td>
+</tr>
+<tr>
+<td><code>redefinirSenha</code></td>
+<td>Valida e-mail, código de 6 dígitos, limite de 5 tentativas e tamanho mínimo da nova senha (6 caracteres), atualizando o hash da senha (RF16).</td>
+<td>Atualiza a senha e invalida o código utilizado, ou lança erro <code>400</code> para código inválido/expirado/excedido.</td>
+</tr>
+<tr>
+<td><code>excluirConta</code></td>
+<td>Valida a senha atual do passageiro autenticado e remove sua própria conta, bloqueando autoexclusão de administradores (RF16).</td>
+<td>Exclui o passageiro com confirmação de senha ou lança erro <code>400</code>/<code>401</code>/<code>403</code>/<code>404</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="34-paradasservice">3.4. <code>ParadasService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obterParadaMaisProxima</code></td>
+<td>Busca a parada mais próxima usando latitude e longitude.</td>
+<td>Retorna a parada, <code>null</code> ou um erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="35-linhasservice">3.5. <code>LinhasService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obterLinhas</code></td>
+<td>Busca linhas com filtros ou por texto.</td>
+<td>Retorna as linhas ou um erro.</td>
+</tr>
+<tr>
+<td><code>obterItinerario</code></td>
+<td>Retorna o itinerário pelo ID.</td>
+<td>Retorna dados estruturados, <code>null</code> ou um erro.</td>
+</tr>
+<tr>
+<td><code>obterQuadroHorarios</code></td>
+<td>Retorna o quadro de horários.</td>
+<td>Retorna os dados agrupados, <code>null</code> ou um erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="36-trajetosservice">3.6. <code>TrajetosService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obterTrajetos</code></td>
+<td>Valida a origem e o destino e retorna rotas.</td>
+<td>Retorna uma lista combinada de trajetos ou um erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="37-gerenciarusuariosservice">3.7. <code>GerenciarUsuariosService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista usuários com filtro.</td>
+<td>Retorna a lista ou um erro.</td>
+</tr>
+<tr>
+<td><code>atualizar</code></td>
+<td>Atualiza os dados conforme as regras.</td>
+<td>Retorna o resultado atualizado ou um erro.</td>
+</tr>
+<tr>
+<td><code>excluir</code></td>
+<td>Valida e exclui usuários.</td>
+<td>Confirma a exclusão ou retorna um erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="38-adminservice">3.8. <code>AdminService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criarAdministrador</code></td>
+<td>Valida os dados e cria um administrador.</td>
+<td>Cria o administrador ou retorna um erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="39-controladores-sinalizacao-de-alertas-nos-itens-afetados-rf14">3.9. Controladores — Sinalização de Alertas nos Itens Afetados (RF14)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AlertasController.getAlertasVigentes</code></td>
+<td>Lista todos os alertas vigentes ou filtra por <code>?linhaId</code> e <code>?paradaId</code>.</td>
+<td>Chama <code>vigentesPara</code> quando há filtros na query ou <code>listarAlertasVigentes</code> caso contrário, respondendo <code>200</code>.</td>
+</tr>
+<tr>
+<td><code>LinhasController.getLinhas</code></td>
+<td>Enriquece cada linha retornada com <code>afetadaPorAlerta</code> e <code>alertas</code>.</td>
+<td>Responde <code>200</code> com a lista de linhas sinalizadas; mantém resposta <code>200</code> sem alertas caso a consulta de alertas falhe.</td>
+</tr>
+<tr>
+<td><code>LinhasController.getItinerario</code></td>
+<td>Sinaliza alertas vigentes tanto na linha quanto individualmente nas paradas de <code>IDA</code> e <code>VOLTA</code>.</td>
+<td>Responde <code>200</code> com <code>afetadaPorAlerta</code> e <code>alertas</code> no cabeçalho da linha e em cada parada afetada.</td>
+</tr>
+<tr>
+<td><code>LinhasController.getHorarios</code></td>
+<td>Anexa <code>afetadaPorAlerta</code> e <code>alertas</code> vigentes ao quadro de horários da linha.</td>
+<td>Responde <code>200</code> com o quadro de horários enriquecido com os alertas da linha.</td>
+</tr>
+<tr>
+<td><code>ParadasController.getParadaProxima</code></td>
+<td>Anexa <code>afetadaPorAlerta</code> e <code>alertas</code> vigentes à parada mais próxima encontrada pelo GPS.</td>
+<td>Responde <code>200</code> com a parada sinalizada; degrada graciosamente se a consulta de alertas falhar.</td>
+</tr>
+<tr>
+<td><code>TrajetosController.getTrajetos</code></td>
+<td>Extrai linhas e paradas das etapas de cada opção e associa os alertas vigentes correspondentes.</td>
+<td>Responde <code>200</code> com cada opção enriquecida com <code>afetadaPorAlerta</code> e <code>alertas</code>; mantém funcionamento caso o serviço de alertas falhe.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="310-controladores-e-servicos-recuperacao-de-senha-e-exclusao-de-conta-rf16">3.10. Controladores e Serviços — Recuperação de Senha e Exclusão de Conta (RF16)</h3>
+<table>
+<thead>
+<tr>
+<th>Componente / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EmailService.enviarCodigoRecuperacao</code></td>
+<td>Registra/dispara o envio do código temporário de recuperação com destinatário e tempo de validade.</td>
+<td>Registra a mensagem contendo nome, e-mail, código de 6 dígitos e validade em minutos.</td>
+</tr>
+<tr>
+<td><code>UsuariosController.solicitarRecuperacaoSenha</code></td>
+<td>Recebe <code>POST /api/v1/usuarios/recuperar-senha</code> e aciona o serviço de recuperação.</td>
+<td>Responde <code>200</code> com a mensagem de confirmação, <code>400</code> quando falta o e-mail ou <code>500</code> em falha inesperada.</td>
+</tr>
+<tr>
+<td><code>UsuariosController.redefinirSenha</code></td>
+<td>Recebe <code>POST /api/v1/usuarios/redefinir-senha</code> com <code>email</code>, <code>codigo</code> e <code>novaSenha</code>.</td>
+<td>Responde <code>200</code> ao redefinir a senha, <code>400</code> para dados/código inválidos ou <code>500</code> em erro interno.</td>
+</tr>
+<tr>
+<td><code>UsuariosController.excluirConta</code></td>
+<td>Recebe <code>DELETE /api/v1/usuarios/me</code> autenticado com a senha de confirmação no corpo.</td>
+<td>Responde <code>200</code> ao excluir a conta, ou <code>400</code>/<code>401</code>/<code>403</code>/<code>404</code>/<code>500</code> conforme a validação.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="311-gerenciaralertasservice-rf22">3.11. <code>GerenciarAlertasService</code> (RF22)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criar</code></td>
+<td>Valida tipo, título, descrição, datas e listas de linhas/paradas antes de gravar.</td>
+<td>Rejeita tipo inválido, título ou descrição ausentes, datas inválidas, fim não posterior ao início e linhas/paradas que não sejam lista.</td>
+</tr>
+<tr>
+<td><code>criar</code></td>
+<td>Cria o alerta com dados válidos, com ou sem linhas e com paradas afetadas.</td>
+<td>Chama o repositório com os dados normalizados (lista vazia quando não há linhas) e retorna o alerta criado.</td>
+</tr>
+<tr>
+<td><code>listar</code></td>
+<td>Lista todos os alertas para o administrador.</td>
+<td>Retorna todos os alertas, inclusive encerrados e expirados.</td>
+</tr>
+<tr>
+<td><code>editar</code></td>
+<td>Altera um alerta existente com as mesmas validações da criação.</td>
+<td>Retorna o alerta atualizado; falha se o alerta não existir, se estiver encerrado ou se os dados forem inválidos.</td>
+</tr>
+<tr>
+<td><code>encerrar</code></td>
+<td>Encerra um alerta em andamento.</td>
+<td>Encerra o alerta; falha se não existir ou se já estiver encerrado.</td>
+</tr>
+<tr>
+<td><code>excluir</code></td>
+<td>Exclui alertas encerrados ou expirados.</td>
+<td>Exclui o alerta; falha se não existir e impede a exclusão de alerta ainda em andamento.</td>
+</tr>
+<tr>
+<td><code>buscarParadas</code></td>
+<td>Busca paradas pelo texto para escolha das paradas afetadas.</td>
+<td>Retorna lista vazia quando a busca é curta e consulta o repositório com o texto sem espaços nas pontas.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="312-gerenciaralertascontroller-rf22">3.12. <code>GerenciarAlertasController</code> (RF22)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Recebe <code>GET /api/v1/admin/alertas</code>.</td>
+<td>Responde <code>200</code> com a lista de alertas.</td>
+</tr>
+<tr>
+<td><code>criar</code></td>
+<td>Recebe <code>POST /api/v1/admin/alertas</code>.</td>
+<td>Responde <code>201</code> ao criar ou <code>400</code> quando o serviço rejeita os dados.</td>
+</tr>
+<tr>
+<td><code>editar</code></td>
+<td>Recebe <code>PUT /api/v1/admin/alertas/:id</code>.</td>
+<td>Responde <code>200</code> ao editar, <code>404</code> se o alerta não existir ou <code>400</code> se estiver encerrado ou o id não for numérico.</td>
+</tr>
+<tr>
+<td><code>encerrar</code></td>
+<td>Recebe <code>PUT /api/v1/admin/alertas/:id/encerrar</code>.</td>
+<td>Responde <code>200</code> ao encerrar, <code>404</code> se o alerta não existir ou <code>400</code> se já estiver encerrado ou o id for inválido.</td>
+</tr>
+<tr>
+<td><code>buscarParadas</code></td>
+<td>Recebe <code>GET /api/v1/admin/paradas?busca=</code>.</td>
+<td>Responde <code>200</code> com as paradas encontradas e aceita busca ausente.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="313-favoritosservice-rf17">3.13. <code>FavoritosService</code> (RF17)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista os favoritos do usuário logado.</td>
+<td>Retorna a lista do usuário.</td>
+</tr>
+<tr>
+<td><code>adicionar</code></td>
+<td>Valida o tipo (<code>LINHA</code>, <code>PARADA</code> ou <code>TRAJETO</code>) e o campo exigido por cada tipo.</td>
+<td>Rejeita tipo inválido ou campo ausente (400); ignora campos que não pertencem ao tipo.</td>
+</tr>
+<tr>
+<td><code>adicionar</code></td>
+<td>Salva o favorito e trata duplicidade e referência inexistente.</td>
+<td>Salva com sucesso; responde 409 se já existia e 404 se a linha ou a parada não existir.</td>
+</tr>
+<tr>
+<td><code>remover</code></td>
+<td>Valida o ID e remove o favorito do usuário.</td>
+<td>Responde 400 para ID inválido e 404 se o favorito não existir ou for de outro usuário.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="314-favoritoscontroller-e-rotas-rf17">3.14. <code>FavoritosController</code> e rotas (RF17)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Recebe <code>GET /api/v1/favoritos</code>.</td>
+<td>Responde <code>200</code> com os favoritos do usuário do token.</td>
+</tr>
+<tr>
+<td><code>adicionar</code></td>
+<td>Recebe <code>POST /api/v1/favoritos</code>.</td>
+<td>Responde <code>201</code>, ou <code>400</code>, <code>404</code> e <code>409</code> conforme a regra violada.</td>
+</tr>
+<tr>
+<td><code>remover</code></td>
+<td>Recebe <code>DELETE /api/v1/favoritos/:id</code>.</td>
+<td>Responde <code>200</code>, ou <code>400</code> e <code>404</code>.</td>
+</tr>
+<tr>
+<td>todos</td>
+<td>Usuário que não é passageiro.</td>
+<td>Responde <code>403</code> (administrador não usa favoritos).</td>
+</tr>
+<tr>
+<td><code>favoritosRoutes</code></td>
+<td>Rotas <code>GET /</code>, <code>POST /</code> e <code>DELETE /:id</code>.</td>
+<td>Todas passam pelo <code>authUsuario</code>; não há rota <code>PUT</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="315-analisarreportesservice-rf24">3.15. <code>AnalisarReportesService</code> (RF24)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Normaliza e valida filtros opcionais de <code>status</code> (<code>PENDENTE</code>, <code>PROCEDENTE</code>, <code>IMPROCEDENTE</code>) e <code>tipo</code> (<code>HORARIO</code>, <code>PARADA</code>, <code>ITINERARIO</code>).</td>
+<td>Retorna a lista filtrada ou lança erro <code>400</code> para filtro inválido.</td>
+</tr>
+<tr>
+<td><code>obterPorId</code></td>
+<td>Valida ID inteiro positivo e consulta o reporte.</td>
+<td>Retorna o reporte, lança <code>400</code> para ID inválido ou <code>404</code> quando não encontrado.</td>
+</tr>
+<tr>
+<td><code>analisar</code></td>
+<td>Valida ID, classificação e exige registro da correção (<code>observacaoAdmin</code> / <code>correcaoRealizada</code>) quando <code>PROCEDENTE</code>.</td>
+<td>Atualiza classificação e correção registrada; lança <code>400</code> para dados inválidos/ausência de correção em procedente ou <code>404</code> se não existir.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="316-analisarreportescontroller-e-rotas-administrativas-rf24">3.16. <code>AnalisarReportesController</code> e rotas administrativas (RF24)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Recebe <code>GET /api/v1/admin/reportes</code> com filtros opcionais na query.</td>
+<td>Responde <code>200</code> com a lista, <code>400</code> para filtro inválido ou <code>500</code> em falha inesperada.</td>
+</tr>
+<tr>
+<td><code>obterPorId</code></td>
+<td>Recebe <code>GET /api/v1/admin/reportes/:id</code>.</td>
+<td>Responde <code>200</code> com o reporte, <code>404</code> se inexistente ou <code>500</code> em erro interno.</td>
+</tr>
+<tr>
+<td><code>analisar</code></td>
+<td>Recebe <code>PATCH /api/v1/admin/reportes/:id</code> com <code>status</code> e <code>observacaoAdmin</code> / <code>correcaoRealizada</code>.</td>
+<td>Responde <code>200</code> com o reporte atualizado, <code>400</code> quando inválido, <code>404</code> se não encontrado ou <code>500</code> em erro interno.</td>
+</tr>
+<tr>
+<td><code>adminRoutes</code></td>
+<td>Rotas <code>GET /reportes</code>, <code>GET /reportes/:id</code> e <code>PATCH /reportes/:id</code>.</td>
+<td>Todas exigem <code>authAdmin</code> como primeiro middleware antes do controlador.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-testes-de-middleware">4. Testes de middleware</h2>
+<table>
+<thead>
+<tr>
+<th>Middleware</th>
+<th>Cenário</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>authAdmin</code></td>
+<td>Token ausente ou malformado.</td>
+<td>Retorna <code>401 Unauthorized</code>.</td>
+</tr>
+<tr>
+<td><code>authAdmin</code></td>
+<td>Token expirado ou inválido.</td>
+<td>Retorna <code>401 Unauthorized</code>.</td>
+</tr>
+<tr>
+<td><code>authAdmin</code></td>
+<td>Usuário sem permissão de administrador.</td>
+<td>Retorna <code>403 Forbidden</code>.</td>
+</tr>
+<tr>
+<td><code>authAdmin</code></td>
+<td>Token válido e usuário administrador.</td>
+<td>Continua a requisição e adiciona os dados a <code>req.usuario</code>.</td>
+</tr>
+<tr>
+<td><code>authUsuario</code></td>
+<td>Cabeçalho <code>Authorization</code> ausente, sem esquema <code>Bearer</code>, token malformado, expirado ou sem <code>id</code> (RF16).</td>
+<td>Retorna <code>401 Unauthorized</code>.</td>
+</tr>
+<tr>
+<td><code>authUsuario</code></td>
+<td>Token JWT válido de passageiro ou administrador (RF16).</td>
+<td>Continua a requisição e popula <code>req.usuario</code> com os dados decodificados.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-testes-de-interface-react-native">5. Testes de interface (React Native)</h2>
+<table>
+<thead>
+<tr>
+<th>Tela / Componente</th>
+<th>Caso / cenário</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AlertaBanner</code> e <code>AlertaBadge</code></td>
+<td>Renderização de banners e badges de sinalização de alertas (RF14).</td>
+<td>Exibe cores e rótulos por tipo (<code>Desvio</code>, <code>Suspensão</code>, <code>Paralisação</code>, <code>Alteração de Horário</code>), contagem de múltiplos alertas, oculta quando não há alertas e aciona <code>onPress</code> para detalhes.</td>
+</tr>
+<tr>
+<td><code>LinhasScreen</code></td>
+<td>Carregamento, filtro, listagem, navegação e sinalização de alertas (RF14).</td>
+<td>Exibe indicador de carregamento, permite filtrar por código ou nome, destaca visualmente linhas com <code>afetadaPorAlerta</code> (<code>AlertaBadge</code>) e navega corretamente.</td>
+</tr>
+<tr>
+<td><code>HorariosScreen</code></td>
+<td>Carregamento, filtro por sentido/tipo de dia, banner de alerta da linha (RF14) e atalho para reporte (RF19).</td>
+<td>Exibe os horários corretos, renderiza o <code>AlertaBanner</code> quando a linha possui alertas vigentes, navega para o itinerário e abre <code>ReportarDivergencia</code> com <code>HORARIO</code> e código da linha.</td>
+</tr>
+<tr>
+<td><code>ItinerarioScreen</code></td>
+<td>Carregamento do itinerário por sentido, sinalização de alertas (RF14) e reporte de divergência na linha/paradas (RF19).</td>
+<td>Lista as paradas em <code>IDA</code>/<code>VOLTA</code>, exibe alertas da linha/paradas e navega para <code>ReportarDivergencia</code> com <code>ITINERARIO</code> (linha) ou <code>PARADA</code> (linha e parada selecionada).</td>
+</tr>
+<tr>
+<td><code>AlertasScreen</code></td>
+<td>Listagem, filtros, título/descrição, mensagens de erro e atualizações.</td>
+<td>Exibe alertas vigentes com título, descrição e itens afetados, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza <code>AsyncStorage</code>.</td>
+</tr>
+<tr>
+<td><code>AdminScreen</code></td>
+<td>Acesso, logout e navegação (incluindo atalho para análise de reportes — RF24).</td>
+<td>Exibe <em>spinner</em>, controla o acesso restrito ou liberado, navega para <code>CriarAdmin</code>, <code>GerenciarUsuarios</code> e <code>AnalisarReportes</code> e remove os dados no logout.</td>
+</tr>
+<tr>
+<td><code>CadastroScreen</code></td>
+<td>Validação, cadastro e navegação.</td>
+<td>Valida campos obrigatórios, exibe mensagens e indicador de carregamento e realiza a navegação.</td>
+</tr>
+<tr>
+<td><code>LoginScreen</code></td>
+<td>Validação, login, armazenamento, falhas e atalho de recuperação de senha (RF16).</td>
+<td>Valida campos, exibe mensagens, salva o token, navega para <code>RecuperarSenha</code> levando o e-mail preenchido e apresenta erros e indicador de carregamento.</td>
+</tr>
+<tr>
+<td><code>RecuperarSenhaScreen</code></td>
+<td>Fluxo em duas etapas para solicitar código por e-mail e redefinir a senha (RF16).</td>
+<td>Valida formato de e-mail, código de 6 dígitos, tamanho mínimo e confirmação da nova senha, permite reenviar código ou trocar e-mail e redireciona ao login após sucesso.</td>
+</tr>
+<tr>
+<td><code>ExcluirContaScreen</code></td>
+<td>Confirmação de senha e diálogo destrutivo para exclusão definitiva da própria conta (RF16).</td>
+<td>Exige senha atual, solicita confirmação, chama <code>DELETE /usuarios/me</code>, limpa <code>AsyncStorage</code> (<code>@rotasdf_token</code>, <code>@rotasdf_usuario</code>, <code>@rotasdf_buscas_recentes</code>) e redireciona para <code>Linhas</code>.</td>
+</tr>
+<tr>
+<td><code>ConfiguracoesScreen</code></td>
+<td>Exibição de perfil, limpeza de histórico, logout, atalho para reporte (RF19) e exclusão de conta para passageiros (RF16).</td>
+<td>Exibe dados do passageiro logado, navega para <code>ReportarDivergencia</code>, mostra <em>"Excluir minha conta"</em> apenas para passageiros autenticados e executa logout.</td>
+</tr>
+<tr>
+<td><code>dialogos</code></td>
+<td>Utilitário multiplataforma de alertas e confirmações (<code>mostrarAviso</code> e <code>confirmarAcao</code>) (RF16).</td>
+<td>Utiliza <code>Alert.alert</code> no Android/iOS e <code>window.alert</code>/<code>window.confirm</code> na Web.</td>
+</tr>
+<tr>
+<td><code>BuscarTrajetoScreen</code></td>
+<td>GPS, permissão, buscas, erros e alerta na parada de origem (RF14).</td>
+<td>Trata a permissão de GPS e a localização, exibe <code>AlertaBanner</code> compacto quando a parada de origem possui alerta vigente, valida a busca e realiza a navegação.</td>
+</tr>
+<tr>
+<td><code>ResultadoTrajetoScreen</code></td>
+<td>Exibição, navegação por opções e destaque de trajetos com alerta (RF14).</td>
+<td>Exibe cartões de opções, baldeações, destaca opções com <code>afetadaPorAlerta</code> (<code>AlertaBadge</code> e resumo do alerta) e navega para os detalhes.</td>
+</tr>
+<tr>
+<td><code>TrajetoDetalheScreen</code></td>
+<td>Exibição detalhada das etapas e banner de alertas do trajeto (RF14).</td>
+<td>Exibe <code>AlertaBanner</code> quando o trajeto é afetado por alerta vigente, lista etapas ordenadas com ícones e apresenta mensagem quando não há etapas.</td>
+</tr>
+<tr>
+<td><code>GerenciarUsuariosScreen</code></td>
+<td>Listagem, filtros, navegação e erros.</td>
+<td>Lista usuários, identifica o usuário atual, aplica filtros e apresenta alertas.</td>
+</tr>
+<tr>
+<td><code>CriarAdminScreen</code></td>
+<td>Cadastro, validação, mensagens e navegação.</td>
+<td>Exibe campos e mensagens, indicador de carregamento e retorna após o sucesso.</td>
+</tr>
+<tr>
+<td><code>EditarUsuarioScreen</code></td>
+<td>Edição, validação, exclusão e mensagens.</td>
+<td>Exibe campos, realiza validações, solicita confirmação de exclusão e apresenta alertas.</td>
+</tr>
+<tr>
+<td><code>FavoritoEstrela</code></td>
+<td>Botão de favoritar e desfavoritar um item (RF17).</td>
+<td>Mostra estrela cheia ou vazia, alterna pelo store, avisa quando não foi possível (por exemplo, sem login) e se atualiza com a lista.</td>
+</tr>
+<tr>
+<td><code>FavoritosSecao</code> e <code>FavoritosCarregador</code></td>
+<td>Lista de linhas favoritas e carregamento ao abrir e ao voltar ao foco (RF17).</td>
+<td>Mostra a dica quando não há favoritos, lista as linhas e abre os horários ao tocar; esconde-se sem passageiro logado.</td>
+</tr>
+<tr>
+<td><code>RodapeNavegacao</code></td>
+<td>Barra de abas Linhas e Favoritos.</td>
+<td>Marca a aba ativa, navega ao tocar na outra e não navega na que já está aberta.</td>
+</tr>
+<tr>
+<td><code>FavoritosScreen</code></td>
+<td>Aba Favoritos (RF17).</td>
+<td>Carrega e lista os favoritos do passageiro; sem login, pede para entrar e leva à tela de login.</td>
+</tr>
+<tr>
+<td><code>AnalisarReportesScreen</code></td>
+<td>Listagem, filtros por status, exibição de badges/referências, navegação e tratamento de erros (RF24).</td>
+<td>Exibe indicador de carregamento, lista reportes com tipo, status, linha/parada e autor, filtra por <code>Pendentes</code>/<code>Procedentes</code>/<code>Improcedentes</code>, navega para <code>DetalheReporte</code> e exibe avisos de erro.</td>
+</tr>
+<tr>
+<td><code>DetalheReporteScreen</code></td>
+<td>Classificação de reporte e registro da correção realizada pelo administrador (RF24).</td>
+<td>Exibe detalhes do reporte, exige descrição da correção ao selecionar <code>Procedente</code>, permite <code>Improcedente</code>/<code>Pendente</code> sem observação obrigatória, chama <code>PATCH /admin/reportes/:id</code> e retorna após salvar.</td>
+</tr>
+<tr>
+<td><code>ReportarDivergenciaScreen</code></td>
+<td>Validação, pré-preenchimento de linha/parada e envio de reporte de divergência pelo passageiro (RF19).</td>
+<td>Permite escolher <code>Horário</code>, <code>Parada</code> ou <code>Itinerário</code>, exige ao menos linha ou parada e descrição com no mínimo 10 caracteres, anexa <code>usuarioId</code> quando logado, chama <code>POST /reportes</code> e trata erros da API.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-tratamento-de-erros-e-condicoes-especiais">6. Tratamento de erros e condições especiais</h2>
+<ul>
+<li>Validação rigorosa de entradas vazias, inválidas ou mal formatadas.</li>
+<li>Mensagens claras para erros retornados pela API.</li>
+<li>Indicadores visuais para processos em andamento.</li>
+<li>Proteção contra ações não autorizadas, como rebaixamentos ou exclusões indevidas.</li>
+<li>Recuperação e apresentação adequada de informações em casos de falha de conexão.</li>
+</ul>
+<hr />
+<h2 id="7-consideracoes-finais">7. Considerações finais</h2>
+<ul>
+<li>Garantia de cobertura mínima de 80% nas regras de negócio e na interface.</li>
+<li>Uso de <em>mocks</em> para isolar os testes e garantir confiabilidade.</li>
+<li>Inclusão dos casos de teste nos pipelines de CI/CD para feedback contínuo.</li>
+<li>Documentação colaborativa para evolução contínua do plano de testes.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
