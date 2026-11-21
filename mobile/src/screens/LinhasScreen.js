@@ -2,8 +2,9 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getLinhas } from '../services/api';
-import FavoritosSecao from '../components/FavoritosSecao';
+import FavoritosCarregador from '../components/FavoritosCarregador';
 import FavoritoEstrela from '../components/FavoritoEstrela';
+import RodapeNavegacao from '../components/RodapeNavegacao';
 
 export default function LinhasScreen({ navigation }) {
   const [busca, setBusca] = useState('');
@@ -61,7 +62,7 @@ export default function LinhasScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View>
-            <FavoritosSecao navigation={navigation} />
+            <FavoritosCarregador navigation={navigation} />
             <View style={styles.botoesAcaoContainer}>
               <TouchableOpacity 
                 style={styles.botaoTrajeto}
@@ -119,6 +120,7 @@ export default function LinhasScreen({ navigation }) {
           </TouchableOpacity>
         )}
       />
+     <RodapeNavegacao navigation={navigation} ativa="Linhas" />
     </View>
   );
 }
