@@ -51,8 +51,6 @@ export const loginUsuario = async (email, senha) => {
   return response.data;
 };
 
-export const getAlertas = async (filtros) => {
-  const response = await axios.get(`${API_BASE_URL}/alertas`, filtros ? { params: filtros } : undefined);
 // RF16 - Recuperação de senha e exclusão da própria conta
 export const solicitarRecuperacaoSenha = async (email) => {
   const response = await axios.post(`${API_BASE_URL}/usuarios/recuperar-senha`, { email });
@@ -72,8 +70,11 @@ export const excluirMinhaConta = async (token, senha) => {
   return response.data;
 };
 
-export const getAlertas = async () => {
-  const response = await axios.get(`${API_BASE_URL}/alertas`);
+export const getAlertas = async (filtros) => {
+  const response = await axios.get(
+    `${API_BASE_URL}/alertas`,
+    filtros ? { params: filtros } : undefined
+  );
   return response.data;
 };
 
@@ -129,6 +130,25 @@ export const excluirUsuario = async (token, id) => {
 
 export const getFavoritos = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/favoritos`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const adicionarFavorito = async (token, dados) => {
+  const response = await axios.post(`${API_BASE_URL}/favoritos`, dados, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const removerFavorito = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/favoritos/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
 // RF24 - Analisar reportes de usuários (Administrador)
 export const listarReportesAdmin = async (token, filtros = {}) => {
   const response = await axios.get(`${API_BASE_URL}/admin/reportes`, {
@@ -138,8 +158,6 @@ export const listarReportesAdmin = async (token, filtros = {}) => {
   return response.data;
 };
 
-export const adicionarFavorito = async (token, dados) => {
-  const response = await axios.post(`${API_BASE_URL}/favoritos`, dados, {
 export const obterReporteAdmin = async (token, id) => {
   const response = await axios.get(`${API_BASE_URL}/admin/reportes/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
@@ -147,8 +165,6 @@ export const obterReporteAdmin = async (token, id) => {
   return response.data;
 };
 
-export const removerFavorito = async (token, id) => {
-  const response = await axios.delete(`${API_BASE_URL}/favoritos/${id}`, {
 export const analisarReporteAdmin = async (token, id, dados) => {
   const response = await axios.patch(`${API_BASE_URL}/admin/reportes/${id}`, dados, {
     headers: { Authorization: `Bearer ${token}` }
