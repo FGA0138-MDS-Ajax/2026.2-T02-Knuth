@@ -59,9 +59,9 @@ class AnalisarReportesRepository {
     const query = `
       UPDATE reportes_divergencia
       SET
-        status = $2,
+        status = $2::varchar,
         observacao_admin = $3,
-        analisado_em = CASE WHEN $2 = 'PENDENTE' THEN NULL ELSE NOW() END
+        analisado_em = CASE WHEN $2::varchar = 'PENDENTE' THEN NULL ELSE NOW() END
       WHERE id = $1
       RETURNING
         id,

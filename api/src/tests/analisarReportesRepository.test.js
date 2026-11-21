@@ -102,9 +102,9 @@ describe('AnalisarReportesRepository', () => {
 
       const [sql, params] = pool.query.mock.calls[0];
       expect(sql).toContain('UPDATE reportes_divergencia');
-      expect(sql).toContain('status = $2');
+      expect(sql).toContain('status = $2::varchar');
       expect(sql).toContain('observacao_admin = $3');
-      expect(sql).toContain("CASE WHEN $2 = 'PENDENTE' THEN NULL ELSE NOW() END");
+      expect(sql).toContain("CASE WHEN $2::varchar = 'PENDENTE' THEN NULL ELSE NOW() END");
       expect(params).toEqual([4, 'PROCEDENTE', 'Horário corrigido no quadro.']);
       expect(resultado).toEqual(atualizado);
     });
