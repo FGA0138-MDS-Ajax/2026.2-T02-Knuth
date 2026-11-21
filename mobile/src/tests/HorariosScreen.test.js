@@ -202,6 +202,38 @@ describe('HorariosScreen', () => {
 
       expect(await findByText(MSG_VAZIO)).toBeTruthy();
     });
+
+    it('oculta o botão Volta e exibe selo Circular quando a linha circular só possui horários de ida', async () => {
+      getHorarios.mockResolvedValue({
+        codigo: '0.782',
+        nome: 'Circular Itapoã / Paranoá',
+        quadroHorarios: {
+          IDA: { DIA_UTIL: ['06:00', '07:00'], SABADO: [], DOMINGO_FERIADO: [] },
+          VOLTA: { DIA_UTIL: [], SABADO: [], DOMINGO_FERIADO: [] },
+        },
+      });
+      const { findByText, queryByText } = renderTela();
+
+      expect(await findByText('Circular (sentido único)')).toBeTruthy();
+      expect(queryByText('Volta')).toBeNull();
+      expect(await findByText('06:00')).toBeTruthy();
+    });
+
+    it('seleciona Volta automaticamente e exibe Sentido único (Volta) quando só há horários de volta', async () => {
+      getHorarios.mockResolvedValue({
+        codigo: '0.999',
+        nome: 'Expresso Retorno',
+        quadroHorarios: {
+          IDA: { DIA_UTIL: [], SABADO: [], DOMINGO_FERIADO: [] },
+          VOLTA: { DIA_UTIL: ['18:10'], SABADO: [], DOMINGO_FERIADO: [] },
+        },
+      });
+      const { findByText, queryByText } = renderTela();
+
+      expect(await findByText('Sentido único (Volta)')).toBeTruthy();
+      expect(queryByText('Ida')).toBeNull();
+      expect(await findByText('18:10')).toBeTruthy();
+    });
   });
 
   describe('navegação', () => {

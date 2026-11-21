@@ -153,15 +153,40 @@ describe('ItinerarioScreen', () => {
       expect(getByText('W3 Sul Quadra 502')).toBeTruthy();
     });
 
-    it('mostra a mensagem de vazio quando o sentido escolhido não tem paradas', async () => {
-      getItinerario.mockResolvedValue({ ...LINHA, itinerario: { IDA: LINHA.itinerario.IDA } });
-      const { findByText, getByText, queryByText } = renderTela();
+    it('mostra a mensagem de vazio quando nenhum sentido tem paradas', async () => {
+      getItinerario.mockResolvedValue({ ...LINHA, itinerario: { IDA: [], VOLTA: [] } });
+      const { findByText, getByText } = renderTela();
       await findByText(LINHA.codigo);
 
       fireEvent.press(getByText('Volta'));
 
       expect(getByText(MSG_VAZIO)).toBeTruthy();
-      expect(queryByText('W3 Sul Quadra 502')).toBeNull();
+    });
+
+    it('exibe selo Circular (sentido único) e oculta aba Volta quando a linha circular só tem ida', async () => {
+      getItinerario.mockResolvedValue({
+        codigo: '0.782',
+        nome: 'Circular Itapoã / Paranoá',
+        itinerario: { IDA: LINHA.itinerario.IDA, VOLTA: [] },
+      });
+      const { findByText, queryByText } = renderTela();
+
+      expect(await findByText('Circular (sentido único)')).toBeTruthy();
+      expect(queryByText('Volta')).toBeNull();
+      expect(await findByText('Rodoviária do Plano Piloto')).toBeTruthy();
+    });
+
+    it('seleciona Volta automaticamente e exibe Sentido único (Volta) quando só há paradas na volta', async () => {
+      getItinerario.mockResolvedValue({
+        codigo: '0.999',
+        nome: 'Expresso Retorno',
+        itinerario: { IDA: [], VOLTA: LINHA.itinerario.VOLTA },
+      });
+      const { findByText, queryByText } = renderTela();
+
+      expect(await findByText('Sentido único (Volta)')).toBeTruthy();
+      expect(queryByText('Ida')).toBeNull();
+      expect(await findByText('Asa Sul Quadra 704')).toBeTruthy();
     });
 
     it('sinaliza alertas na linha e nas paradas afetadas do itinerário (RF14)', async () => {
