@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import RodapeNavegacao from '../components/RodapeNavegacao';
 
 jest.mock('@expo/vector-icons', () => {
@@ -57,11 +58,27 @@ describe('RodapeNavegacao', () => {
     expect(navigation.navigate).toHaveBeenCalledWith('Linhas');
   });
 
-  it('não navega ao tocar na aba que já está aberta', () => {
-    const { getByLabelText } = renderRodape('Linhas');
+  it('não navega ao tocar na aba que já está aberta e chama onPressAtiva quando informado', () => {
+    const onPressAtiva = jest.fn();
+    const { getByLabelText } = render(
+      <RodapeNavegacao navigation={navigation} ativa="Linhas" onPressAtiva={onPressAtiva} />
+    );
 
     fireEvent.press(getByLabelText('Aba Linhas'));
 
     expect(navigation.navigate).not.toHaveBeenCalled();
+    expect(onPressAtiva).toHaveBeenCalledTimes(1);
+  });
+
+  it('aplica paddingBottom respeitando o recuo inferior da safe area do dispositivo', () => {
+    const { getByTestId } = render(
+      <SafeAreaInsetsContext.Provider value={{ top: 0, right: 0, bottom: 48, left: 0 }}>
+        <RodapeNavegacao navigation={navigation} ativa="Linhas" />
+      </SafeAreaInsetsContext.Provider>
+    );
+
+    expect(getByTestId('rodape-navegacao').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ paddingBottom: 54 })])
+    );
   });
 });

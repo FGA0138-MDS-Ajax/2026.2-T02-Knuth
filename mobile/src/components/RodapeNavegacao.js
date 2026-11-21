@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 const ABAS = [
   { nome: 'Linhas', icone: 'bus-outline', iconeAtivo: 'bus' },
   { nome: 'Favoritos', icone: 'star-outline', iconeAtivo: 'star' },
 ];
 
-export default function RodapeNavegacao({ navigation, ativa }) {
+export default function RodapeNavegacao({ navigation, ativa, onPressAtiva }) {
+  const insets = useContext(SafeAreaInsetsContext);
+  const paddingBottom = Math.max(insets?.bottom || 0, 8) + 6;
+
   return (
-    <View style={styles.barra}>
+    <View testID="rodape-navegacao" style={[styles.barra, { paddingBottom }]}>
       {ABAS.map((aba) => {
         const selecionada = aba.nome === ativa;
         const cor = selecionada ? '#006666' : '#888';
@@ -21,7 +25,11 @@ export default function RodapeNavegacao({ navigation, ativa }) {
             accessibilityLabel={`Aba ${aba.nome}`}
             accessibilityState={{ selected: selecionada }}
             onPress={() => {
-              if (!selecionada) navigation.navigate(aba.nome);
+              if (!selecionada) {
+                navigation.navigate(aba.nome);
+              } else if (typeof onPressAtiva === 'function') {
+                onPressAtiva();
+              }
             }}
           >
             <Ionicons name={selecionada ? aba.iconeAtivo : aba.icone} size={22} color={cor} />
@@ -34,7 +42,13 @@ export default function RodapeNavegacao({ navigation, ativa }) {
 }
 
 const styles = StyleSheet.create({
-  barra: { flexDirection: 'row', backgroundColor: '#FFF', borderTopWidth: 1, borderTopColor: '#DDD', paddingVertical: 8 },
+  barra: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF',
+    borderTopWidth: 1,
+    borderTopColor: '#DDD',
+    paddingTop: 10,
+  },
   aba: { flex: 1, alignItems: 'center' },
-  texto: { fontSize: 12, fontWeight: '600', marginTop: 2 }
+  texto: { fontSize: 12, fontWeight: '600', marginTop: 2 },
 });
