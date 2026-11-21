@@ -57,6 +57,16 @@ describe('FavoritosRepository', () => {
       expect(resultado).toEqual(criado);
     });
 
+    it('devolve o favorito já com os dados da linha e da parada', async () => {
+      pool.query.mockResolvedValue({ rows: [{ id: 7 }] });
+
+      await repository.adicionar({ usuarioId: 3, tipo: 'LINHA', linhaId: '0.111-1' });
+
+      const [sql] = pool.query.mock.calls[0];
+      expect(sql).toContain('LEFT JOIN linhas');
+      expect(sql).toContain('LEFT JOIN paradas');
+    });
+    
     it('guarda origem e destino de um trajeto', async () => {
       pool.query.mockResolvedValue({ rows: [{ id: 8 }] });
 

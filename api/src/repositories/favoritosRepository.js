@@ -20,11 +20,20 @@ class FavoritosRepository {
 
   async adicionar({ usuarioId, tipo, linhaId = null, paradaId = null, origem = null, destino = null }) {
     const query = `
-      INSERT INTO favoritos (usuario_id, tipo, linha_id, parada_id, origem, destino)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      ON CONFLICT DO NOTHING
-      RETURNING id, tipo, linha_id AS "linhaId", parada_id AS "paradaId",
-                origem, destino, criado_em AS "criadoEm";
+      WITH novo AS (
+        INSERT INTO favoritos (usuario_id, tipo, linha_id, parada_id, origem, destino)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT DO NOTHING
+        RETURNING id, tipo, linha_id, parada_id, origem, destino, criado_em
+      )
+      SELECT n.id, n.tipo,
+             n.linha_id AS "linhaId", n.parada_id AS "paradaId",
+             n.origem, n.destino, n.criado_em AS "criadoEm",
+             l.codigo AS "linhaCodigo", l.nome AS "linhaNome", l.cor AS "linhaCor",
+             p.codigo AS "paradaCodigo", p.nome AS "paradaNome"
+      FROM novo n
+      LEFT JOIN linhas l ON l.id = n.linha_id
+      LEFT JOIN paradas p ON p.id = n.parada_id;
     `;
     const { rows } = await pool.query(query, [usuarioId, tipo, linhaId, paradaId, origem, destino]);
     return rows[0] || null;
