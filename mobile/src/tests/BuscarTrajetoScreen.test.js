@@ -19,6 +19,14 @@ jest.mock('../services/api', () => ({
   getParadaProxima: jest.fn(),
 }));
 
+jest.mock('@expo/vector-icons', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return {
+    Ionicons: ({ name }) => React.createElement(Text, null, name),
+  };
+});
+
 const PLACEHOLDER_DESTINO = 'Ex: Rodoviária do Plano Piloto';
 const PARADA = { nome: 'Asa Sul - Quadra 704' };
 const POSICAO = { coords: { latitude: -15.79, longitude: -47.88 } };
@@ -196,7 +204,11 @@ describe('BuscarTrajetoScreen', () => {
       fireEvent.press(getByText('Buscar Trajetos'));
 
       await waitFor(() =>
-        expect(navigation.navigate).toHaveBeenCalledWith('ResultadoTrajeto', { opcoes })
+        expect(navigation.navigate).toHaveBeenCalledWith('ResultadoTrajeto', {
+          opcoes,
+          origem: PARADA.nome,
+          destino: 'Rodoviária do Plano Piloto',
+        })
       );
       expect(getTrajetos).toHaveBeenCalledWith(PARADA.nome, 'Rodoviária do Plano Piloto');
     });
@@ -251,9 +263,27 @@ describe('BuscarTrajetoScreen', () => {
       fireEvent.press(getByText('Buscar Trajetos'));
 
       await waitFor(() =>
-        expect(navigation.navigate).toHaveBeenCalledWith('ResultadoTrajeto', { opcoes })
+        expect(navigation.navigate).toHaveBeenCalledWith('ResultadoTrajeto', {
+          opcoes,
+          origem: PARADA.nome,
+          destino: 'Rodoviária',
+        })
       );
       expect(queryByText('Por favor, preencha o destino.')).toBeNull();
+    });
+
+    it('aceita origem e destino pré-preenchidos por rota (favoritos RF17) sem sobrescrever com GPS', () => {
+      const { getByText, getByDisplayValue } = render(
+        <BuscarTrajetoScreen
+          route={{ params: { origem: 'Asa Sul', destino: 'Rodoviária' } }}
+          navigation={navigation}
+        />
+      );
+
+      expect(getByText('Asa Sul')).toBeTruthy();
+      expect(getByDisplayValue('Rodoviária')).toBeTruthy();
+      expect(getByText('Salvar este trajeto nos favoritos')).toBeTruthy();
+      expect(Location.requestForegroundPermissionsAsync).not.toHaveBeenCalled();
     });
   });
 });

@@ -8,6 +8,14 @@ jest.mock('../services/api', () => ({
   getItinerario: jest.fn(),
 }));
 
+jest.mock('@expo/vector-icons', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return {
+    Ionicons: ({ name }) => React.createElement(Text, null, name),
+  };
+});
+
 const LINHA = {
   codigo: '0.111',
   nome: 'Rodoviária / Asa Sul',
@@ -235,6 +243,14 @@ describe('ItinerarioScreen', () => {
         linhaId: LINHA.codigo,
         paradaId: 'P-101',
       });
+    });
+  });
+
+  describe('favoritar parada (RF17)', () => {
+    it('exibe botão de favoritar para cada parada listada no itinerário', async () => {
+      const { getAllByLabelText } = await renderCarregada();
+
+      expect(getAllByLabelText('Adicionar aos favoritos')).toHaveLength(LINHA.itinerario.IDA.length);
     });
   });
 });
