@@ -58,12 +58,16 @@ describe('RodapeNavegacao', () => {
     expect(navigation.navigate).toHaveBeenCalledWith('Linhas');
   });
 
-  it('não navega ao tocar na aba que já está aberta', () => {
-    const { getByLabelText } = renderRodape('Linhas');
+  it('não navega ao tocar na aba que já está aberta e chama onPressAtiva quando informado', () => {
+    const onPressAtiva = jest.fn();
+    const { getByLabelText } = render(
+      <RodapeNavegacao navigation={navigation} ativa="Linhas" onPressAtiva={onPressAtiva} />
+    );
 
     fireEvent.press(getByLabelText('Aba Linhas'));
 
     expect(navigation.navigate).not.toHaveBeenCalled();
+    expect(onPressAtiva).toHaveBeenCalledTimes(1);
   });
 
   it('aplica paddingBottom respeitando o recuo inferior da safe area do dispositivo', () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getLinhas } from '../services/api';
@@ -13,6 +13,7 @@ import FavoritoEstrela from '../components/FavoritoEstrela';
 import RodapeNavegacao from '../components/RodapeNavegacao';
 
 export default function LinhasScreen({ navigation }) {
+  const listaRef = useRef(null);
   const [busca, setBusca] = useState('');
   const [linhas, setLinhas] = useState([]); 
   const [linhasRecentes, setLinhasRecentes] = useState([]);
@@ -107,6 +108,7 @@ export default function LinhasScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <FlatList
+        ref={listaRef}
         data={linhasFiltradas}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
@@ -199,7 +201,11 @@ export default function LinhasScreen({ navigation }) {
           );
         }}
       />
-     <RodapeNavegacao navigation={navigation} ativa="Linhas" />
+      <RodapeNavegacao
+        navigation={navigation}
+        ativa="Linhas"
+        onPressAtiva={() => listaRef.current?.scrollToOffset({ offset: 0, animated: true })}
+      />
     </View>
   );
 }

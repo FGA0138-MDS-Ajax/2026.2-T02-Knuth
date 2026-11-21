@@ -8,7 +8,7 @@ const ABAS = [
   { nome: 'Favoritos', icone: 'star-outline', iconeAtivo: 'star' },
 ];
 
-export default function RodapeNavegacao({ navigation, ativa }) {
+export default function RodapeNavegacao({ navigation, ativa, onPressAtiva }) {
   const insets = useContext(SafeAreaInsetsContext);
   const paddingBottom = Math.max(insets?.bottom || 0, 8) + 6;
 
@@ -25,7 +25,11 @@ export default function RodapeNavegacao({ navigation, ativa }) {
             accessibilityLabel={`Aba ${aba.nome}`}
             accessibilityState={{ selected: selecionada }}
             onPress={() => {
-              if (!selecionada) navigation.navigate(aba.nome);
+              if (!selecionada) {
+                navigation.navigate(aba.nome);
+              } else if (typeof onPressAtiva === 'function') {
+                onPressAtiva();
+              }
             }}
           >
             <Ionicons name={selecionada ? aba.iconeAtivo : aba.icone} size={22} color={cor} />
