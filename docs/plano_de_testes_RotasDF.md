@@ -104,6 +104,14 @@
 | `adicionar` | Insere um favorito de linha, parada ou trajeto e devolve o registro já com os dados da linha e da parada. | Devolve o favorito criado, ou `null` quando ele já existia; propaga o erro do banco. |
 | `remover` | Remove o favorito somente se pertencer ao usuário. | Retorna `true` quando removeu e `false` quando não havia favorito. |
 
+### 2.11. `AnalisarReportesRepository` (RF24)
+
+| Método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `listar` | Lista os reportes de divergência com `LEFT JOIN` em `usuarios`, com filtros opcionais de `status` e `tipo`, priorizando pendentes e mais recentes. | Executa a consulta com os filtros corretos e retorna a lista de reportes ou propaga o erro do banco. |
+| `buscarPorId` | Busca um reporte específico pelo ID com dados do autor. | Retorna o reporte encontrado ou `null`. |
+| `atualizarAnalise` | Atualiza `status`, `observacao_admin` e define `analisado_em` (`NULL` quando `PENDENTE`, `NOW()` nos demais). | Retorna o reporte atualizado ou `null` caso o ID não exista. |
+
 ---
 
 ## 3. Testes de serviços e controladores
@@ -230,6 +238,23 @@
 | todos | Usuário que não é passageiro. | Responde `403` (administrador não usa favoritos). |
 | `favoritosRoutes` | Rotas `GET /`, `POST /` e `DELETE /:id`. | Todas passam pelo `authUsuario`; não há rota `PUT`. |
 
+### 3.15. `AnalisarReportesService` (RF24)
+
+| Método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `listar` | Normaliza e valida filtros opcionais de `status` (`PENDENTE`, `PROCEDENTE`, `IMPROCEDENTE`) e `tipo` (`HORARIO`, `PARADA`, `ITINERARIO`). | Retorna a lista filtrada ou lança erro `400` para filtro inválido. |
+| `obterPorId` | Valida ID inteiro positivo e consulta o reporte. | Retorna o reporte, lança `400` para ID inválido ou `404` quando não encontrado. |
+| `analisar` | Valida ID, classificação e exige registro da correção (`observacaoAdmin` / `correcaoRealizada`) quando `PROCEDENTE`. | Atualiza classificação e correção registrada; lança `400` para dados inválidos/ausência de correção em procedente ou `404` se não existir. |
+
+### 3.16. `AnalisarReportesController` e rotas administrativas (RF24)
+
+| Controlador / método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `listar` | Recebe `GET /api/v1/admin/reportes` com filtros opcionais na query. | Responde `200` com a lista, `400` para filtro inválido ou `500` em falha inesperada. |
+| `obterPorId` | Recebe `GET /api/v1/admin/reportes/:id`. | Responde `200` com o reporte, `404` se inexistente ou `500` em erro interno. |
+| `analisar` | Recebe `PATCH /api/v1/admin/reportes/:id` com `status` e `observacaoAdmin` / `correcaoRealizada`. | Responde `200` com o reporte atualizado, `400` quando inválido, `404` se não encontrado ou `500` em erro interno. |
+| `adminRoutes` | Rotas `GET /reportes`, `GET /reportes/:id` e `PATCH /reportes/:id`. | Todas exigem `authAdmin` como primeiro middleware antes do controlador. |
+
 ---
 
 ## 4. Testes de middleware
@@ -254,7 +279,7 @@
 | `HorariosScreen` | Carregamento, filtro por sentido/tipo de dia e banner de alerta da linha (RF14). | Exibe os horários corretos, renderiza o `AlertaBanner` quando a linha possui alertas vigentes (com navegação para `Alertas`) e permite navegar para o itinerário. |
 | `ItinerarioScreen` | Carregamento do itinerário por sentido e sinalização de alertas na linha e paradas (RF14). | Lista as paradas em `IDA`/`VOLTA`, exibe o `AlertaBanner` da linha no topo e destaca individualmente as paradas afetadas com badge e descrição do alerta. |
 | `AlertasScreen` | Listagem, filtros, título/descrição, mensagens de erro e atualizações. | Exibe alertas vigentes com título, descrição e itens afetados, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza `AsyncStorage`. |
-| `AdminScreen` | Acesso, logout e navegação. | Exibe *spinner*, controla o acesso restrito ou liberado e remove os dados no logout. |
+| `AdminScreen` | Acesso, logout e navegação (incluindo atalho para análise de reportes — RF24). | Exibe *spinner*, controla o acesso restrito ou liberado, navega para `CriarAdmin`, `GerenciarUsuarios` e `AnalisarReportes` e remove os dados no logout. |
 | `CadastroScreen` | Validação, cadastro e navegação. | Valida campos obrigatórios, exibe mensagens e indicador de carregamento e realiza a navegação. |
 | `LoginScreen` | Validação, login, armazenamento, falhas e atalho de recuperação de senha (RF16). | Valida campos, exibe mensagens, salva o token, navega para `RecuperarSenha` levando o e-mail preenchido e apresenta erros e indicador de carregamento. |
 | `RecuperarSenhaScreen` | Fluxo em duas etapas para solicitar código por e-mail e redefinir a senha (RF16). | Valida formato de e-mail, código de 6 dígitos, tamanho mínimo e confirmação da nova senha, permite reenviar código ou trocar e-mail e redireciona ao login após sucesso. |
@@ -271,6 +296,8 @@
 | `FavoritosSecao` e `FavoritosCarregador` | Lista de linhas favoritas e carregamento ao abrir e ao voltar ao foco (RF17). | Mostra a dica quando não há favoritos, lista as linhas e abre os horários ao tocar; esconde-se sem passageiro logado. |
 | `RodapeNavegacao` | Barra de abas Linhas e Favoritos. | Marca a aba ativa, navega ao tocar na outra e não navega na que já está aberta. |
 | `FavoritosScreen` | Aba Favoritos (RF17). | Carrega e lista os favoritos do passageiro; sem login, pede para entrar e leva à tela de login. |
+| `AnalisarReportesScreen` | Listagem, filtros por status, exibição de badges/referências, navegação e tratamento de erros (RF24). | Exibe indicador de carregamento, lista reportes com tipo, status, linha/parada e autor, filtra por `Pendentes`/`Procedentes`/`Improcedentes`, navega para `DetalheReporte` e exibe avisos de erro. |
+| `DetalheReporteScreen` | Classificação de reporte e registro da correção realizada pelo administrador (RF24). | Exibe detalhes do reporte, exige descrição da correção ao selecionar `Procedente`, permite `Improcedente`/`Pendente` sem observação obrigatória, chama `PATCH /admin/reportes/:id` e retorna após salvar. |
 
 ---
 
