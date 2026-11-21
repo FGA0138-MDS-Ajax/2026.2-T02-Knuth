@@ -16,6 +16,21 @@ class UsuariosRepository {
     const { rows } = await pool.query(query, [email]);
     return rows[0] || null;
   }
+
+  async buscarPorId(id) {
+    const query = `SELECT * FROM usuarios WHERE id = $1;`;
+    const { rows } = await pool.query(query, [id]);
+    return rows[0] || null;
+  }
+
+  async atualizarSenha(id, senhaHash) {
+    const query = `UPDATE usuarios SET senha_hash = $2 WHERE id = $1;`;
+    await pool.query(query, [id, senhaHash]);
+  }
+
+  async excluir(id) {
+    await pool.query('DELETE FROM usuarios WHERE id = $1;', [id]);
+  }
 }
 
 module.exports = new UsuariosRepository();

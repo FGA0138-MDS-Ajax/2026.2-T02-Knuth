@@ -202,4 +202,39 @@ describe('ItinerarioScreen', () => {
       );
     });
   });
+
+  describe('reporte de divergência (RF19)', () => {
+    it('"Reportar divergência" navega com tipo ITINERARIO e código da linha', async () => {
+      const navigation = { navigate: jest.fn() };
+      getItinerario.mockResolvedValue(LINHA);
+      const { findByText, getByText } = render(
+        <ItinerarioScreen route={rotaDaLinha(5)} navigation={navigation} />
+      );
+      await findByText(LINHA.codigo);
+
+      fireEvent.press(getByText('Reportar divergência'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ReportarDivergencia', {
+        tipo: 'ITINERARIO',
+        linhaId: LINHA.codigo,
+      });
+    });
+
+    it('"Reportar" em uma parada navega com tipo PARADA, linha e código da parada', async () => {
+      const navigation = { navigate: jest.fn() };
+      getItinerario.mockResolvedValue(LINHA);
+      const { findByText, getAllByText } = render(
+        <ItinerarioScreen route={rotaDaLinha(5)} navigation={navigation} />
+      );
+      await findByText('Rodoviária do Plano Piloto');
+
+      fireEvent.press(getAllByText('Reportar')[0]);
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ReportarDivergencia', {
+        tipo: 'PARADA',
+        linhaId: LINHA.codigo,
+        paradaId: 'P-101',
+      });
+    });
+  });
 });

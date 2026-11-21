@@ -168,6 +168,214 @@ paths:
       responses:
         '200':
           description: Lista de alertas vigentes.
+  /usuarios/cadastro:
+    post:
+      summary: Cadastrar novo passageiro (RF16)
+      description: Cria uma conta de passageiro com nome, e-mail e senha criptografada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, email, senha]
+              properties:
+                nome:
+                  type: string
+                  example: "Maria Silva"
+                email:
+                  type: string
+                  format: email
+                  example: "maria@email.com"
+                senha:
+                  type: string
+                  example: "senha123"
+      responses:
+        '201':
+          description: Passageiro cadastrado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Campos obrigatórios ausentes ou e-mail já cadastrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
+  /usuarios/login:
+    post:
+      summary: Autenticar usuário (RF16)
+      description: Autentica o usuário com e-mail e senha e retorna token JWT.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, senha]
+              properties:
+                email:
+                  type: string
+                  format: email
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Autenticação realizada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+                  token:
+                    type: string
+        '401':
+          description: Credenciais inválidas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
+  /usuarios/recuperar-senha:
+    post:
+      summary: Solicitar código de recuperação de senha (RF16)
+      description: Gera e envia um código temporário de 6 dígitos para redefinição de senha.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Solicitação processada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: E-mail não informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /usuarios/redefinir-senha:
+    post:
+      summary: Redefinir senha com código de recuperação (RF16)
+      description: Valida o código de 6 dígitos recebido e atualiza a senha do passageiro.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, codigo, novaSenha]
+              properties:
+                email:
+                  type: string
+                  format: email
+                codigo:
+                  type: string
+                  example: "123456"
+                novaSenha:
+                  type: string
+                  minLength: 6
+      responses:
+        '200':
+          description: Senha redefinida com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: Dados inválidos, código expirado/incorreto ou limite de tentativas excedido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /usuarios/me:
+    delete:
+      summary: Excluir a própria conta de passageiro (RF16)
+      description: Remove definitivamente a conta do passageiro autenticado mediante confirmação de senha.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [senha]
+              properties:
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Conta excluída com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: Senha de confirmação não informada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente/inválido ou senha incorreta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '403':
+          description: Exclusão da própria conta restrita a passageiros.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/reportes:
+    get:
+      summary: Listar reportes de divergência recebidos (RF24)
+      description: Lista os reportes enviados pelos passageiros para análise administrativa, com filtros opcionais por status e tipo.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [PENDENTE, PROCEDENTE, IMPROCEDENTE]
+        - name: tipo
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [HORARIO, PARADA, ITINERARIO]
+      responses:
+        '200':
+          description: Lista de reportes encontrados.
           content:
             application/json:
               schema:
@@ -194,12 +402,115 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Alerta'
+                  $ref: '#/components/schemas/ReporteDivergencia'
+        '400':
+          description: Filtro de status ou tipo inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/reportes/{id}:
+    get:
+      summary: Consultar detalhes de um reporte (RF24)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalhes do reporte.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReporteDivergencia'
+        '400':
+          description: ID inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+    patch:
+      summary: Classificar reporte e registrar correção realizada (RF24)
+      description: Permite ao administrador classificar o reporte como PENDENTE, PROCEDENTE ou IMPROCEDENTE e registrar a correção realizada ou observação.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [PENDENTE, PROCEDENTE, IMPROCEDENTE]
+                observacaoAdmin:
+                  type: string
+                  description: Obrigatória quando o status for PROCEDENTE (registro da correção realizada).
+                  example: "Horário da linha 0.110 atualizado no quadro de dias úteis."
+      responses:
+        '200':
+          description: Análise registrada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReporteDivergencia'
+        '400':
+          description: ID inválido, status inválido ou ausência da descrição da correção para reporte procedente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
         '404':
           $ref: '#/components/responses/ErroNaoEncontrado'
         '500':
           $ref: '#/components/responses/ErroInterno'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   responses:
     ErroInterno:
       description: Erro interno no servidor.
@@ -422,4 +733,69 @@ components:
           example: "NOT_FOUND"
         detalhes:
           type: string
+
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "Maria Silva"
+        email:
+          type: string
+          format: email
+          example: "maria@email.com"
+        tipo:
+          type: string
+          enum: [PASSAGEIRO, ADMIN]
+          example: "PASSAGEIRO"
+
+    MensagemSucesso:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: "Operação realizada com sucesso."
+
+    ReporteDivergencia:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        tipo:
+          type: string
+          enum: [HORARIO, PARADA, ITINERARIO]
+        descricao:
+          type: string
+        linhaId:
+          type: string
+          nullable: true
+        paradaId:
+          type: string
+          nullable: true
+        usuarioId:
+          type: integer
+          nullable: true
+        usuarioNome:
+          type: string
+          nullable: true
+        usuarioEmail:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [PENDENTE, PROCEDENTE, IMPROCEDENTE]
+        observacaoAdmin:
+          type: string
+          nullable: true
+        criadoEm:
+          type: string
+          format: date-time
+        analisadoEm:
+          type: string
+          format: date-time
+          nullable: true
           example: "Recurso não encontrado."
