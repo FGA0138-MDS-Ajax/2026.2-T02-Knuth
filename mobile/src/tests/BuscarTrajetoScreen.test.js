@@ -4,7 +4,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import * as Location from 'expo-location';
 
 import BuscarTrajetoScreen from '../screens/BuscarTrajetoScreen';
-import { getTrajetos, getParadaProxima } from '../services/api';
+import { getTrajetos, getParadaProxima, buscarParadas } from '../services/api';
 
 
 jest.mock('expo-location', () => ({
@@ -17,6 +17,7 @@ jest.mock('expo-location', () => ({
 jest.mock('../services/api', () => ({
   getTrajetos: jest.fn(),
   getParadaProxima: jest.fn(),
+  buscarParadas: jest.fn(),
 }));
 
 jest.mock('@expo/vector-icons', () => {
@@ -284,6 +285,29 @@ describe('BuscarTrajetoScreen', () => {
       expect(getByDisplayValue('Rodoviária')).toBeTruthy();
       expect(getByText('Salvar este trajeto nos favoritos')).toBeTruthy();
       expect(Location.requestForegroundPermissionsAsync).not.toHaveBeenCalled();
+    });
+
+    it('permite editar a origem manualmente e selecionar sugestão de destino do autocomplete', async () => {
+      buscarParadas.mockResolvedValue([
+        { id: '3369', nome: 'PLATAFORMA SUPERIOR DA RODOVIARIA - APOS ROD.PP EIXO L SUL' },
+      ]);
+      const { getByText, getByPlaceholderText, findByText, getByDisplayValue } =
+        await renderComOrigem();
+
+      fireEvent.press(getByText('Digitar outra origem'));
+      fireEvent.changeText(getByPlaceholderText('Ex: UnB, Taguatinga, W3 Norte...'), 'UnB');
+      fireEvent.press(getByText('Confirmar origem'));
+      expect(getByText('UnB')).toBeTruthy();
+
+      fireEvent.changeText(getByPlaceholderText(PLACEHOLDER_DESTINO), 'Rodoviária');
+      const sugestao = await findByText(
+        'PLATAFORMA SUPERIOR DA RODOVIARIA - APOS ROD.PP EIXO L SUL'
+      );
+      fireEvent.press(sugestao);
+
+      expect(
+        getByDisplayValue('PLATAFORMA SUPERIOR DA RODOVIARIA - APOS ROD.PP EIXO L SUL')
+      ).toBeTruthy();
     });
   });
 });

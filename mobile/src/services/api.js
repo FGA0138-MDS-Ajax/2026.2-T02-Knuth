@@ -42,6 +42,13 @@ export const getParadaProxima = async (lat, lng) => {
   return response.data;
 };
 
+export const buscarParadas = async (busca, limite = 8) => {
+  const response = await axios.get(`${API_BASE_URL}/paradas`, {
+    params: { busca, limite }
+  });
+  return response.data;
+};
+
 export const cadastrarUsuario = async (nome, email, senha) => {
   const response = await axios.post(`${API_BASE_URL}/usuarios/cadastro`, {
     nome,
