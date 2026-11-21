@@ -112,3 +112,26 @@ export const excluirUsuario = async (token, id) => {
   });
   return response.data;
 };
+
+// RF24 - Analisar reportes de usuários (Administrador)
+export const listarReportesAdmin = async (token, filtros = {}) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/reportes`, {
+    params: filtros,
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const obterReporteAdmin = async (token, id) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/reportes/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const analisarReporteAdmin = async (token, id, dados) => {
+  const response = await axios.patch(`${API_BASE_URL}/admin/reportes/${id}`, dados, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};

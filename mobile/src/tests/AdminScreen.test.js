@@ -136,6 +136,14 @@ describe('AdminScreen', () => {
 
       expect(navigation.navigate).toHaveBeenCalledWith('GerenciarUsuarios');
     });
+
+    it('"Analisar reportes" leva para a tela AnalisarReportes', async () => {
+      const { getByText } = await renderLiberada();
+
+      fireEvent.press(getByText('Analisar reportes'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('AnalisarReportes');
+    });
   });
 
   describe('logout', () => {
