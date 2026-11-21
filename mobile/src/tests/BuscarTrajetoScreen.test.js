@@ -4,7 +4,18 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import * as Location from 'expo-location';
 
 import BuscarTrajetoScreen from '../screens/BuscarTrajetoScreen';
-import { getTrajetos, getParadaProxima, buscarParadas } from '../services/api';
+import {
+  getTrajetos,
+  getParadaProxima,
+  buscarParadas,
+  getBuscasRecentes,
+  salvarBuscaRecente,
+} from '../services/api';
+import {
+  listarTrajetosRecentes,
+  salvarTrajetoRecenteLocal,
+  obterUsuarioLogadoId,
+} from '../utils/buscasRecentesStorage';
 
 
 jest.mock('expo-location', () => ({
@@ -18,6 +29,15 @@ jest.mock('../services/api', () => ({
   getTrajetos: jest.fn(),
   getParadaProxima: jest.fn(),
   buscarParadas: jest.fn(),
+  getBuscasRecentes: jest.fn(),
+  salvarBuscaRecente: jest.fn(),
+}));
+
+jest.mock('../utils/buscasRecentesStorage', () => ({
+  listarTrajetosRecentes: jest.fn(),
+  salvarTrajetoRecenteLocal: jest.fn(),
+  mesclarTrajetosRecentes: jest.fn((locais, remotos) => [...locais, ...remotos]),
+  obterUsuarioLogadoId: jest.fn(),
 }));
 
 jest.mock('@expo/vector-icons', () => {
@@ -55,6 +75,11 @@ describe('BuscarTrajetoScreen', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    listarTrajetosRecentes.mockResolvedValue([]);
+    salvarTrajetoRecenteLocal.mockResolvedValue([]);
+    obterUsuarioLogadoId.mockResolvedValue(null);
+    getBuscasRecentes.mockResolvedValue([]);
+    salvarBuscaRecente.mockResolvedValue({});
     erroSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
@@ -308,6 +333,29 @@ describe('BuscarTrajetoScreen', () => {
       expect(
         getByDisplayValue('PLATAFORMA SUPERIOR DA RODOVIARIA - APOS ROD.PP EIXO L SUL')
       ).toBeTruthy();
+    });
+
+    it('exibe buscas recentes e repete a consulta ao tocar em um item (RF18)', async () => {
+      const opcoes = [{ duracaoMinutos: 20, partida: '08:00', chegada: '08:20', baldeacoes: 0 }];
+      listarTrajetosRecentes.mockResolvedValue([
+        { origem: 'UnB', destino: 'Rodoviária do Plano Piloto' },
+      ]);
+      getTrajetos.mockResolvedValue(opcoes);
+      mockGpsOk();
+      const { findByText } = renderTela();
+
+      expect(await findByText('Buscas recentes')).toBeTruthy();
+      const itemRecente = await findByText('UnB → Rodoviária do Plano Piloto');
+      fireEvent.press(itemRecente);
+
+      await waitFor(() =>
+        expect(getTrajetos).toHaveBeenCalledWith('UnB', 'Rodoviária do Plano Piloto')
+      );
+      expect(navigation.navigate).toHaveBeenCalledWith('ResultadoTrajeto', {
+        opcoes,
+        origem: 'UnB',
+        destino: 'Rodoviária do Plano Piloto',
+      });
     });
   });
 });

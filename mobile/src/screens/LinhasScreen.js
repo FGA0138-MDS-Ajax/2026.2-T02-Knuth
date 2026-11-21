@@ -2,6 +2,10 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getLinhas } from '../services/api';
+import {
+  listarLinhasRecentes,
+  salvarLinhaRecenteLocal,
+} from '../utils/buscasRecentesStorage';
 import { AlertaBadge } from '../components/AlertaBanner';
 import FavoritosCarregador from '../components/FavoritosCarregador';
 import FavoritosSecao from '../components/FavoritosSecao';
@@ -11,6 +15,7 @@ import RodapeNavegacao from '../components/RodapeNavegacao';
 export default function LinhasScreen({ navigation }) {
   const [busca, setBusca] = useState('');
   const [linhas, setLinhas] = useState([]); 
+  const [linhasRecentes, setLinhasRecentes] = useState([]);
   const [carregando, setCarregando] = useState(true);
 
   useLayoutEffect(() => {
@@ -29,6 +34,15 @@ export default function LinhasScreen({ navigation }) {
   }, [navigation]);
 
   useEffect(() => {
+    const carregarRecentes = () => {
+      listarLinhasRecentes()
+        .then(setLinhasRecentes)
+        .catch(() => {});
+    };
+
+    carregarRecentes();
+    const removerListener = navigation?.addListener?.('focus', carregarRecentes);
+
     async function carregarLinhas() {
       try {
         const dados = await getLinhas(); 
@@ -40,7 +54,41 @@ export default function LinhasScreen({ navigation }) {
       }
     }
     carregarLinhas();
-  }, []);
+
+    return () => {
+      if (typeof removerListener === 'function') removerListener();
+    };
+  }, [navigation]);
+
+  const registrarTermoPesquisado = () => {
+    const termoLimpo = busca.trim();
+    if (termoLimpo.length < 2) return;
+    salvarLinhaRecenteLocal({ termo: termoLimpo })
+      .then(setLinhasRecentes)
+      .catch(() => {});
+  };
+
+  const abrirLinha = (item) => {
+    salvarLinhaRecenteLocal({
+      termo: busca.trim() || item.codigo,
+      linhaId: item.id,
+      codigo: item.codigo,
+      nome: item.nome,
+    })
+      .then(setLinhasRecentes)
+      .catch(() => {});
+    navigation.navigate('Horarios', { linhaId: item.id });
+  };
+
+  const selecionarLinhaRecente = (item) => {
+    if (item.linhaId) {
+      navigation.navigate('Horarios', { linhaId: item.linhaId });
+      return;
+    }
+    if (item.termo) {
+      setBusca(item.termo);
+    }
+  };
 
   const linhasFiltradas = linhas.filter(item => 
     item.codigo.toLowerCase().includes(busca.toLowerCase()) ||
@@ -92,6 +140,8 @@ export default function LinhasScreen({ navigation }) {
                 placeholderTextColor="#888"
                 value={busca}
                 onChangeText={setBusca}
+                onSubmitEditing={registrarTermoPesquisado}
+                returnKeyType="search"
               />
               {busca.length > 0 && (
                 <TouchableOpacity onPress={() => setBusca('')} style={styles.clearIcon}>
@@ -99,6 +149,25 @@ export default function LinhasScreen({ navigation }) {
                 </TouchableOpacity>
               )}
             </View>
+
+            {busca.length === 0 && linhasRecentes.length > 0 ? (
+              <View style={styles.recentesContainer}>
+                <Text style={styles.recentesTitulo}>Buscas recentes</Text>
+                <View style={styles.recentesChips}>
+                  {linhasRecentes.map((item, idx) => (
+                    <TouchableOpacity
+                      key={`${item.linhaId || item.termo}-${idx}`}
+                      style={styles.recenteChip}
+                      onPress={() => selecionarLinhaRecente(item)}
+                    >
+                      <Text style={styles.recenteChipTexto} numberOfLines={1}>
+                        {item.codigo ? `${item.codigo}${item.nome ? ` · ${item.nome}` : ''}` : item.termo}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            ) : null}
           </View>
         }
         ListEmptyComponent={
@@ -114,7 +183,7 @@ export default function LinhasScreen({ navigation }) {
           return (
             <TouchableOpacity 
               style={[styles.card, temAlerta && styles.cardComAlerta]}
-              onPress={() => navigation.navigate('Horarios', { linhaId: item.id })}>
+              onPress={() => abrirLinha(item)}>
               <View style={styles.badge}>
                 <Text style={styles.badgeText}>{item.codigo}</Text>
               </View>
@@ -146,6 +215,19 @@ const styles = StyleSheet.create({
   searchIcon: { marginRight: 8 },
   searchInput: { flex: 1, paddingVertical: 14, fontSize: 16, color: '#333' },
   clearIcon: { padding: 4 },
+  recentesContainer: { marginBottom: 14 },
+  recentesTitulo: { fontSize: 13, fontWeight: 'bold', color: '#006666', marginBottom: 8 },
+  recentesChips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  recenteChip: {
+    backgroundColor: '#E0F2F1',
+    borderWidth: 1,
+    borderColor: '#B2DFDB',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    maxWidth: '100%',
+  },
+  recenteChipTexto: { fontSize: 12, color: '#004D4D', fontWeight: '600' },
   textoVazio: { fontSize: 16, color: '#888', textAlign: 'center', marginTop: 12 },
   card: { flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 8, marginBottom: 12, alignItems: 'center', elevation: 1 },
   cardComAlerta: { backgroundColor: '#FFFBEB', borderLeftWidth: 4, borderLeftColor: '#D97706' },
