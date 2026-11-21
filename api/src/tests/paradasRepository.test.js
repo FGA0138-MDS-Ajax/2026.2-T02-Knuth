@@ -42,4 +42,26 @@ describe('ParadasRepository', () => {
       );
     });
   });
+
+  describe('buscarPorNome', () => {
+    it('busca paradas ignorando acentos e respeitando o limite', async () => {
+      const paradas = [{ id: '3369', nome: 'PLATAFORMA SUPERIOR DA RODOVIARIA' }];
+      pool.query.mockResolvedValue({ rows: paradas });
+
+      const resultado = await repository.buscarPorNome('Rodoviária', 5);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('translate(nome');
+      expect(params[0]).toBe('rodoviaria');
+      expect(params[params.length - 1]).toBe(5);
+      expect(resultado).toEqual(paradas);
+    });
+
+    it('retorna lista vazia sem consultar o banco quando o termo é vazio', async () => {
+      const resultado = await repository.buscarPorNome('   ');
+
+      expect(resultado).toEqual([]);
+      expect(pool.query).not.toHaveBeenCalled();
+    });
+  });
 });
