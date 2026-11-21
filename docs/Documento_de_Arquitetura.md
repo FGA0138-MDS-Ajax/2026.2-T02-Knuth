@@ -94,7 +94,7 @@ A escolha considera os seguintes pontos do Documento de Visão do Produto e do P
 - **Entregas incrementais em Sprints semanais (Visão, seções 2.1 e 2.3).** Os módulos são entregues progressivamente, do módulo base (S1) aos recursos avançados (S5). Módulos independentes dentro de um único monólito permitem que cada Sprint entregue um incremento sem a sobrecarga operacional de vários serviços.
 - **Equipe de 6 integrantes e prazo curto (26/10 a 29/11/2026).** O monólito modular reduz a complexidade de implantação e de integração em comparação a microsserviços e mantém baixo acoplamento entre os módulos, o que facilita uma eventual separação futura (RICHARDS, 2015).
 - **Dados oficiais em formato padronizado (Visão, RF20).** Um serviço de importação isolado das consultas permite validar e carregar os dados GTFS sem afetar a experiência do passageiro.
-- **Práticas de XP e qualidade (Visão, seções 2.1, 3 e 5.1).** Camadas e módulos bem delimitados favorecem os testes unitários por módulo e a meta de 80% de cobertura (MR06).
+- **Práticas de XP e qualidade (Visão, seções 2.1, 3 e 5.1).** Camadas e módulos bem delimitados favorecem os testes unitários por módulo e a meta de 80% de cobertura (MR05).
 
 #### Alternativas consideradas e descartadas
 
@@ -105,8 +105,8 @@ A escolha considera os seguintes pontos do Documento de Visão do Produto e do P
 #### Consequências e riscos aceitos
 
 - O monólito é implantado e escalado como um todo. Se um módulo exigir muito mais recursos, como o cálculo de trajetos, será necessário otimizá-lo por cache e índices antes de separá-lo.
-- O uso de duas linguagens (Node.js e Python) aumenta o esforço de configuração. O risco é reduzido ao isolar o Python no serviço de importação e padronizar os ambientes com Docker (MR08).
-- A disponibilidade de mapas, geocodificação e dados de transporte depende de serviços e fontes externas. Isso motiva a validação prévia dos dados e o tratamento de falhas (MR09).
+- O uso de duas linguagens (Node.js e Python) aumenta o esforço de configuração. O risco é reduzido ao isolar o Python no serviço de importação e padronizar os ambientes com Docker (MR07).
+- A disponibilidade de mapas, geocodificação e dados de transporte depende de serviços e fontes externas. Isso motiva a validação prévia dos dados e o tratamento de falhas (MR08).
 
 ### 2.3 Detalhamento
 
@@ -340,20 +340,20 @@ O Quadro 1 resume a responsabilidade de cada componente e as interfaces que ele 
 | Componente | Responsabilidade | Interface fornecida | Usa |
 |---|---|---|---|
 | **Camada de apresentação (aplicativo mobile)** | | | |
-| Telas (React Native) | Telas de busca, trajetos, linhas, horários, alertas, conta e administração para Android e iOS, com acessibilidade (MR02). | — | Mapa; Geolocalização; Cliente da API |
+| Telas (React Native) | Telas de busca, trajetos, linhas, horários, alertas, conta e administração para Android e iOS, com acessibilidade (MR01). | — | Mapa; Geolocalização; Cliente da API |
 | Mapa (ex.: Leaflet) | Desenha itinerários, paradas e trajetos (RF04, RF08). | — | Serviço externo de mapas e geocodificação |
 | Geolocalização | Obtém a posição atual pelo GPS do aparelho, com autorização do usuário (RF03). | — | GPS do aparelho (sistema operacional) |
 | Cliente da API | Centraliza as chamadas HTTP, envia o token e trata o formato único de erro. | — | API REST `/api/v1` |
 | **Camada de aplicação / negócio** | | | |
-| Controladores REST (Node.js, Express) | Recebem as requisições, validam as entradas, chamam os módulos e padronizam respostas e erros (MR03). | API REST `/api/v1` | Interfaces dos módulos |
+| Controladores REST (Node.js, Express) | Recebem as requisições, validam as entradas, chamam os módulos e padronizam respostas e erros (MR02). | API REST `/api/v1` | Interfaces dos módulos |
 | Linhas, Paradas e Horários | Consulta de linhas, itinerários, paradas, horários e próximas partidas (RF07 a RF12); operações de escrita usadas na manutenção manual (RF23). | ServicoLinhas | ProvedorPosicaoFrota; AcessoDados |
 | Trajetos | Cálculo, detalhamento e ordenação das opções de trajeto (RF01 a RF06). | ServicoTrajetos | ServicoLinhas |
 | Alertas | Cadastro, consulta, encerramento e expiração de alertas; emite o evento `alertaPublicado` (RF13, RF14, RF22). | ServicoAlertas | ProvedorCentralTransito; AcessoDados |
-| Autenticação e Autorização | Cadastro e login de passageiros e administradores, emissão e validação de tokens e permissões por perfil (RF16, RF21, MR07). | ServicoAutenticacao | AcessoDados |
+| Autenticação e Autorização | Cadastro e login de passageiros e administradores, emissão e validação de tokens e permissões por perfil (RF16, RF21, MR06). | ServicoAutenticacao | AcessoDados |
 | Conta e Personalização | Favoritos, buscas recentes, reportes de divergência e notificações (RF15 a RF19). | ServicoConta | ServicoAutenticacao; ServicoAlertas (evento); e-mail / push; AcessoDados |
 | Administração | Gestão de alertas, manutenção manual da base, análise de reportes e disparo da importação (RF22 a RF24). | ServicoAdministracao | ServicoAutenticacao; ServicoLinhas; ServicoAlertas; ServicoConta; ServicoImportacao |
-| Importação GTFS (Python) | Lê o pacote GTFS, valida estrutura e consistência e carrega a base em transação única, em processo separado do servidor (RF20, MR09). | ServicoImportacao | Fonte oficial GTFS; PostgreSQL |
-| Adaptadores de integração | Comunicação com a posição da frota e a central de trânsito, com tempo limite e tratamento de falhas (MR09). | ProvedorPosicaoFrota; ProvedorCentralTransito | Serviços externos (HTTPS) |
+| Importação GTFS (Python) | Lê o pacote GTFS, valida estrutura e consistência e carrega a base em transação única, em processo separado do servidor (RF20, MR08). | ServicoImportacao | Fonte oficial GTFS; PostgreSQL |
+| Adaptadores de integração | Comunicação com a posição da frota e a central de trânsito, com tempo limite e tratamento de falhas (MR08). | ProvedorPosicaoFrota; ProvedorCentralTransito | Serviços externos (HTTPS) |
 | **Camada de persistência** | | | |
 | Repositórios (driver pg, SQL direto) | Isolam o acesso ao banco; cada módulo usa só os repositórios das suas tabelas. | AcessoDados | PostgreSQL (SQL, porta 5432) |
 | PostgreSQL | Armazena dados de transporte, alertas, usuários, favoritos, buscas, reportes e o histórico de importações. | Conexão SQL (porta 5432) | — |
@@ -362,13 +362,13 @@ O Quadro 1 resume a responsabilidade de cada componente e as interfaces que ele 
 
 As conexões entre os componentes seguem as regras de dependência da seção 2.1 e as relações lógicas da seção 2.5.2:
 
-- **Entrada única pela API.** O aplicativo mobile só chega ao servidor pela API REST `/api/v1`, por HTTPS e em JSON (MR03). Os controladores validam as entradas e encaminham cada operação ao módulo responsável.
-- **Identificação e perfil.** Conta e Personalização e Administração usam `ServicoAutenticacao` para identificar o usuário e verificar o perfil antes de executar operações protegidas (MR07).
-- **Dependências em um só sentido.** Trajetos depende de Linhas, Paradas e Horários; Conta e Personalização depende de Alertas; Administração depende de Linhas, Paradas e Horários, Alertas, Conta e Personalização e Importação GTFS; Linhas, Paradas e Horários e Alertas dependem dos Adaptadores de integração. Não há ciclos, o que permite testar cada módulo com as dependências simuladas (MR06).
+- **Entrada única pela API.** O aplicativo mobile só chega ao servidor pela API REST `/api/v1`, por HTTPS e em JSON (MR02). Os controladores validam as entradas e encaminham cada operação ao módulo responsável.
+- **Identificação e perfil.** Conta e Personalização e Administração usam `ServicoAutenticacao` para identificar o usuário e verificar o perfil antes de executar operações protegidas (MR06).
+- **Dependências em um só sentido.** Trajetos depende de Linhas, Paradas e Horários; Conta e Personalização depende de Alertas; Administração depende de Linhas, Paradas e Horários, Alertas, Conta e Personalização e Importação GTFS; Linhas, Paradas e Horários e Alertas dependem dos Adaptadores de integração. Não há ciclos, o que permite testar cada módulo com as dependências simuladas (MR05).
 - **Administração sem acesso a tabelas de outros módulos.** A gestão de alertas (RF22), a manutenção manual da base (RF23) e a análise de reportes (RF24) são feitas pelos serviços dos módulos donos desses dados, e não pelos repositórios deles, conforme a regra da seção 2.1.
 - **Notificação por evento.** Ao publicar um alerta, o módulo Alertas emite o evento interno `alertaPublicado`; Conta e Personalização o escuta, identifica os passageiros com favoritos afetados e envia a notificação por e-mail ou push no aparelho (RF15). Assim, Alertas não precisa conhecer Conta, e a dependência continua em um só sentido.
-- **Serviços externos isolados.** As consultas à posição da frota e à central de trânsito passam pelos Adaptadores de integração, que aplicam tempo limite e tratam falhas. Se um serviço não responder, o sistema segue com os dados programados e avisa o usuário (MR09; Visão, caso CT-03).
-- **Importação em processo separado.** Administração dispara a importação pela interface `ServicoImportacao`, e o serviço Python a executa em segundo plano. Como os repositórios do servidor são escritos em Node.js, a Importação GTFS tem acesso a dados próprio: lê o pacote GTFS, valida estrutura e consistência e grava os dados em uma única transação. Se a validação encontrar erros, a base não é alterada, e o resultado fica registrado no histórico de importações (RF20, MR09).
+- **Serviços externos isolados.** As consultas à posição da frota e à central de trânsito passam pelos Adaptadores de integração, que aplicam tempo limite e tratam falhas. Se um serviço não responder, o sistema segue com os dados programados e avisa o usuário (MR08; Visão, critério de aceitação do RF12 / US12).
+- **Importação em processo separado.** Administração dispara a importação pela interface `ServicoImportacao`, e o serviço Python a executa em segundo plano. Como os repositórios do servidor são escritos em Node.js, a Importação GTFS tem acesso a dados próprio: lê o pacote GTFS, valida estrutura e consistência e grava os dados em uma única transação. Se a validação encontrar erros, a base não é alterada, e o resultado fica registrado no histórico de importações (RF20, MR08).
 - **Acesso a dados só pelos repositórios.** No servidor, apenas os repositórios executam SQL no PostgreSQL, e cada módulo usa somente os repositórios das tabelas que lhe pertencem (Figura 4).
 
 ##### Diagramas de classes
@@ -385,7 +385,7 @@ Os principais pontos do modelo de domínio são:
 
 - **Dados de transporte.** As classes seguem a estrutura do GTFS: Linha corresponde a *routes*, Viagem a *trips*, Parada a *stops*, HorarioParada a *stop_times* e Calendario a *calendar*. Uma linha é composta por viagens; cada viagem opera conforme um calendário e percorre uma sequência ordenada de horários, cada um em uma parada. O itinerário (RF08) é a sequência de paradas de uma viagem em cada sentido, e o quadro de horários (RF10) reúne as partidas das viagens de acordo com o tipo de dia.
 - **Alertas.** Um alerta afeta zero ou mais linhas e paradas e é publicado por um administrador (RF13, RF14, RF22). O método `estaVigente()` considera o período de vigência e o encerramento manual, o que permite deixar de exibir alertas vencidos sem intervenção.
-- **Usuários e perfis.** Usuario é abstrata e se especializa em Passageiro e Administrador, que correspondem aos perfis Passageiro Cadastrado e Administrador. O Passageiro Anônimo não é persistido: corresponde às requisições feitas sem token. A senha é guardada só como hash (MR07), e `excluirConta()` atende à exclusão de conta prevista na LGPD (RF16).
+- **Usuários e perfis.** Usuario é abstrata e se especializa em Passageiro e Administrador, que correspondem aos perfis Passageiro Cadastrado e Administrador. O Passageiro Anônimo não é persistido: corresponde às requisições feitas sem token. A senha é guardada só como hash (MR06), e `excluirConta()` atende à exclusão de conta prevista na LGPD (RF16).
 - **Conta e personalização.** Favoritos e buscas recentes compõem o passageiro e são excluídos com a conta (RF17, RF18). Reporte registra a divergência enviada pelo passageiro (RF19) e a classificação feita pelo administrador (RF24).
 - **Histórico de importações.** ImportacaoGTFS pertence ao módulo Importação GTFS e guarda cada execução, com o administrador que a disparou, a situação, o total de registros carregados e o relatório de erros (RF20).
 - **Associações entre módulos.** As associações que cruzam módulos, como Alerta–Linha ou Reporte–Passageiro, são implementadas como chaves estrangeiras: o módulo que guarda a chave obtém os dados completos pela interface do outro módulo, e não pela tabela dele. Em Favorito e Reporte, as referências opcionais a Linha e Parada aparecem como atributos apenas para não sobrecarregar a figura.
@@ -410,7 +410,7 @@ O módulo Trajetos foi detalhado por ser o mais complexo do sistema e por ilustr
 
 A visão de implantação descreve o mapeamento dos artefatos de software para a infraestrutura de hardware e para os ambientes de execução (nós) nos quais o sistema operará, fundamentando-se nos conceitos e diretrizes arquiteturais adotados na disciplina.
 
-O sistema RotasDF será implantado em um ambiente de computação em nuvem (*Cloud Computing*) utilizando contêineres Docker, o que garante a padronização dos ambientes de desenvolvimento, homologação e produção, conforme estabelecido na restrição MR08. A topologia física da aplicação está dividida da seguinte forma:
+O sistema RotasDF será implantado em um ambiente de computação em nuvem (*Cloud Computing*) utilizando contêineres Docker, o que garante a padronização dos ambientes de desenvolvimento, homologação e produção, conforme estabelecido na restrição MR07. A topologia física da aplicação está dividida da seguinte forma:
 
 **Nó Cliente (`<<Device>>`):** representa o hardware do usuário final, abrangendo dispositivos móveis como smartphones e tablets.
 
@@ -422,7 +422,7 @@ O sistema RotasDF será implantado em um ambiente de computação em nuvem (*Clo
 
 - **Tecnologia:** ambiente de execução Node.js conteinerizado via Docker. O serviço de importação de dados GTFS, desenvolvido em Python, será executado sob demanda no mesmo ambiente (ou via cron job/worker).
 - **Artefato:** monólito modular da API REST.
-- **Justificativa:** o uso de contêineres em uma plataforma gerenciada facilita as práticas de Integração e Entrega Contínuas (CI/CD) automatizadas pelo GitHub Actions (MR05). Essa abordagem permite que a equipe realize implantações contínuas de novos testes e funcionalidades sem a necessidade de gerenciar uma infraestrutura de baixo nível.
+- **Justificativa:** o uso de contêineres em uma plataforma gerenciada facilita as práticas de Integração e Entrega Contínuas (CI/CD) automatizadas pelo GitHub Actions (MR04). Essa abordagem permite que a equipe realize implantações contínuas de novos testes e funcionalidades sem a necessidade de gerenciar uma infraestrutura de baixo nível.
 
 **Nó Servidor de Banco de Dados (`<<Database Server>>`):** representa o serviço de banco de dados relacional gerenciado.
 
