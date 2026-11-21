@@ -49,6 +49,24 @@ export const buscarParadas = async (busca, limite = 8) => {
   return response.data;
 };
 
+export const getBuscasRecentes = async (usuarioId = null, limite = 5) => {
+  const params = { limite };
+  if (usuarioId !== null && usuarioId !== undefined) {
+    params.usuarioId = usuarioId;
+  }
+  const response = await axios.get(`${API_BASE_URL}/buscas-recentes`, { params });
+  return response.data;
+};
+
+export const salvarBuscaRecente = async (origem, destino, usuarioId = null) => {
+  const payload = { origem, destino };
+  if (usuarioId !== null && usuarioId !== undefined) {
+    payload.usuarioId = usuarioId;
+  }
+  const response = await axios.post(`${API_BASE_URL}/buscas-recentes`, payload);
+  return response.data;
+};
+
 export const cadastrarUsuario = async (nome, email, senha) => {
   const response = await axios.post(`${API_BASE_URL}/usuarios/cadastro`, {
     nome,
