@@ -96,6 +96,14 @@
 | `registrarTentativa` | Incrementa o contador de tentativas inválidas de um código. | Atualiza `tentativas = tentativas + 1` e retorna o total atualizado. |
 | `marcarUsada` | Marca um código de recuperação como utilizado ou bloqueado. | Atualiza `usado_em = NOW()` para o registro informado. |
 
+### 2.10. `FavoritosRepository` (RF17)
+
+| Método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `listar` | Lista os favoritos de um usuário, do mais recente ao mais antigo, com os dados da linha e da parada. | Retorna apenas os favoritos do usuário ou lista vazia; propaga o erro do banco. |
+| `adicionar` | Insere um favorito de linha, parada ou trajeto e devolve o registro já com os dados da linha e da parada. | Devolve o favorito criado, ou `null` quando ele já existia; propaga o erro do banco. |
+| `remover` | Remove o favorito somente se pertencer ao usuário. | Retorna `true` quando removeu e `false` quando não havia favorito. |
+
 ---
 
 ## 3. Testes de serviços e controladores
@@ -203,6 +211,25 @@
 | `encerrar` | Recebe `PUT /api/v1/admin/alertas/:id/encerrar`. | Responde `200` ao encerrar, `404` se o alerta não existir ou `400` se já estiver encerrado ou o id for inválido. |
 | `buscarParadas` | Recebe `GET /api/v1/admin/paradas?busca=`. | Responde `200` com as paradas encontradas e aceita busca ausente. |
 
+### 3.13. `FavoritosService` (RF17)
+
+| Método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `listar` | Lista os favoritos do usuário logado. | Retorna a lista do usuário. |
+| `adicionar` | Valida o tipo (`LINHA`, `PARADA` ou `TRAJETO`) e o campo exigido por cada tipo. | Rejeita tipo inválido ou campo ausente (400); ignora campos que não pertencem ao tipo. |
+| `adicionar` | Salva o favorito e trata duplicidade e referência inexistente. | Salva com sucesso; responde 409 se já existia e 404 se a linha ou a parada não existir. |
+| `remover` | Valida o ID e remove o favorito do usuário. | Responde 400 para ID inválido e 404 se o favorito não existir ou for de outro usuário. |
+
+### 3.14. `FavoritosController` e rotas (RF17)
+
+| Controlador / método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `listar` | Recebe `GET /api/v1/favoritos`. | Responde `200` com os favoritos do usuário do token. |
+| `adicionar` | Recebe `POST /api/v1/favoritos`. | Responde `201`, ou `400`, `404` e `409` conforme a regra violada. |
+| `remover` | Recebe `DELETE /api/v1/favoritos/:id`. | Responde `200`, ou `400` e `404`. |
+| todos | Usuário que não é passageiro. | Responde `403` (administrador não usa favoritos). |
+| `favoritosRoutes` | Rotas `GET /`, `POST /` e `DELETE /:id`. | Todas passam pelo `authUsuario`; não há rota `PUT`. |
+
 ---
 
 ## 4. Testes de middleware
@@ -240,6 +267,10 @@
 | `GerenciarUsuariosScreen` | Listagem, filtros, navegação e erros. | Lista usuários, identifica o usuário atual, aplica filtros e apresenta alertas. |
 | `CriarAdminScreen` | Cadastro, validação, mensagens e navegação. | Exibe campos e mensagens, indicador de carregamento e retorna após o sucesso. |
 | `EditarUsuarioScreen` | Edição, validação, exclusão e mensagens. | Exibe campos, realiza validações, solicita confirmação de exclusão e apresenta alertas. |
+| `FavoritoEstrela` | Botão de favoritar e desfavoritar um item (RF17). | Mostra estrela cheia ou vazia, alterna pelo store, avisa quando não foi possível (por exemplo, sem login) e se atualiza com a lista. |
+| `FavoritosSecao` e `FavoritosCarregador` | Lista de linhas favoritas e carregamento ao abrir e ao voltar ao foco (RF17). | Mostra a dica quando não há favoritos, lista as linhas e abre os horários ao tocar; esconde-se sem passageiro logado. |
+| `RodapeNavegacao` | Barra de abas Linhas e Favoritos. | Marca a aba ativa, navega ao tocar na outra e não navega na que já está aberta. |
+| `FavoritosScreen` | Aba Favoritos (RF17). | Carrega e lista os favoritos do passageiro; sem login, pede para entrar e leva à tela de login. |
 
 ---
 
