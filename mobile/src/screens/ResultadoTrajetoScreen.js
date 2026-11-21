@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { AlertaBadge } from '../components/AlertaBanner';
 import FavoritoEstrela from '../components/FavoritoEstrela';
+import { formatarDuracao } from '../utils/formatarDuracao';
 
 export default function ResultadoTrajetoScreen({ route, navigation }) {
   const { opcoes, origem, destino } = route.params;
@@ -21,7 +22,7 @@ export default function ResultadoTrajetoScreen({ route, navigation }) {
         onPress={() => navigation.navigate('TrajetoDetalhe', { opcaoTrajeto: item })}
       >
         <View style={styles.headerCard}>
-          <Text style={styles.tempoTotal}>{item.duracaoMinutos} min</Text>
+          <Text style={styles.tempoTotal}>{formatarDuracao(item.duracaoMinutos)}</Text>
           <Text style={styles.horario}>
             {item.partida} - {item.chegada}
           </Text>

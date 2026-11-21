@@ -67,9 +67,21 @@ describe('ResultadoTrajetoScreen', () => {
     it('mantém a ordem em que as opções foram recebidas', () => {
       const { getAllByText } = renderTela();
 
-      const duracoes = getAllByText(/ min$/).map((no) => no.props.children.join(''));
+      const duracoes = getAllByText(/ min$/).map((no) => no.props.children);
 
       expect(duracoes).toEqual(['25 min', '40 min', '55 min']);
+    });
+
+    it('formata durações iguais ou superiores a 60 minutos em horas e minutos', () => {
+      const { getByText } = renderTela([
+        { duracaoMinutos: 60, partida: '08:00', chegada: '09:00', baldeacoes: 0 },
+        { duracaoMinutos: 90, partida: '08:00', chegada: '09:30', baldeacoes: 1 },
+        { duracaoMinutos: 125, partida: '08:00', chegada: '10:05', baldeacoes: 1 },
+      ]);
+
+      expect(getByText('1h')).toBeTruthy();
+      expect(getByText('1h 30min')).toBeTruthy();
+      expect(getByText('2h 05min')).toBeTruthy();
     });
 
     it('mostra uma única opção quando só há uma', () => {

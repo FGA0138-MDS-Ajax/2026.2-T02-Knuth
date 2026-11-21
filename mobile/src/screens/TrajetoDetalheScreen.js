@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import AlertaBanner from '../components/AlertaBanner';
+import { formatarDuracao } from '../utils/formatarDuracao';
 
 export default function TrajetoDetalheScreen({ route, navigation }) {
   const { opcaoTrajeto } = route.params;
@@ -20,7 +21,7 @@ export default function TrajetoDetalheScreen({ route, navigation }) {
 
         <View style={styles.etapaInfo}>
           <Text style={styles.etapaInstrucao}>{item.instrucao}</Text>
-          <Text style={styles.etapaDuracao}>{item.duracaoMinutos} min</Text>
+          <Text style={styles.etapaDuracao}>{formatarDuracao(item.duracaoMinutos)}</Text>
         </View>
       </View>
     );
@@ -29,7 +30,7 @@ export default function TrajetoDetalheScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.headerCard}>
-        <Text style={styles.tempoTotal}>{opcaoTrajeto.duracaoMinutos} min</Text>
+        <Text style={styles.tempoTotal}>{formatarDuracao(opcaoTrajeto.duracaoMinutos)}</Text>
         <Text style={styles.detalheTexto}>
           Partida: {opcaoTrajeto.partida} | Chegada: {opcaoTrajeto.chegada}
         </Text>
