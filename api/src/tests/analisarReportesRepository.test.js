@@ -104,7 +104,7 @@ describe('AnalisarReportesRepository', () => {
       expect(sql).toContain('UPDATE reportes_divergencia');
       expect(sql).toContain('status = $2');
       expect(sql).toContain('observacao_admin = $3');
-      expect(sql).toContain("CASE WHEN $2 = 'PENDENTE' THEN NULL ELSE NOW() END");
+      expect(sql).toContain("WHEN $2::VARCHAR = 'PENDENTE' THEN NULL");
       expect(params).toEqual([4, 'PROCEDENTE', 'Horário corrigido no quadro.']);
       expect(resultado).toEqual(atualizado);
     });

@@ -1,3 +1,4 @@
+
 const pool = require('../config/database');
 
 const CAMPOS_REPORTE = `
@@ -31,13 +32,19 @@ class AnalisarReportesRepository {
       condicoes.push(`r.tipo = $${params.length}`);
     }
 
-    const where = condicoes.length > 0 ? `WHERE ${condicoes.join(' AND ')}` : '';
+    const where = condicoes.length > 0
+      ? `WHERE ${condicoes.join(' AND ')}`
+      : '';
+
     const query = `
       SELECT ${CAMPOS_REPORTE}
       FROM reportes_divergencia r
       LEFT JOIN usuarios u ON u.id = r.usuario_id
       ${where}
-      ORDER BY CASE WHEN r.status = 'PENDENTE' THEN 0 ELSE 1 END, r.criado_em DESC, r.id DESC;
+      ORDER BY
+        CASE WHEN r.status = 'PENDENTE' THEN 0 ELSE 1 END,
+        r.criado_em DESC,
+        r.id DESC;
     `;
 
     const { rows } = await pool.query(query, params);
@@ -51,6 +58,7 @@ class AnalisarReportesRepository {
       LEFT JOIN usuarios u ON u.id = r.usuario_id
       WHERE r.id = $1;
     `;
+
     const { rows } = await pool.query(query, [id]);
     return rows[0] || null;
   }
@@ -61,7 +69,10 @@ class AnalisarReportesRepository {
       SET
         status = $2,
         observacao_admin = $3,
-        analisado_em = CASE WHEN $2 = 'PENDENTE' THEN NULL ELSE NOW() END
+        analisado_em = CASE
+          WHEN $2::VARCHAR = 'PENDENTE' THEN NULL
+          ELSE NOW()
+        END
       WHERE id = $1
       RETURNING
         id,
@@ -75,9 +86,16 @@ class AnalisarReportesRepository {
         criado_em AS "criadoEm",
         analisado_em AS "analisadoEm";
     `;
-    const { rows } = await pool.query(query, [id, status, observacaoAdmin]);
+
+    const { rows } = await pool.query(query, [
+      id,
+      status,
+      observacaoAdmin
+    ]);
+
     return rows[0] || null;
   }
 }
 
 module.exports = new AnalisarReportesRepository();
+
