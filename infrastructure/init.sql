@@ -54,6 +54,19 @@ CREATE TABLE IF NOT EXISTS buscas_recentes (
     realizada_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- RF16 - Recuperação de senha do passageiro (código temporário de uso único)
+CREATE TABLE IF NOT EXISTS recuperacoes_senha (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    codigo_hash VARCHAR(255) NOT NULL,
+    expira_em TIMESTAMP WITH TIME ZONE NOT NULL,
+    usado_em TIMESTAMP WITH TIME ZONE,
+    tentativas INTEGER NOT NULL DEFAULT 0,
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_recuperacoes_senha_usuario ON recuperacoes_senha(usuario_id);
+
 CREATE TABLE IF NOT EXISTS alertas (
     id SERIAL PRIMARY KEY,
     tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('DESVIO', 'SUSPENSAO', 'ALTERACAO_HORARIO', 'PARALISACAO')),
@@ -77,6 +90,7 @@ CREATE TABLE IF NOT EXISTS alertas_paradas (
     PRIMARY KEY (alerta_id, parada_id)
 );
 
+-- RF19 / RF24 - Reportes de divergência e análise pelo administrador
 CREATE TABLE IF NOT EXISTS reportes_divergencia (
     id SERIAL PRIMARY KEY,
     tipo VARCHAR(30) NOT NULL CHECK (tipo IN ('HORARIO', 'PARADA', 'ITINERARIO')),
@@ -90,6 +104,29 @@ CREATE TABLE IF NOT EXISTS reportes_divergencia (
     analisado_em TIMESTAMP WITH TIME ZONE
 );
 
+CREATE INDEX IF NOT EXISTS idx_reportes_divergencia_status ON reportes_divergencia(status);
+
+
 INSERT INTO usuarios (nome, email, senha_hash, tipo)
 VALUES ('Administrador', 'admin@rotasdf.com', '$2b$10$YIRTlYFXqX9MpSOHqjSjceSTXG500o8cWkapw3nG5til7lxW38HWC', 'ADMIN')
 ON CONFLICT (email) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS favoritos (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('LINHA', 'PARADA', 'TRAJETO')),
+    linha_id VARCHAR(50) REFERENCES linhas(id) ON DELETE CASCADE,
+    parada_id VARCHAR(50) REFERENCES paradas(id) ON DELETE CASCADE,
+    origem VARCHAR(255),
+    destino VARCHAR(255),
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CHECK (
+        (tipo = 'LINHA' AND linha_id IS NOT NULL)
+        OR (tipo = 'PARADA' AND parada_id IS NOT NULL)
+        OR (tipo = 'TRAJETO' AND origem IS NOT NULL AND destino IS NOT NULL)
+    )
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_linha ON favoritos(usuario_id, linha_id) WHERE tipo = 'LINHA';
+CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_parada ON favoritos(usuario_id, parada_id) WHERE tipo = 'PARADA';
+CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_trajeto ON favoritos(usuario_id, origem, destino) WHERE tipo = 'TRAJETO';

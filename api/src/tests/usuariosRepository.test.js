@@ -78,3 +78,60 @@ describe('UsuariosRepository', () => {
     });
   });
 });
+
+// ---------- RF16: recuperação de senha e exclusão de conta ----------
+describe('UsuariosRepository - RF16', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  describe('buscarPorId', () => {
+    it('devolve o usuário encontrado pelo id', async () => {
+      const usuario = { id: 7, email: 'maria@email.com', senha_hash: 'hash' };
+      pool.query.mockResolvedValue({ rows: [usuario] });
+
+      const resultado = await repository.buscarPorId(7);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('SELECT * FROM usuarios WHERE id = $1');
+      expect(params).toEqual([7]);
+      expect(resultado).toEqual(usuario);
+    });
+
+    it('devolve null quando o usuário não existe', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      expect(await repository.buscarPorId(99)).toBeNull();
+    });
+  });
+
+  describe('atualizarSenha', () => {
+    it('atualiza apenas o hash da senha do usuário', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await repository.atualizarSenha(7, 'novo-hash');
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('UPDATE usuarios SET senha_hash = $2 WHERE id = $1');
+      expect(params).toEqual([7, 'novo-hash']);
+    });
+  });
+
+  describe('excluir', () => {
+    it('remove o usuário pelo id', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await repository.excluir(7);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('DELETE FROM usuarios WHERE id = $1');
+      expect(params).toEqual([7]);
+    });
+
+    it('propaga o erro do banco', async () => {
+      pool.query.mockRejectedValue(new Error('falha no banco'));
+
+      await expect(repository.excluir(7)).rejects.toThrow('falha no banco');
+    });
+  });
+});

@@ -1,4 +1,5 @@
 const paradasService = require('../services/paradasService');
+const alertasService = require('../services/alertasService');
 
 class ParadasController {
   async getParadaProxima(req, res) {
@@ -21,7 +22,19 @@ class ParadasController {
         });
       }
 
-      return res.status(200).json(data);
+      let alertas = [];
+      try {
+        const encontrados = await alertasService.vigentesPara([], [data.id, data.codigo]);
+        alertas = Array.isArray(encontrados) ? encontrados : [];
+      } catch (erroAlerta) {
+        console.error('Erro ao consultar alertas da parada:', erroAlerta);
+      }
+
+      return res.status(200).json({
+        ...data,
+        afetadaPorAlerta: alertas.length > 0,
+        alertas,
+      });
     } catch (error) {
       console.error('Erro ao buscar parada próxima:', error);
       return res.status(500).json({

@@ -134,6 +134,22 @@ describe('BuscarTrajetoScreen', () => {
 
       expect(Location.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     });
+
+    it('sinaliza alerta quando a parada mais próxima possui alertas vigentes (RF14)', async () => {
+      mockGpsOk({
+        id: '3368',
+        nome: 'Asa Sul - Quadra 704',
+        afetadaPorAlerta: true,
+        alertas: [{ id: 5, tipo: 'SUSPENSAO', descricao: 'Parada interditada temporariamente.' }],
+      });
+      const { findByText, getByText } = renderTela();
+
+      expect(await findByText('⚠ Alerta na parada de origem')).toBeTruthy();
+      expect(getByText('Parada interditada temporariamente.')).toBeTruthy();
+
+      fireEvent.press(getByText('Ver detalhes ›'));
+      expect(navigation.navigate).toHaveBeenCalledWith('Alertas');
+    });
   });
 
   describe('busca de trajetos', () => {

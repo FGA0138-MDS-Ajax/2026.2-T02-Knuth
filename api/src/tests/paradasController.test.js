@@ -1,8 +1,13 @@
 const paradasService = require('../services/paradasService');
+const alertasService = require('../services/alertasService');
 const paradasController = require('../controllers/paradasController');
 
 jest.mock('../services/paradasService', () => ({
   obterParadaMaisProxima: jest.fn(),
+}));
+
+jest.mock('../services/alertasService', () => ({
+  vigentesPara: jest.fn(),
 }));
 
 function criarRes() {
@@ -19,6 +24,7 @@ describe('ParadasController', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     erroSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    alertasService.vigentesPara.mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -44,16 +50,39 @@ describe('ParadasController', () => {
       expect(paradasService.obterParadaMaisProxima).not.toHaveBeenCalled();
     });
 
-    it('repassa lat e lng ao serviço e responde 200 com a parada', async () => {
+    it('repassa lat e lng ao serviço e responde 200 com a parada e alertas (RF14)', async () => {
       const parada = { id: 10, nome: 'Asa Sul - Quadra 704' };
+      const alerta = { id: 3, tipo: 'SUSPENSAO', descricao: 'Parada em manutenção' };
       paradasService.obterParadaMaisProxima.mockResolvedValue(parada);
+      alertasService.vigentesPara.mockResolvedValue([alerta]);
       const res = criarRes();
 
       await paradasController.getParadaProxima({ query: { lat: '-15.79', lng: '-47.88' } }, res);
 
       expect(paradasService.obterParadaMaisProxima).toHaveBeenCalledWith('-15.79', '-47.88');
+      expect(alertasService.vigentesPara).toHaveBeenCalledWith([], [10, undefined]);
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(parada);
+      expect(res.json).toHaveBeenCalledWith({
+        ...parada,
+        afetadaPorAlerta: true,
+        alertas: [alerta],
+      });
+    });
+
+    it('continua respondendo 200 sem alertas se a consulta de alertas falhar', async () => {
+      const parada = { id: 10, nome: 'Asa Sul - Quadra 704' };
+      paradasService.obterParadaMaisProxima.mockResolvedValue(parada);
+      alertasService.vigentesPara.mockRejectedValue(new Error('erro alertas'));
+      const res = criarRes();
+
+      await paradasController.getParadaProxima({ query: { lat: '-15.79', lng: '-47.88' } }, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        ...parada,
+        afetadaPorAlerta: false,
+        alertas: [],
+      });
     });
 
     it('aceita a coordenada "0" como valor válido', async () => {

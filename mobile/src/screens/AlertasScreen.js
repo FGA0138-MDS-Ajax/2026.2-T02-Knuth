@@ -197,7 +197,8 @@ export default function AlertasScreen({ navigation }) {
                 </View>
               </View>
 
-              {/* Descrição */}
+              {/* Título (quando informado) e Descrição */}
+              {item.titulo ? <Text style={styles.tituloAlerta}>{item.titulo}</Text> : null}
               <Text style={styles.descricao}>{item.descricao}</Text>
 
               {/* Período de Vigência */}
@@ -324,6 +325,12 @@ const styles = StyleSheet.create({
   badgeTipoTexto: {
     fontSize: 12,
     fontWeight: 'bold'
+  },
+  tituloAlerta: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 6
   },
   descricao: {
     fontSize: 15,

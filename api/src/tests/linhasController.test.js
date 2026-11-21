@@ -1,10 +1,17 @@
 const linhasService = require('../services/linhasService');
+const alertasService = require('../services/alertasService');
 const linhasController = require('../controllers/linhasController');
 
 jest.mock('../services/linhasService', () => ({
   obterLinhas: jest.fn(),
   obterItinerario: jest.fn(),
   obterQuadroHorarios: jest.fn(),
+}));
+
+jest.mock('../services/alertasService', () => ({
+  listarAlertasVigentes: jest.fn(),
+  vigentesPara: jest.fn(),
+  filtrarAlertasParaItens: jest.fn(),
 }));
 
 function criarRes() {
@@ -21,6 +28,9 @@ describe('LinhasController', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     erroSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    alertasService.listarAlertasVigentes.mockResolvedValue([]);
+    alertasService.vigentesPara.mockResolvedValue([]);
+    alertasService.filtrarAlertasParaItens.mockReturnValue([]);
   });
 
   afterEach(() => {
@@ -28,15 +38,34 @@ describe('LinhasController', () => {
   });
 
   describe('getLinhas', () => {
-    it('responde 200 com as linhas devolvidas pelo serviço', async () => {
+    it('responde 200 com as linhas devolvidas pelo serviço e sinalização de alertas (RF14)', async () => {
       const linhas = [{ id: 1, codigo: '0.111' }];
+      const alerta = { id: 10, tipo: 'DESVIO', descricao: 'Desvio na W3' };
       linhasService.obterLinhas.mockResolvedValue(linhas);
+      alertasService.listarAlertasVigentes.mockResolvedValue([alerta]);
+      alertasService.filtrarAlertasParaItens.mockReturnValue([alerta]);
       const res = criarRes();
 
       await linhasController.getLinhas({ query: {} }, res);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(linhas);
+      expect(res.json).toHaveBeenCalledWith([
+        { id: 1, codigo: '0.111', afetadaPorAlerta: true, alertas: [alerta] },
+      ]);
+    });
+
+    it('mantém a resposta 200 mesmo se a consulta de alertas falhar', async () => {
+      const linhas = [{ id: 1, codigo: '0.111' }];
+      linhasService.obterLinhas.mockResolvedValue(linhas);
+      alertasService.listarAlertasVigentes.mockRejectedValue(new Error('erro alertas'));
+      const res = criarRes();
+
+      await linhasController.getLinhas({ query: {} }, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith([
+        { id: 1, codigo: '0.111', afetadaPorAlerta: false, alertas: [] },
+      ]);
     });
 
     it('repassa só o texto da busca quando não há outros filtros', async () => {
@@ -124,7 +153,7 @@ describe('LinhasController', () => {
       expect(res.status).toHaveBeenCalledWith(400);
     });
 
-    it.each([['12'], ['0.111']])('aceita o id %s e responde 200 com o itinerário', async (id) => {
+    it.each([['12'], ['0.111']])('aceita o id %s e responde 200 com o itinerário e alertas', async (id) => {
       const itinerario = { codigo: id, itinerario: { IDA: [], VOLTA: [] } };
       linhasService.obterItinerario.mockResolvedValue(itinerario);
       const res = criarRes();
@@ -133,7 +162,52 @@ describe('LinhasController', () => {
 
       expect(linhasService.obterItinerario).toHaveBeenCalledWith(id);
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(itinerario);
+      expect(res.json).toHaveBeenCalledWith({
+        ...itinerario,
+        afetadaPorAlerta: false,
+        alertas: [],
+      });
+    });
+
+    it('sinaliza alertas na linha e nas paradas afetadas do itinerário (RF14)', async () => {
+      const alertaLinha = { id: 1, tipo: 'DESVIO', descricao: 'Desvio na linha' };
+      const alertaParada = { id: 2, tipo: 'SUSPENSAO', descricao: 'Parada interditada' };
+      const itinerario = {
+        codigo: '0.111',
+        itinerario: {
+          IDA: [{ sequencia: 1, paradaId: '10', codigo: 'P-10', nome: 'Rodoviária' }],
+          VOLTA: [],
+        },
+      };
+      linhasService.obterItinerario.mockResolvedValue(itinerario);
+      alertasService.vigentesPara.mockResolvedValue([alertaLinha, alertaParada]);
+      alertasService.filtrarAlertasParaItens
+        .mockReturnValueOnce([alertaLinha])
+        .mockReturnValueOnce([alertaParada]);
+      const res = criarRes();
+
+      await linhasController.getItinerario({ params: { id: '0.111' } }, res);
+
+      expect(alertasService.vigentesPara).toHaveBeenCalledWith(['0.111', '0.111'], ['10', 'P-10']);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        codigo: '0.111',
+        afetadaPorAlerta: true,
+        alertas: [alertaLinha],
+        itinerario: {
+          IDA: [
+            {
+              sequencia: 1,
+              paradaId: '10',
+              codigo: 'P-10',
+              nome: 'Rodoviária',
+              afetadaPorAlerta: true,
+              alertas: [alertaParada],
+            },
+          ],
+          VOLTA: [],
+        },
+      });
     });
 
     it('responde 404 quando a linha não tem itinerário', async () => {
@@ -187,16 +261,23 @@ describe('LinhasController', () => {
       expect(res.status).toHaveBeenCalledWith(400);
     });
 
-    it('responde 200 com o quadro de horários da linha', async () => {
+    it('responde 200 com o quadro de horários e alertas vigentes da linha (RF14)', async () => {
       const quadro = { codigo: '0.111', quadroHorarios: { IDA: {}, VOLTA: {} } };
+      const alerta = { id: 5, tipo: 'ALTERACAO_HORARIO', descricao: 'Intervalo reduzido' };
       linhasService.obterQuadroHorarios.mockResolvedValue(quadro);
+      alertasService.vigentesPara.mockResolvedValue([alerta]);
       const res = criarRes();
 
       await linhasController.getHorarios({ params: { id: '12' } }, res);
 
       expect(linhasService.obterQuadroHorarios).toHaveBeenCalledWith('12');
+      expect(alertasService.vigentesPara).toHaveBeenCalledWith(['12', '0.111'], []);
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(quadro);
+      expect(res.json).toHaveBeenCalledWith({
+        ...quadro,
+        afetadaPorAlerta: true,
+        alertas: [alerta],
+      });
     });
 
     it('responde 404 quando a linha não tem quadro de horários', async () => {

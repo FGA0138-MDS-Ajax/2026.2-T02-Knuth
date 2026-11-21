@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
 import { getTrajetos, getParadaProxima } from '../services/api';
+import AlertaBanner from '../components/AlertaBanner';
 
 export default function BuscarTrajetoScreen({ navigation }) {
   const [origem, setOrigem] = useState('');
+  const [alertasOrigem, setAlertasOrigem] = useState([]);
+  const [origemAfetadaPorAlerta, setOrigemAfetadaPorAlerta] = useState(false);
   const [destino, setDestino] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [buscandoGps, setBuscandoGps] = useState(true);
@@ -18,6 +21,8 @@ export default function BuscarTrajetoScreen({ navigation }) {
     setBuscandoGps(true);
     setErro('');
     setOrigem('');
+    setAlertasOrigem([]);
+    setOrigemAfetadaPorAlerta(false);
     
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -33,6 +38,8 @@ export default function BuscarTrajetoScreen({ navigation }) {
 
       if (parada && parada.nome) {
         setOrigem(parada.nome);
+        setAlertasOrigem(Array.isArray(parada.alertas) ? parada.alertas : []);
+        setOrigemAfetadaPorAlerta(Boolean(parada.afetadaPorAlerta));
       } else {
         setErro("Nenhuma parada encontrada próxima à sua localização.");
       }
@@ -86,6 +93,14 @@ export default function BuscarTrajetoScreen({ navigation }) {
         <TouchableOpacity onPress={buscarLocalizacao} disabled={buscandoGps} style={styles.botaoAtualizar}>
           <Text style={styles.botaoAtualizarTexto}>Atualizar Localização</Text>
         </TouchableOpacity>
+
+        <AlertaBanner
+          alertas={alertasOrigem}
+          afetadaPorAlerta={origemAfetadaPorAlerta}
+          compacto
+          titulo="Alerta na parada de origem"
+          onPress={() => navigation.navigate('Alertas')}
+        />
       </View>
 
       <View style={styles.inputContainer}>

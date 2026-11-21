@@ -102,5 +102,16 @@ describe('TrajetoDetalheScreen', () => {
       expect(queryByText('🚌')).toBeNull();
       expect(queryByText('🚶')).toBeNull();
     });
+
+    it('exibe banner de alertas vigentes quando o trajeto é afetado por alerta (RF14)', () => {
+      const { getByText } = renderTela({
+        ...OPCAO,
+        afetadaPorAlerta: true,
+        alertas: [{ id: 1, tipo: 'DESVIO', descricao: 'Desvio temporário na W3 Sul.' }],
+      });
+
+      expect(getByText('⚠ Alerta vigente')).toBeTruthy();
+      expect(getByText('Desvio temporário na W3 Sul.')).toBeTruthy();
+    });
   });
 });

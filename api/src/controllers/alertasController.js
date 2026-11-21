@@ -1,10 +1,26 @@
 const alertasService = require('../services/alertasService');
 
+function parseParametroLista(valor) {
+  if (!valor) return [];
+  if (Array.isArray(valor)) {
+    return valor.flatMap((v) => String(v).split(',')).map((v) => v.trim()).filter(Boolean);
+  }
+  return String(valor).split(',').map((v) => v.trim()).filter(Boolean);
+}
+
 class AlertasController {
-  // GET /api/v1/alertas
+  // GET /api/v1/alertas (opcionalmente ?linhaId=...&paradaId=...)
   async getAlertasVigentes(req, res) {
     try {
-      const data = await alertasService.listarAlertasVigentes();
+      const { linhaId, paradaId } = req.query || {};
+      const linhas = parseParametroLista(linhaId);
+      const paradas = parseParametroLista(paradaId);
+
+      const data =
+        linhas.length > 0 || paradas.length > 0
+          ? await alertasService.vigentesPara(linhas, paradas)
+          : await alertasService.listarAlertasVigentes();
+
       return res.status(200).json(data);
     } catch (error) {
       console.error('Erro ao listar alertas vigentes:', error);
