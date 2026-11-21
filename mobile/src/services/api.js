@@ -75,6 +75,18 @@ export const getAlertas = async () => {
   return response.data;
 };
 
+// RF19 - Reportar divergência na informação (Passageiro)
+export const reportarDivergencia = async ({ tipo, descricao, linhaId, paradaId, usuarioId }) => {
+  const response = await axios.post(`${API_BASE_URL}/reportes`, {
+    tipo,
+    descricao,
+    linhaId: linhaId || null,
+    paradaId: paradaId || null,
+    usuarioId: usuarioId ?? null,
+  });
+  return response.data;
+};
+
 export const getPerfilAdmin = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/admin/perfil`, {
     headers: { Authorization: `Bearer ${token}` }
