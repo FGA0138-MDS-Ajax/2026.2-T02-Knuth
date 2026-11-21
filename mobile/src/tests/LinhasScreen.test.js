@@ -3,11 +3,20 @@ import { ActivityIndicator } from 'react-native';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import LinhasScreen from '../screens/LinhasScreen';
 import { getLinhas } from '../services/api';
+import {
+  listarLinhasRecentes,
+  salvarLinhaRecenteLocal,
+} from '../utils/buscasRecentesStorage';
 
 jest.setTimeout(15000);
 
 jest.mock('../services/api', () => ({
   getLinhas: jest.fn(),
+}));
+
+jest.mock('../utils/buscasRecentesStorage', () => ({
+  listarLinhasRecentes: jest.fn(),
+  salvarLinhaRecenteLocal: jest.fn(),
 }));
 
 jest.mock('@expo/vector-icons', () => {
@@ -48,6 +57,8 @@ describe('LinhasScreen', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    listarLinhasRecentes.mockResolvedValue([]);
+    salvarLinhaRecenteLocal.mockResolvedValue([]);
     erroSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
@@ -237,6 +248,37 @@ describe('LinhasScreen', () => {
       expect(await findByText('Nenhuma linha encontrada para ""')).toBeTruthy();
       expect(queryByText('Carregando linhas...')).toBeNull();
       await waitFor(() => expect(erroSpy).toHaveBeenCalledWith(expect.any(Error)));
+    });
+  });
+
+  describe('buscas recentes de linhas (RF18)', () => {
+    it('exibe buscas recentes de linhas e abre horários ou preenche termo ao tocar', async () => {
+      listarLinhasRecentes.mockResolvedValue([
+        { linhaId: '2', codigo: '0.222', nome: 'W3 Norte / Lago Norte', termo: '0.222' },
+        { linhaId: null, codigo: null, nome: null, termo: 'Aeroporto' },
+      ]);
+      const { findByText, getByPlaceholderText } = await renderCarregada();
+
+      expect(await findByText('Buscas recentes')).toBeTruthy();
+
+      fireEvent.press(await findByText('0.222 · W3 Norte / Lago Norte'));
+      expect(navigation.navigate).toHaveBeenCalledWith('Horarios', { linhaId: '2' });
+
+      fireEvent.press(await findByText('Aeroporto'));
+      expect(getByPlaceholderText(PLACEHOLDER_BUSCA).props.value).toBe('Aeroporto');
+    });
+
+    it('salva a linha no histórico ao tocar em um cartão de linha', async () => {
+      const { getByText } = await renderCarregada();
+
+      fireEvent.press(getByText('W3 Norte / Lago Norte'));
+
+      expect(salvarLinhaRecenteLocal).toHaveBeenCalledWith({
+        termo: '0.222',
+        linhaId: 2,
+        codigo: '0.222',
+        nome: 'W3 Norte / Lago Norte',
+      });
     });
   });
 });
