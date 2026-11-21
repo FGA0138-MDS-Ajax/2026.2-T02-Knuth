@@ -2,6 +2,20 @@ const paradasService = require('../services/paradasService');
 const alertasService = require('../services/alertasService');
 
 class ParadasController {
+  async buscarParadas(req, res) {
+    try {
+      const { busca = '', limite } = req.query;
+      const paradas = await paradasService.buscarParadas(busca, limite);
+      return res.status(200).json(paradas);
+    } catch (error) {
+      console.error('Erro ao buscar paradas:', error);
+      return res.status(500).json({
+        erro: 'INTERNAL_ERROR',
+        detalhes: 'Erro interno ao buscar paradas.',
+      });
+    }
+  }
+
   async getParadaProxima(req, res) {
     try {
       const { lat, lng } = req.query;

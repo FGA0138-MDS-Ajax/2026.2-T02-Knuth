@@ -73,13 +73,13 @@ describe('TrajetosService.obterTrajetos', () => {
       expect(trajetosRepository.buscarRotasComBaldeacao).not.toHaveBeenCalled();
     });
 
-    it('usa o id da primeira parada encontrada em cada busca', async () => {
+    it('usa os ids de todas as paradas candidatas encontradas em cada busca', async () => {
       mockParadas([{ id: 1 }, { id: 99 }], [{ id: 2 }, { id: 88 }]);
 
       await trajetosService.obterTrajetos('Terminal', 'UNB');
 
-      expect(trajetosRepository.buscarRotasDiretas).toHaveBeenCalledWith(1, 2);
-      expect(trajetosRepository.buscarRotasComBaldeacao).toHaveBeenCalledWith(1, 2);
+      expect(trajetosRepository.buscarRotasDiretas).toHaveBeenCalledWith([1, 99], [2, 88]);
+      expect(trajetosRepository.buscarRotasComBaldeacao).toHaveBeenCalledWith([1, 99], [2, 88]);
     });
 
     it('retorna lista vazia quando não há rotas diretas nem com baldeação', async () => {

@@ -3,13 +3,14 @@ from sqlalchemy import create_engine
 from datetime import datetime, timedelta
 from pyproj import Transformer
 from shapely import wkt
+from shapely.strtree import STRtree
 import os
 
-DB_USER = "admin"
-DB_PASSWORD = "adminpassword"
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "rotasdf"
+DB_USER = os.getenv("DB_USER", "admin")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "adminpassword")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "5432")
+DB_NAME = os.getenv("DB_NAME", "rotasdf")
 engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
 
 PASTA_ATUAL = os.path.dirname(os.path.abspath(__file__))
@@ -57,25 +58,31 @@ def importar_dados():
     
     print("Cruzando traçados das linhas com as paradas...")
     paradas_por_linha = {}
-    
+    geometrias_paradas = df_paradas_raw['geometry'].tolist()
+    codigos_paradas = df_paradas_raw['parada'].astype(str).tolist()
+    arvore_paradas = STRtree(geometrias_paradas)
+
     for _, row in df_percursos.iterrows():
         cd_linha = str(row['cd_linha']).strip()
         sentido_geo = str(row['lin_sentido']).strip().upper()
-        sentido = 'IDA' if sentido_geo in ['IDA', 'I', 'C'] else 'VOLTA'
-        
+        sentido = 'IDA' if sentido_geo in ['IDA', 'I', 'C', 'CIRCULAR'] else 'VOLTA'
+
         wkt_linha = str(row['geo_linhas_lin_31983']).strip('"').strip("'").strip()
         linha_geom = wkt.loads(wkt_linha)
-            
+
         buffer_linha = linha_geom.buffer(50)
-            
-        mask = df_paradas_raw['geometry'].apply(lambda p: p.intersects(buffer_linha))
-        paradas_na_linha = df_paradas_raw[mask].copy()
-            
-        if not paradas_na_linha.empty:
-            paradas_na_linha['dist_trajeto'] = paradas_na_linha['geometry'].apply(lambda p: linha_geom.project(p))
-            paradas_na_linha = paradas_na_linha.sort_values('dist_trajeto')
+        indices_candidatos = arvore_paradas.query(buffer_linha, predicate='intersects')
+
+        if len(indices_candidatos) > 0:
+            paradas_ordenadas = sorted(
+                (
+                    (linha_geom.project(geometrias_paradas[idx]), codigos_paradas[idx])
+                    for idx in indices_candidatos
+                ),
+                key=lambda item: item[0],
+            )
             chave = f"{cd_linha}_{sentido}"
-            paradas_por_linha[chave] = paradas_na_linha['parada'].astype(str).tolist()
+            paradas_por_linha[chave] = [codigo for _, codigo in paradas_ordenadas]
 
     print(f"-> Itinerários mapeados: {len(paradas_por_linha)}.")
 
@@ -126,7 +133,7 @@ def importar_dados():
     for _, row in df_horarios_raw.iterrows():
         linha_id = str(row['cd_linha']).strip()
         sentido_raw = str(row['sentido']).strip().upper()
-        sentido = 'IDA' if sentido_raw in ['I', 'IDA', '0', 'C'] else 'VOLTA'
+        sentido = 'IDA' if sentido_raw in ['I', 'IDA', '0', 'C', 'CIRCULAR'] else 'VOLTA'
         
         chave_busca = f"{linha_id}_{sentido}"
         

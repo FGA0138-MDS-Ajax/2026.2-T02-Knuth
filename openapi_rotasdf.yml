@@ -115,6 +115,47 @@ paths:
         '500':
           $ref: '#/components/responses/ErroInterno'
 
+  /paradas:
+    get:
+      summary: Busca paradas por nome (autocomplete)
+      description: Retorna paradas correspondentes ao termo buscado, ignorando acentos e maiúsculas/minúsculas, para sugestão na busca de trajetos.
+      parameters:
+        - in: query
+          name: busca
+          required: false
+          schema:
+            type: string
+          description: Termo de busca com pelo menos 2 caracteres (ex. Rodoviária, UnB, Taguatinga)
+        - in: query
+          name: limite
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 25
+          description: Quantidade máxima de paradas retornadas
+      responses:
+        '200':
+          description: Lista de paradas correspondentes ao termo buscado.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    nome:
+                      type: string
+                    latitude:
+                      type: number
+                    longitude:
+                      type: number
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
   /paradas/proximas:
     get:
       summary: Busca a parada mais próxima

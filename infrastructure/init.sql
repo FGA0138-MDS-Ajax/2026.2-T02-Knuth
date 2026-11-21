@@ -37,6 +37,12 @@ CREATE TABLE IF NOT EXISTS horarios_paradas (
     chegada TIME
 );
 
+CREATE INDEX IF NOT EXISTS idx_linhas_codigo ON linhas(codigo);
+CREATE INDEX IF NOT EXISTS idx_viagens_linha_id ON viagens(linha_id);
+CREATE INDEX IF NOT EXISTS idx_viagens_linha_sentido ON viagens(linha_id, sentido);
+CREATE INDEX IF NOT EXISTS idx_hp_parada_viagem_seq ON horarios_paradas(parada_id, viagem_id, sequencia);
+CREATE INDEX IF NOT EXISTS idx_hp_viagem_seq ON horarios_paradas(viagem_id, sequencia);
+
 CREATE TABLE IF NOT EXISTS usuarios (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,

@@ -25,6 +25,21 @@ describe('TrajetoDetalheScreen', () => {
       expect(getByText('45 min')).toBeTruthy();
     });
 
+    it('formata duração total e etapas >= 60 min em horas e minutos', () => {
+      const { getByText } = renderTela({
+        ...OPCAO,
+        duracaoMinutos: 95,
+        etapas: [
+          { ordem: 1, tipo: 'ONIBUS', instrucao: 'Trecho longo', duracaoMinutos: 75 },
+          { ordem: 2, tipo: 'CAMINHADA', instrucao: 'Espera', duracaoMinutos: 20 },
+        ],
+      });
+
+      expect(getByText('1h 35min')).toBeTruthy();
+      expect(getByText('1h 15min')).toBeTruthy();
+      expect(getByText('20 min')).toBeTruthy();
+    });
+
     it('mostra os horários de partida e chegada', () => {
       const { getByText } = renderTela();
 

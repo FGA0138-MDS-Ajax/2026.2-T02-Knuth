@@ -1,5 +1,6 @@
 jest.mock('../repositories/paradasRepository', () => ({
   findNearestParada: jest.fn(),
+  buscarPorNome: jest.fn(),
 }));
 
 const paradasRepository = require('../repositories/paradasRepository');
@@ -31,6 +32,24 @@ describe('ParadasService', () => {
       paradasRepository.findNearestParada.mockRejectedValue(new Error('falha no banco'));
 
       await expect(paradasService.obterParadaMaisProxima(1, 1)).rejects.toThrow('falha no banco');
+    });
+  });
+
+  describe('buscarParadas', () => {
+    it('retorna lista vazia para termos com menos de 2 caracteres', async () => {
+      await expect(paradasService.buscarParadas('a')).resolves.toEqual([]);
+      await expect(paradasService.buscarParadas('  ')).resolves.toEqual([]);
+      expect(paradasRepository.buscarPorNome).not.toHaveBeenCalled();
+    });
+
+    it('repassa o termo aparado e o limite válido ao repositório', async () => {
+      const paradas = [{ id: '1', nome: 'UNB' }];
+      paradasRepository.buscarPorNome.mockResolvedValue(paradas);
+
+      const resultado = await paradasService.buscarParadas('  UnB  ', '8');
+
+      expect(paradasRepository.buscarPorNome).toHaveBeenCalledWith('UnB', 8);
+      expect(resultado).toEqual(paradas);
     });
   });
 });

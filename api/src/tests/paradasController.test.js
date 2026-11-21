@@ -3,6 +3,7 @@ const alertasService = require('../services/alertasService');
 const paradasController = require('../controllers/paradasController');
 
 jest.mock('../services/paradasService', () => ({
+  buscarParadas: jest.fn(),
   obterParadaMaisProxima: jest.fn(),
 }));
 
@@ -29,6 +30,35 @@ describe('ParadasController', () => {
 
   afterEach(() => {
     erroSpy.mockRestore();
+  });
+
+  describe('buscarParadas', () => {
+    it('repassa busca e limite ao serviço e responde 200 com as paradas', async () => {
+      const paradas = [{ id: '3369', nome: 'PLATAFORMA SUPERIOR DA RODOVIARIA' }];
+      paradasService.buscarParadas.mockResolvedValue(paradas);
+      const res = criarRes();
+
+      await paradasController.buscarParadas({ query: { busca: 'Rodoviária', limite: '5' } }, res);
+
+      expect(paradasService.buscarParadas).toHaveBeenCalledWith('Rodoviária', '5');
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(paradas);
+    });
+
+    it('responde 500 quando ocorre erro ao buscar paradas', async () => {
+      const erro = new Error('falha no banco');
+      paradasService.buscarParadas.mockRejectedValue(erro);
+      const res = criarRes();
+
+      await paradasController.buscarParadas({ query: { busca: 'UnB' } }, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'INTERNAL_ERROR',
+        detalhes: 'Erro interno ao buscar paradas.',
+      });
+      expect(erroSpy).toHaveBeenCalledWith('Erro ao buscar paradas:', erro);
+    });
   });
 
   describe('getParadaProxima', () => {
