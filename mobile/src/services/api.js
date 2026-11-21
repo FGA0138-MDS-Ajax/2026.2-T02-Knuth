@@ -60,8 +60,13 @@ export const loginUsuario = async (email, senha) => {
 };
 
 export const getAlertas = async (filtros) => {
-  const response = await axios.get(`${API_BASE_URL}/alertas`, filtros ? { params: filtros } : undefined);
-// RF16 - Recuperação de senha e exclusão da própria conta
+  const response = await axios.get(
+    `${API_BASE_URL}/alertas`,
+    filtros ? { params: filtros } : undefined
+  );
+  return response.data;
+};
+
 export const solicitarRecuperacaoSenha = async (email) => {
   const response = await axios.post(`${API_BASE_URL}/usuarios/recuperar-senha`, {
     email
@@ -86,12 +91,6 @@ export const excluirMinhaConta = async (token, senha) => {
   return response.data;
 };
 
-export const getAlertas = async () => {
-  const response = await axios.get(`${API_BASE_URL}/alertas`);
-  return response.data;
-};
-
-// RF19 - Reportar divergência na informação (Passageiro)
 export const reportarDivergencia = async ({
   tipo,
   descricao,
@@ -104,7 +103,7 @@ export const reportarDivergencia = async ({
     descricao,
     linhaId: linhaId || null,
     paradaId: paradaId || null,
-    usuarioId: usuarioId ?? null,
+    usuarioId: usuarioId ?? null
   });
   return response.data;
 };
@@ -147,7 +146,6 @@ export const excluirUsuario = async (token, id) => {
   return response.data;
 };
 
-// RF - Gerenciamento de alertas pelo administrador
 export const listarAlertasAdmin = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/admin/alertas`, {
     headers: { Authorization: `Bearer ${token}` }
@@ -191,7 +189,6 @@ export const buscarParadasAdmin = async (token, busca) => {
   return response.data;
 };
 
-// RF - Gerenciamento de favoritos
 export const getFavoritos = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/favoritos`, {
     headers: { Authorization: `Bearer ${token}` }
@@ -213,7 +210,6 @@ export const removerFavorito = async (token, id) => {
   return response.data;
 };
 
-// RF24 - Analisar reportes de usuários (Administrador)
 export const listarReportesAdmin = async (token, filtros = {}) => {
   const response = await axios.get(`${API_BASE_URL}/admin/reportes`, {
     params: filtros,
@@ -235,3 +231,4 @@ export const analisarReporteAdmin = async (token, id, dados) => {
   });
   return response.data;
 };
+
