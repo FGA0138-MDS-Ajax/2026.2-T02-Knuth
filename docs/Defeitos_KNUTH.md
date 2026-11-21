@@ -16,7 +16,7 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 
 | ID | Sev. | Tema | Tipo | Descrição | Prazo | Evidência de correção |
 | --- | --- | --- | --- | --- | --- | --- |
-| DEF-041 | Crítico | Visão | Omissão | Backlog sem critérios de aceitação suficientemente operacionalizados | Antes de prosseguir (condição de reprovação) | Não há evidência |
+| DEF-041 | Crítico | Visão | Omissão | Backlog sem critérios de aceitação suficientemente operacionalizados | Antes de prosseguir (condição de reprovação) | docs/Documento_de_Visao_do_Produto.md, versão 1.3.0 – seção 4.4.1 (Tabela 8: critérios de aceitação verificáveis para US01–US24) |
 | DEF-010 | Alto | Outros | Inconsistência | PDFs publicados divergem dos arquivos Markdown atuais | Até a entrega final, com rechecagem | Não há evidência |
 | DEF-013 | Alto | Visão | Inconsistência | Documentos indicam ramos diferentes para integração do código | Até a entrega final, com rechecagem | Não há evidência |
 | DEF-015 | Alto | Outros | Omissão | Faltam registros rastreáveis das cerimônias para S1 a S3 | Até a entrega final, com rechecagem | Não há evidência |
@@ -53,10 +53,10 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 | DEF-036 | Médio | Outros | Inconsistência | DoD usada pela métrica difere da definição da Visão | No ciclo de revisão | Não há evidência |
 | DEF-037 | Médio | Outros | Omissão | Registro de análise das medições incompleto | No ciclo de revisão | Não há evidência |
 | DEF-040 | Médio | Visão | Inconsistência | Campo de comparação da declaração de posição não identifica alternativa | No ciclo de revisão | Não há evidência |
-| DEF-004 | Baixo | Visão | Inconsistência | Linha de fonte fora de lugar ou sem ilustração associada | Na próxima edição do trecho | Não há evidência |
-| DEF-009 | Baixo | Visão | Inconsistência | Referências fora da ordem alfabética | Na próxima edição do trecho | Não há evidência |
-| DEF-012 | Baixo | Visão | Inconsistência | Soma de participação no Markdown diverge do total declarado | Na próxima edição do trecho | Não há evidência |
-| DEF-039 | Baixo | Outros | Ambiguidade | O registro tem marcas de citação sem significado | Na próxima edição do trecho | Não há evidência |
+| DEF-004 | Baixo | Visão | Inconsistência | Linha de fonte fora de lugar ou sem ilustração associada | Na próxima edição do trecho | docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – fonte da Tabela 1 logo abaixo da tabela e linha de fonte órfã da seção 2.4 retirada |
+| DEF-009 | Baixo | Visão | Inconsistência | Referências fora da ordem alfabética | Na próxima edição do trecho | docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – referências da seção 7 em ordem alfabética (NBR 6023) |
+| DEF-012 | Baixo | Visão | Inconsistência | Soma de participação no Markdown diverge do total declarado | Na próxima edição do trecho | docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – participação ajustada para somar exatamente 100 (4 × 16,67 + 2 × 16,66) |
+| DEF-039 | Baixo | Outros | Ambiguidade | O registro tem marcas de citação sem significado | Na próxima edição do trecho | metricas/projeto/registro-escopo.md – marcas “[cite: …]” retiradas (commit ed8c40ce) |
 
 ## Defeito crítico
 
@@ -67,6 +67,7 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 - **Evidência:** As 24 histórias da Tabela 7 descrevem funcionalidades e benefícios, mas não estabelecem os resultados esperados e condições de aprovação usados pela seção 6.1 e exigidos na coleta TCH. Os cenários da seção 4 não vinculam esses critérios a cada história. A cobrança é de condições verificáveis, não de coluna ou formato específico.
 - **Impacto:** A aceitação das histórias não pode ser aferida pelos parâmetros declarados. O formulário inclui requisito sem critério de aceitação entre os exemplos de severidade Crítica.
 - **Reparo:** Cada história do backlog deve ter critérios de aceitação verificáveis, usados para declará-la concluída. **Prazo:** antes de prosseguir (condição de reprovação).
+- **Evidência de correção:** docs/Documento_de_Visao_do_Produto.md, versão 1.3.0 – seção 4.4.1 (Tabela 8: critérios de aceitação verificáveis para US01–US24)
 
 ## Defeitos altos
 
@@ -369,6 +370,7 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 - **Evidência:** A fonte da Tabela 1 aparece depois do parágrafo explicativo, separada da tabela (linha 86). A seção 2.4 traz “Fonte: Elaborado pelos autores (2026)” sem nenhuma tabela ou figura (linha 191).
 - **Impacto:** Fere a consistência editorial.
 - **Reparo:** A fonte da Tabela 1 deve ficar logo abaixo da tabela, e a linha de fonte da seção 2.4 deve ser associada a uma ilustração ou retirada. **Prazo:** na próxima edição do trecho.
+- **Evidência de correção:** docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – fonte da Tabela 1 logo abaixo da tabela e linha de fonte órfã da seção 2.4 retirada
 
 ### DEF-009 – Referências fora da ordem alfabética
 
@@ -377,6 +379,7 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 - **Evidência:** A referência ao ISTQB vem depois de SOMMERVILLE, o que contraria a NBR 6023.
 - **Impacto:** Fere a consistência editorial.
 - **Reparo:** As referências da seção 7 devem seguir a ordem alfabética, conforme a NBR 6023. **Prazo:** na próxima edição do trecho.
+- **Evidência de correção:** docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – referências da seção 7 em ordem alfabética (NBR 6023)
 
 ### DEF-012 – Soma de participação no Markdown diverge do total declarado
 
@@ -385,6 +388,7 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 - **Evidência:** A Visão registra seis parcelas de 16,6, soma 99,6, e declara total 100. Trata-se de inconsistência aritmética de baixo impacto; diferenças por arredondamento no PDF não recebem nova penalidade.
 - **Impacto:** Inconsistência editorial local, sem alteração da avaliação técnica do produto.
 - **Reparo:** Os pontos de participação devem somar exatamente o total declarado (100). **Prazo:** na próxima edição do trecho.
+- **Evidência de correção:** docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – participação ajustada para somar exatamente 100 (4 × 16,67 + 2 × 16,66)
 
 ### DEF-039 – O registro tem marcas de citação sem significado
 
@@ -393,3 +397,4 @@ Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de D
 - **Evidência:** Aparecem marcas como “[cite: 20]”, “[cite: 1, 11]” e “[cite: 5, 6, 7]”, sem nenhuma referência correspondente.
 - **Impacto:** O registro fica confuso para o leitor.
 - **Reparo:** As marcas “[cite: …]” devem ser retiradas ou substituídas por referências identificáveis. **Prazo:** na próxima edição do trecho.
+- **Evidência de correção:** metricas/projeto/registro-escopo.md – marcas “[cite: …]” retiradas (commit ed8c40ce)
