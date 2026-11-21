@@ -141,6 +141,14 @@ describe('ConfiguracoesScreen', () => {
       expect(navigation.navigate).toHaveBeenCalledWith('Alertas');
     });
 
+    it('"Reportar divergência" leva para a tela ReportarDivergencia', async () => {
+      const { getByText } = await renderTela();
+
+      fireEvent.press(getByText('Reportar divergência'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ReportarDivergencia');
+    });
+
     it('"Área do administrador" leva para a tela Admin', async () => {
       const { getByText } = await renderTela();
 

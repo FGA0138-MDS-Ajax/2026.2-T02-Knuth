@@ -212,6 +212,17 @@ describe('HorariosScreen', () => {
 
       expect(navigation.navigate).toHaveBeenCalledWith('Itinerario', { linhaId: 5 });
     });
+
+    it('"Reportar divergência" abre a tela de reporte preenchida com HORARIO e código da linha', async () => {
+      const { getByText } = await renderCarregada(5);
+
+      fireEvent.press(getByText('Reportar divergência'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ReportarDivergencia', {
+        tipo: 'HORARIO',
+        linhaId: LINHA.codigo,
+      });
+    });
   });
 
   describe('erro ao carregar', () => {
