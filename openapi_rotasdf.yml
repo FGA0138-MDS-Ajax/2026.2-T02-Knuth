@@ -150,7 +150,198 @@ paths:
         '500':
           $ref: '#/components/responses/ErroInterno'
 
+  /usuarios/cadastro:
+    post:
+      summary: Cadastrar novo passageiro (RF16)
+      description: Cria uma conta de passageiro com nome, e-mail e senha criptografada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, email, senha]
+              properties:
+                nome:
+                  type: string
+                  example: "Maria Silva"
+                email:
+                  type: string
+                  format: email
+                  example: "maria@email.com"
+                senha:
+                  type: string
+                  example: "senha123"
+      responses:
+        '201':
+          description: Passageiro cadastrado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Campos obrigatórios ausentes ou e-mail já cadastrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
+  /usuarios/login:
+    post:
+      summary: Autenticar usuário (RF16)
+      description: Autentica o usuário com e-mail e senha e retorna token JWT.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, senha]
+              properties:
+                email:
+                  type: string
+                  format: email
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Autenticação realizada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+                  token:
+                    type: string
+        '401':
+          description: Credenciais inválidas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
+  /usuarios/recuperar-senha:
+    post:
+      summary: Solicitar código de recuperação de senha (RF16)
+      description: Gera e envia um código temporário de 6 dígitos para redefinição de senha.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Solicitação processada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: E-mail não informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /usuarios/redefinir-senha:
+    post:
+      summary: Redefinir senha com código de recuperação (RF16)
+      description: Valida o código de 6 dígitos recebido e atualiza a senha do passageiro.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, codigo, novaSenha]
+              properties:
+                email:
+                  type: string
+                  format: email
+                codigo:
+                  type: string
+                  example: "123456"
+                novaSenha:
+                  type: string
+                  minLength: 6
+      responses:
+        '200':
+          description: Senha redefinida com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: Dados inválidos, código expirado/incorreto ou limite de tentativas excedido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /usuarios/me:
+    delete:
+      summary: Excluir a própria conta de passageiro (RF16)
+      description: Remove definitivamente a conta do passageiro autenticado mediante confirmação de senha.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [senha]
+              properties:
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Conta excluída com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: Senha de confirmação não informada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente/inválido ou senha incorreta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '403':
+          description: Exclusão da própria conta restrita a passageiros.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   responses:
     ErroInterno:
       description: Erro interno no servidor.
@@ -314,4 +505,29 @@ components:
           example: "NOT_FOUND"
         detalhes:
           type: string
+
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "Maria Silva"
+        email:
+          type: string
+          format: email
+          example: "maria@email.com"
+        tipo:
+          type: string
+          enum: [PASSAGEIRO, ADMIN]
+          example: "PASSAGEIRO"
+
+    MensagemSucesso:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: "Operação realizada com sucesso."
           example: "Recurso não encontrado."

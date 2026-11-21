@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from './src/screens/LoginScreen';
 import CadastroScreen from './src/screens/CadastroScreen';
+import RecuperarSenhaScreen from './src/screens/RecuperarSenhaScreen';
+import ExcluirContaScreen from './src/screens/ExcluirContaScreen';
 import LinhasScreen from './src/screens/LinhasScreen';
 import HorariosScreen from './src/screens/HorariosScreen';
 import ItinerarioScreen from './src/screens/ItinerarioScreen';
@@ -84,6 +86,16 @@ export default function App() {
           name="Cadastro" 
           component={CadastroScreen} 
           options={{ title: 'Criar Conta' }} 
+        />
+        <Stack.Screen
+          name="RecuperarSenha"
+          component={RecuperarSenhaScreen}
+          options={{ title: 'Recuperar Senha' }}
+        />
+        <Stack.Screen
+          name="ExcluirConta"
+          component={ExcluirContaScreen}
+          options={{ title: 'Excluir Conta' }}
         />
         <Stack.Screen
           name="Admin"

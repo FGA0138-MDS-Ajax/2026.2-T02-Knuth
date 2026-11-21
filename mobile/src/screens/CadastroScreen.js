@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { cadastrarUsuario } from '../services/api';
+import { mostrarAviso } from '../utils/dialogos';
 
 export default function CadastroScreen({ navigation }) {
   const [nome, setNome] = useState('');
@@ -10,18 +11,18 @@ export default function CadastroScreen({ navigation }) {
 
   const cadastrar = async () => {
     if (!nome || !email || !senha) {
-      Alert.alert("Atenção", "Preencha todos os campos.");
+      mostrarAviso("Atenção", "Preencha todos os campos.");
       return;
     }
 
     setCarregando(true);
     try {
       await cadastrarUsuario(nome, email, senha);
-      Alert.alert("Sucesso", "Conta criada! Faça login para continuar.");
+      mostrarAviso("Sucesso", "Conta criada! Faça login para continuar.");
       navigation.navigate('Login');
     } catch (error) {
       const msg = error.response?.data?.detalhes || "Erro ao cadastrar.";
-      Alert.alert("Erro", msg);
+      mostrarAviso("Erro", msg);
     } finally {
       setCarregando(false);
     }

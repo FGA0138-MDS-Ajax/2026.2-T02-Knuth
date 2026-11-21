@@ -87,6 +87,13 @@ export default function ConfiguracoesScreen({ navigation }) {
             <Text style={styles.opcaoTexto}>Área do administrador</Text>
           </TouchableOpacity>
 
+        {usuario && usuario.tipo !== 'ADMIN' && (
+          <TouchableOpacity style={styles.opcaoItem} onPress={() => navigation.navigate('ExcluirConta')}>
+            <Ionicons name="person-remove-outline" size={24} color="#666" />
+            <Text style={styles.opcaoTexto}>Excluir minha conta</Text>
+          </TouchableOpacity>
+        )}
+
         {usuario && (
           <TouchableOpacity style={styles.opcaoItem} onPress={sair}>
             <Ionicons name="log-out-outline" size={24} color="#D32F2F" />
