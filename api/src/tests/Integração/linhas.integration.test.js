@@ -11,7 +11,7 @@ let container;
 let app;
 
 // Como o alertasService não pertence ao módulo de linhas, vamos simulá-lo para focar no banco de linhas
-jest.mock('../src/services/alertasService', () => ({
+jest.mock('../../services/alertasService', () => ({
   listarAlertasVigentes: jest.fn().mockResolvedValue([]),
   vigentesPara: jest.fn().mockResolvedValue([]),
   filtrarAlertasParaItens: jest.fn().mockReturnValue([])
@@ -41,7 +41,7 @@ describe('Integração REAL (Testcontainers) - API de Linhas', () => {
     await client.connect();
 
     // O caminho assume que o init.sql está na pasta infrastructure
-    const initSqlPath = path.resolve(__dirname, '../../infrastructure/init.sql');
+    const initSqlPath = path.resolve(__dirname, '../../../../infrastructure/init.sql');
     const initSql = fs.readFileSync(initSqlPath, 'utf8');
     await client.query(initSql);
 
@@ -58,15 +58,23 @@ describe('Integração REAL (Testcontainers) - API de Linhas', () => {
     await client.end();
 
     // 5. Agora importamos o App do Express (ele vai usar as variáveis de ambiente do container)
-    app = require('../src/app');
+    app = require('../../app');
   });
 
-  afterAll(async () => {
-    // 6. Derruba o container após os testes
+
+afterAll(async () => {
+  try {
+    if (app) {
+      const pool = require('../../config/database');
+      await pool.end();
+    }
+  } finally {
     if (container) {
       await container.stop();
     }
-  });
+  }
+});
+
 
   it('GET /api/v1/linhas - Deve buscar as linhas direto do banco PostgreSQL real', async () => {
     const response = await request(app).get('/api/v1/linhas?busca=0.600');
