@@ -3,14 +3,23 @@
 ## Sumário
 
 1. [Estratégia de testes](#1-estratégia-de-testes)
+
 2. [Testes de repositórios](#2-testes-de-repositórios)
+
 3. [Testes de serviços e controladores](#3-testes-de-serviços-e-controladores)
+
 4. [Testes de middleware](#4-testes-de-middleware)
+
 5. [Testes de interface (React Native)](#5-testes-de-interface-react-native)
+
 6. [Testes de integração](#6-testes-de-integração)
+
 7. [Testes de sistema](#7-testes-de-sistema)
+
 8. [Tratamento de erros e condições especiais](#8-tratamento-de-erros-e-condições-especiais)
+
 9. [Considerações finais](#9-considerações-finais)
+
 10. [Cobertura de testes](#10-cobertura-de-testes)
 
 ---
@@ -18,19 +27,24 @@
 ## 1. Estratégia de testes
 
 - **Testes unitários:** foco na validação isolada dos serviços, repositórios e controladores.
+
 - **Testes funcionais de interface:** validação das telas React Native quanto à renderização, às interações e ao estado da interface.
-- **Testes de integração:** validação da comunicação entre a API Express e o banco PostgreSQL real, utilizando Testcontainers para disponibilizar um banco temporário.
+
+- **Testes de integração:** na API, validação da comunicação entre Express e PostgreSQL real, com Testcontainers; no Mobile, validação integrada da tela `LinhasScreen` e suas interações, com a chamada à API simulada por mock.
+
 - **Testes de sistema:** desenvolvidos na Sprint 4, verificando o funcionamento integrado das principais funcionalidades da API, incluindo autenticação, consultas, favoritos, recuperação de senha, administração, alertas e reportes.
 
-Os testes unitários utilizam *mocks* para isolar dependências. Já os testes de integração e de sistema exercitam componentes reais, incluindo a persistência dos dados no PostgreSQL.
+Os testes unitários utilizam **mocks** para isolar dependências. Os testes de integração da API e os testes de sistema exercitam a persistência de dados no PostgreSQL. A integração de componentes do Mobile usa respostas simuladas da API e, portanto, **não valida uma conexão real entre aplicativo e backend**.
 
 Os testes automatizados de sistema apresentados neste plano verificam os fluxos da API e do banco de dados. A validação das interações e da renderização da interface React Native é realizada separadamente pelos testes funcionais de interface.
+
+As indicações `RFxx` associadas aos componentes e às suítes são referências de **rastreabilidade** à Tabela 9 (Backlog do Produto), seção 4.4 do documento *RotasDF — Visão do Produto e do Projeto*, versão 1.1.0. Elas identificam os requisitos relacionados aos cenários descritos, sem afirmar que cada requisito foi integralmente coberto. Componentes sem correspondência funcional direta no backlog foram mantidos sem código RF.
 
 ---
 
 ## 2. Testes de repositórios
 
-### 2.1. `AlertasRepository`
+### 2.1. `AlertasRepository` (RF13, RF14)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -38,14 +52,14 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 | `findAlertaVigenteById` | Retorna um alerta ativo pelo ID. | Retorna o alerta ou `null`; trata erros. |
 | `findAlertasVigentesPorItens` | Retorna alertas vigentes que afetam uma lista de linhas e/ou paradas (RF14). | Retorna os alertas correspondentes, lista vazia sem ir ao banco quando os parâmetros são vazios, ou propaga o erro. |
 
-### 2.2. `BuscasRecentesRepository`
+### 2.2. `BuscasRecentesRepository` (RF18)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
 | `salvarBusca` | Insere uma busca e retorna o registro. | Executa a consulta com os valores corretos. |
 | `listarBuscasRecentes` | Lista buscas recentes com filtro. | Retorna uma lista ou uma lista vazia. |
 
-### 2.3. `UsuariosRepository`
+### 2.3. `UsuariosRepository` (RF16)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -55,14 +69,14 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 | `atualizarSenha` | Atualiza o hash da senha de um usuário pelo ID (RF16). | Executa `UPDATE usuarios SET senha_hash = $2 WHERE id = $1`. |
 | `excluir` | Remove o registro do usuário pelo ID (RF16). | Executa a exclusão ou propaga o erro do banco. |
 
-### 2.4. `ParadasRepository`
+### 2.4. `ParadasRepository` (RF01, RF03)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
 | `findNearestParada` | Busca a parada mais próxima. | Retorna a parada ou `null`. |
 | `buscarPorNome` | Busca paradas ignorando acentos/caixa, com fronteira de palavras curtas e limite configurável. | Retorna as paradas correspondentes ordenadas por relevância ou lista vazia para termo vazio. |
 
-### 2.5. `LinhasRepository`
+### 2.5. `LinhasRepository` (RF07, RF08, RF10)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -70,7 +84,7 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 | `findItinerarioByLinhaId` | Busca o itinerário de uma linha. | Retorna o resultado ou uma lista vazia. |
 | `findHorariosByLinhaId` | Busca os horários de uma linha. | Retorna os horários ou uma lista vazia. |
 
-### 2.6. `TrajetosRepository`
+### 2.6. `TrajetosRepository` (RF01)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -124,7 +138,7 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 
 ## 3. Testes de serviços e controladores
 
-### 3.1. `AlertasService`
+### 3.1. `AlertasService` (RF13, RF14)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -134,14 +148,14 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 | `filtrarAlertasParaItens` | Filtra alertas vigentes por linhas (ID/código) e paradas (ID/código/nome) (RF14). | Retorna apenas os alertas que afetam os itens informados. |
 | `extrairItensDoTrajeto` | Extrai códigos de linhas e nomes/IDs de paradas das etapas de uma opção de trajeto (RF14). | Retorna as listas normalizadas de linhas e paradas envolvidas no trajeto. |
 
-### 3.2. `BuscasRecentesService`
+### 3.2. `BuscasRecentesService` (RF18)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
 | `registrarBusca` | Valida e registra buscas. | Trata e retorna os dados corretamente. |
 | `obterBuscasRecentes` | Lista buscas com parâmetros e valores padrão. | Retorna as buscas ou uma lista vazia. |
 
-### 3.3. `UsuariosService`
+### 3.3. `UsuariosService` (RF16)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -151,14 +165,14 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 | `redefinirSenha` | Valida e-mail, código de 6 dígitos, limite de 5 tentativas e tamanho mínimo da nova senha (6 caracteres), atualizando o hash da senha (RF16). | Atualiza a senha e invalida o código utilizado, ou lança erro `400` para código inválido/expirado/excedido. |
 | `excluirConta` | Valida a senha atual do passageiro autenticado e remove sua própria conta, bloqueando autoexclusão de administradores (RF16). | Exclui o passageiro com confirmação de senha ou lança erro `400`/`401`/`403`/`404`. |
 
-### 3.4. `ParadasService`
+### 3.4. `ParadasService` (RF01, RF03)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
 | `obterParadaMaisProxima` | Busca a parada mais próxima usando latitude e longitude. | Retorna a parada, `null` ou um erro. |
 | `buscarParadas` | Valida o termo mínimo (2 caracteres) e o limite (1–25) para autocomplete (`GET /paradas`). | Retorna lista vazia para termos curtos/vazios ou repassa termo aparado e limite ao repositório. |
 
-### 3.5. `LinhasService`
+### 3.5. `LinhasService` (RF07, RF08, RF10)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -166,7 +180,7 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 | `obterItinerario` | Retorna o itinerário pelo ID. | Retorna dados estruturados, `null` ou um erro. |
 | `obterQuadroHorarios` | Retorna o quadro de horários. | Retorna os dados agrupados, `null` ou um erro. |
 
-### 3.6. `TrajetosService`
+### 3.6. `TrajetosService` (RF01)
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -270,12 +284,12 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 
 | Middleware | Cenário | Resultado esperado |
 |---|---|---|
-| `authAdmin` | Token ausente ou malformado. | Retorna `401 Unauthorized`. |
-| `authAdmin` | Token expirado ou inválido. | Retorna `401 Unauthorized`. |
-| `authAdmin` | Usuário sem permissão de administrador. | Retorna `403 Forbidden`. |
-| `authAdmin` | Token válido e usuário administrador. | Continua a requisição e adiciona os dados a `req.usuario`. |
-| `authUsuario` | Cabeçalho `Authorization` ausente, sem esquema `Bearer`, token malformado, expirado ou sem `id` (RF16). | Retorna `401 Unauthorized`. |
-| `authUsuario` | Token JWT válido de passageiro ou administrador (RF16). | Continua a requisição e popula `req.usuario` com os dados decodificados. |
+| `authAdmin` (RF21) | Token ausente ou malformado. | Retorna `401 Unauthorized`. |
+| `authAdmin` (RF21) | Token expirado ou inválido. | Retorna `401 Unauthorized`. |
+| `authAdmin` (RF21) | Usuário sem permissão de administrador. | Retorna `403 Forbidden`. |
+| `authAdmin` (RF21) | Token válido e usuário administrador. | Continua a requisição e adiciona os dados a `req.usuario`. |
+| `authUsuario` (RF16) | Cabeçalho `Authorization` ausente, sem esquema `Bearer`, token malformado, expirado ou sem `id` (RF16). | Retorna `401 Unauthorized`. |
+| `authUsuario` (RF16) | Token JWT válido de passageiro ou administrador (RF16). | Continua a requisição e popula `req.usuario` com os dados decodificados. |
 
 ---
 
@@ -283,55 +297,63 @@ Os testes automatizados de sistema apresentados neste plano verificam os fluxos 
 
 | Tela / Componente | Caso / cenário | Resultado esperado |
 |---|---|---|
-| `AlertaBanner` e `AlertaBadge` | Renderização de banners e badges de sinalização de alertas (RF14). | Exibe cores e rótulos por tipo (`Desvio`, `Suspensão`, `Paralisação`, `Alteração de Horário`), contagem de múltiplos alertas, oculta quando não há alertas e aciona `onPress` para detalhes. |
-| `LinhasScreen` | Carregamento, filtro, listagem, navegação, sinalização de alertas (RF14) e buscas recentes de linhas (RF18). | Exibe indicador de carregamento, permite filtrar por código ou nome, destaca visualmente linhas com `afetadaPorAlerta` (`AlertaBadge`), salva linhas/termos acessados no histórico e exibe chips clicáveis de buscas recentes para repetir a consulta ou abrir horários. |
-| `HorariosScreen` | Carregamento, filtro por sentido/tipo de dia, banner de alerta da linha (RF14) e atalho para reporte (RF19). | Exibe os horários corretos, renderiza o `AlertaBanner` quando a linha possui alertas vigentes, navega para o itinerário e abre `ReportarDivergencia` com `HORARIO` e código da linha. |
-| `ItinerarioScreen` | Carregamento do itinerário por sentido, sinalização de alertas (RF14), reporte (RF19) e favoritar paradas (RF17). | Lista as paradas em `IDA`/`VOLTA`, exibe alertas da linha/paradas, botão de favoritar em cada parada e navega para `ReportarDivergencia`. |
-| `AlertasScreen` | Listagem, filtros, título/descrição, mensagens de erro e atualizações. | Exibe alertas vigentes com título, descrição e itens afetados, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza `AsyncStorage`. |
-| `AdminScreen` | Acesso, logout e navegação (incluindo atalho para análise de reportes — RF24). | Exibe *spinner*, controla o acesso restrito ou liberado, navega para `CriarAdmin`, `GerenciarUsuarios` e `AnalisarReportes` e remove os dados no logout. |
-| `CadastroScreen` | Validação, cadastro e navegação. | Valida campos obrigatórios, exibe mensagens e indicador de carregamento e realiza a navegação. |
-| `LoginScreen` | Validação, login, armazenamento, falhas e atalho de recuperação de senha (RF16). | Valida campos, exibe mensagens, salva o token, navega para `RecuperarSenha` levando o e-mail preenchido e apresenta erros e indicador de carregamento. |
-| `RecuperarSenhaScreen` | Fluxo em duas etapas para solicitar código por e-mail e redefinir a senha (RF16). | Valida formato de e-mail, código de 6 dígitos, tamanho mínimo e confirmação da nova senha, permite reenviar código ou trocar e-mail e redireciona ao login após sucesso. |
-| `ExcluirContaScreen` | Confirmação de senha e diálogo destrutivo para exclusão definitiva da própria conta (RF16). | Exige senha atual, solicita confirmação, chama `DELETE /usuarios/me`, limpa `AsyncStorage` (`@rotasdf_token`, `@rotasdf_usuario`, `@rotasdf_buscas_recentes`) e redireciona para `Linhas`. |
-| `ConfiguracoesScreen` | Exibição de perfil, limpeza de histórico, logout, atalho para reporte (RF19) e exclusão de conta para passageiros (RF16). | Exibe dados do passageiro logado, navega para `ReportarDivergencia`, mostra **"Excluir minha conta"** apenas para passageiros autenticados e executa logout. |
-| `dialogos` | Utilitário multiplataforma de alertas e confirmações (`mostrarAviso` e `confirmarAcao`) (RF16). | Utiliza `Alert.alert` no Android/iOS e `window.alert`/`window.confirm` na Web. |
-| `BuscarTrajetoScreen` | GPS, permissão, edição manual de origem, autocomplete de paradas (`GET /paradas`), buscas, buscas recentes de trajetos (RF18), alerta na parada de origem (RF14) e favoritos de parada/trajeto (RF17). | Trata permissão de GPS e localização, permite digitar outra origem manualmente e selecionar sugestões de paradas no destino, salva e exibe buscas recentes (local + `/buscas-recentes`) permitindo repeti-las com um toque, exibe `AlertaBanner`, aceita origem/destino pré-preenchidos por rota, permite favoritar a parada próxima ou o trajeto e navega com `{ opcoes, origem, destino }`. |
-| `ResultadoTrajetoScreen` | Exibição com duração formatada em horas e minutos, navegação por opções, destaque de alertas (RF14) e favoritar trajeto pesquisado (RF17). | Exibe cartões de opções com duração formatada (`25 min`, `1h`, `1h 30min`), baldeações, destaque `afetadaPorAlerta`, resumo `Origem → Destino` com `FavoritoEstrela` e navega para os detalhes. |
-| `TrajetoDetalheScreen` | Exibição detalhada das etapas com duração em horas e minutos e banner de alertas do trajeto (RF14). | Exibe duração total e por etapa formatadas em horas e minutos, mostra `AlertaBanner` quando o trajeto é afetado por alerta vigente, lista etapas ordenadas com ícones e apresenta mensagem quando não há etapas. |
-| `buscasRecentesStorage` | Armazenamento local (`@rotasdf_buscas_recentes`), ordenação, deduplicação e mesclagem com histórico remoto (RF18). | Salva até 5 trajetos e 5 linhas recentes da mais recente para a mais antiga sem duplicatas, mescla histórico local e remoto e lê o `usuarioId` logado com tolerância a erros. |
+| `AlertaBanner` e `AlertaBadge` (RF14) | Renderização de banners e badges de sinalização de alertas (RF14). | Exibe cores e rótulos por tipo (`Desvio`, `Suspensão`, `Paralisação`, `Alteração de Horário`), contagem de múltiplos alertas, oculta quando não há alertas e aciona `onPress` para detalhes. |
+| `LinhasScreen` (RF07, RF14, RF18) | Carregamento, filtro, listagem, navegação, sinalização de alertas (RF14) e buscas recentes de linhas (RF18). | Exibe indicador de carregamento, permite filtrar por código ou nome, destaca visualmente linhas com `afetadaPorAlerta` (`AlertaBadge`), salva linhas/termos acessados no histórico e exibe chips clicáveis de buscas recentes para repetir a consulta ou abrir horários. |
+| `HorariosScreen` (RF10, RF14, RF19) | Carregamento, filtro por sentido/tipo de dia, banner de alerta da linha (RF14) e atalho para reporte (RF19). | Exibe os horários corretos, renderiza o `AlertaBanner` quando a linha possui alertas vigentes, navega para o itinerário e abre `ReportarDivergencia` com `HORARIO` e código da linha. |
+| `ItinerarioScreen` (RF08, RF14, RF17, RF19) | Carregamento do itinerário por sentido, sinalização de alertas (RF14), reporte (RF19) e favoritar paradas (RF17). | Lista as paradas em `IDA`/`VOLTA`, exibe alertas da linha/paradas, botão de favoritar em cada parada e navega para `ReportarDivergencia`. |
+| `AlertasScreen` (RF13) | Listagem, filtros, título/descrição, mensagens de erro e atualizações. | Exibe alertas vigentes com título, descrição e itens afetados, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza `AsyncStorage`. |
+| `AdminScreen` (RF21, RF24) | Acesso, logout e navegação (incluindo atalho para análise de reportes — RF24). | Exibe **spinner**, controla o acesso restrito ou liberado, navega para `CriarAdmin`, `GerenciarUsuarios` e `AnalisarReportes` e remove os dados no logout. |
+| `CadastroScreen` (RF16) | Validação, cadastro e navegação. | Valida campos obrigatórios, exibe mensagens e indicador de carregamento e realiza a navegação. |
+| `LoginScreen` (RF16, RF21) | Validação, login, armazenamento, falhas e atalho de recuperação de senha (RF16). | Valida campos, exibe mensagens, salva o token, navega para `RecuperarSenha` levando o e-mail preenchido e apresenta erros e indicador de carregamento. |
+| `RecuperarSenhaScreen` (RF16) | Fluxo em duas etapas para solicitar código por e-mail e redefinir a senha (RF16). | Valida formato de e-mail, código de 6 dígitos, tamanho mínimo e confirmação da nova senha, permite reenviar código ou trocar e-mail e redireciona ao login após sucesso. |
+| `ExcluirContaScreen` (RF16) | Confirmação de senha e diálogo destrutivo para exclusão definitiva da própria conta (RF16). | Exige senha atual, solicita confirmação, chama `DELETE /usuarios/me`, limpa `AsyncStorage` (`@rotasdf_token`, `@rotasdf_usuario`, `@rotasdf_buscas_recentes`) e redireciona para `Linhas`. |
+| `ConfiguracoesScreen` (RF16, RF19) | Exibição de perfil, limpeza de histórico, logout, atalho para reporte (RF19) e exclusão de conta para passageiros (RF16). | Exibe dados do passageiro logado, navega para `ReportarDivergencia`, mostra **"Excluir minha conta"** apenas para passageiros autenticados e executa logout. |
+| `dialogos` (RF16) | Utilitário multiplataforma de alertas e confirmações (`mostrarAviso` e `confirmarAcao`) (RF16). | Utiliza `Alert.alert` no Android/iOS e `window.alert`/`window.confirm` na Web. |
+| `BuscarTrajetoScreen` (RF01, RF03, RF14, RF17, RF18) | GPS, permissão, edição manual de origem, autocomplete de paradas (`GET /paradas`), buscas, buscas recentes de trajetos (RF18), alerta na parada de origem (RF14) e favoritos de parada/trajeto (RF17). | Trata permissão de GPS e localização, permite digitar outra origem manualmente e selecionar sugestões de paradas no destino, salva e exibe buscas recentes (local + `/buscas-recentes`) permitindo repeti-las com um toque, exibe `AlertaBanner`, aceita origem/destino pré-preenchidos por rota, permite favoritar a parada próxima ou o trajeto e navega com `{ opcoes, origem, destino }`. |
+| `ResultadoTrajetoScreen` (RF01, RF02, RF14, RF17) | Exibição com duração formatada em horas e minutos, navegação por opções, destaque de alertas (RF14) e favoritar trajeto pesquisado (RF17). | Exibe cartões de opções com duração formatada (`25 min`, `1h`, `1h 30min`), baldeações, destaque `afetadaPorAlerta`, resumo `Origem → Destino` com `FavoritoEstrela` e navega para os detalhes. |
+| `TrajetoDetalheScreen` (RF02, RF14) | Exibição detalhada das etapas com duração em horas e minutos e banner de alertas do trajeto (RF14). | Exibe duração total e por etapa formatadas em horas e minutos, mostra `AlertaBanner` quando o trajeto é afetado por alerta vigente, lista etapas ordenadas com ícones e apresenta mensagem quando não há etapas. |
+| `buscasRecentesStorage` (RF18) | Armazenamento local (`@rotasdf_buscas_recentes`), ordenação, deduplicação e mesclagem com histórico remoto (RF18). | Salva até 5 trajetos e 5 linhas recentes da mais recente para a mais antiga sem duplicatas, mescla histórico local e remoto e lê o `usuarioId` logado com tolerância a erros. |
 | `GerenciarUsuariosScreen` | Listagem, filtros, navegação e erros. | Lista usuários, identifica o usuário atual, aplica filtros e apresenta alertas. |
 | `CriarAdminScreen` | Cadastro, validação, mensagens e navegação. | Exibe campos e mensagens, indicador de carregamento e retorna após o sucesso. |
 | `EditarUsuarioScreen` | Edição, validação, exclusão e mensagens. | Exibe campos, realiza validações, solicita confirmação de exclusão e apresenta alertas. |
-| `FavoritoEstrela` | Botão de favoritar e desfavoritar um item (RF17). | Mostra estrela cheia ou vazia, alterna pelo store, avisa quando não foi possível (por exemplo, sem login) e se atualiza com a lista. |
-| `FavoritosSecao` e `FavoritosCarregador` | Lista de linhas, paradas e trajetos favoritos em destaque na tela inicial e na aba Favoritos (RF17). | Mostra a dica quando não há favoritos, lista linhas (abre `Horarios`), paradas (abre `BuscarTrajeto` com origem) e trajetos (abre `BuscarTrajeto` com origem/destino); esconde-se sem passageiro logado. |
-| `RodapeNavegacao` | Barra de abas Linhas e Favoritos com *safe area* inferior e ação `onPressAtiva` (voltar ao topo). | Marca a aba ativa, aplica `paddingBottom` conforme o recuo inferior da *safe area* do dispositivo, navega ao tocar na outra aba e dispara `onPressAtiva` (rolando a lista de linhas ao topo) ao tocar na aba já aberta. |
-| `FavoritosScreen` | Aba Favoritos (RF17). | Carrega e lista os favoritos do passageiro; sem login, pede para entrar e leva à tela de login. |
-| `AnalisarReportesScreen` | Listagem, filtros por status, exibição de badges/referências, navegação e tratamento de erros (RF24). | Exibe indicador de carregamento, lista reportes com tipo, status, linha/parada e autor, filtra por `Pendentes`/`Procedentes`/`Improcedentes`, navega para `DetalheReporte` e exibe avisos de erro. |
-| `DetalheReporteScreen` | Classificação de reporte e registro da correção realizada pelo administrador (RF24). | Exibe detalhes do reporte, exige descrição da correção ao selecionar `Procedente`, permite `Improcedente`/`Pendente` sem observação obrigatória, chama `PATCH /admin/reportes/:id` e retorna após salvar. |
-| `ReportarDivergenciaScreen` | Validação, pré-preenchimento de linha/parada e envio de reporte de divergência pelo passageiro (RF19). | Permite escolher `Horário`, `Parada` ou `Itinerário`, exige ao menos linha ou parada e descrição com no mínimo 10 caracteres, anexa `usuarioId` quando logado, chama `POST /reportes` e trata erros da API. |
+| `FavoritoEstrela` (RF17) | Botão de favoritar e desfavoritar um item (RF17). | Mostra estrela cheia ou vazia, alterna pelo store, avisa quando não foi possível (por exemplo, sem login) e se atualiza com a lista. |
+| `FavoritosSecao` e `FavoritosCarregador` (RF17) | Lista de linhas, paradas e trajetos favoritos em destaque na tela inicial e na aba Favoritos (RF17). | Mostra a dica quando não há favoritos, lista linhas (abre `Horarios`), paradas (abre `BuscarTrajeto` com origem) e trajetos (abre `BuscarTrajeto` com origem/destino); esconde-se sem passageiro logado. |
+| `RodapeNavegacao` | Barra de abas Linhas e Favoritos com **safe area** inferior e ação `onPressAtiva` (voltar ao topo). | Marca a aba ativa, aplica `paddingBottom` conforme o recuo inferior da **safe area** do dispositivo, navega ao tocar na outra aba e dispara `onPressAtiva` (rolando a lista de linhas ao topo) ao tocar na aba já aberta. |
+| `FavoritosScreen` (RF17) | Aba Favoritos (RF17). | Carrega e lista os favoritos do passageiro; sem login, pede para entrar e leva à tela de login. |
+| `AnalisarReportesScreen` (RF24) | Listagem, filtros por status, exibição de badges/referências, navegação e tratamento de erros (RF24). | Exibe indicador de carregamento, lista reportes com tipo, status, linha/parada e autor, filtra por `Pendentes`/`Procedentes`/`Improcedentes`, navega para `DetalheReporte` e exibe avisos de erro. |
+| `DetalheReporteScreen` (RF24) | Classificação de reporte e registro da correção realizada pelo administrador (RF24). | Exibe detalhes do reporte, exige descrição da correção ao selecionar `Procedente`, permite `Improcedente`/`Pendente` sem observação obrigatória, chama `PATCH /admin/reportes/:id` e retorna após salvar. |
+| `ReportarDivergenciaScreen` (RF19) | Validação, pré-preenchimento de linha/parada e envio de reporte de divergência pelo passageiro (RF19). | Permite escolher `Horário`, `Parada` ou `Itinerário`, exige ao menos linha ou parada e descrição com no mínimo 10 caracteres, anexa `usuarioId` quando logado, chama `POST /reportes` e trata erros da API. |
 
 ---
 
 ## 6. Testes de integração
 
-### 6.1. Integração da API com PostgreSQL usando Testcontainers
+### 6.1. Integração da API com PostgreSQL usando Testcontainers (RF07, RF08, RF10)
 
 O teste de integração verifica se as rotas da API de linhas conseguem consultar dados armazenados em um banco PostgreSQL real, iniciado temporariamente por meio do Testcontainers.
 
 **Tecnologias utilizadas:**
 
 - Jest para execução dos testes.
+
 - Supertest para realizar requisições HTTP à aplicação Express.
+
 - Testcontainers para iniciar um container PostgreSQL.
+
 - PostgreSQL 15 (`postgres:15-alpine`) como banco de dados de teste.
+
 - `pg` para conectar ao banco e preparar os dados iniciais.
 
 #### 6.1.1. Preparação do ambiente
 
 1. É iniciado um container PostgreSQL temporário.
+
 2. As variáveis de ambiente (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` e `DB_NAME`) são configuradas com os dados fornecidos pelo container.
+
 3. O arquivo `infrastructure/init.sql` é executado para criar a estrutura do banco.
+
 4. São inseridos dados de teste nas tabelas de calendário, linhas, paradas, viagens e horários das paradas.
+
 5. A aplicação Express é carregada após a configuração das variáveis de ambiente, para utilizar o banco temporário.
 
 #### 6.1.2. Casos de teste
@@ -352,9 +374,85 @@ Portanto, o banco de dados utilizado para as consultas de linhas é real, mas o 
 
 Após a execução:
 
-- A conexão auxiliar utilizada para preparar os dados é encerrada.
-- O container PostgreSQL é interrompido no encerramento da suíte.
-- O pool de conexões utilizado pela aplicação deve ser encerrado, quando aplicável, para evitar conexões ou *handles* pendentes.
+- A conexão auxiliar `Client`, utilizada para criar o esquema e preparar os dados, é encerrada.
+
+- O pool de conexões PostgreSQL utilizado pela aplicação é encerrado com `pool.end()`.
+
+- O container PostgreSQL é interrompido **depois** do encerramento das conexões, evitando o erro `57P01` de conexão terminada durante a parada do banco.
+
+#### 6.1.5. Resultado observado na execução local
+
+Em **22/11/2026**, a suíte `api/src/tests/Integração/linhas.integration.test.js` foi executada com Jest, Supertest e PostgreSQL temporário via Testcontainers. O resultado informado pelo Jest foi **PASS**, com tempo de aproximadamente **5,152 segundos**.
+
+| Caso de teste | Resultado |
+|---|---|
+| `GET /api/v1/linhas?busca=0.600` | Aprovado |
+| `GET /api/v1/linhas/1/itinerario` | Aprovado |
+| `GET /api/v1/linhas/1/horarios` | Aprovado |
+
+**Total desta suíte:** 1 suíte aprovada e 3 casos de teste aprovados. A mensagem informativa do `dotenv` exibida no console não altera o resultado `PASS`. Este resultado comprova a execução **local**, não uma aprovação já verificada no GitHub Actions.
+
+### 6.2. Integração de componentes do Mobile — `LinhasScreen` (RF07)
+
+O teste de integração do Mobile, apresentado no arquivo `linhas.integration.test.js`, exercita conjuntamente a tela React Native `LinhasScreen`, seus estados de carregamento, entrada de busca, renderização da lista e navegação. A função `getLinhas` do serviço de API é **simulada com Jest**, assim como as funções de buscas recentes; os ícones do Expo também são simulados.
+
+**Tecnologias utilizadas:** Jest, React Native Testing Library (`render`, `screen`, `fireEvent`, `waitFor`) e mocks de dependências externas.
+
+| Caso | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| 1. Carregamento e listagem | Renderizar a tela e aguardar o retorno simulado de duas linhas (`0.600` e `0.110`). | Apresentar o carregamento e exibir os códigos e nomes das linhas retornadas. |
+| 2. Filtragem em tempo real | Digitar `0.110` no campo de busca. | Exibir a linha correspondente e remover `0.600` da lista visível. |
+| 3. Busca sem resultados | Digitar `Linha Fantasma` no campo de busca. | Exibir a mensagem de nenhum resultado encontrado. |
+| 4. Navegação | Pressionar o card da linha `0.600`. | Chamar a navegação para `Horarios`, com `{ linhaId: '1' }`. |
+
+**Escopo e limitações:** são quatro casos escritos para a integração de componentes da interface, **não** para integração real Mobile–API–PostgreSQL. Nenhum banco de dados ou Docker é necessário nessa suíte. A execução bem-sucedida desses quatro casos **ainda não foi comprovada por um log enviado**; portanto, ficam registrados como casos implementados/propostos, com resultado pendente de confirmação.
+
+Os caminhos relativos dos imports e mocks precisam corresponder à estrutura real do projeto Mobile. O diretório `Integração` e o padrão de nome `*.integration.test.js` devem coincidir com a configuração do Jest.
+
+### 6.3. Separação de execução por tipo de teste
+
+A execução isolada facilita o diagnóstico e evita que testes dependentes de PostgreSQL/Docker sejam iniciados durante a suíte unitária. Abaixo estão os **scripts sugeridos** para os respectivos arquivos `package.json`; a aplicação efetiva dessas alterações deve ser conferida no repositório.
+
+**API — seção `scripts` do `api/package.json`:**
+
+```json
+{
+  "test": "jest --testPathIgnorePatterns=\"sistema|Integração\"",
+  "test:sistema": "jest --config jest.sistema.config.js --runInBand",
+  "test:integracao": "jest --runInBand Integração"
+}
+```
+
+**Mobile — comandos a incorporar à seção `scripts` de `mobile/package.json`, preservando os demais scripts (por exemplo, `start`, `android`, `ios` e `web`):**
+
+```json
+{
+  "test": "jest --testPathIgnorePatterns=Integração",
+  "test:integracao": "jest --runInBand Integração"
+}
+```
+
+| Diretório | Comando | Finalidade |
+|---|---|---|
+| `api` | `npm test` | Executar os testes comuns da API, excluindo `sistema` e `Integração`. |
+| `api` | `npm run test:integracao` | Executar os testes da pasta `Integração` da API, com Testcontainers. |
+| `api` | `npm run test:sistema` | Executar as suítes pelo `jest.sistema.config.js`, com PostgreSQL de teste. |
+| `mobile` | `npm test` | Executar os testes comuns do Mobile, excluindo `Integração`. |
+| `mobile` | `npm run test:integracao` | Executar os testes de integração de componentes do Mobile. |
+
+Os comandos foram separados por diretório: executar o script de integração da API dentro de `api` e o do Mobile dentro de `mobile`. O filtro pelo nome `Integração` pressupõe que as suítes estejam nesse diretório, incluindo o acento e a mesma capitalização, principalmente no CI Linux.
+
+### 6.4. Estado da integração com CI/CD
+
+- **Testes comuns:** os workflows que usam `npm test` passam a executar apenas os testes não excluídos quando os scripts acima estiverem aplicados.
+
+- **Testes de sistema da API:** há configuração documentada em `ci-sistema-api.yml`, que utiliza `npm run test:sistema` e um serviço PostgreSQL.
+
+- **Integração da API:** o resultado local está aprovado. Ainda é necessário **confirmar ou configurar** no GitHub Actions um job que execute `npm run test:integracao` em ambiente com Docker e as dependências instaladas com `npm ci`.
+
+- **Integração do Mobile:** ainda é necessário executar os quatro casos localmente e adicionar ou confirmar sua execução no CI com `npm run test:integracao` no diretório `mobile`.
+
+**Não se deve registrar aprovação no CI de nenhuma dessas suítes de integração sem o respectivo resultado do workflow.**
 
 ---
 
@@ -369,10 +467,15 @@ Diferentemente dos testes unitários, esses testes realizam requisições HTTP p
 **Tecnologias utilizadas:**
 
 - Jest para organização e execução dos testes automatizados.
+
 - Supertest para realizar requisições HTTP à aplicação Express.
+
 - PostgreSQL para persistência dos dados durante os testes.
+
 - `pg` para preparação e consultas ao banco de dados.
+
 - `bcrypt` e `jsonwebtoken` para apoiar os cenários de autenticação.
+
 - GitHub Actions para execução automatizada em CI/CD.
 
 Os testes de sistema estão organizados em seis suítes, cada uma responsável por verificar um conjunto específico de funcionalidades da API.
@@ -381,12 +484,12 @@ Os testes de sistema estão organizados em seis suítes, cada uma responsável p
 
 | Arquivo | Funcionalidades verificadas |
 |---|---|
-| `consultas.sistema.js` | Consultas de linhas, itinerários, horários, paradas e trajetos. |
-| `passageiro.sistema.js` | Cadastro, login, favoritos, buscas recentes e exclusão da própria conta. |
-| `recuperacaoSenha.sistema.js` | Solicitação de códigos, redefinição e regras de segurança da recuperação de senha. |
-| `administracao.sistema.js` | Controle de acesso, criação de administradores, listagem, atualização e exclusão de usuários. |
-| `alertas.sistema.js` | Gerenciamento, vigência e sinalização de alertas nas consultas públicas. |
-| `reportes.sistema.js` | Registro, consulta, análise, classificação e reabertura de reportes de divergência. |
+| `consultas.sistema.js` (RF01, RF03, RF07, RF08, RF10) | Consultas de linhas, itinerários, horários, paradas e trajetos. |
+| `passageiro.sistema.js` (RF16, RF17, RF18) | Cadastro, login, favoritos, buscas recentes e exclusão da própria conta. |
+| `recuperacaoSenha.sistema.js` (RF16) | Solicitação de códigos, redefinição e regras de segurança da recuperação de senha. |
+| `administracao.sistema.js` (RF21) | Controle de acesso, criação de administradores, listagem, atualização e exclusão de usuários. |
+| `alertas.sistema.js` (RF13, RF14, RF22) | Gerenciamento, vigência e sinalização de alertas nas consultas públicas. |
+| `reportes.sistema.js` (RF19, RF24) | Registro, consulta, análise, classificação e reabertura de reportes de divergência. |
 
 ### 7.3. Preparação do ambiente
 
@@ -397,8 +500,11 @@ A execução das suítes utiliza os arquivos `ambiente.js`, `auxiliares.js`, `pr
 O arquivo `ambiente.js` configura:
 
 - `NODE_ENV=test`, identificando o ambiente de testes.
+
 - `JWT_SECRET`, contendo um segredo próprio para os testes.
+
 - `RECUPERACAO_SENHA_EXPOR_CODIGO=true`, permitindo a verificação automatizada do código de recuperação.
+
 - `DB_NAME`, utilizando o valor de `DB_NAME_SISTEMA` ou o nome padrão `rotasdf_teste`.
 
 #### 7.3.2. Preparação do banco de dados
@@ -408,10 +514,15 @@ O arquivo `preparoBanco.js` é responsável por preparar a base utilizada pelos 
 **Etapas realizadas:**
 
 1. Valida o nome do banco, exigindo que contenha `test`.
+
 2. Conecta-se ao servidor PostgreSQL.
+
 3. Cria o banco de testes caso ele ainda não exista.
+
 4. Executa o esquema definido em `infrastructure/init.sql`.
+
 5. Limpa as tabelas utilizadas pelos cenários.
+
 6. Insere dados controlados de linhas, paradas, calendários, viagens e horários.
 
 Os dados iniciais incluem três linhas fictícias (`Sistema Alfa`, `Sistema Beta` e `Sistema Gama`), seis paradas e viagens de ida e volta.
@@ -435,7 +546,7 @@ O arquivo `auxiliares.js` contém funções reutilizáveis:
 
 ### 7.4. Casos de teste
 
-#### 7.4.1. Consultas públicas — `consultas.sistema.js`
+#### 7.4.1. Consultas públicas — `consultas.sistema.js` (RF01, RF03, RF07, RF08, RF10)
 
 | Funcionalidade | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -460,7 +571,7 @@ O arquivo `auxiliares.js` contém funções reutilizáveis:
 | Validação de trajetos | Informar origem ou destino ausente ou inexistente. | Retorna erro ou lista vazia, conforme o cenário. |
 | Sentido da viagem | Consultar percurso no sentido contrário ao disponível. | Não retorna rota incompatível. |
 
-#### 7.4.2. Jornada do passageiro — `passageiro.sistema.js`
+#### 7.4.2. Jornada do passageiro — `passageiro.sistema.js` (RF16, RF17, RF18)
 
 | Funcionalidade | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -489,7 +600,7 @@ O arquivo `auxiliares.js` contém funções reutilizáveis:
 | Validação da exclusão | Solicitar exclusão sem autenticação ou confirmação válida. | Bloqueia a operação. |
 | Restrição administrativa | Administrador tenta excluir a própria conta pela rota de passageiro. | Bloqueia a operação. |
 
-#### 7.4.3. Recuperação de senha — `recuperacaoSenha.sistema.js`
+#### 7.4.3. Recuperação de senha — `recuperacaoSenha.sistema.js` (RF16)
 
 | Funcionalidade | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -507,7 +618,7 @@ O arquivo `auxiliares.js` contém funções reutilizáveis:
 | Expiração | Utilizar código após o prazo de validade. | Retorna HTTP `400`. |
 | Novo código | Solicitar outro código antes de utilizar o anterior. | Invalida o código antigo e aceita o novo. |
 
-#### 7.4.4. Administração de usuários — `administracao.sistema.js`
+#### 7.4.4. Administração de usuários — `administracao.sistema.js` (RF21)
 
 | Funcionalidade | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -529,7 +640,7 @@ O arquivo `auxiliares.js` contém funções reutilizáveis:
 | Proteção da própria conta | Administrador tenta excluir a própria conta. | Bloqueia a exclusão. |
 | Usuário inexistente | Excluir usuário não cadastrado. | Retorna HTTP `404`. |
 
-#### 7.4.5. Gerenciamento de alertas — `alertas.sistema.js`
+#### 7.4.5. Gerenciamento de alertas — `alertas.sistema.js` (RF13, RF14, RF22)
 
 | Funcionalidade | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -559,7 +670,7 @@ O arquivo `auxiliares.js` contém funções reutilizáveis:
 | Alerta expirado | Consultar alerta após o período de vigência. | Não aparece na listagem pública de vigentes. |
 | Busca administrativa de paradas | Pesquisar paradas pelo nome ou código. | Retorna resultados correspondentes e lista vazia para buscas muito curtas. |
 
-#### 7.4.6. Reportes de divergência — `reportes.sistema.js`
+#### 7.4.6. Reportes de divergência — `reportes.sistema.js` (RF19, RF24)
 
 | Funcionalidade | Cenário / objetivo | Resultado esperado |
 |---|---|---|
@@ -590,10 +701,15 @@ O arquivo `jest.sistema.config.js` configura a execução das suítes de sistema
 **Configurações utilizadas:**
 
 - Ambiente de execução: `node`.
+
 - Padrão de arquivos: `src/tests/sistema/**/*.sistema.js`.
+
 - Inicialização de variáveis de ambiente por `ambiente.js`.
+
 - Preparação global do banco por `preparoBanco.js`.
+
 - Tempo limite por teste de 30 segundos.
+
 - Execução com um trabalhador (`maxWorkers: 1`).
 
 O comando utilizado pelo workflow para executar as suítes é:
@@ -611,10 +727,15 @@ O workflow é acionado em eventos de `push` e `pull_request` nas branches `devel
 **Etapas do pipeline:**
 
 1. Inicializa um ambiente Ubuntu.
+
 2. Disponibiliza PostgreSQL 15 usando a imagem `postgres:15-alpine`.
+
 3. Configura Node.js 20.
+
 4. Instala as dependências da API utilizando `npm ci`.
+
 5. Configura as variáveis de conexão ao banco.
+
 6. Executa `npm run test:sistema`.
 
 O workflow utiliza `api` como diretório de trabalho.
@@ -636,13 +757,21 @@ Diferentemente do teste de integração descrito na seção 6, os testes de sist
 A avaliação dos testes considera:
 
 - Retorno dos códigos HTTP esperados.
+
 - Correspondência entre respostas da API e registros no PostgreSQL.
+
 - Validação das regras de negócio.
+
 - Funcionamento da autenticação e autorização.
+
 - Proteção das rotas administrativas.
+
 - Isolamento dos dados entre usuários.
+
 - Persistência, atualização e exclusão corretas dos registros.
+
 - Tratamento de entradas inválidas e informações inexistentes.
+
 - Funcionamento dos fluxos de cadastro, login, recuperação de senha, consultas, favoritos, alertas e reportes.
 
 Os arquivos fornecidos contêm os testes e seus resultados esperados. A aprovação ou reprovação efetiva de cada caso depende da execução das suítes no ambiente configurado.
@@ -652,9 +781,13 @@ Os arquivos fornecidos contêm os testes e seus resultados esperados. A aprovaç
 ## 8. Tratamento de erros e condições especiais
 
 - Validação rigorosa de entradas vazias, inválidas ou mal formatadas.
+
 - Mensagens claras para erros retornados pela API.
+
 - Indicadores visuais para processos em andamento.
+
 - Proteção contra ações não autorizadas, como rebaixamentos ou exclusões indevidas.
+
 - Recuperação e apresentação adequada de informações em casos de falha de conexão.
 
 ---
@@ -662,8 +795,11 @@ Os arquivos fornecidos contêm os testes e seus resultados esperados. A aprovaç
 ## 9. Considerações finais
 
 - Garantia de cobertura mínima de 80% nas regras de negócio e na interface.
-- Uso de *mocks* para isolar os testes e garantir confiabilidade.
-- Inclusão dos casos de teste nos pipelines de CI/CD para feedback contínuo.
+
+- Uso de **mocks** para isolar os testes e garantir confiabilidade.
+
+- Execução de testes comuns e de sistema em seus respectivos fluxos de CI/CD; a execução automática das suítes de integração da API e do Mobile deve ser confirmada ou adicionada aos workflows.
+
 - Documentação colaborativa para evolução contínua do plano de testes.
 
 ---
@@ -679,5 +815,6 @@ A cobertura foi medida com `npx jest --coverage` nas pastas `api` e `mobile`, so
 
 Os dois módulos atendem à meta de 80% em todas as métricas. A medição é feita manualmente: o workflow de CI executa `npm test` sem a opção `--coverage`.
 
-Os valores apresentados correspondem ao commit e à data informados. A inclusão das suítes de testes de sistema neste plano não altera retroativamente essa medição. Para atualizar a quantidade de testes e a cobertura, é necessária uma nova execução com os testes incorporados à branch avaliada.
+Os valores apresentados correspondem ao commit e à data informados. A inclusão das suítes de sistema e de integração neste plano não altera retroativamente essa medição. Para atualizar as quantidades e os percentuais de cobertura, é necessária uma nova execução com os testes incorporados à branch avaliada.
 
+Como referência de execução, houve **49 suítes e 513 testes aprovados** nos testes comuns da API, além da **suíte de integração da API com 3 casos aprovados**. São conjuntos distintos e não uma nova medição consolidada de cobertura. O Mobile tem **4 casos de integração de componentes descritos**, mas sua aprovação ainda precisa ser demonstrada por uma execução do Jest.
