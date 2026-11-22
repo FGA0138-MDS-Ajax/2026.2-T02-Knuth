@@ -4,7 +4,8 @@
   "description": "",
   "main": "App.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:integracao": "jest --runInBand Integração"
   },
   "jest": {
     "preset": "jest-expo",
