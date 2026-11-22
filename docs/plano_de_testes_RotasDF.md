@@ -7,9 +7,11 @@
 3. [Testes de serviços e controladores](#3-testes-de-serviços-e-controladores)
 4. [Testes de middleware](#4-testes-de-middleware)
 5. [Testes de interface (React Native)](#5-testes-de-interface-react-native)
-6. [Tratamento de erros e condições especiais](#6-tratamento-de-erros-e-condições-especiais)
-7. [Considerações finais](#7-considerações-finais)
-8. [Cobertura de testes](#8-cobertura-de-testes)
+6. [Testes de integração](#6-testes-de-integração)
+7. [Testes de sistema](#7-testes-de-sistema)
+8. [Tratamento de erros e condições especiais](#8-tratamento-de-erros-e-condições-especiais)
+9. [Considerações finais](#9-considerações-finais)
+10. [Cobertura de testes](#10-cobertura-de-testes)
 
 ---
 
@@ -17,8 +19,12 @@
 
 - **Testes unitários:** foco na validação isolada dos serviços, repositórios e controladores.
 - **Testes funcionais de interface:** validação das telas React Native quanto à renderização, às interações e ao estado da interface.
-- **Testes de integração:** não há testes de integração entre componentes distintos; as dependências são simuladas com *mocks*.
-- **Teste de sistema:** realizado na Sprint 4, com o objetivo de verificar a integração e a usabilidade do sistema.
+- **Testes de integração:** validação da comunicação entre a API Express e o banco PostgreSQL real, utilizando Testcontainers para disponibilizar um banco temporário.
+- **Testes de sistema:** desenvolvidos na Sprint 4, verificando o funcionamento integrado das principais funcionalidades da API, incluindo autenticação, consultas, favoritos, recuperação de senha, administração, alertas e reportes.
+
+Os testes unitários utilizam *mocks* para isolar dependências. Já os testes de integração e de sistema exercitam componentes reais, incluindo a persistência dos dados no PostgreSQL.
+
+Os testes automatizados de sistema apresentados neste plano verificam os fluxos da API e do banco de dados. A validação das interações e da renderização da interface React Native é realizada separadamente pelos testes funcionais de interface.
 
 ---
 
@@ -68,7 +74,7 @@
 
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
-| `buscarParadasPorNome` | Busca múltiplas paradas candidatas ignorando acentos, com aliases locais (ex.: *Rodoviária do Plano Piloto* → `ROD.PP`) e expansão em raio de 350 m para parada única. | Retorna até 15 paradas candidatas ordenadas por relevância ou lista vazia para termo vazio/inexistente. |
+| `buscarParadasPorNome` | Busca múltiplas paradas candidatas ignorando acentos, com aliases locais (ex.: **Rodoviária do Plano Piloto** → `ROD.PP`) e expansão em raio de 350 m para parada única. | Retorna até 15 paradas candidatas ordenadas por relevância ou lista vazia para termo vazio/inexistente. |
 | `buscarRotasDiretas` | Busca rotas diretas aceitando listas ou IDs unitários de origem/destino, com ajuste de virada de meia-noite e diversidade de linhas. | Retorna até 8 opções diretas ordenadas por duração/horário ou lista vazia sem consultar o banco quando algum lado está vazio. |
 | `buscarRotasComBaldeacao` | Busca rotas com 1 baldeação via CTEs materializadas por padrão `(linha_id, sentido)` e janela de espera de até 60 minutos. | Retorna até 5 opções com baldeação distintas por par de linhas ou lista vazia. |
 
@@ -287,7 +293,7 @@
 | `LoginScreen` | Validação, login, armazenamento, falhas e atalho de recuperação de senha (RF16). | Valida campos, exibe mensagens, salva o token, navega para `RecuperarSenha` levando o e-mail preenchido e apresenta erros e indicador de carregamento. |
 | `RecuperarSenhaScreen` | Fluxo em duas etapas para solicitar código por e-mail e redefinir a senha (RF16). | Valida formato de e-mail, código de 6 dígitos, tamanho mínimo e confirmação da nova senha, permite reenviar código ou trocar e-mail e redireciona ao login após sucesso. |
 | `ExcluirContaScreen` | Confirmação de senha e diálogo destrutivo para exclusão definitiva da própria conta (RF16). | Exige senha atual, solicita confirmação, chama `DELETE /usuarios/me`, limpa `AsyncStorage` (`@rotasdf_token`, `@rotasdf_usuario`, `@rotasdf_buscas_recentes`) e redireciona para `Linhas`. |
-| `ConfiguracoesScreen` | Exibição de perfil, limpeza de histórico, logout, atalho para reporte (RF19) e exclusão de conta para passageiros (RF16). | Exibe dados do passageiro logado, navega para `ReportarDivergencia`, mostra *"Excluir minha conta"* apenas para passageiros autenticados e executa logout. |
+| `ConfiguracoesScreen` | Exibição de perfil, limpeza de histórico, logout, atalho para reporte (RF19) e exclusão de conta para passageiros (RF16). | Exibe dados do passageiro logado, navega para `ReportarDivergencia`, mostra **"Excluir minha conta"** apenas para passageiros autenticados e executa logout. |
 | `dialogos` | Utilitário multiplataforma de alertas e confirmações (`mostrarAviso` e `confirmarAcao`) (RF16). | Utiliza `Alert.alert` no Android/iOS e `window.alert`/`window.confirm` na Web. |
 | `BuscarTrajetoScreen` | GPS, permissão, edição manual de origem, autocomplete de paradas (`GET /paradas`), buscas, buscas recentes de trajetos (RF18), alerta na parada de origem (RF14) e favoritos de parada/trajeto (RF17). | Trata permissão de GPS e localização, permite digitar outra origem manualmente e selecionar sugestões de paradas no destino, salva e exibe buscas recentes (local + `/buscas-recentes`) permitindo repeti-las com um toque, exibe `AlertaBanner`, aceita origem/destino pré-preenchidos por rota, permite favoritar a parada próxima ou o trajeto e navega com `{ opcoes, origem, destino }`. |
 | `ResultadoTrajetoScreen` | Exibição com duração formatada em horas e minutos, navegação por opções, destaque de alertas (RF14) e favoritar trajeto pesquisado (RF17). | Exibe cartões de opções com duração formatada (`25 min`, `1h`, `1h 30min`), baldeações, destaque `afetadaPorAlerta`, resumo `Origem → Destino` com `FavoritoEstrela` e navega para os detalhes. |
@@ -306,7 +312,344 @@
 
 ---
 
-## 6. Tratamento de erros e condições especiais
+## 6. Testes de integração
+
+### 6.1. Integração da API com PostgreSQL usando Testcontainers
+
+O teste de integração verifica se as rotas da API de linhas conseguem consultar dados armazenados em um banco PostgreSQL real, iniciado temporariamente por meio do Testcontainers.
+
+**Tecnologias utilizadas:**
+
+- Jest para execução dos testes.
+- Supertest para realizar requisições HTTP à aplicação Express.
+- Testcontainers para iniciar um container PostgreSQL.
+- PostgreSQL 15 (`postgres:15-alpine`) como banco de dados de teste.
+- `pg` para conectar ao banco e preparar os dados iniciais.
+
+#### 6.1.1. Preparação do ambiente
+
+1. É iniciado um container PostgreSQL temporário.
+2. As variáveis de ambiente (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` e `DB_NAME`) são configuradas com os dados fornecidos pelo container.
+3. O arquivo `infrastructure/init.sql` é executado para criar a estrutura do banco.
+4. São inseridos dados de teste nas tabelas de calendário, linhas, paradas, viagens e horários das paradas.
+5. A aplicação Express é carregada após a configuração das variáveis de ambiente, para utilizar o banco temporário.
+
+#### 6.1.2. Casos de teste
+
+| Rota | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `GET /api/v1/linhas?busca=0.600` | Busca uma linha pelo código no PostgreSQL. | Retorna HTTP `200`, uma linha e os dados esperados (`codigo: 0.600`, `nome: Planaltina`). |
+| `GET /api/v1/linhas/1/itinerario` | Consulta o itinerário da linha cadastrada no banco. | Retorna HTTP `200`, o código da linha e duas paradas no sentido `IDA`, com a primeira parada identificada como `Terminal`. |
+| `GET /api/v1/linhas/1/horarios` | Consulta o quadro de horários da linha cadastrada. | Retorna HTTP `200` e o horário `05:00` no quadro de horários do sentido `IDA` para `DIA_UTIL`. |
+
+#### 6.1.3. Isolamento de dependências externas
+
+No teste de integração da API de linhas, o serviço `alertasService` é simulado. Essa decisão mantém o foco do teste nas rotas de linhas e na integração dessas rotas com o PostgreSQL, evitando que dependências do módulo de alertas interfiram no resultado.
+
+Portanto, o banco de dados utilizado para as consultas de linhas é real, mas o serviço de alertas não é exercitado de forma integrada nesse conjunto de testes.
+
+#### 6.1.4. Encerramento
+
+Após a execução:
+
+- A conexão auxiliar utilizada para preparar os dados é encerrada.
+- O container PostgreSQL é interrompido no encerramento da suíte.
+- O pool de conexões utilizado pela aplicação deve ser encerrado, quando aplicável, para evitar conexões ou *handles* pendentes.
+
+---
+
+## 7. Testes de sistema
+
+### 7.1. Objetivo e escopo
+
+Os testes de sistema verificam os principais fluxos funcionais da API do RotasDF, exercitando a aplicação Express e sua comunicação com o banco PostgreSQL.
+
+Diferentemente dos testes unitários, esses testes realizam requisições HTTP por meio do Supertest, verificando a execução conjunta das rotas, dos controladores, dos serviços, dos repositórios e da persistência de dados.
+
+**Tecnologias utilizadas:**
+
+- Jest para organização e execução dos testes automatizados.
+- Supertest para realizar requisições HTTP à aplicação Express.
+- PostgreSQL para persistência dos dados durante os testes.
+- `pg` para preparação e consultas ao banco de dados.
+- `bcrypt` e `jsonwebtoken` para apoiar os cenários de autenticação.
+- GitHub Actions para execução automatizada em CI/CD.
+
+Os testes de sistema estão organizados em seis suítes, cada uma responsável por verificar um conjunto específico de funcionalidades da API.
+
+### 7.2. Organização das suítes
+
+| Arquivo | Funcionalidades verificadas |
+|---|---|
+| `consultas.sistema.js` | Consultas de linhas, itinerários, horários, paradas e trajetos. |
+| `passageiro.sistema.js` | Cadastro, login, favoritos, buscas recentes e exclusão da própria conta. |
+| `recuperacaoSenha.sistema.js` | Solicitação de códigos, redefinição e regras de segurança da recuperação de senha. |
+| `administracao.sistema.js` | Controle de acesso, criação de administradores, listagem, atualização e exclusão de usuários. |
+| `alertas.sistema.js` | Gerenciamento, vigência e sinalização de alertas nas consultas públicas. |
+| `reportes.sistema.js` | Registro, consulta, análise, classificação e reabertura de reportes de divergência. |
+
+### 7.3. Preparação do ambiente
+
+A execução das suítes utiliza os arquivos `ambiente.js`, `auxiliares.js`, `preparoBanco.js` e `jest.sistema.config.js`.
+
+#### 7.3.1. Configuração das variáveis de ambiente
+
+O arquivo `ambiente.js` configura:
+
+- `NODE_ENV=test`, identificando o ambiente de testes.
+- `JWT_SECRET`, contendo um segredo próprio para os testes.
+- `RECUPERACAO_SENHA_EXPOR_CODIGO=true`, permitindo a verificação automatizada do código de recuperação.
+- `DB_NAME`, utilizando o valor de `DB_NAME_SISTEMA` ou o nome padrão `rotasdf_teste`.
+
+#### 7.3.2. Preparação do banco de dados
+
+O arquivo `preparoBanco.js` é responsável por preparar a base utilizada pelos testes.
+
+**Etapas realizadas:**
+
+1. Valida o nome do banco, exigindo que contenha `test`.
+2. Conecta-se ao servidor PostgreSQL.
+3. Cria o banco de testes caso ele ainda não exista.
+4. Executa o esquema definido em `infrastructure/init.sql`.
+5. Limpa as tabelas utilizadas pelos cenários.
+6. Insere dados controlados de linhas, paradas, calendários, viagens e horários.
+
+Os dados iniciais incluem três linhas fictícias (`Sistema Alfa`, `Sistema Beta` e `Sistema Gama`), seis paradas e viagens de ida e volta.
+
+#### 7.3.3. Funções auxiliares
+
+O arquivo `auxiliares.js` contém funções reutilizáveis:
+
+| Função | Finalidade |
+|---|---|
+| `api` | Realiza requisições HTTP à aplicação Express utilizando Supertest. |
+| `cabecalho` | Prepara o cabeçalho de autorização com token JWT. |
+| `emailUnico` | Gera e-mails diferentes para os testes. |
+| `isoEmHoras` | Gera datas relativas ao horário atual. |
+| `cadastrarPassageiro` | Cadastra um passageiro para os cenários. |
+| `logar` | Realiza a autenticação de um usuário. |
+| `criarPassageiroLogado` | Prepara um passageiro autenticado. |
+| `criarAdminLogado` | Prepara um administrador autenticado. |
+| `resetarDados` | Limpa os dados transacionais utilizados pelas suítes. |
+| `encerrarConexoes` | Encerra o pool de conexões PostgreSQL. |
+
+### 7.4. Casos de teste
+
+#### 7.4.1. Consultas públicas — `consultas.sistema.js`
+
+| Funcionalidade | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| Listagem de linhas | Consultar as linhas cadastradas sem alertas vigentes. | Retorna HTTP `200`, as linhas esperadas e nenhuma sinalização de alerta. |
+| Busca por código e nome | Pesquisar linhas pelo código ou nome, independentemente de maiúsculas e minúsculas. | Retorna somente as linhas correspondentes. |
+| Busca sem resultados | Consultar linha inexistente. | Retorna HTTP `200` e lista vazia. |
+| Itinerário | Consultar paradas de ida e volta. | Retorna as paradas na ordem correta. |
+| Coordenadas | Verificar latitude e longitude das paradas. | Retorna coordenadas numéricas. |
+| Validação de itinerário | Consultar utilizando ID inválido. | Retorna HTTP `400`. |
+| Itinerário inexistente | Consultar linha sem itinerário. | Retorna HTTP `404`. |
+| Quadro de horários | Consultar horários por sentido e tipo de dia. | Retorna horários agrupados e ordenados. |
+| Horários por linha | Consultar horários de uma linha específica. | Retorna somente os horários correspondentes. |
+| Horários inexistentes | Consultar linha sem quadro de horários. | Retorna HTTP `404`. |
+| Busca de paradas | Pesquisar paradas pelo nome. | Retorna os resultados priorizando correspondências exatas. |
+| Limite de paradas | Consultar paradas informando um limite. | Respeita a quantidade solicitada. |
+| Normalização da busca | Pesquisar paradas com diferenças de acentuação e capitalização. | Retorna os resultados correspondentes. |
+| Termos curtos ou ausentes | Consultar paradas sem termo adequado. | Retorna lista vazia. |
+| Parada mais próxima | Consultar a parada mais próxima utilizando coordenadas. | Retorna a parada correspondente. |
+| Validação de coordenadas | Consultar sem latitude ou longitude válidas. | Retorna erro de validação. |
+| Trajetos diretos | Consultar origem e destino conectados por uma viagem direta. | Retorna opções sem baldeação, organizadas por horário. |
+| Trajetos com baldeação | Consultar um percurso que exige troca de linha. | Retorna opção com baldeação. |
+| Validação de trajetos | Informar origem ou destino ausente ou inexistente. | Retorna erro ou lista vazia, conforme o cenário. |
+| Sentido da viagem | Consultar percurso no sentido contrário ao disponível. | Não retorna rota incompatível. |
+
+#### 7.4.2. Jornada do passageiro — `passageiro.sistema.js`
+
+| Funcionalidade | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| Cadastro | Cadastrar passageiro com dados válidos. | Retorna HTTP `201`, sem expor dados sensíveis. |
+| E-mail duplicado | Cadastrar usuário com e-mail existente. | Retorna HTTP `400`. |
+| Campos obrigatórios | Cadastrar usuário sem informações necessárias. | Retorna HTTP `400` e mensagem apropriada. |
+| Login | Autenticar passageiro cadastrado. | Retorna HTTP `200`, token JWT e dados do usuário. |
+| Falha de autenticação | Informar senha errada ou e-mail inexistente. | Retorna HTTP `401` com mensagem padronizada. |
+| Autorização de favoritos | Consultar favoritos sem token ou com token inválido. | Retorna HTTP `401`. |
+| Lista inicial | Consultar favoritos de passageiro sem registros. | Retorna lista vazia. |
+| Favoritar linha | Adicionar linha aos favoritos. | Retorna HTTP `201` com dados da linha. |
+| Favoritar parada | Adicionar parada aos favoritos. | Retorna HTTP `201` com dados da parada. |
+| Favoritar trajeto | Adicionar trajeto aos favoritos. | Retorna HTTP `201` com origem e destino. |
+| Duplicidade | Tentar adicionar favorito já cadastrado. | Retorna HTTP `409`. |
+| Validação de favoritos | Informar tipo inválido ou dados incorretos. | Retorna HTTP `400`. |
+| Referência inexistente | Favoritar linha ou parada inexistente. | Retorna HTTP `404`. |
+| Listagem de favoritos | Consultar favoritos cadastrados. | Retorna os itens associados ao passageiro. |
+| Isolamento de dados | Consultar favoritos de diferentes passageiros. | Cada passageiro visualiza somente seus registros. |
+| Remoção | Excluir favorito cadastrado. | Remove o registro e impede nova exclusão do mesmo item. |
+| Validação da remoção | Informar ID inválido. | Retorna erro de validação. |
+| Restrição administrativa | Administrador tenta utilizar favoritos. | Bloqueia a operação. |
+| Buscas recentes | Registrar busca com origem e destino. | Registra a busca associada ao usuário. |
+| Validação de busca | Registrar busca sem origem ou destino. | Retorna HTTP `400`. |
+| Histórico de buscas | Listar buscas recentes. | Retorna os registros ordenados e respeita o limite. |
+| Exclusão da própria conta | Passageiro solicita exclusão com senha correta. | Exclui a conta e os dados relacionados. |
+| Validação da exclusão | Solicitar exclusão sem autenticação ou confirmação válida. | Bloqueia a operação. |
+| Restrição administrativa | Administrador tenta excluir a própria conta pela rota de passageiro. | Bloqueia a operação. |
+
+#### 7.4.3. Recuperação de senha — `recuperacaoSenha.sistema.js`
+
+| Funcionalidade | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| Solicitação de código | Solicitar recuperação sem e-mail. | Retorna HTTP `400`. |
+| Privacidade | Solicitar código para e-mail cadastrado ou desconhecido. | Retorna a mesma mensagem pública. |
+| Geração de código | Solicitar recuperação para usuário cadastrado. | Gera código de seis dígitos e armazena seu hash. |
+| Validação da redefinição | Omitir e-mail, código ou nova senha. | Retorna HTTP `400`. |
+| Tamanho da senha | Informar nova senha com menos de seis caracteres. | Retorna HTTP `400`. |
+| E-mail desconhecido | Solicitar redefinição para conta inexistente. | Não revela a existência da conta. |
+| Código correto | Redefinir senha utilizando código válido. | Altera a senha e permite login com a nova senha. |
+| Senha anterior | Tentar login com senha antiga após redefinição. | Retorna HTTP `401`. |
+| Reutilização | Utilizar novamente um código consumido. | Retorna HTTP `400`. |
+| Código incorreto | Informar código errado. | Incrementa o contador de tentativas e preserva a senha antiga. |
+| Limite de tentativas | Realizar cinco tentativas incorretas. | Bloqueia o código e exige nova solicitação. |
+| Expiração | Utilizar código após o prazo de validade. | Retorna HTTP `400`. |
+| Novo código | Solicitar outro código antes de utilizar o anterior. | Invalida o código antigo e aceita o novo. |
+
+#### 7.4.4. Administração de usuários — `administracao.sistema.js`
+
+| Funcionalidade | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| Acesso sem token | Consultar rotas administrativas sem autenticação. | Retorna HTTP `401`. |
+| Acesso de passageiro | Tentar acessar área administrativa como passageiro. | Retorna HTTP `403`. |
+| Acesso de administrador | Consultar perfil administrativo com token válido. | Retorna HTTP `200`. |
+| Proteção das operações | Passageiro tenta listar, criar, atualizar ou excluir usuários. | Retorna HTTP `403`. |
+| Criação de administrador | Criar administrador e realizar login na nova conta. | Retorna HTTP `201` e permite acesso à área administrativa. |
+| Validação de cadastro | Criar administrador com campos ausentes, senha curta ou e-mail duplicado. | Retorna HTTP `400`. |
+| Listagem de usuários | Consultar todos os usuários. | Retorna a lista sem expor hashes de senha. |
+| Filtro de usuários | Filtrar usuários pelo tipo. | Retorna somente os registros correspondentes. |
+| Atualização de dados | Alterar nome de passageiro. | Retorna os dados atualizados. |
+| Alteração de senha | Modificar a senha de usuário. | Aceita login com a senha nova e rejeita a anterior. |
+| Promoção de usuário | Alterar perfil de passageiro para administrador. | Atualiza o tipo do usuário. |
+| Validação de atualização | Enviar dados inválidos. | Retorna erro de validação. |
+| Autorrestrição | Administrador tenta rebaixar a própria conta. | Impede a operação. |
+| Exclusão de passageiro | Excluir passageiro cadastrado. | Remove o registro. |
+| Exclusão de administrador | Excluir outro administrador quando permitido. | Remove o registro. |
+| Proteção da própria conta | Administrador tenta excluir a própria conta. | Bloqueia a exclusão. |
+| Usuário inexistente | Excluir usuário não cadastrado. | Retorna HTTP `404`. |
+
+#### 7.4.5. Gerenciamento de alertas — `alertas.sistema.js`
+
+| Funcionalidade | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| Acesso sem token | Consultar gerenciamento de alertas sem autenticação. | Retorna HTTP `401`. |
+| Acesso de passageiro | Tentar gerenciar alertas com perfil de passageiro. | Retorna HTTP `403`. |
+| Tipo inválido | Criar alerta com tipo não permitido. | Retorna HTTP `400`. |
+| Campos obrigatórios | Criar alerta sem título ou descrição válida. | Retorna HTTP `400`. |
+| Datas inválidas | Informar datas incorretas ou fim anterior ao início. | Retorna HTTP `400`. |
+| Listas inválidas | Informar linhas ou paradas fora do formato esperado. | Retorna HTTP `400`. |
+| Criação de alerta | Criar alerta vinculado a linha e parada. | Registra os relacionamentos esperados. |
+| Vigência | Consultar alertas ativos. | Retorna os alertas vigentes com seus itens afetados. |
+| Consulta individual | Consultar alerta pelo ID. | Retorna os dados ou HTTP `404`. |
+| Filtros | Filtrar alertas por linha ou parada. | Retorna somente os registros correspondentes. |
+| Sinalização de linhas | Consultar linhas afetadas e não afetadas. | Identifica corretamente os alertas associados. |
+| Sinalização de itinerário | Consultar itinerário com parada afetada. | Marca somente os elementos relacionados ao alerta. |
+| Sinalização de horários | Consultar quadro de horários de linha afetada. | Retorna a sinalização apropriada. |
+| Sinalização de paradas | Consultar parada afetada por alerta. | Identifica corretamente a parada afetada. |
+| Sinalização de trajetos | Buscar trajetos que passam por linhas ou paradas afetadas. | Identifica as opções atingidas. |
+| Edição de alerta | Alterar título e itens afetados. | Atualiza os dados do alerta. |
+| Listagem administrativa | Consultar alertas na área administrativa. | Retorna os registros com informações relacionadas. |
+| Exclusão de alerta vigente | Tentar excluir alerta em andamento. | Impede a exclusão. |
+| Encerramento | Encerrar alerta vigente. | Altera sua situação e remove o alerta da listagem de vigentes. |
+| Operações repetidas | Encerrar novamente ou editar alerta encerrado. | Bloqueia a operação. |
+| Exclusão após encerramento | Excluir alerta encerrado. | Permite a exclusão. |
+| Identificadores inválidos | Editar, encerrar ou excluir alerta com ID incorreto. | Retorna erro apropriado. |
+| Alerta futuro | Consultar alerta cuja vigência ainda não começou. | Não aparece ao passageiro, mas permanece acessível administrativamente. |
+| Alerta expirado | Consultar alerta após o período de vigência. | Não aparece na listagem pública de vigentes. |
+| Busca administrativa de paradas | Pesquisar paradas pelo nome ou código. | Retorna resultados correspondentes e lista vazia para buscas muito curtas. |
+
+#### 7.4.6. Reportes de divergência — `reportes.sistema.js`
+
+| Funcionalidade | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| Registro de reporte | Registrar divergência vinculada a usuário e linha. | Retorna HTTP `201` e status `PENDENTE`. |
+| Normalização | Registrar reporte somente com parada e tipo em letras minúsculas. | Normaliza o tipo e aceita os campos opcionais. |
+| Tipo inválido | Informar tipo de divergência não permitido. | Retorna HTTP `400`. |
+| Descrição inválida | Informar descrição com menos de dez caracteres. | Retorna HTTP `400`. |
+| Referência ausente | Registrar reporte sem linha nem parada. | Retorna HTTP `400`. |
+| Acesso sem token | Tentar acessar análise de reportes sem autenticação. | Retorna HTTP `401`. |
+| Acesso de passageiro | Passageiro tenta consultar área administrativa de reportes. | Retorna HTTP `403`. |
+| Listagem | Consultar reportes cadastrados. | Retorna os registros esperados. |
+| Filtros | Filtrar reportes por status e tipo. | Retorna somente os registros correspondentes. |
+| Filtros inválidos | Informar tipo ou status desconhecido. | Retorna HTTP `400`. |
+| Detalhamento | Consultar reporte com informações do passageiro. | Retorna os dados associados à ocorrência. |
+| ID inválido | Consultar reporte com identificador malformado. | Retorna HTTP `400`. |
+| Registro inexistente | Consultar reporte não cadastrado. | Retorna HTTP `404`. |
+| Validação da análise | Informar status inválido ou dados insuficientes. | Retorna erro de validação. |
+| Classificação procedente | Analisar reporte como `PROCEDENTE`. | Atualiza o status e registra a correção realizada. |
+| Campo alternativo | Informar correção pelo campo `correcaoRealizada`. | Aceita a informação na análise. |
+| Classificação improcedente | Analisar reporte como `IMPROCEDENTE`. | Atualiza o status sem exigir observação. |
+| Ordenação | Consultar reportes após análises. | Mantém registros pendentes com prioridade na listagem. |
+| Reabertura | Alterar reporte analisado para `PENDENTE`. | Reabre o registro e limpa a data de análise. |
+
+### 7.5. Configuração e execução dos testes
+
+O arquivo `jest.sistema.config.js` configura a execução das suítes de sistema.
+
+**Configurações utilizadas:**
+
+- Ambiente de execução: `node`.
+- Padrão de arquivos: `src/tests/sistema/**/*.sistema.js`.
+- Inicialização de variáveis de ambiente por `ambiente.js`.
+- Preparação global do banco por `preparoBanco.js`.
+- Tempo limite por teste de 30 segundos.
+- Execução com um trabalhador (`maxWorkers: 1`).
+
+O comando utilizado pelo workflow para executar as suítes é:
+
+`npm run test:sistema`
+
+A execução pressupõe que esse script esteja configurado no `package.json` da API.
+
+### 7.6. Integração com CI/CD
+
+O arquivo `ci-sistema-api.yml` configura a execução automática dos testes de sistema da API no GitHub Actions.
+
+O workflow é acionado em eventos de `push` e `pull_request` nas branches `developer` e `main`.
+
+**Etapas do pipeline:**
+
+1. Inicializa um ambiente Ubuntu.
+2. Disponibiliza PostgreSQL 15 usando a imagem `postgres:15-alpine`.
+3. Configura Node.js 20.
+4. Instala as dependências da API utilizando `npm ci`.
+5. Configura as variáveis de conexão ao banco.
+6. Executa `npm run test:sistema`.
+
+O workflow utiliza `api` como diretório de trabalho.
+
+### 7.7. Isolamento e encerramento
+
+Os testes utilizam dados controlados para garantir previsibilidade e evitar interferência de registros externos.
+
+O arquivo `preparoBanco.js` prepara a estrutura e os dados iniciais. A função `resetarDados` limpa as tabelas transacionais utilizadas pelos cenários.
+
+Os usuários necessários são criados pelas funções auxiliares, permitindo validar autenticação, permissões e isolamento dos dados entre usuários.
+
+Ao final das suítes, a função `encerrarConexoes` encerra o pool PostgreSQL.
+
+Diferentemente do teste de integração descrito na seção 6, os testes de sistema utilizam uma instância PostgreSQL configurada no ambiente local ou disponibilizada como serviço no GitHub Actions, sem inicializá-la diretamente pelo Testcontainers.
+
+### 7.8. Critérios de avaliação
+
+A avaliação dos testes considera:
+
+- Retorno dos códigos HTTP esperados.
+- Correspondência entre respostas da API e registros no PostgreSQL.
+- Validação das regras de negócio.
+- Funcionamento da autenticação e autorização.
+- Proteção das rotas administrativas.
+- Isolamento dos dados entre usuários.
+- Persistência, atualização e exclusão corretas dos registros.
+- Tratamento de entradas inválidas e informações inexistentes.
+- Funcionamento dos fluxos de cadastro, login, recuperação de senha, consultas, favoritos, alertas e reportes.
+
+Os arquivos fornecidos contêm os testes e seus resultados esperados. A aprovação ou reprovação efetiva de cada caso depende da execução das suítes no ambiente configurado.
+
+---
+
+## 8. Tratamento de erros e condições especiais
 
 - Validação rigorosa de entradas vazias, inválidas ou mal formatadas.
 - Mensagens claras para erros retornados pela API.
@@ -316,7 +659,7 @@
 
 ---
 
-## 7. Considerações finais
+## 9. Considerações finais
 
 - Garantia de cobertura mínima de 80% nas regras de negócio e na interface.
 - Uso de *mocks* para isolar os testes e garantir confiabilidade.
@@ -325,7 +668,7 @@
 
 ---
 
-## 8. Cobertura de testes
+## 10. Cobertura de testes
 
 A cobertura foi medida com `npx jest --coverage` nas pastas `api` e `mobile`, sobre a branch `developer` no commit `ae272234` (21/11/2026). A meta definida na seção 6.1 do Documento de Visão é de 80%.
 
@@ -335,3 +678,6 @@ A cobertura foi medida com `npx jest --coverage` nas pastas `api` e `mobile`, so
 | Mobile | 28 | 344 | 89,32% | 83,23% | 81,96% | 89,84% |
 
 Os dois módulos atendem à meta de 80% em todas as métricas. A medição é feita manualmente: o workflow de CI executa `npm test` sem a opção `--coverage`.
+
+Os valores apresentados correspondem ao commit e à data informados. A inclusão das suítes de testes de sistema neste plano não altera retroativamente essa medição. Para atualizar a quantidade de testes e a cobertura, é necessária uma nova execução com os testes incorporados à branch avaliada.
+
