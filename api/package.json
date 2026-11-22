@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "jest --testPathIgnorePatterns=src/tests/sistema/",
-    "test:sistema": "jest --config jest.sistema.config.js --runInBand",
-    "test:integracao": "jest --runInBand Integração"
-  },
+
+"scripts": {
+  "test": "jest --testPathIgnorePatterns=\"sistema|Integração\"",
+  "test:integracao": "jest --runInBand Integração",
+  "test:sistema": "jest --config jest.sistema.config.js --runInBand"
+},
+
   "keywords": [],
   "author": "",
   "license": "ISC",
