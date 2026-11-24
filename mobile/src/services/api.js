@@ -28,10 +28,12 @@ export const getHorarios = async (linhaId, sentido = 'IDA') => {
   return response.data;
 };
 
-export const getTrajetos = async (origem, destino) => {
-  const response = await axios.get(`${API_BASE_URL}/trajetos`, {
-    params: { origem, destino }
-  });
+export const getTrajetos = async (origem, destino, ordenarPor = null) => {
+  const params = { origem, destino };
+  if (ordenarPor) {
+    params.ordenarPor = ordenarPor;
+  }
+  const response = await axios.get(`${API_BASE_URL}/trajetos`, { params });
   return response.data;
 };
 
