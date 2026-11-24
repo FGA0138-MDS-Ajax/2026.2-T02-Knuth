@@ -55,6 +55,8 @@
 |---|---|---|
 | `findNearestParada` | Busca a parada mais próxima. | Retorna a parada ou `null`. |
 | `buscarPorNome` | Busca paradas ignorando acentos/caixa, com fronteira de palavras curtas e limite configurável. | Retorna as paradas correspondentes ordenadas por relevância ou lista vazia para termo vazio. |
+| `findById` | Busca os dados de uma parada pelo identificador (RF11). | Retorna a parada encontrada ou `null` quando inexistente. |
+| `findProximasPartidas` | Consulta próximas partidas programadas da parada filtrando por tipo de dia e horário de referência sem duplicatas de linha/sentido/horário (RF11). | Retorna as partidas ordenadas cronologicamente respeitando o limite informado. |
 
 ### 2.5. `LinhasRepository`
 
@@ -151,6 +153,7 @@
 |---|---|---|
 | `obterParadaMaisProxima` | Busca a parada mais próxima usando latitude e longitude. | Retorna a parada, `null` ou um erro. |
 | `buscarParadas` | Valida o termo mínimo (2 caracteres) e o limite (1–25) para autocomplete (`GET /paradas`). | Retorna lista vazia para termos curtos/vazios ou repassa termo aparado e limite ao repositório. |
+| `obterProximasPartidas` | Detecta automaticamente horário e tipo de dia em Brasília (`America/Sao_Paulo`), valida parâmetros opcionais (`horario`, `tipoDia`, `limite`) e calcula `minutosRestantes` (RF11). | Retorna partidas ordenadas cronologicamente, mensagem explícita quando não há mais saídas no dia, `null` para parada inexistente ou erro `400` para parâmetros inválidos. |
 
 ### 3.5. `LinhasService`
 
@@ -258,6 +261,13 @@
 | `analisar` | Recebe `PATCH /api/v1/admin/reportes/:id` com `status` e `observacaoAdmin` / `correcaoRealizada`. | Responde `200` com o reporte atualizado, `400` quando inválido, `404` se não encontrado ou `500` em erro interno. |
 | `adminRoutes` | Rotas `GET /reportes`, `GET /reportes/:id` e `PATCH /reportes/:id`. | Todas exigem `authAdmin` como primeiro middleware antes do controlador. |
 
+### 3.17. `ParadasController` e rotas — Próximas Partidas em uma Parada (RF11)
+
+| Controlador / método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `ParadasController.getProximasPartidas` | Recebe `GET /api/v1/paradas/:id/proximas-partidas` com parâmetros opcionais (`horario`, `tipoDia`, `limite`) e integra alertas vigentes da parada (RF11 / RF14). | Responde `200` com a parada, próximas partidas e alertas (degradando graciosamente se a consulta de alertas falhar), `400` para ID/parâmetros inválidos, `404` se a parada não existir ou `500` em falha inesperada. |
+| `paradasRoutes` | Rotas `GET /`, `GET /proximas` e `GET /:id/proximas-partidas`. | Registra exatamente as três rotas vinculadas a `buscarParadas`, `getParadaProxima` e `getProximasPartidas`. |
+
 ---
 
 ## 4. Testes de middleware
@@ -280,7 +290,8 @@
 | `AlertaBanner` e `AlertaBadge` | Renderização de banners e badges de sinalização de alertas (RF14). | Exibe cores e rótulos por tipo (`Desvio`, `Suspensão`, `Paralisação`, `Alteração de Horário`), contagem de múltiplos alertas, oculta quando não há alertas e aciona `onPress` para detalhes. |
 | `LinhasScreen` | Carregamento, filtro, listagem, navegação, sinalização de alertas (RF14) e buscas recentes de linhas (RF18). | Exibe indicador de carregamento, permite filtrar por código ou nome, destaca visualmente linhas com `afetadaPorAlerta` (`AlertaBadge`), salva linhas/termos acessados no histórico e exibe chips clicáveis de buscas recentes para repetir a consulta ou abrir horários. |
 | `HorariosScreen` | Carregamento, filtro por sentido/tipo de dia, banner de alerta da linha (RF14) e atalho para reporte (RF19). | Exibe os horários corretos, renderiza o `AlertaBanner` quando a linha possui alertas vigentes, navega para o itinerário e abre `ReportarDivergencia` com `HORARIO` e código da linha. |
-| `ItinerarioScreen` | Carregamento do itinerário por sentido, sinalização de alertas (RF14), reporte (RF19) e favoritar paradas (RF17). | Lista as paradas em `IDA`/`VOLTA`, exibe alertas da linha/paradas, botão de favoritar em cada parada e navega para `ReportarDivergencia`. |
+| `ItinerarioScreen` | Carregamento do itinerário por sentido, sinalização de alertas (RF14), reporte (RF19), favoritar paradas (RF17) e acesso às próximas partidas da parada (RF11). | Lista as paradas em `IDA`/`VOLTA`, exibe alertas da linha/paradas, botão de favoritar em cada parada, navega para `ProximasPartidas` ao tocar na parada e abre `ReportarDivergencia`. |
+| `ProximasPartidasScreen` | Carregamento, listagem cronológica de próximas partidas em uma parada, alertas vigentes, atualização manual, estado vazio e navegação (RF11). | Exibe indicador de carregamento, lista partidas com linha, sentido, horário (`HH:MM`) e tempo restante (`Agora` / `em X min`), exibe alertas vigentes da parada, informa explicitamente quando não há mais partidas previstas no dia, trata erros com botão de tentar novamente e navega para `Horarios` ao tocar em uma partida. |
 | `AlertasScreen` | Listagem, filtros, título/descrição, mensagens de erro e atualizações. | Exibe alertas vigentes com título, descrição e itens afetados, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza `AsyncStorage`. |
 | `AdminScreen` | Acesso, logout e navegação (incluindo atalho para análise de reportes — RF24). | Exibe *spinner*, controla o acesso restrito ou liberado, navega para `CriarAdmin`, `GerenciarUsuarios` e `AnalisarReportes` e remove os dados no logout. |
 | `CadastroScreen` | Validação, cadastro e navegação. | Valida campos obrigatórios, exibe mensagens e indicador de carregamento e realiza a navegação. |
@@ -297,7 +308,7 @@
 | `CriarAdminScreen` | Cadastro, validação, mensagens e navegação. | Exibe campos e mensagens, indicador de carregamento e retorna após o sucesso. |
 | `EditarUsuarioScreen` | Edição, validação, exclusão e mensagens. | Exibe campos, realiza validações, solicita confirmação de exclusão e apresenta alertas. |
 | `FavoritoEstrela` | Botão de favoritar e desfavoritar um item (RF17). | Mostra estrela cheia ou vazia, alterna pelo store, avisa quando não foi possível (por exemplo, sem login) e se atualiza com a lista. |
-| `FavoritosSecao` e `FavoritosCarregador` | Lista de linhas, paradas e trajetos favoritos em destaque na tela inicial e na aba Favoritos (RF17). | Mostra a dica quando não há favoritos, lista linhas (abre `Horarios`), paradas (abre `BuscarTrajeto` com origem) e trajetos (abre `BuscarTrajeto` com origem/destino); esconde-se sem passageiro logado. |
+| `FavoritosSecao` e `FavoritosCarregador` | Lista de linhas, paradas e trajetos favoritos em destaque na tela inicial e na aba Favoritos (RF17) com atalho de próximas partidas (RF11). | Mostra a dica quando não há favoritos, lista linhas (abre `Horarios`), paradas (abre `BuscarTrajeto` com origem e oferece botão **Partidas** para abrir `ProximasPartidas`) e trajetos (abre `BuscarTrajeto` com origem/destino); esconde-se sem passageiro logado. |
 | `RodapeNavegacao` | Barra de abas Linhas e Favoritos com *safe area* inferior e ação `onPressAtiva` (voltar ao topo). | Marca a aba ativa, aplica `paddingBottom` conforme o recuo inferior da *safe area* do dispositivo, navega ao tocar na outra aba e dispara `onPressAtiva` (rolando a lista de linhas ao topo) ao tocar na aba já aberta. |
 | `FavoritosScreen` | Aba Favoritos (RF17). | Carrega e lista os favoritos do passageiro; sem login, pede para entrar e leva à tela de login. |
 | `AnalisarReportesScreen` | Listagem, filtros por status, exibição de badges/referências, navegação e tratamento de erros (RF24). | Exibe indicador de carregamento, lista reportes com tipo, status, linha/parada e autor, filtra por `Pendentes`/`Procedentes`/`Improcedentes`, navega para `DetalheReporte` e exibe avisos de erro. |
