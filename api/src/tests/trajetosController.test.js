@@ -125,5 +125,55 @@ describe('TrajetosController', () => {
       });
       expect(erroSpy).toHaveBeenCalledWith('Erro na busca de trajetos:', erro);
     });
+
+    it('repassa filtro de horário de partida/chegada ao serviço quando válido (RF06)', async () => {
+      const opcoes = [{ duracaoMinutos: 20, partida: '08:30:00', chegada: '08:50:00', baldeacoes: 0 }];
+      trajetosService.obterTrajetos.mockResolvedValue(opcoes);
+      const res = criarRes();
+
+      await trajetosController.getTrajetos(
+        {
+          query: {
+            origem: 'Asa Sul',
+            destino: 'Rodoviária',
+            horario: '09:00',
+            referenciaHorario: 'chegada',
+          },
+        },
+        res
+      );
+
+      expect(trajetosService.obterTrajetos).toHaveBeenCalledWith('Asa Sul', 'Rodoviária', {
+        referencia: 'CHEGADA',
+        horario: '09:00:00',
+      });
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it.each([
+      [
+        { origem: 'Asa Sul', destino: 'Rodoviária', horario: '25:99' },
+        'Parâmetro horario inválido. Use o formato HH:MM (ex.: 08:30).',
+      ],
+      [
+        { origem: 'Asa Sul', destino: 'Rodoviária', horario: '08:00', referenciaHorario: 'OUTRO' },
+        'Parâmetro referenciaHorario inválido. Use PARTIDA ou CHEGADA.',
+      ],
+      [
+        { origem: 'Asa Sul', destino: 'Rodoviária', referenciaHorario: 'CHEGADA' },
+        'Informe o parâmetro horario (HH:MM) junto com referenciaHorario.',
+      ],
+    ])('responde 400 quando o filtro de horário é inválido (%j)', async (query, detalhes) => {
+      const res = criarRes();
+
+      await trajetosController.getTrajetos({ query }, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'BAD_REQUEST',
+        detalhes,
+      });
+      expect(trajetosService.obterTrajetos).not.toHaveBeenCalled();
+    });
   });
 });

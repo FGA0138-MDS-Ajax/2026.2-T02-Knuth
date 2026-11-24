@@ -100,6 +100,34 @@ describe('TrajetosRepository', () => {
 
       await expect(repository.buscarRotasDiretas(10, 20)).rejects.toThrow('falha no banco');
     });
+
+    it('aplica filtro de partida >= horario quando referencia é PARTIDA (RF06)', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await repository.buscarRotasDiretas([10], [20], {
+        referencia: 'PARTIDA',
+        horario: '08:30:00',
+      });
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('CAST(hp1.partida AS TIME) >= CAST($3 AS TIME)');
+      expect(sql).toContain('ORDER BY horario_origem ASC, duracao ASC');
+      expect(params).toEqual([['10'], ['20'], '08:30:00']);
+    });
+
+    it('aplica filtro de chegada <= horario quando referencia é CHEGADA (RF06)', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await repository.buscarRotasDiretas([10], [20], {
+        referencia: 'CHEGADA',
+        horario: '09:00:00',
+      });
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('CAST(hp2.partida AS TIME) <= CAST($3 AS TIME)');
+      expect(sql).toContain('ORDER BY horario_destino DESC, duracao ASC');
+      expect(params).toEqual([['10'], ['20'], '09:00:00']);
+    });
   });
 
   describe('buscarRotasComBaldeacao', () => {
@@ -137,6 +165,35 @@ describe('TrajetosRepository', () => {
       pool.query.mockRejectedValue(new Error('falha no banco'));
 
       await expect(repository.buscarRotasComBaldeacao(10, 20)).rejects.toThrow('falha no banco');
+    });
+
+    it('aplica filtro de PARTIDA na busca com baldeação (RF06)', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await repository.buscarRotasComBaldeacao([10], [20], {
+        referencia: 'PARTIDA',
+        horario: '07:45:00',
+      });
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('CAST(hp_o.partida AS TIME) >= CAST($3 AS TIME)');
+      expect(sql).toContain('ORDER BY hora_origem ASC, duracao_total ASC');
+      expect(params).toEqual([['10'], ['20'], '07:45:00']);
+    });
+
+    it('aplica filtro de CHEGADA na busca com baldeação (RF06)', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await repository.buscarRotasComBaldeacao([10], [20], {
+        referencia: 'CHEGADA',
+        horario: '10:00:00',
+      });
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('CAST(hp_o.partida AS TIME) <= CAST($3 AS TIME)');
+      expect(sql).toContain('CAST(hp_d.partida AS TIME) <= CAST($3 AS TIME)');
+      expect(sql).toContain('ORDER BY hora_destino DESC, duracao_total ASC');
+      expect(params).toEqual([['10'], ['20'], '10:00:00']);
     });
   });
 });

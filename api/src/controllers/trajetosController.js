@@ -1,10 +1,11 @@
 const trajetosService = require('../services/trajetosService');
 const alertasService = require('../services/alertasService');
+const { interpretarFiltroHorario } = require('../utils/horarioConsulta');
 
 class TrajetosController {
   async getTrajetos(req, res) {
     try {
-      const { origem, destino } = req.query;
+      const { origem, destino, horario, referenciaHorario } = req.query;
 
       if (!origem || !destino) {
         return res.status(400).json({
@@ -13,7 +14,21 @@ class TrajetosController {
         });
       }
 
-      const data = await trajetosService.obterTrajetos(origem, destino);
+      const { filtro: filtroHorario, erro: erroHorario } = interpretarFiltroHorario({
+        horario,
+        referenciaHorario,
+      });
+
+      if (erroHorario) {
+        return res.status(400).json({
+          erro: 'BAD_REQUEST',
+          detalhes: erroHorario,
+        });
+      }
+
+      const data = filtroHorario
+        ? await trajetosService.obterTrajetos(origem, destino, filtroHorario)
+        : await trajetosService.obterTrajetos(origem, destino);
 
       if (!Array.isArray(data) || data.length === 0) {
         return res.status(200).json(data);

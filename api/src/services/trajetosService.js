@@ -1,7 +1,7 @@
 const trajetosRepository = require('../repositories/trajetosRepository');
 
 class TrajetosService {
-  async obterTrajetos(origem, destino) {
+  async obterTrajetos(origem, destino, filtroHorario = null) {
     const paradasOrigem = await trajetosRepository.buscarParadasPorNome(origem);
     const paradasDestino = await trajetosRepository.buscarParadasPorNome(destino);
 
@@ -13,7 +13,9 @@ class TrajetosService {
     const idsDestino = paradasDestino.map((parada) => parada.id);
     const opcoesFinais = [];
 
-    const diretas = await trajetosRepository.buscarRotasDiretas(idsOrigem, idsDestino);
+    const diretas = filtroHorario
+      ? await trajetosRepository.buscarRotasDiretas(idsOrigem, idsDestino, filtroHorario)
+      : await trajetosRepository.buscarRotasDiretas(idsOrigem, idsDestino);
     diretas.forEach((viagem) => {
       opcoesFinais.push({
         partida: viagem.horario_origem,
@@ -33,7 +35,9 @@ class TrajetosService {
       });
     });
 
-    const comBaldeacao = await trajetosRepository.buscarRotasComBaldeacao(idsOrigem, idsDestino);
+    const comBaldeacao = filtroHorario
+      ? await trajetosRepository.buscarRotasComBaldeacao(idsOrigem, idsDestino, filtroHorario)
+      : await trajetosRepository.buscarRotasComBaldeacao(idsOrigem, idsDestino);
     comBaldeacao.forEach((viagem) => {
       const tempoEspera = Math.round(
         (new Date(`1970-01-01T${viagem.hora_saida_transfer}`) -
