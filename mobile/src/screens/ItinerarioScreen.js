@@ -99,13 +99,13 @@ export default function ItinerarioScreen({ route, navigation }) {
       )}
 
       {modoVisualizacao === 'MAPA' && dados && paradas.length > 0 ? (
-        <ScrollView>
+        <View style={{ flex: 1 }}>
           <MapaTrajeto
             trechos={dadosMapa.trechos}
             marcadores={dadosMapa.marcadores}
             mensagemVazio="Coordenadas indisponíveis para exibir o itinerário no mapa."
           />
-        </ScrollView>
+        </View>
       ) : (
         <FlatList
           data={paradas}

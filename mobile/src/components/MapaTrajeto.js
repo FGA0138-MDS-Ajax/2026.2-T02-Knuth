@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { gerarHtmlMapaLeaflet } from '../utils/mapaHtml';
 
@@ -45,7 +45,7 @@ export default function MapaTrajeto({
 
   return (
     <View style={styles.container}>
-      <View style={[styles.mapaWrapper, { height: altura }]}>
+      <View style={[styles.mapaWrapper, altura ? { minHeight: Math.min(altura, 280) } : null]}>
         {Platform.OS === 'web' ? (
           <iframe
             title="Mapa do percurso"
@@ -59,12 +59,20 @@ export default function MapaTrajeto({
             source={{ html }}
             javaScriptEnabled
             domStorageEnabled
+            nestedScrollEnabled
+            scrollEnabled={false}
+            bounces={false}
+            overScrollMode="never"
             style={styles.webview}
           />
         )}
       </View>
 
-      <View style={styles.legendaCard}>
+      <ScrollView
+        style={styles.legendaScroll}
+        contentContainerStyle={styles.legendaCard}
+        nestedScrollEnabled
+      >
         <Text style={styles.legendaTitulo}>Legenda do percurso</Text>
         <View style={styles.legendaItens}>
           {trechosOnibus.map((trecho, idx) => (
@@ -104,7 +112,7 @@ export default function MapaTrajeto({
             })}
           </View>
         ) : null}
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -112,12 +120,14 @@ export default function MapaTrajeto({
 const styles = StyleSheet.create({
   container: { flex: 1 },
   mapaWrapper: {
+    flex: 1,
+    minHeight: 280,
     borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: '#E2E8F0',
     borderWidth: 1,
     borderColor: '#CBD5E1',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   webview: { flex: 1, backgroundColor: 'transparent' },
   vazioBox: {
@@ -129,12 +139,16 @@ const styles = StyleSheet.create({
     borderColor: '#E2E8F0',
   },
   vazioTexto: { fontSize: 14, color: '#64748B', textAlign: 'center' },
-  legendaCard: {
-    backgroundColor: '#FFF',
+  legendaScroll: {
+    maxHeight: 165,
+    flexGrow: 0,
     borderRadius: 10,
-    padding: 12,
+    backgroundColor: '#FFF',
     elevation: 1,
-    marginBottom: 16,
+    marginBottom: 8,
+  },
+  legendaCard: {
+    padding: 12,
   },
   legendaTitulo: { fontSize: 13, fontWeight: 'bold', color: '#334155', marginBottom: 8 },
   legendaItens: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 8 },

@@ -195,7 +195,16 @@ export function gerarHtmlMapaLeaflet({ trechos = [], marcadores = [] } = {}) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    html, body, #map { margin: 0; padding: 0; width: 100%; height: 100%; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    html, body, #map {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      touch-action: none;
+      overscroll-behavior: none;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
     .marcador-pin {
       display: flex;
       align-items: center;
@@ -217,7 +226,14 @@ export function gerarHtmlMapaLeaflet({ trechos = [], marcadores = [] } = {}) {
   <script>
     (function () {
       var dados = ${payloadSeguro};
-      var map = L.map('map', { zoomControl: true }).setView([-15.793889, -47.882778], 12);
+      var map = L.map('map', {
+        zoomControl: true,
+        dragging: true,
+        touchZoom: true,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
+        tap: false
+      }).setView([-15.793889, -47.882778], 12);
 
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,

@@ -71,13 +71,13 @@ export default function TrajetoDetalheScreen({ route, navigation }) {
       </View>
 
       {modoVisualizacao === 'MAPA' ? (
-        <ScrollView contentContainerStyle={styles.listaContent}>
+        <View style={{ flex: 1 }}>
           <MapaTrajeto
             trechos={dadosMapa.trechos}
             marcadores={dadosMapa.marcadores}
             mensagemVazio="Coordenadas indisponíveis para exibir este trajeto no mapa."
           />
-        </ScrollView>
+        </View>
       ) : (
         <>
           <Text style={styles.tituloPassoAPasso}>Passo a passo:</Text>
