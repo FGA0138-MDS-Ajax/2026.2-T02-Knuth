@@ -1,7 +1,7 @@
 jest.mock('pg', () => ({ Pool: jest.fn() }));
 jest.mock('dotenv', () => ({ config: jest.fn() }));
 
-const VARIAVEIS = ['DB_USER', 'DB_HOST', 'DB_NAME', 'DB_PASSWORD', 'DB_PORT'];
+const VARIAVEIS = ['DATABASE_URL', 'DB_USER', 'DB_HOST', 'DB_NAME', 'DB_PASSWORD', 'DB_PORT'];
 
 function carregar() {
   let resultado;
@@ -43,7 +43,7 @@ describe('database', () => {
   it('carrega as variáveis do arquivo .env', () => {
     const { dotenv } = carregar();
 
-    expect(dotenv.config).toHaveBeenCalledTimes(1);
+    expect(dotenv.config).toHaveBeenCalledTimes(2);
   });
 
   it('cria um único pool e o exporta', () => {
@@ -53,14 +53,25 @@ describe('database', () => {
     expect(pool).toBe(Pool.mock.instances[0]);
   });
 
+  it('usa DATABASE_URL com SSL quando definida', () => {
+    process.env.DATABASE_URL = 'postgres://user:pass@host.neon.tech/rotasdf';
+
+    const { Pool } = carregar();
+
+    expect(Pool).toHaveBeenCalledWith({
+      connectionString: 'postgres://user:pass@host.neon.tech/rotasdf',
+      ssl: { rejectUnauthorized: false },
+    });
+  });
+
   it('usa os valores padrão quando as variáveis de ambiente não existem', () => {
     const { Pool } = carregar();
 
     expect(Pool).toHaveBeenCalledWith({
-      user: 'admin',
+      user: undefined,
       host: '127.0.0.1',
       database: 'rotasdf',
-      password: 'adminpassword',
+      password: undefined,
       port: 5432,
     });
   });
@@ -79,7 +90,7 @@ describe('database', () => {
       host: 'banco.exemplo.com',
       database: 'rotasdf_teste',
       password: 'senha_ci',
-      port: '5433',
+      port: 5433,
     });
   });
 
@@ -90,10 +101,10 @@ describe('database', () => {
     const { Pool } = carregar();
 
     expect(Pool).toHaveBeenCalledWith({
-      user: 'admin',
+      user: undefined,
       host: 'banco.exemplo.com',
       database: 'rotasdf_teste',
-      password: 'adminpassword',
+      password: undefined,
       port: 5432,
     });
   });

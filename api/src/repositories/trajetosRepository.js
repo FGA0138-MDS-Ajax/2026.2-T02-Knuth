@@ -125,8 +125,14 @@ class TrajetosRepository {
             ELSE (EXTRACT(EPOCH FROM (CAST(hp2.partida AS TIME) - CAST(hp1.partida AS TIME))) / 60) + 1440
           END AS duracao,
           (hp2.sequencia - hp1.sequencia) AS qtd_paradas,
+          po.id AS origem_id,
           po.nome AS nome_origem,
+          po.latitude AS lat_origem,
+          po.longitude AS lng_origem,
+          pd.id AS destino_id,
           pd.nome AS nome_destino,
+          pd.latitude AS lat_destino,
+          pd.longitude AS lng_destino,
           ROW_NUMBER() OVER (
             PARTITION BY l.codigo
             ORDER BY (hp2.sequencia - hp1.sequencia) ASC, hp1.partida ASC
@@ -149,8 +155,14 @@ class TrajetosRepository {
         horario_destino,
         duracao,
         qtd_paradas,
+        origem_id,
         nome_origem,
-        nome_destino
+        lat_origem,
+        lng_origem,
+        destino_id,
+        nome_destino,
+        lat_destino,
+        lng_destino
       FROM rotas_candidatas
       WHERE ordem_linha <= 2
       ORDER BY duracao ASC, horario_origem ASC
@@ -244,12 +256,15 @@ class TrajetosRepository {
           tp.linha_2_id,
           tp.sentido_2,
           tp.parada_transfer_id,
+          tp.origem_id,
           tp.destino_id,
           l1.codigo AS linha_1,
           hp_o.partida AS hora_origem,
           hp_t.partida AS hora_chegada_transfer,
           (hp_t.sequencia - hp_o.sequencia) AS paradas_leg1,
           po.nome AS nome_origem,
+          po.latitude AS lat_origem,
+          po.longitude AS lng_origem,
           ROW_NUMBER() OVER (
             PARTITION BY tp.linha_1_id, tp.linha_2_id, tp.parada_transfer_id
             ORDER BY hp_o.partida ASC
@@ -280,8 +295,14 @@ class TrajetosRepository {
           END AS duracao_total,
           l1h.paradas_leg1,
           (hp_d.sequencia - hp_t2.sequencia) AS paradas_leg2,
+          l1h.origem_id,
           l1h.nome_origem,
+          l1h.lat_origem,
+          l1h.lng_origem,
+          l1h.destino_id,
           pd.nome AS nome_destino,
+          pd.latitude AS lat_destino,
+          pd.longitude AS lng_destino,
           ROW_NUMBER() OVER (
             PARTITION BY l1h.linha_1, l2.codigo
             ORDER BY
@@ -315,8 +336,14 @@ class TrajetosRepository {
         duracao_total,
         paradas_leg1,
         paradas_leg2,
+        origem_id,
         nome_origem,
-        nome_destino
+        lat_origem,
+        lng_origem,
+        destino_id,
+        nome_destino,
+        lat_destino,
+        lng_destino
       FROM candidatas
       WHERE rn_par = 1
       ORDER BY duracao_total ASC, hora_origem ASC

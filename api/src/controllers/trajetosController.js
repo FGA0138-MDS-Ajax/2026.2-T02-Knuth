@@ -1,10 +1,11 @@
 const trajetosService = require('../services/trajetosService');
 const alertasService = require('../services/alertasService');
+const { normalizarCriterioOrdenacao } = require('../services/ordenacaoTrajetos');
 
 class TrajetosController {
   async getTrajetos(req, res) {
     try {
-      const { origem, destino } = req.query;
+      const { origem, destino, ordenarPor } = req.query;
 
       if (!origem || !destino) {
         return res.status(400).json({
@@ -13,7 +14,20 @@ class TrajetosController {
         });
       }
 
-      const data = await trajetosService.obterTrajetos(origem, destino);
+      let criterioOrdenacao = null;
+      if (ordenarPor !== undefined && String(ordenarPor).trim() !== '') {
+        criterioOrdenacao = normalizarCriterioOrdenacao(ordenarPor);
+        if (!criterioOrdenacao) {
+          return res.status(400).json({
+            erro: 'BAD_REQUEST',
+            detalhes: 'Parâmetro ordenarPor inválido. Use TEMPO, BALDEACOES ou CAMINHADA.'
+          });
+        }
+      }
+
+      const data = criterioOrdenacao
+        ? await trajetosService.obterTrajetos(origem, destino, criterioOrdenacao)
+        : await trajetosService.obterTrajetos(origem, destino);
 
       if (!Array.isArray(data) || data.length === 0) {
         return res.status(200).json(data);

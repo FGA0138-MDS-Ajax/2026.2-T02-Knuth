@@ -252,4 +252,85 @@ describe('TrajetosService.obterTrajetos', () => {
       );
     });
   });
+
+  describe('ordenação e cálculo de caminhada (RF05)', () => {
+    it('calcula caminhadaMetros quando a parada de embarque/desembarque difere da referência', async () => {
+      mockParadas(
+        [{ id: '1', nome: 'Parada A', latitude: -15.7939, longitude: -47.8828 }],
+        [{ id: '2', nome: 'Parada B', latitude: -15.7801, longitude: -47.8792 }]
+      );
+      trajetosRepository.buscarRotasDiretas.mockResolvedValue([
+        viagemDireta({
+          origem_id: '10',
+          lat_origem: -15.7957,
+          lng_origem: -47.8828,
+          destino_id: '2',
+          lat_destino: -15.7801,
+          lng_destino: -47.8792,
+        }),
+      ]);
+
+      const [opcao] = await trajetosService.obterTrajetos('Parada A', 'Parada B');
+
+      expect(opcao.caminhadaMetros).toBeGreaterThan(150);
+      expect(opcao.caminhadaMetros).toBeLessThan(250);
+    });
+
+    it('ordena opções pelo critério TEMPO, BALDEACOES ou CAMINHADA', async () => {
+      mockParadas(
+        [{ id: '1', nome: 'Parada A', latitude: -15.7939, longitude: -47.8828 }],
+        [{ id: '2', nome: 'Parada B', latitude: -15.7801, longitude: -47.8792 }]
+      );
+      trajetosRepository.buscarRotasDiretas.mockResolvedValue([
+        viagemDireta({
+          horario_origem: '08:00:00',
+          duracao: 45,
+          origem_id: '10',
+          lat_origem: -15.7965,
+          lng_origem: -47.8828,
+          destino_id: '2',
+          lat_destino: -15.7801,
+          lng_destino: -47.8792,
+        }),
+      ]);
+      trajetosRepository.buscarRotasComBaldeacao.mockResolvedValue([
+        viagemComBaldeacao({
+          hora_origem: '08:05:00',
+          duracao_total: 25,
+          origem_id: '1',
+          lat_origem: -15.7939,
+          lng_origem: -47.8828,
+          destino_id: '2',
+          lat_destino: -15.7801,
+          lng_destino: -47.8792,
+        }),
+      ]);
+
+      const porTempo = await trajetosService.obterTrajetos('Parada A', 'Parada B', 'TEMPO');
+      expect(porTempo.map((o) => o.duracaoMinutos)).toEqual([25, 45]);
+
+      mockParadas(
+        [{ id: '1', nome: 'Parada A', latitude: -15.7939, longitude: -47.8828 }],
+        [{ id: '2', nome: 'Parada B', latitude: -15.7801, longitude: -47.8792 }]
+      );
+      const porBaldeacoes = await trajetosService.obterTrajetos(
+        'Parada A',
+        'Parada B',
+        'BALDEACOES'
+      );
+      expect(porBaldeacoes.map((o) => o.baldeacoes)).toEqual([0, 1]);
+
+      mockParadas(
+        [{ id: '1', nome: 'Parada A', latitude: -15.7939, longitude: -47.8828 }],
+        [{ id: '2', nome: 'Parada B', latitude: -15.7801, longitude: -47.8792 }]
+      );
+      const porCaminhada = await trajetosService.obterTrajetos(
+        'Parada A',
+        'Parada B',
+        'CAMINHADA'
+      );
+      expect(porCaminhada[0].caminhadaMetros).toBe(0);
+      expect(porCaminhada[1].caminhadaMetros).toBeGreaterThan(200);
+    });
+  });
 });
