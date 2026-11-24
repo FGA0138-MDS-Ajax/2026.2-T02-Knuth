@@ -253,4 +253,23 @@ describe('ItinerarioScreen', () => {
       expect(getAllByLabelText('Adicionar aos favoritos')).toHaveLength(LINHA.itinerario.IDA.length);
     });
   });
+
+  describe('próximas partidas na parada (RF11)', () => {
+    it('navega para ProximasPartidas ao tocar em uma parada do itinerário', async () => {
+      const navigation = { navigate: jest.fn() };
+      getItinerario.mockResolvedValue(LINHA);
+      const { findByText } = render(
+        <ItinerarioScreen route={rotaDaLinha(5)} navigation={navigation} />
+      );
+
+      const parada = await findByText('Rodoviária do Plano Piloto');
+      fireEvent.press(parada);
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ProximasPartidas', {
+        paradaId: 10,
+        paradaNome: 'Rodoviária do Plano Piloto',
+        paradaCodigo: 'P-101',
+      });
+    });
+  });
 });
