@@ -4,6 +4,11 @@ import { getItinerario } from '../services/api';
 import AlertaBanner, { AlertaBadge } from '../components/AlertaBanner';
 import FavoritoEstrela from '../components/FavoritoEstrela';
 import FavoritosCarregador from '../components/FavoritosCarregador';
+import {
+  formatarOperadora,
+  formatarTarifa,
+  obterCorLinha,
+} from '../utils/formatarMetadadosLinha';
 
 export default function ItinerarioScreen({ route, navigation }) {
   const { linhaId } = route.params;
@@ -26,13 +31,18 @@ export default function ItinerarioScreen({ route, navigation }) {
 
   const paradas = dados?.itinerario?.[sentido] || [];
   const linhaRef = dados?.codigo || String(linhaId);
+  const corLinha = obterCorLinha(dados?.cor);
+  const tarifaTexto = formatarTarifa(dados?.tarifa);
+  const operadoraTexto = formatarOperadora(dados?.operadora);
+  const resumoMetadados = [tarifaTexto, operadoraTexto].filter(Boolean).join(' • ');
 
   return (
     <View style={styles.container}>
       <FavoritosCarregador navigation={navigation} />
       <View style={styles.header}>
-        <Text style={styles.numeroLinha}>{dados?.codigo || '---'}</Text>
+        <Text style={[styles.numeroLinha, { color: corLinha }]}>{dados?.codigo || '---'}</Text>
         <Text style={styles.nomeLinha}>{dados?.nome || 'Carregando...'}</Text>
+        {resumoMetadados ? <Text style={styles.metadadosLinha}>{resumoMetadados}</Text> : null}
       </View>
 
       <AlertaBanner
@@ -121,6 +131,7 @@ const styles = StyleSheet.create({
   header: { marginBottom: 12, alignItems: 'center' },
   numeroLinha: { fontSize: 24, fontWeight: 'bold', color: '#006666' },
   nomeLinha: { fontSize: 16, color: '#666' },
+  metadadosLinha: { fontSize: 12, fontWeight: '600', color: '#0F766E', marginTop: 4, textAlign: 'center' },
   botaoReportarLinha: { alignSelf: 'center', paddingVertical: 6, paddingHorizontal: 16, borderRadius: 20, borderWidth: 1, borderColor: '#C62828', marginBottom: 14 },
   botaoReportarLinhaTexto: { color: '#C62828', fontWeight: 'bold', fontSize: 13 },
   tabContainer: { flexDirection: 'row', marginBottom: 16 },

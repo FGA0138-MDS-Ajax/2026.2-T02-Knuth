@@ -6,6 +6,11 @@ import {
   listarLinhasRecentes,
   salvarLinhaRecenteLocal,
 } from '../utils/buscasRecentesStorage';
+import {
+  formatarOperadora,
+  formatarTarifa,
+  obterCorLinha,
+} from '../utils/formatarMetadadosLinha';
 import { AlertaBadge } from '../components/AlertaBanner';
 import FavoritosCarregador from '../components/FavoritosCarregador';
 import FavoritosSecao from '../components/FavoritosSecao';
@@ -183,15 +188,23 @@ export default function LinhasScreen({ navigation }) {
           const temAlerta = Boolean(
             item.afetadaPorAlerta || (Array.isArray(item.alertas) && item.alertas.length > 0)
           );
+          const corBadge = obterCorLinha(item.cor);
+          const tarifaFormatada = formatarTarifa(item.tarifa);
+          const operadoraFormatada = formatarOperadora(item.operadora);
           return (
             <TouchableOpacity 
               style={[styles.card, temAlerta && styles.cardComAlerta]}
               onPress={() => abrirLinha(item)}>
-              <View style={styles.badge}>
+              <View style={[styles.badge, { backgroundColor: corBadge }]}>
                 <Text style={styles.badgeText}>{item.codigo}</Text>
               </View>
               <View style={styles.infoContainer}>
                 <Text style={styles.nomeLinha} numberOfLines={2}>{item.nome}</Text>
+                {tarifaFormatada || operadoraFormatada ? (
+                  <Text style={styles.metadadosLinha} numberOfLines={1}>
+                    {[tarifaFormatada, operadoraFormatada].filter(Boolean).join(' • ')}
+                  </Text>
+                ) : null}
                 <Text style={styles.toqueDetalhes}>Toque para ver horários</Text>
                 <AlertaBadge alertas={item.alertas} afetadaPorAlerta={item.afetadaPorAlerta} />
               </View>
@@ -242,6 +255,7 @@ const styles = StyleSheet.create({
   badge: { backgroundColor: '#006666', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 6, marginRight: 16 },
   badgeText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
   infoContainer: { flex: 1 },
-  nomeLinha: { fontSize: 15, fontWeight: '600', color: '#333', marginBottom: 4 },
+  nomeLinha: { fontSize: 15, fontWeight: '600', color: '#333', marginBottom: 3 },
+  metadadosLinha: { fontSize: 12, color: '#0F766E', fontWeight: '600', marginBottom: 2 },
   toqueDetalhes: { fontSize: 12, color: '#666' }
 });
