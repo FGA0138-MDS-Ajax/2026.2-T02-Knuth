@@ -160,8 +160,8 @@
 | Método | Cenário / objetivo | Resultado esperado |
 |---|---|---|
 | `obterLinhas` | Busca linhas com filtros ou por texto. | Retorna as linhas ou um erro. |
-| `obterItinerario` | Retorna o itinerário pelo ID. | Retorna dados estruturados, `null` ou um erro. |
-| `obterQuadroHorarios` | Retorna o quadro de horários. | Retorna os dados agrupados, `null` ou um erro. |
+| `obterItinerario` | Retorna o itinerário pelo ID, incluindo metadados opcionais da linha (`tarifa`, `faixaTarifaria`, `operadora`, `extensaoKm`, `cor`). | Retorna dados estruturados, `null` ou um erro. |
+| `obterQuadroHorarios` | Retorna o quadro de horários agrupado por sentido e tipo de dia, anexando metadados enriquecidos da linha (`cor`, `tarifa`, `faixaTarifaria`, `operadora`, `extensaoKm`) quando disponíveis. | Retorna os dados agrupados com metadados, `null` ou um erro. |
 
 ### 3.6. `TrajetosService`
 
@@ -304,6 +304,7 @@
 | `ResultadoTrajetoScreen` | Exibição com duração formatada em horas e minutos, navegação por opções, destaque de alertas (RF14) e favoritar trajeto pesquisado (RF17). | Exibe cartões de opções com duração formatada (`25 min`, `1h`, `1h 30min`), baldeações, destaque `afetadaPorAlerta`, resumo `Origem → Destino` com `FavoritoEstrela` e navega para os detalhes. |
 | `TrajetoDetalheScreen` | Exibição detalhada das etapas com duração em horas e minutos e banner de alertas do trajeto (RF14). | Exibe duração total e por etapa formatadas em horas e minutos, mostra `AlertaBanner` quando o trajeto é afetado por alerta vigente, lista etapas ordenadas com ícones e apresenta mensagem quando não há etapas. |
 | `buscasRecentesStorage` | Armazenamento local (`@rotasdf_buscas_recentes`), ordenação, deduplicação e mesclagem com histórico remoto (RF18). | Salva até 5 trajetos e 5 linhas recentes da mais recente para a mais antiga sem duplicatas, mescla histórico local e remoto e lê o `usuarioId` logado com tolerância a erros. |
+| `formatarMetadadosLinha` | Formatação de cor por bacia (`obterCorLinha`), tarifa (`formatarTarifa`), extensão (`formatarExtensao`) e normalização de operadoras (`formatarOperadora`). | Normaliza hex de cores com fallback `#006666` para branco/inválido, formata valores em `R$ X,XX` e `X,X km`, padroniza operadoras por bacia do DF e substitui nomes de permissionários pessoa física por `Transporte Complementar (STPCR)`. |
 | `GerenciarUsuariosScreen` | Listagem, filtros, navegação e erros. | Lista usuários, identifica o usuário atual, aplica filtros e apresenta alertas. |
 | `CriarAdminScreen` | Cadastro, validação, mensagens e navegação. | Exibe campos e mensagens, indicador de carregamento e retorna após o sucesso. |
 | `EditarUsuarioScreen` | Edição, validação, exclusão e mensagens. | Exibe campos, realiza validações, solicita confirmação de exclusão e apresenta alertas. |
