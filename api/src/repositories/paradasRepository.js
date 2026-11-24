@@ -75,6 +75,54 @@ class ParadasRepository {
     const { rows } = await pool.query(wrappedQuery, params);
     return rows;
   }
+
+  async findById(paradaId) {
+    const query = `
+      SELECT id, codigo, nome, latitude, longitude
+      FROM paradas
+      WHERE id = $1
+      LIMIT 1;
+    `;
+    const { rows } = await pool.query(query, [paradaId]);
+    return rows[0] || null;
+  }
+
+  // RF11 - Próximas partidas programadas em uma parada em ordem cronológica
+  async findProximasPartidas(paradaId, tipoDia, horarioReferencia, limite = 30) {
+    const query = `
+      SELECT
+        linha_id,
+        linha_codigo,
+        linha_nome,
+        linha_cor,
+        sentido,
+        destino,
+        horario_partida
+      FROM (
+        SELECT DISTINCT ON (TO_CHAR(hp.partida::time, 'HH24:MI'), l.id, v.sentido)
+          l.id AS linha_id,
+          l.codigo AS linha_codigo,
+          l.nome AS linha_nome,
+          l.cor AS linha_cor,
+          v.sentido,
+          v.destino,
+          TO_CHAR(hp.partida::time, 'HH24:MI') AS horario_partida
+        FROM horarios_paradas hp
+        INNER JOIN viagens v ON v.id = hp.viagem_id
+        INNER JOIN calendario c ON c.id = v.calendario_id
+        INNER JOIN linhas l ON l.id = v.linha_id
+        WHERE hp.parada_id = $1
+          AND c.tipo_dia = $2
+          AND hp.partida IS NOT NULL
+          AND hp.partida::time >= $3::time
+        ORDER BY TO_CHAR(hp.partida::time, 'HH24:MI') ASC, l.id ASC, v.sentido ASC
+      ) partidas_unicas
+      ORDER BY horario_partida ASC, linha_codigo ASC
+      LIMIT $4;
+    `;
+    const { rows } = await pool.query(query, [paradaId, tipoDia, horarioReferencia, limite]);
+    return rows;
+  }
 }
 
 module.exports = new ParadasRepository();
