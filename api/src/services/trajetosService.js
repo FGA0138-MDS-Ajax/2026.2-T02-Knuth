@@ -150,9 +150,6 @@ class TrajetosService {
 
         if (pontosOnibus.length >= 2) {
           const corLinha = escolherCorTrecho(viagem.linha_cor, 0);
-          etapa.linhaCodigo = viagem.linha_codigo;
-          etapa.cor = corLinha;
-          etapa.paradas = pontosOnibus;
 
           const trechos = [];
           adicionarCaminhadaSeDiferente(
@@ -281,14 +278,6 @@ class TrajetosService {
           if (cor2 === cor1) {
             cor2 = PALETA_LINHAS_FALLBACK.find((cor) => cor !== cor1) || '#1565C0';
           }
-
-          etapa1.linhaCodigo = viagem.linha_1;
-          etapa1.cor = cor1;
-          etapa1.paradas = pontosLeg1;
-
-          etapa3.linhaCodigo = viagem.linha_2;
-          etapa3.cor = cor2;
-          etapa3.paradas = pontosLeg2;
 
           const trechos = [];
           adicionarCaminhadaSeDiferente(
