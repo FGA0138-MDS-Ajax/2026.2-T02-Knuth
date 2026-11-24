@@ -9,10 +9,10 @@ const pool = process.env.DATABASE_URL
       ssl: { rejectUnauthorized: false },
     })
   : new Pool({
-      user: process.env.DB_USER,
+      user: process.env.DB_USER || 'admin',
       host: process.env.DB_HOST || '127.0.0.1',
       database: process.env.DB_NAME || 'rotasdf',
-      password: process.env.DB_PASSWORD,
+      password: process.env.DB_PASSWORD || 'adminpassword',
       port: Number(process.env.DB_PORT) || 5432,
     });
 
