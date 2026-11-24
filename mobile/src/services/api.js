@@ -49,6 +49,18 @@ export const buscarParadas = async (busca, limite = 8) => {
   return response.data;
 };
 
+export const getProximasPartidasParada = async (paradaId, opcoes = {}) => {
+  const params = {};
+  if (opcoes.horario) params.horario = opcoes.horario;
+  if (opcoes.tipoDia) params.tipoDia = opcoes.tipoDia;
+  if (opcoes.limite) params.limite = opcoes.limite;
+
+  const response = await axios.get(`${API_BASE_URL}/paradas/${paradaId}/proximas-partidas`, {
+    params
+  });
+  return response.data;
+};
+
 export const getBuscasRecentes = async (usuarioId = null, limite = 5) => {
   const params = { limite };
   if (usuarioId !== null && usuarioId !== undefined) {
