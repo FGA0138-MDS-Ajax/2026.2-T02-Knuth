@@ -28,10 +28,15 @@ export const getHorarios = async (linhaId, sentido = 'IDA') => {
   return response.data;
 };
 
-export const getTrajetos = async (origem, destino) => {
-  const response = await axios.get(`${API_BASE_URL}/trajetos`, {
-    params: { origem, destino }
-  });
+export const getTrajetos = async (origem, destino, opcoes = {}) => {
+  const params = { origem, destino };
+  if (opcoes && opcoes.horario) {
+    params.horario = opcoes.horario;
+  }
+  if (opcoes && opcoes.referenciaHorario) {
+    params.referenciaHorario = opcoes.referenciaHorario;
+  }
+  const response = await axios.get(`${API_BASE_URL}/trajetos`, { params });
   return response.data;
 };
 

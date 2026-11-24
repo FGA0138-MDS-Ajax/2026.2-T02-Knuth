@@ -123,6 +123,24 @@ describe('ResultadoTrajetoScreen', () => {
       expect(getByText('Asa Sul → Rodoviária')).toBeTruthy();
       expect(getByLabelText('Adicionar aos favoritos')).toBeTruthy();
     });
+
+    it('exibe o selo do planejamento por horário quando informado na rota (RF06)', () => {
+      const { getByText } = render(
+        <ResultadoTrajetoScreen
+          route={{
+            params: {
+              opcoes: OPCOES,
+              origem: 'Asa Sul',
+              destino: 'Rodoviária',
+              planejamentoHorario: { referenciaHorario: 'CHEGADA', horario: '09:00' },
+            },
+          }}
+          navigation={navigation}
+        />
+      );
+
+      expect(getByText('Planejamento: Chegada até 09:00')).toBeTruthy();
+    });
   });
 
   describe('navegação', () => {

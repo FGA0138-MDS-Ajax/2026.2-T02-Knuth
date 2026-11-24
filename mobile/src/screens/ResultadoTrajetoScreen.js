@@ -3,9 +3,11 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native
 import { AlertaBadge } from '../components/AlertaBanner';
 import FavoritoEstrela from '../components/FavoritoEstrela';
 import { formatarDuracao } from '../utils/formatarDuracao';
+import { formatarResumoPlanejamento } from '../utils/planejamentoHorario';
 
 export default function ResultadoTrajetoScreen({ route, navigation }) {
-  const { opcoes, origem, destino } = route.params;
+  const { opcoes, origem, destino, planejamentoHorario } = route.params;
+  const resumoHorario = formatarResumoPlanejamento(planejamentoHorario);
 
   const renderOpcao = ({ item }) => {
     const temAlerta = Boolean(
@@ -59,6 +61,11 @@ export default function ResultadoTrajetoScreen({ route, navigation }) {
           <FavoritoEstrela item={{ tipo: 'TRAJETO', origem, destino }} />
         </View>
       ) : null}
+      {resumoHorario ? (
+        <View style={styles.planejamentoBadge}>
+          <Text style={styles.planejamentoBadgeTexto}>Planejamento: {resumoHorario}</Text>
+        </View>
+      ) : null}
       <FlatList
         data={opcoes}
         keyExtractor={(item, index) => index.toString()}
@@ -73,6 +80,15 @@ const styles = StyleSheet.create({
   titulo: { fontSize: 22, fontWeight: 'bold', color: '#006666', marginBottom: 16 },
   resumoTrajeto: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#FFF7E6', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#F3D9A4', marginBottom: 14 },
   resumoTrajetoTexto: { flex: 1, fontSize: 14, fontWeight: '600', color: '#333', marginRight: 10 },
+  planejamentoBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#E0F2F1',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginBottom: 12,
+  },
+  planejamentoBadgeTexto: { fontSize: 13, fontWeight: '600', color: '#006666' },
   card: { backgroundColor: '#FFF', padding: 16, borderRadius: 8, marginBottom: 12, elevation: 2 },
   cardComAlerta: { backgroundColor: '#FFFBEB', borderLeftWidth: 4, borderLeftColor: '#D97706' },
   headerCard: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
