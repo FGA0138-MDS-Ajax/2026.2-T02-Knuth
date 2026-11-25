@@ -1,4 +1,69 @@
 const trajetosRepository = require('../repositories/trajetosRepository');
+const { ordenarOpcoesTrajeto } = require('./ordenacaoTrajetos');
+
+const RAIO_TERRA_METROS = 6371000;
+
+function paraNumeroValido(valor) {
+  if (valor === null || valor === undefined || valor === '') {
+    return null;
+  }
+  const numero = Number(valor);
+  return Number.isFinite(numero) ? numero : null;
+}
+
+function calcularDistanciaMetros(pontoA, pontoB) {
+  if (!pontoA || !pontoB) {
+    return 0;
+  }
+  if (
+    pontoA.id !== null &&
+    pontoA.id !== undefined &&
+    pontoB.id !== null &&
+    pontoB.id !== undefined &&
+    String(pontoA.id) === String(pontoB.id)
+  ) {
+    return 0;
+  }
+
+  const lat1 = paraNumeroValido(pontoA.latitude);
+  const lng1 = paraNumeroValido(pontoA.longitude);
+  const lat2 = paraNumeroValido(pontoB.latitude);
+  const lng2 = paraNumeroValido(pontoB.longitude);
+
+  if (lat1 === null || lng1 === null || lat2 === null || lng2 === null) {
+    return 0;
+  }
+
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const lat1Rad = (lat1 * Math.PI) / 180;
+  const lat2Rad = (lat2 * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(Math.max(0, 1 - a)));
+
+  return Math.round(RAIO_TERRA_METROS * c);
+}
+
+function calcularCaminhadaOpcao(pontoRefOrigem, pontoRefDestino, viagem) {
+  const pontoEmbarque = {
+    id: viagem.origem_id,
+    latitude: viagem.lat_origem,
+    longitude: viagem.lng_origem,
+  };
+  const pontoDesembarque = {
+    id: viagem.destino_id,
+    latitude: viagem.lat_destino,
+    longitude: viagem.lng_destino,
+  };
+
+  return (
+    calcularDistanciaMetros(pontoRefOrigem, pontoEmbarque) +
+    calcularDistanciaMetros(pontoDesembarque, pontoRefDestino)
+  );
+}
 
 const PALETA_LINHAS_FALLBACK = ['#006666', '#1565C0', '#D97706', '#2E7D32'];
 
@@ -83,7 +148,7 @@ function adicionarCaminhadaSeDiferente(trechos, pontoA, pontoB, titulo) {
 }
 
 class TrajetosService {
-  async obterTrajetos(origem, destino) {
+  async obterTrajetos(origem, destino, criterioOrdenacao = null) {
     const paradasOrigem = await trajetosRepository.buscarParadasPorNome(origem);
     const paradasDestino = await trajetosRepository.buscarParadasPorNome(destino);
 
@@ -143,7 +208,7 @@ class TrajetosService {
           chegada: viagem.horario_destino,
           duracaoMinutos: Math.max(Math.round(viagem.duracao), 1),
           baldeacoes: 0,
-          caminhadaMetros: 0,
+          caminhadaMetros: calcularCaminhadaOpcao(pontoRefOrigem, pontoRefDestino, viagem),
           afetadaPorAlerta: false,
           etapas: [etapa],
         };
@@ -267,7 +332,7 @@ class TrajetosService {
           chegada: viagem.hora_destino,
           duracaoMinutos: Math.max(Math.round(viagem.duracao_total), 1),
           baldeacoes: 1,
-          caminhadaMetros: 0,
+          caminhadaMetros: calcularCaminhadaOpcao(pontoRefOrigem, pontoRefDestino, viagem),
           afetadaPorAlerta: false,
           etapas: [etapa1, etapa2, etapa3],
         };
@@ -346,7 +411,13 @@ class TrajetosService {
       })
     );
 
-    return [...opcoesDiretas, ...opcoesBaldeacao];
+    const opcoesFinais = [...opcoesDiretas, ...opcoesBaldeacao];
+
+    if (criterioOrdenacao) {
+      return ordenarOpcoesTrajeto(opcoesFinais, criterioOrdenacao);
+    }
+
+    return opcoesFinais;
   }
 }
 

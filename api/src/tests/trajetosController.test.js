@@ -125,5 +125,39 @@ describe('TrajetosController', () => {
       });
       expect(erroSpy).toHaveBeenCalledWith('Erro na busca de trajetos:', erro);
     });
+
+    it('repassa ordenarPor normalizado ao serviço quando válido (RF05)', async () => {
+      const opcoes = [{ duracaoMinutos: 20, baldeacoes: 0, caminhadaMetros: 0 }];
+      trajetosService.obterTrajetos.mockResolvedValue(opcoes);
+      const res = criarRes();
+
+      await trajetosController.getTrajetos(
+        { query: { origem: 'Asa Sul', destino: 'Rodoviária', ordenarPor: 'baldeacoes' } },
+        res
+      );
+
+      expect(trajetosService.obterTrajetos).toHaveBeenCalledWith(
+        'Asa Sul',
+        'Rodoviária',
+        'BALDEACOES'
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('responde 400 quando ordenarPor é inválido (RF05)', async () => {
+      const res = criarRes();
+
+      await trajetosController.getTrajetos(
+        { query: { origem: 'Asa Sul', destino: 'Rodoviária', ordenarPor: 'tarifa' } },
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'BAD_REQUEST',
+        detalhes: 'Parâmetro ordenarPor inválido. Use TEMPO, BALDEACOES ou CAMINHADA.',
+      });
+      expect(trajetosService.obterTrajetos).not.toHaveBeenCalled();
+    });
   });
 });
