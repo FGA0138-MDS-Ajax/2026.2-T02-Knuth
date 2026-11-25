@@ -5,6 +5,7 @@ const paradasController = require('../controllers/paradasController');
 jest.mock('../services/paradasService', () => ({
   buscarParadas: jest.fn(),
   obterParadaMaisProxima: jest.fn(),
+  obterProximasPartidas: jest.fn(),
 }));
 
 jest.mock('../services/alertasService', () => ({
@@ -151,6 +152,114 @@ describe('ParadasController', () => {
         detalhes: 'Erro interno ao buscar parada próxima.',
       });
       expect(erroSpy).toHaveBeenCalledWith('Erro ao buscar parada próxima:', erro);
+    });
+  });
+
+  describe('getProximasPartidas (RF11)', () => {
+    const dadosPartidas = {
+      parada: { id: '3369', codigo: 'P-101', nome: 'Rodoviária do Plano Piloto' },
+      tipoDia: 'DIA_UTIL',
+      horarioReferencia: '14:10',
+      partidas: [
+        { linhaId: 'L1', linhaCodigo: '0.111', linhaNome: 'Asa Sul', sentido: 'IDA', horario: '14:15', minutosRestantes: 5 },
+      ],
+      mensagem: null,
+    };
+
+    it('responde 400 quando o id da parada não é informado', async () => {
+      const res = criarRes();
+
+      await paradasController.getProximasPartidas({ params: { id: '   ' }, query: {} }, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(paradasService.obterProximasPartidas).not.toHaveBeenCalled();
+    });
+
+    it('responde 200 com as próximas partidas e alertas vigentes da parada', async () => {
+      const alerta = { id: 7, tipo: 'DESVIO', descricao: 'Desvio temporário' };
+      paradasService.obterProximasPartidas.mockResolvedValue(dadosPartidas);
+      alertasService.vigentesPara.mockResolvedValue([alerta]);
+      const res = criarRes();
+
+      await paradasController.getProximasPartidas(
+        { params: { id: '3369' }, query: { horario: '14:10', tipoDia: 'DIA_UTIL', limite: '20' } },
+        res
+      );
+
+      expect(paradasService.obterProximasPartidas).toHaveBeenCalledWith('3369', {
+        horario: '14:10',
+        tipoDia: 'DIA_UTIL',
+        limite: '20',
+      });
+      expect(alertasService.vigentesPara).toHaveBeenCalledWith([], ['3369', 'P-101']);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        ...dadosPartidas,
+        afetadaPorAlerta: true,
+        alertas: [alerta],
+      });
+    });
+
+    it('continua respondendo 200 sem alertas se a consulta de alertas falhar', async () => {
+      paradasService.obterProximasPartidas.mockResolvedValue(dadosPartidas);
+      alertasService.vigentesPara.mockRejectedValue(new Error('erro alertas'));
+      const res = criarRes();
+
+      await paradasController.getProximasPartidas({ params: { id: '3369' }, query: {} }, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        ...dadosPartidas,
+        afetadaPorAlerta: false,
+        alertas: [],
+      });
+    });
+
+    it('responde 404 quando a parada não existe', async () => {
+      paradasService.obterProximasPartidas.mockResolvedValue(null);
+      const res = criarRes();
+
+      await paradasController.getProximasPartidas({ params: { id: '9999' }, query: {} }, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'NOT_FOUND',
+        detalhes: 'Parada não encontrada.',
+      });
+    });
+
+    it('responde 400 quando o serviço rejeita parâmetros inválidos', async () => {
+      const erroValidacao = new Error('O parâmetro horario deve estar no formato HH:MM.');
+      erroValidacao.status = 400;
+      erroValidacao.erro = 'BAD_REQUEST';
+      erroValidacao.detalhes = erroValidacao.message;
+      paradasService.obterProximasPartidas.mockRejectedValue(erroValidacao);
+      const res = criarRes();
+
+      await paradasController.getProximasPartidas(
+        { params: { id: '3369' }, query: { horario: '99:99' } },
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'BAD_REQUEST',
+        detalhes: 'O parâmetro horario deve estar no formato HH:MM.',
+      });
+    });
+
+    it('responde 500 quando ocorre erro inesperado no serviço', async () => {
+      const erro = new Error('falha no banco');
+      paradasService.obterProximasPartidas.mockRejectedValue(erro);
+      const res = criarRes();
+
+      await paradasController.getProximasPartidas({ params: { id: '3369' }, query: {} }, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({
+        erro: 'INTERNAL_ERROR',
+        detalhes: 'Erro interno ao buscar próximas partidas da parada.',
+      });
     });
   });
 });

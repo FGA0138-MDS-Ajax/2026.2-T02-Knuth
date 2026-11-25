@@ -9,16 +9,30 @@ CREATE TABLE IF NOT EXISTS linhas (
     id VARCHAR(50) PRIMARY KEY,
     codigo VARCHAR(50) NOT NULL,
     nome VARCHAR(255) NOT NULL,
-    cor VARCHAR(10)
+    cor VARCHAR(10),
+    tarifa NUMERIC(6,2),
+    faixa_tarifaria VARCHAR(50),
+    operadora VARCHAR(120),
+    extensao_km NUMERIC(8,2)
 );
+
+ALTER TABLE linhas ADD COLUMN IF NOT EXISTS tarifa NUMERIC(6,2);
+ALTER TABLE linhas ADD COLUMN IF NOT EXISTS faixa_tarifaria VARCHAR(50);
+ALTER TABLE linhas ADD COLUMN IF NOT EXISTS operadora VARCHAR(120);
+ALTER TABLE linhas ADD COLUMN IF NOT EXISTS extensao_km NUMERIC(8,2);
 
 CREATE TABLE IF NOT EXISTS paradas (
     id VARCHAR(50) PRIMARY KEY,
     codigo VARCHAR(50),
     nome VARCHAR(255) NOT NULL,
     latitude NUMERIC(10,8),
-    longitude NUMERIC(11,8)
+    longitude NUMERIC(11,8),
+    tipo VARCHAR(50),
+    estrutura VARCHAR(80)
 );
+
+ALTER TABLE paradas ADD COLUMN IF NOT EXISTS tipo VARCHAR(50);
+ALTER TABLE paradas ADD COLUMN IF NOT EXISTS estrutura VARCHAR(80);
 
 CREATE TABLE IF NOT EXISTS viagens (
     id VARCHAR(50) PRIMARY KEY,
