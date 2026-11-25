@@ -249,7 +249,8 @@ class TrajetosRepository {
         INNER JOIN leg2_topo l2
           ON l1.parada_transfer_id = l2.parada_transfer_id
           AND l1.linha_1_id <> l2.linha_2_id
-        ORDER BY l1.linha_1_id, l2.linha_2_id, (l1.paradas_leg1 + l2.paradas_leg2) ASC
+        ORDER BY l1.linha_1_id, l2.linha_2_id,
+          (l1.paradas_leg1 + l2.paradas_leg2) ASC
       ),
       top_padroes AS MATERIALIZED (
         SELECT * FROM melhores_padroes
@@ -264,7 +265,6 @@ class TrajetosRepository {
           tp.sentido_2,
           tp.origem_id,
           tp.parada_transfer_id,
-          tp.origem_id,
           tp.destino_id,
           l1.codigo AS linha_1,
           l1.cor AS linha_1_cor,
@@ -277,13 +277,18 @@ class TrajetosRepository {
           po.latitude AS lat_origem,
           po.longitude AS lng_origem,
           ROW_NUMBER() OVER (
-            PARTITION BY tp.linha_1_id, tp.linha_2_id, tp.parada_transfer_id
+            PARTITION BY tp.linha_1_id, tp.linha_2_id,
+              tp.parada_transfer_id
             ORDER BY hp_o.partida ASC
           ) AS rn
         FROM top_padroes tp
-        INNER JOIN viagens v1 ON v1.linha_id = tp.linha_1_id AND v1.sentido = tp.sentido_1
+        INNER JOIN viagens v1
+          ON v1.linha_id = tp.linha_1_id
+          AND v1.sentido = tp.sentido_1
         INNER JOIN linhas l1 ON l1.id = v1.linha_id
-        INNER JOIN horarios_paradas hp_o ON hp_o.viagem_id = v1.id AND hp_o.parada_id = tp.origem_id
+        INNER JOIN horarios_paradas hp_o
+          ON hp_o.viagem_id = v1.id
+          AND hp_o.parada_id = tp.origem_id
         INNER JOIN horarios_paradas hp_t
           ON hp_t.viagem_id = v1.id
           AND hp_t.parada_id = tp.parada_transfer_id
@@ -314,12 +319,19 @@ class TrajetosRepository {
           hp_d.partida AS hora_destino,
           CASE
             WHEN CAST(hp_d.partida AS TIME) >= CAST(l1h.hora_origem AS TIME)
-              THEN EXTRACT(EPOCH FROM (CAST(hp_d.partida AS TIME) - CAST(l1h.hora_origem AS TIME))) / 60
-            ELSE (EXTRACT(EPOCH FROM (CAST(hp_d.partida AS TIME) - CAST(l1h.hora_origem AS TIME))) / 60) + 1440
+              THEN EXTRACT(EPOCH FROM (
+                CAST(hp_d.partida AS TIME) -
+                CAST(l1h.hora_origem AS TIME)
+              )) / 60
+            ELSE (
+              EXTRACT(EPOCH FROM (
+                CAST(hp_d.partida AS TIME) -
+                CAST(l1h.hora_origem AS TIME)
+              )) / 60
+            ) + 1440
           END AS duracao_total,
           l1h.paradas_leg1,
           (hp_d.sequencia - hp_t2.sequencia) AS paradas_leg2,
-          l1h.origem_id,
           l1h.nome_origem,
           l1h.lat_origem,
           l1h.lng_origem,
@@ -329,11 +341,16 @@ class TrajetosRepository {
           ROW_NUMBER() OVER (
             PARTITION BY l1h.linha_1, l2.codigo
             ORDER BY
-              EXTRACT(EPOCH FROM (CAST(hp_t2.partida AS TIME) - CAST(l1h.hora_chegada_transfer AS TIME))) ASC,
+              EXTRACT(EPOCH FROM (
+                CAST(hp_t2.partida AS TIME) -
+                CAST(l1h.hora_chegada_transfer AS TIME)
+              )) ASC,
               l1h.hora_origem ASC
           ) AS rn_par
         FROM leg1_horarios l1h
-        INNER JOIN viagens v2 ON v2.linha_id = l1h.linha_2_id AND v2.sentido = l1h.sentido_2
+        INNER JOIN viagens v2
+          ON v2.linha_id = l1h.linha_2_id
+          AND v2.sentido = l1h.sentido_2
         INNER JOIN linhas l2 ON l2.id = v2.linha_id
         INNER JOIN horarios_paradas hp_t2
           ON hp_t2.viagem_id = v2.id
@@ -345,8 +362,14 @@ class TrajetosRepository {
         INNER JOIN paradas pt ON pt.id = l1h.parada_transfer_id
         INNER JOIN paradas pd ON pd.id = l1h.destino_id
         WHERE l1h.rn <= 5
-          AND CAST(hp_t2.partida AS TIME) >= CAST(l1h.hora_chegada_transfer AS TIME)
-          AND (EXTRACT(EPOCH FROM (CAST(hp_t2.partida AS TIME) - CAST(l1h.hora_chegada_transfer AS TIME))) / 60) <= 60
+          AND CAST(hp_t2.partida AS TIME) >=
+              CAST(l1h.hora_chegada_transfer AS TIME)
+          AND (
+            EXTRACT(EPOCH FROM (
+              CAST(hp_t2.partida AS TIME) -
+              CAST(l1h.hora_chegada_transfer AS TIME)
+            )) / 60
+          ) <= 60
       )
       SELECT
         viagem_1_id,
@@ -383,9 +406,10 @@ class TrajetosRepository {
       ORDER BY duracao_total ASC, hora_origem ASC
       LIMIT 5;
     `;
+
     const { rows } = await pool.query(query, [origens, destinos]);
     return rows;
-  }
+}
 
   // RF04 - Busca a sequência ordenada de paradas com coordenadas para desenhar um trecho no mapa
   async buscarParadasTrecho(viagemId, seqInicio, seqFim) {
