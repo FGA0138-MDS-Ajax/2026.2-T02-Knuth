@@ -117,6 +117,9 @@ class TrajetosRepository {
         SELECT
           v.id AS viagem_id,
           l.codigo AS linha_codigo,
+          l.cor AS linha_cor,
+          hp1.sequencia AS seq_origem,
+          hp2.sequencia AS seq_destino,
           hp1.partida AS horario_origem,
           hp2.partida AS horario_destino,
           CASE
@@ -125,8 +128,14 @@ class TrajetosRepository {
             ELSE (EXTRACT(EPOCH FROM (CAST(hp2.partida AS TIME) - CAST(hp1.partida AS TIME))) / 60) + 1440
           END AS duracao,
           (hp2.sequencia - hp1.sequencia) AS qtd_paradas,
+          po.id AS origem_id,
           po.nome AS nome_origem,
+          po.latitude AS lat_origem,
+          po.longitude AS lng_origem,
+          pd.id AS destino_id,
           pd.nome AS nome_destino,
+          pd.latitude AS lat_destino,
+          pd.longitude AS lng_destino,
           ROW_NUMBER() OVER (
             PARTITION BY l.codigo
             ORDER BY (hp2.sequencia - hp1.sequencia) ASC, hp1.partida ASC
@@ -145,12 +154,21 @@ class TrajetosRepository {
       SELECT
         viagem_id,
         linha_codigo,
+        linha_cor,
+        seq_origem,
+        seq_destino,
         horario_origem,
         horario_destino,
         duracao,
         qtd_paradas,
+        origem_id,
         nome_origem,
-        nome_destino
+        lat_origem,
+        lng_origem,
+        destino_id,
+        nome_destino,
+        lat_destino,
+        lng_destino
       FROM rotas_candidatas
       WHERE ordem_linha <= 2
       ORDER BY duracao ASC, horario_origem ASC
@@ -240,16 +258,23 @@ class TrajetosRepository {
       ),
       leg1_horarios AS MATERIALIZED (
         SELECT
+          v1.id AS viagem_1_id,
           tp.linha_1_id,
           tp.linha_2_id,
           tp.sentido_2,
+          tp.origem_id,
           tp.parada_transfer_id,
           tp.destino_id,
           l1.codigo AS linha_1,
+          l1.cor AS linha_1_cor,
+          hp_o.sequencia AS seq_origem_1,
+          hp_t.sequencia AS seq_transfer_1,
           hp_o.partida AS hora_origem,
           hp_t.partida AS hora_chegada_transfer,
           (hp_t.sequencia - hp_o.sequencia) AS paradas_leg1,
           po.nome AS nome_origem,
+          po.latitude AS lat_origem,
+          po.longitude AS lng_origem,
           ROW_NUMBER() OVER (
             PARTITION BY tp.linha_1_id, tp.linha_2_id, tp.parada_transfer_id
             ORDER BY hp_o.partida ASC
@@ -266,9 +291,22 @@ class TrajetosRepository {
       ),
       candidatas AS (
         SELECT
+          l1h.viagem_1_id,
+          v2.id AS viagem_2_id,
           l1h.linha_1,
+          l1h.linha_1_cor,
           l2.codigo AS linha_2,
+          l2.cor AS linha_2_cor,
+          l1h.seq_origem_1,
+          l1h.seq_transfer_1,
+          hp_t2.sequencia AS seq_transfer_2,
+          hp_d.sequencia AS seq_destino_2,
+          l1h.origem_id,
+          l1h.parada_transfer_id AS transfer_id,
+          l1h.destino_id,
           pt.nome AS nome_transferencia,
+          pt.latitude AS lat_transferencia,
+          pt.longitude AS lng_transferencia,
           l1h.hora_origem,
           l1h.hora_chegada_transfer,
           hp_t2.partida AS hora_saida_transfer,
@@ -281,7 +319,11 @@ class TrajetosRepository {
           l1h.paradas_leg1,
           (hp_d.sequencia - hp_t2.sequencia) AS paradas_leg2,
           l1h.nome_origem,
+          l1h.lat_origem,
+          l1h.lng_origem,
           pd.nome AS nome_destino,
+          pd.latitude AS lat_destino,
+          pd.longitude AS lng_destino,
           ROW_NUMBER() OVER (
             PARTITION BY l1h.linha_1, l2.codigo
             ORDER BY
@@ -305,9 +347,22 @@ class TrajetosRepository {
           AND (EXTRACT(EPOCH FROM (CAST(hp_t2.partida AS TIME) - CAST(l1h.hora_chegada_transfer AS TIME))) / 60) <= 60
       )
       SELECT
+        viagem_1_id,
+        viagem_2_id,
         linha_1,
+        linha_1_cor,
         linha_2,
+        linha_2_cor,
+        seq_origem_1,
+        seq_transfer_1,
+        seq_transfer_2,
+        seq_destino_2,
+        origem_id,
+        transfer_id,
+        destino_id,
         nome_transferencia,
+        lat_transferencia,
+        lng_transferencia,
         hora_origem,
         hora_chegada_transfer,
         hora_saida_transfer,
@@ -316,13 +371,43 @@ class TrajetosRepository {
         paradas_leg1,
         paradas_leg2,
         nome_origem,
-        nome_destino
+        lat_origem,
+        lng_origem,
+        nome_destino,
+        lat_destino,
+        lng_destino
       FROM candidatas
       WHERE rn_par = 1
       ORDER BY duracao_total ASC, hora_origem ASC
       LIMIT 5;
     `;
     const { rows } = await pool.query(query, [origens, destinos]);
+    return rows;
+  }
+
+  // RF04 - Busca a sequência ordenada de paradas com coordenadas para desenhar um trecho no mapa
+  async buscarParadasTrecho(viagemId, seqInicio, seqFim) {
+    if (!viagemId || seqInicio === undefined || seqFim === undefined) {
+      return [];
+    }
+    const query = `
+      SELECT
+        hp.sequencia,
+        p.id AS parada_id,
+        p.codigo,
+        p.nome,
+        p.latitude,
+        p.longitude
+      FROM horarios_paradas hp
+      INNER JOIN paradas p ON p.id = hp.parada_id
+      WHERE hp.viagem_id = $1
+        AND hp.sequencia >= $2
+        AND hp.sequencia <= $3
+        AND p.latitude IS NOT NULL
+        AND p.longitude IS NOT NULL
+      ORDER BY hp.sequencia ASC;
+    `;
+    const { rows } = await pool.query(query, [viagemId, seqInicio, seqFim]);
     return rows;
   }
 }

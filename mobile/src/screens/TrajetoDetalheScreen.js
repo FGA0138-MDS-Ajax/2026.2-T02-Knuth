@@ -1,13 +1,22 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import AlertaBanner from '../components/AlertaBanner';
+import MapaTrajeto from '../components/MapaTrajeto';
 import { formatarDuracao } from '../utils/formatarDuracao';
+import { construirDadosMapaTrajeto } from '../utils/mapaHtml';
 
 export default function TrajetoDetalheScreen({ route, navigation }) {
   const { opcaoTrajeto } = route.params;
+  const [modoVisualizacao, setModoVisualizacao] = useState('ETAPAS');
+
+  const etapas = Array.isArray(opcaoTrajeto?.etapas) ? opcaoTrajeto.etapas : [];
+  const dadosMapa = useMemo(
+    () => construirDadosMapaTrajeto(opcaoTrajeto),
+    [opcaoTrajeto]
+  );
 
   const renderEtapa = ({ item, index }) => {
-    const isUltima = index === opcaoTrajeto.etapas.length - 1;
+    const isUltima = index === etapas.length - 1;
     const isOnibus = item.tipo === 'ONIBUS';
 
     return (
@@ -42,23 +51,59 @@ export default function TrajetoDetalheScreen({ route, navigation }) {
         onPress={navigation ? () => navigation.navigate('Alertas') : undefined}
       />
 
-      <Text style={styles.tituloPassoAPasso}>Passo a passo:</Text>
+      <View style={styles.modoContainer}>
+        <TouchableOpacity
+          style={[styles.modoBotao, modoVisualizacao === 'ETAPAS' && styles.modoBotaoAtivo]}
+          onPress={() => setModoVisualizacao('ETAPAS')}
+        >
+          <Text style={[styles.modoTexto, modoVisualizacao === 'ETAPAS' && styles.modoTextoAtivo]}>
+            Etapas
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.modoBotao, modoVisualizacao === 'MAPA' && styles.modoBotaoAtivo]}
+          onPress={() => setModoVisualizacao('MAPA')}
+        >
+          <Text style={[styles.modoTexto, modoVisualizacao === 'MAPA' && styles.modoTextoAtivo]}>
+            Ver no mapa
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-      <FlatList
-        data={opcaoTrajeto.etapas}
-        keyExtractor={(item) => item.ordem.toString()}
-        renderItem={renderEtapa}
-        contentContainerStyle={styles.listaContent}
-      />
+      {modoVisualizacao === 'MAPA' ? (
+        <View style={{ flex: 1 }}>
+          <MapaTrajeto
+            trechos={dadosMapa.trechos}
+            marcadores={dadosMapa.marcadores}
+            mensagemVazio="Coordenadas indisponíveis para exibir este trajeto no mapa."
+          />
+        </View>
+      ) : (
+        <>
+          <Text style={styles.tituloPassoAPasso}>Passo a passo:</Text>
+
+          <FlatList
+            data={etapas}
+            keyExtractor={(item) => item.ordem.toString()}
+            renderItem={renderEtapa}
+            contentContainerStyle={styles.listaContent}
+          />
+        </>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5', padding: 16 },
-  headerCard: { backgroundColor: '#FFF', padding: 16, borderRadius: 8, marginBottom: 24, alignItems: 'center', elevation: 2 },
+  headerCard: { backgroundColor: '#FFF', padding: 16, borderRadius: 8, marginBottom: 16, alignItems: 'center', elevation: 2 },
   tempoTotal: { fontSize: 24, fontWeight: 'bold', color: '#006666', marginBottom: 4 },
   detalheTexto: { fontSize: 14, color: '#666' },
+  modoContainer: { flexDirection: 'row', backgroundColor: '#E2E8F0', borderRadius: 10, padding: 4, marginBottom: 16 },
+  modoBotao: { flex: 1, paddingVertical: 8, borderRadius: 8, alignItems: 'center' },
+  modoBotaoAtivo: { backgroundColor: '#006666' },
+  modoTexto: { fontSize: 14, fontWeight: 'bold', color: '#475569' },
+  modoTextoAtivo: { color: '#FFF' },
   tituloPassoAPasso: { fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 16 },
   listaContent: { paddingBottom: 20 },
   etapaContainer: { flexDirection: 'row', marginBottom: 16 },
