@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { getHorarios } from '../services/api';
 import AlertaBanner from '../components/AlertaBanner';
+import {
+  formatarExtensao,
+  formatarOperadora,
+  formatarTarifa,
+  obterCorLinha,
+} from '../utils/formatarMetadadosLinha';
 
 export default function HorariosScreen({ route, navigation }) {
   const { linhaId } = route?.params || { linhaId: 1 };
@@ -25,6 +31,13 @@ export default function HorariosScreen({ route, navigation }) {
   }, [linhaId]);
 
   const horariosAtuais = dados?.quadroHorarios?.[sentido]?.[tipoDia] || [];
+  const corLinha = obterCorLinha(dados?.cor);
+  const tarifaTexto = formatarTarifa(dados?.tarifa);
+  const extensaoTexto = formatarExtensao(dados?.extensaoKm);
+  const operadoraTexto = formatarOperadora(dados?.operadora);
+  const resumoMetadados = [tarifaTexto, dados?.faixaTarifaria, extensaoTexto]
+    .filter(Boolean)
+    .join(' • ');
 
   if (carregando) {
     return (
@@ -38,8 +51,10 @@ export default function HorariosScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.numeroLinha}>{dados?.codigo || '---'}</Text>
+        <Text style={[styles.numeroLinha, { color: corLinha }]}>{dados?.codigo || '---'}</Text>
         <Text style={styles.nomeLinha}>{dados?.nome || 'Linha'}</Text>
+        {resumoMetadados ? <Text style={styles.metadadosTexto}>{resumoMetadados}</Text> : null}
+        {operadoraTexto ? <Text style={styles.operadoraTexto}>{operadoraTexto}</Text> : null}
       </View>
 
       <AlertaBanner
@@ -119,6 +134,8 @@ const styles = StyleSheet.create({
   header: { marginBottom: 16, alignItems: 'center' },
   numeroLinha: { fontSize: 24, fontWeight: 'bold', color: '#006666' },
   nomeLinha: { fontSize: 16, color: '#666', textAlign: 'center' },
+  metadadosTexto: { fontSize: 13, fontWeight: '600', color: '#0F766E', marginTop: 4, textAlign: 'center' },
+  operadoraTexto: { fontSize: 12, color: '#666', marginTop: 2, textAlign: 'center' },
   acoesLinha: { flexDirection: 'row', justifyContent: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' },
   botaoItinerario: { paddingVertical: 8, paddingHorizontal: 18, borderRadius: 20, borderWidth: 1, borderColor: '#006666' },
   botaoItinerarioTexto: { color: '#006666', fontWeight: 'bold' },

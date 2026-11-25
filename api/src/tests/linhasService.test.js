@@ -230,5 +230,26 @@ describe('LinhasService', () => {
       expect(resultado.quadroHorarios.CIRCULAR).toBeUndefined();
       expect(resultado.quadroHorarios.IDA.FERIADO_LOCAL).toBeUndefined();
     });
+
+    it('inclui metadados enriquecidos da linha (tarifa, faixa, operadora, extensão e cor) quando presentes', async () => {
+      linhasRepository.findHorariosByLinhaId.mockResolvedValue([
+        {
+          ...horario('IDA', 'DIA_UTIL', '06:00'),
+          linha_cor: '#D97706',
+          linha_tarifa: '5.50',
+          linha_faixa_tarifaria: 'METROPOLITANA 2',
+          linha_operadora: 'VIAÇÃO PIONEIRA BACIA - 02',
+          linha_extensao_km: '42.35',
+        },
+      ]);
+
+      const resultado = await linhasService.obterQuadroHorarios(1);
+
+      expect(resultado.cor).toBe('#D97706');
+      expect(resultado.tarifa).toBe(5.5);
+      expect(resultado.faixaTarifaria).toBe('METROPOLITANA 2');
+      expect(resultado.operadora).toBe('VIAÇÃO PIONEIRA BACIA - 02');
+      expect(resultado.extensaoKm).toBe(42.35);
+    });
   });
 });
