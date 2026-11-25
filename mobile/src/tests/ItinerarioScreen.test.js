@@ -270,6 +270,30 @@ describe('ItinerarioScreen', () => {
         paradaNome: 'Rodoviária do Plano Piloto',
         paradaCodigo: 'P-101',
       });
+  describe('visualização do itinerário no mapa (RF08)', () => {
+    it('alterna entre Lista e Mapa exibindo o percurso quando há coordenadas', async () => {
+      getItinerario.mockResolvedValue({
+        ...LINHA,
+        itinerario: {
+          IDA: [
+            { sequencia: 1, paradaId: 10, nome: 'Rodoviária', codigo: 'P-101', latitude: -15.79, longitude: -47.88 },
+            { sequencia: 2, paradaId: 11, nome: 'Asa Sul', codigo: 'P-102', latitude: -15.81, longitude: -47.90 },
+          ],
+          VOLTA: [],
+        },
+      });
+
+      const { findByText, getByText, getByTestId } = renderTela();
+      await findByText(LINHA.codigo);
+
+      fireEvent.press(getByText('Mapa'));
+
+      expect(getByTestId('mapa-webview')).toBeTruthy();
+      expect(getByText('Início do itinerário')).toBeTruthy();
+      expect(getByText('Final do itinerário')).toBeTruthy();
+
+      fireEvent.press(getByText('Lista'));
+      expect(getByText('Parada P-101')).toBeTruthy();
     });
   });
 });

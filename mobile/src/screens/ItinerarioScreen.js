@@ -1,14 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, Text, TouchableOpacity, FlatList, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { getItinerario } from '../services/api';
 import AlertaBanner, { AlertaBadge } from '../components/AlertaBanner';
 import FavoritoEstrela from '../components/FavoritoEstrela';
 import FavoritosCarregador from '../components/FavoritosCarregador';
+import {
+  formatarOperadora,
+  formatarTarifa,
+  obterCorLinha,
+} from '../utils/formatarMetadadosLinha';
+import MapaTrajeto from '../components/MapaTrajeto';
+import { construirDadosMapaItinerario } from '../utils/mapaHtml';
 
 export default function ItinerarioScreen({ route, navigation }) {
   const { linhaId } = route.params;
   const [dados, setDados] = useState(null);
   const [sentido, setSentido] = useState('IDA');
+  const [modoVisualizacao, setModoVisualizacao] = useState('LISTA');
   const [erro, setErro] = useState(null);
 
   useEffect(() => {
@@ -26,13 +34,22 @@ export default function ItinerarioScreen({ route, navigation }) {
 
   const paradas = dados?.itinerario?.[sentido] || [];
   const linhaRef = dados?.codigo || String(linhaId);
+  const corLinha = obterCorLinha(dados?.cor);
+  const tarifaTexto = formatarTarifa(dados?.tarifa);
+  const operadoraTexto = formatarOperadora(dados?.operadora);
+  const resumoMetadados = [tarifaTexto, operadoraTexto].filter(Boolean).join(' • ');
+  const dadosMapa = useMemo(
+    () => construirDadosMapaItinerario(paradas, dados?.codigo, dados?.cor),
+    [paradas, dados?.codigo, dados?.cor]
+  );
 
   return (
     <View style={styles.container}>
       <FavoritosCarregador navigation={navigation} />
       <View style={styles.header}>
-        <Text style={styles.numeroLinha}>{dados?.codigo || '---'}</Text>
+        <Text style={[styles.numeroLinha, { color: corLinha }]}>{dados?.codigo || '---'}</Text>
         <Text style={styles.nomeLinha}>{dados?.nome || 'Carregando...'}</Text>
+        {resumoMetadados ? <Text style={styles.metadadosLinha}>{resumoMetadados}</Text> : null}
       </View>
 
       <AlertaBanner
@@ -52,16 +69,37 @@ export default function ItinerarioScreen({ route, navigation }) {
         <Text style={styles.botaoReportarLinhaTexto}>Reportar divergência</Text>
       </TouchableOpacity>
 
-      <View style={styles.tabContainer}>
-        {['IDA', 'VOLTA'].map((s) => (
+      <View style={styles.controlesRow}>
+        <View style={styles.tabContainer}>
+          {['IDA', 'VOLTA'].map((s) => (
+            <TouchableOpacity
+              key={s}
+              style={[styles.tab, sentido === s && styles.tabAtiva]}
+              onPress={() => setSentido(s)}
+            >
+              <Text style={styles.tabTexto}>{s === 'IDA' ? 'Ida' : 'Volta'}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.modoContainer}>
           <TouchableOpacity
-            key={s}
-            style={[styles.tab, sentido === s && styles.tabAtiva]}
-            onPress={() => setSentido(s)}
+            style={[styles.modoBotao, modoVisualizacao === 'LISTA' && styles.modoBotaoAtivo]}
+            onPress={() => setModoVisualizacao('LISTA')}
           >
-            <Text style={styles.tabTexto}>{s === 'IDA' ? 'Ida' : 'Volta'}</Text>
+            <Text style={[styles.modoTexto, modoVisualizacao === 'LISTA' && styles.modoTextoAtivo]}>
+              Lista
+            </Text>
           </TouchableOpacity>
-        ))}
+          <TouchableOpacity
+            style={[styles.modoBotao, modoVisualizacao === 'MAPA' && styles.modoBotaoAtivo]}
+            onPress={() => setModoVisualizacao('MAPA')}
+          >
+            <Text style={[styles.modoTexto, modoVisualizacao === 'MAPA' && styles.modoTextoAtivo]}>
+              Mapa
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {erro && <Text style={styles.erro}>{erro}</Text>}
@@ -70,58 +108,68 @@ export default function ItinerarioScreen({ route, navigation }) {
         <Text style={styles.vazio}>Nenhuma parada neste sentido.</Text>
       )}
 
-      <FlatList
-        data={paradas}
-        keyExtractor={(item) => `${item.sequencia}-${item.paradaId}`}
-        renderItem={({ item }) => {
-          const temAlerta = Boolean(
-            item.afetadaPorAlerta || (Array.isArray(item.alertas) && item.alertas.length > 0)
-          );
-          return (
-            <View style={[styles.paradaCard, temAlerta && styles.paradaCardAlerta]}>
-              <View style={styles.seqBadge}>
-                <Text style={styles.seqTexto}>{item.sequencia}</Text>
+      {modoVisualizacao === 'MAPA' && dados && paradas.length > 0 ? (
+        <View style={{ flex: 1 }}>
+          <MapaTrajeto
+            trechos={dadosMapa.trechos}
+            marcadores={dadosMapa.marcadores}
+            mensagemVazio="Coordenadas indisponíveis para exibir o itinerário no mapa."
+          />
+        </View>
+      ) : (
+        <FlatList
+          data={paradas}
+          keyExtractor={(item) => `${item.sequencia}-${item.paradaId}`}
+          renderItem={({ item }) => {
+            const temAlerta = Boolean(
+              item.afetadaPorAlerta || (Array.isArray(item.alertas) && item.alertas.length > 0)
+            );
+            return (
+              <View style={[styles.paradaCard, temAlerta && styles.paradaCardAlerta]}>
+                <View style={styles.seqBadge}>
+                  <Text style={styles.seqTexto}>{item.sequencia}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.paradaInfo}
+                  onPress={() =>
+                    navigation?.navigate('ProximasPartidas', {
+                      paradaId: item.paradaId,
+                      paradaNome: item.nome,
+                      paradaCodigo: item.codigo,
+                    })
+                  }
+                >
+                  <Text style={styles.paradaNome}>{item.nome}</Text>
+                  <Text style={styles.paradaCodigo}>Parada {item.codigo}</Text>
+                  <Text style={styles.paradaAcao}>Ver próximas partidas ›</Text>
+                  <AlertaBadge alertas={item.alertas} afetadaPorAlerta={item.afetadaPorAlerta} />
+                  {Array.isArray(item.alertas) && item.alertas[0]?.descricao ? (
+                    <Text style={styles.paradaAlertaDescricao} numberOfLines={2}>
+                      {item.alertas[0].descricao}
+                    </Text>
+                  ) : null}
+                </TouchableOpacity>
+                <FavoritoEstrela
+                  item={{ tipo: 'PARADA', paradaId: String(item.paradaId) }}
+                  tamanho={20}
+                />
+                <TouchableOpacity
+                  style={styles.botaoReportarParada}
+                  onPress={() =>
+                    navigation?.navigate('ReportarDivergencia', {
+                      tipo: 'PARADA',
+                      linhaId: linhaRef,
+                      paradaId: item.codigo || String(item.paradaId),
+                    })
+                  }
+                >
+                  <Text style={styles.botaoReportarParadaTexto}>Reportar</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                style={styles.paradaInfo}
-                onPress={() =>
-                  navigation?.navigate('ProximasPartidas', {
-                    paradaId: item.paradaId,
-                    paradaNome: item.nome,
-                    paradaCodigo: item.codigo,
-                  })
-                }
-              >
-                <Text style={styles.paradaNome}>{item.nome}</Text>
-                <Text style={styles.paradaCodigo}>Parada {item.codigo}</Text>
-                <Text style={styles.paradaAcao}>Ver próximas partidas ›</Text>
-                <AlertaBadge alertas={item.alertas} afetadaPorAlerta={item.afetadaPorAlerta} />
-                {Array.isArray(item.alertas) && item.alertas[0]?.descricao ? (
-                  <Text style={styles.paradaAlertaDescricao} numberOfLines={2}>
-                    {item.alertas[0].descricao}
-                  </Text>
-                ) : null}
-              </TouchableOpacity>
-              <FavoritoEstrela
-                item={{ tipo: 'PARADA', paradaId: String(item.paradaId) }}
-                tamanho={20}
-              />
-              <TouchableOpacity
-                style={styles.botaoReportarParada}
-                onPress={() =>
-                  navigation?.navigate('ReportarDivergencia', {
-                    tipo: 'PARADA',
-                    linhaId: linhaRef,
-                    paradaId: item.codigo || String(item.paradaId),
-                  })
-                }
-              >
-                <Text style={styles.botaoReportarParadaTexto}>Reportar</Text>
-              </TouchableOpacity>
-            </View>
-          );
-        }}
-      />
+            );
+          }}
+        />
+      )}
     </View>
   );
 }
@@ -131,12 +179,19 @@ const styles = StyleSheet.create({
   header: { marginBottom: 12, alignItems: 'center' },
   numeroLinha: { fontSize: 24, fontWeight: 'bold', color: '#006666' },
   nomeLinha: { fontSize: 16, color: '#666' },
+  metadadosLinha: { fontSize: 12, fontWeight: '600', color: '#0F766E', marginTop: 4, textAlign: 'center' },
   botaoReportarLinha: { alignSelf: 'center', paddingVertical: 6, paddingHorizontal: 16, borderRadius: 20, borderWidth: 1, borderColor: '#C62828', marginBottom: 14 },
   botaoReportarLinhaTexto: { color: '#C62828', fontWeight: 'bold', fontSize: 13 },
-  tabContainer: { flexDirection: 'row', marginBottom: 16 },
-  tab: { paddingVertical: 8, paddingHorizontal: 24, borderRadius: 20, backgroundColor: '#E0E0E0', marginRight: 8 },
+  controlesRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 },
+  tabContainer: { flexDirection: 'row' },
+  tab: { paddingVertical: 8, paddingHorizontal: 20, borderRadius: 20, backgroundColor: '#E0E0E0', marginRight: 8 },
   tabAtiva: { backgroundColor: '#006666' },
   tabTexto: { color: '#FFF', fontWeight: 'bold' },
+  modoContainer: { flexDirection: 'row', backgroundColor: '#E2E8F0', borderRadius: 18, padding: 3 },
+  modoBotao: { paddingVertical: 5, paddingHorizontal: 14, borderRadius: 15 },
+  modoBotaoAtivo: { backgroundColor: '#006666' },
+  modoTexto: { fontSize: 13, fontWeight: 'bold', color: '#475569' },
+  modoTextoAtivo: { color: '#FFF' },
   erro: { color: '#B00020', marginVertical: 16 },
   vazio: { color: '#666', marginVertical: 16 },
   paradaCard: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#EEE' },

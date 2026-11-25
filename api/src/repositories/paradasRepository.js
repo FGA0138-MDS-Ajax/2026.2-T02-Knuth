@@ -10,7 +10,7 @@ const COLUNA_NOME_NORM = sqlNormalizarColuna('nome');
 class ParadasRepository {
   async findNearestParada(lat, lng) {
     const query = `
-      SELECT id, nome, latitude, longitude,
+      SELECT id, nome, latitude, longitude, tipo, estrutura,
       (6371 * 2 * asin(sqrt(
         power(sin(radians(latitude - $1) / 2), 2) + 
         cos(radians($1)) * cos(radians(latitude)) * power(sin(radians(longitude - $2) / 2), 2)
@@ -53,13 +53,15 @@ class ParadasRepository {
       .join(' ');
 
     const wrappedQuery = `
-      SELECT id, nome, latitude, longitude
+      SELECT id, nome, latitude, longitude, tipo, estrutura
       FROM (
         SELECT
           id,
           nome,
           latitude,
           longitude,
+          tipo,
+          estrutura,
           CASE
             WHEN ${COLUNA_NOME_NORM} = $1 THEN 0
             ${prioridadeCasos}

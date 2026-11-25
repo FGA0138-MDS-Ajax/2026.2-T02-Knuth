@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import TrajetoDetalheScreen from '../screens/TrajetoDetalheScreen';
 
 const OPCAO = {
@@ -127,6 +127,54 @@ describe('TrajetoDetalheScreen', () => {
 
       expect(getByText('⚠ Alerta vigente')).toBeTruthy();
       expect(getByText('Desvio temporário na W3 Sul.')).toBeTruthy();
+    });
+  });
+
+  describe('visualização no mapa (RF04)', () => {
+    it('alterna entre Etapas e Ver no mapa exibindo trechos e marcadores', () => {
+      const opcaoComMapa = {
+        ...OPCAO,
+        mapa: {
+          trechos: [
+            {
+              tipo: 'ONIBUS',
+              linhaCodigo: '0.111',
+              cor: '#006666',
+              pontos: [
+                { nome: 'Rodoviária', latitude: -15.7938, longitude: -47.8827 },
+                { nome: 'Quadra 704', latitude: -15.815, longitude: -47.905 },
+              ],
+            },
+          ],
+          marcadores: [
+            { tipo: 'EMBARQUE', titulo: 'Embarque', nome: 'Rodoviária', latitude: -15.7938, longitude: -47.8827 },
+            { tipo: 'DESEMBARQUE', titulo: 'Desembarque', nome: 'Quadra 704', latitude: -15.815, longitude: -47.905 },
+          ],
+        },
+      };
+
+      const { getByText, getByTestId, queryByText } = renderTela(opcaoComMapa);
+
+      fireEvent.press(getByText('Ver no mapa'));
+
+      expect(getByTestId('mapa-webview')).toBeTruthy();
+      expect(getByText('Linha 0.111')).toBeTruthy();
+      expect(getByText('Embarque')).toBeTruthy();
+      expect(getByText('Desembarque')).toBeTruthy();
+      expect(queryByText('Passo a passo:')).toBeNull();
+
+      fireEvent.press(getByText('Etapas'));
+      expect(getByText('Passo a passo:')).toBeTruthy();
+    });
+
+    it('mostra aviso quando o trajeto não possui coordenadas para o mapa', () => {
+      const { getByText } = renderTela();
+
+      fireEvent.press(getByText('Ver no mapa'));
+
+      expect(
+        getByText('Coordenadas indisponíveis para exibir este trajeto no mapa.')
+      ).toBeTruthy();
     });
   });
 });
