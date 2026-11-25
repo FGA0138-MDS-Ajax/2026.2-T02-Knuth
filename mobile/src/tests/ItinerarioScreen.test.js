@@ -270,6 +270,9 @@ describe('ItinerarioScreen', () => {
         paradaNome: 'Rodoviária do Plano Piloto',
         paradaCodigo: 'P-101',
       });
+    });
+  });
+
   describe('visualização do itinerário no mapa (RF08)', () => {
     it('alterna entre Lista e Mapa exibindo o percurso quando há coordenadas', async () => {
       getItinerario.mockResolvedValue({
