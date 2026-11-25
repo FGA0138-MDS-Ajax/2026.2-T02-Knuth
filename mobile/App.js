@@ -11,6 +11,7 @@ import ExcluirContaScreen from './src/screens/ExcluirContaScreen';
 import LinhasScreen from './src/screens/LinhasScreen';
 import HorariosScreen from './src/screens/HorariosScreen';
 import ItinerarioScreen from './src/screens/ItinerarioScreen';
+import ProximasPartidasScreen from './src/screens/ProximasPartidasScreen';
 import BuscarTrajetoScreen from './src/screens/BuscarTrajetoScreen';
 import ResultadoTrajetoScreen from './src/screens/ResultadoTrajetoScreen';
 import TrajetoDetalheScreen from './src/screens/TrajetoDetalheScreen';
@@ -59,6 +60,11 @@ export default function App() {
           name="Itinerario"
           component={ItinerarioScreen}
           options={{ title: 'Itinerário' }}
+        />
+        <Stack.Screen
+          name="ProximasPartidas"
+          component={ProximasPartidasScreen}
+          options={{ title: 'Próximas Partidas' }}
         />
         <Stack.Screen
           name="BuscarTrajeto"

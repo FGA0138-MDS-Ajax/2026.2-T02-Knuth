@@ -4,5 +4,6 @@ const paradasController = require('../controllers/paradasController');
 
 router.get('/', paradasController.buscarParadas);
 router.get('/proximas', paradasController.getParadaProxima);
+router.get('/:id/proximas-partidas', paradasController.getProximasPartidas);
 
 module.exports = router;

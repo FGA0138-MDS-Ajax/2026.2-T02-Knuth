@@ -64,4 +64,53 @@ describe('ParadasRepository', () => {
       expect(pool.query).not.toHaveBeenCalled();
     });
   });
+
+  describe('findById', () => {
+    it('busca parada pelo identificador e retorna o registro encontrado', async () => {
+      const parada = { id: '3369', codigo: 'P-101', nome: 'Rodoviária', latitude: '-15.79', longitude: '-47.88' };
+      pool.query.mockResolvedValue({ rows: [parada] });
+
+      const resultado = await repository.findById('3369');
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('FROM paradas');
+      expect(sql).toContain('WHERE id = $1');
+      expect(params).toEqual(['3369']);
+      expect(resultado).toEqual(parada);
+    });
+
+    it('retorna null quando a parada não existe', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await expect(repository.findById('inexistente')).resolves.toBeNull();
+    });
+  });
+
+  describe('findProximasPartidas', () => {
+    it('consulta partidas filtrando parada, tipo de dia e horário em ordem cronológica', async () => {
+      const partidas = [
+        {
+          linha_id: 'L1',
+          linha_codigo: '0.111',
+          linha_nome: 'Rodoviária / Asa Sul',
+          linha_cor: '#006666',
+          sentido: 'IDA',
+          destino: 'Asa Sul',
+          horario_partida: '14:20',
+        },
+      ];
+      pool.query.mockResolvedValue({ rows: partidas });
+
+      const resultado = await repository.findProximasPartidas('3369', 'DIA_UTIL', '14:10', 20);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('FROM horarios_paradas hp');
+      expect(sql).toContain('hp.parada_id = $1');
+      expect(sql).toContain('c.tipo_dia = $2');
+      expect(sql).toContain('hp.partida::time >= $3::time');
+      expect(sql).toContain('ORDER BY horario_partida ASC');
+      expect(params).toEqual(['3369', 'DIA_UTIL', '14:10', 20]);
+      expect(resultado).toEqual(partidas);
+    });
+  });
 });

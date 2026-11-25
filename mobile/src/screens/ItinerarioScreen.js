@@ -129,16 +129,26 @@ export default function ItinerarioScreen({ route, navigation }) {
                 <View style={styles.seqBadge}>
                   <Text style={styles.seqTexto}>{item.sequencia}</Text>
                 </View>
-                <View style={styles.paradaInfo}>
+                <TouchableOpacity
+                  style={styles.paradaInfo}
+                  onPress={() =>
+                    navigation?.navigate('ProximasPartidas', {
+                      paradaId: item.paradaId,
+                      paradaNome: item.nome,
+                      paradaCodigo: item.codigo,
+                    })
+                  }
+                >
                   <Text style={styles.paradaNome}>{item.nome}</Text>
                   <Text style={styles.paradaCodigo}>Parada {item.codigo}</Text>
+                  <Text style={styles.paradaAcao}>Ver próximas partidas ›</Text>
                   <AlertaBadge alertas={item.alertas} afetadaPorAlerta={item.afetadaPorAlerta} />
                   {Array.isArray(item.alertas) && item.alertas[0]?.descricao ? (
                     <Text style={styles.paradaAlertaDescricao} numberOfLines={2}>
                       {item.alertas[0].descricao}
                     </Text>
                   ) : null}
-                </View>
+                </TouchableOpacity>
                 <FavoritoEstrela
                   item={{ tipo: 'PARADA', paradaId: String(item.paradaId) }}
                   tamanho={20}
@@ -191,6 +201,7 @@ const styles = StyleSheet.create({
   paradaInfo: { flex: 1 },
   paradaNome: { fontSize: 15, fontWeight: '600', color: '#333' },
   paradaCodigo: { fontSize: 12, color: '#666' },
+  paradaAcao: { fontSize: 12, color: '#006666', fontWeight: '600', marginTop: 2 },
   paradaAlertaDescricao: { fontSize: 12, color: '#92400E', marginTop: 4 },
   botaoReportarParada: { paddingVertical: 4, paddingHorizontal: 10, borderRadius: 12, borderWidth: 1, borderColor: '#C62828', marginLeft: 8 },
   botaoReportarParadaTexto: { color: '#C62828', fontSize: 12, fontWeight: '600' },
