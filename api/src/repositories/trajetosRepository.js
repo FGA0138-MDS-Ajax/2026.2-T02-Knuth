@@ -372,7 +372,6 @@ class TrajetosRepository {
         duracao_total,
         paradas_leg1,
         paradas_leg2,
-        origem_id,
         nome_origem,
         lat_origem,
         lng_origem,
