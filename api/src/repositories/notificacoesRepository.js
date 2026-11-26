@@ -40,4 +40,17 @@ const listarPorUsuario = async (usuarioId) => {
   return resultado.rows;
 };
 
-module.exports = { criarParaFavoritosAfetados, listarPorUsuario };
+
+const marcarComoLida = async (id, usuarioId) => {
+  const resultado = await pool.query(
+    `UPDATE notificacoes
+     SET lida = TRUE
+     WHERE id = $1 AND usuario_id = $2
+     RETURNING id, alerta_id, item_tipo, item_id, titulo, resumo, lida, criado_em`,
+    [id, usuarioId]
+  );
+
+  return resultado.rows[0] || null;
+};
+
+module.exports = { criarParaFavoritosAfetados, listarPorUsuario, marcarComoLida };
