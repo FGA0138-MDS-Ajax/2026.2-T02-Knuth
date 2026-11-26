@@ -39,6 +39,43 @@ const excluirLinha = async (req, res) => {
   }
 };
 
+const listarPartidas = async (req, res) => {
+  try {
+    const { sentido, tipoDia } = req.query || {};
+    const partidas = await linhasService.listarPartidas(req.params.id, sentido, tipoDia);
+    return res.status(200).json(partidas);
+  } catch (error) {
+    return responderErro(res, error, 'Erro interno ao listar as partidas.');
+  }
+};
+
+const incluirPartida = async (req, res) => {
+  try {
+    const partida = await linhasService.incluirPartida(req.params.id, req.body || {});
+    return res.status(201).json(partida);
+  } catch (error) {
+    return responderErro(res, error, 'Erro interno ao incluir a partida.');
+  }
+};
+
+const alterarPartida = async (req, res) => {
+  try {
+    const partida = await linhasService.alterarPartida(req.params.id, req.params.viagemId, req.body || {});
+    return res.status(200).json(partida);
+  } catch (error) {
+    return responderErro(res, error, 'Erro interno ao alterar a partida.');
+  }
+};
+
+const excluirPartida = async (req, res) => {
+  try {
+    await linhasService.excluirPartida(req.params.id, req.params.viagemId);
+    return res.status(200).json({ mensagem: 'Partida excluída.' });
+  } catch (error) {
+    return responderErro(res, error, 'Erro interno ao excluir a partida.');
+  }
+};
+
 const obterParada = async (req, res) => {
   try {
     const parada = await paradasService.obterParada(req.params.id);
@@ -79,6 +116,10 @@ module.exports = {
   criarLinha,
   editarLinha,
   excluirLinha,
+  listarPartidas,
+  incluirPartida,
+  alterarPartida,
+  excluirPartida,
   obterParada,
   criarParada,
   editarParada,

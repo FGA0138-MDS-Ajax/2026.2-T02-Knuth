@@ -88,6 +88,98 @@ class LinhasRepository {
   async excluir(id) {
     await pool.query('DELETE FROM linhas WHERE id = $1', [id]);
   }
+
+  // RF23 - Partidas da linha: cada viagem parte no horário da parada de sequência 1
+  async listarPartidas(linhaId, sentido, tipoDia) {
+    const { rows } = await pool.query(
+      `SELECT v.id AS viagem_id, TO_CHAR(hp.partida, 'HH24:MI') AS horario
+       FROM viagens v
+       INNER JOIN calendario c ON c.id = v.calendario_id
+       INNER JOIN horarios_paradas hp ON hp.viagem_id = v.id AND hp.sequencia = 1
+       WHERE v.linha_id = $1 AND v.sentido = $2 AND c.tipo_dia = $3
+       ORDER BY hp.partida ASC`,
+      [linhaId, sentido, tipoDia]
+    );
+    return rows;
+  }
+
+  async buscarPartida(linhaId, viagemId) {
+    const { rows } = await pool.query(
+      `SELECT v.id AS viagem_id, v.sentido, c.tipo_dia, TO_CHAR(hp.partida, 'HH24:MI') AS horario
+       FROM viagens v
+       INNER JOIN calendario c ON c.id = v.calendario_id
+       INNER JOIN horarios_paradas hp ON hp.viagem_id = v.id AND hp.sequencia = 1
+       WHERE v.id = $1 AND v.linha_id = $2`,
+      [viagemId, linhaId]
+    );
+    return rows[0] || null;
+  }
+
+  // Viagem do mesmo sentido e tipo de dia cuja partida é a mais próxima do horário informado
+  async buscarPartidaMaisProxima(linhaId, sentido, tipoDia, horario) {
+    const { rows } = await pool.query(
+      `SELECT v.id AS viagem_id, TO_CHAR(hp.partida, 'HH24:MI') AS horario
+       FROM viagens v
+       INNER JOIN calendario c ON c.id = v.calendario_id
+       INNER JOIN horarios_paradas hp ON hp.viagem_id = v.id AND hp.sequencia = 1
+       WHERE v.linha_id = $1 AND v.sentido = $2 AND c.tipo_dia = $3
+       ORDER BY ABS(EXTRACT(EPOCH FROM (hp.partida - $4::time))) ASC
+       LIMIT 1`,
+      [linhaId, sentido, tipoDia, horario]
+    );
+    return rows[0] || null;
+  }
+
+  // Copia a viagem modelo e todos os seus horários, deslocados para a nova partida
+  async criarPartida(modeloId, horario) {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      const { rows } = await client.query(
+        `INSERT INTO viagens (id, linha_id, calendario_id, sentido, destino)
+         SELECT 'MANUAL_' || gen_random_uuid(), linha_id, calendario_id, sentido, destino
+         FROM viagens
+         WHERE id = $1
+         RETURNING id`,
+        [modeloId]
+      );
+      const viagemId = rows[0].id;
+      await client.query(
+        `INSERT INTO horarios_paradas (viagem_id, parada_id, sequencia, partida, chegada)
+         SELECT $1, hp.parada_id, hp.sequencia,
+                hp.partida + ($3::time - inicio.partida),
+                hp.chegada + ($3::time - inicio.partida)
+         FROM horarios_paradas hp
+         INNER JOIN horarios_paradas inicio ON inicio.viagem_id = hp.viagem_id AND inicio.sequencia = 1
+         WHERE hp.viagem_id = $2`,
+        [viagemId, modeloId, horario]
+      );
+      await client.query('COMMIT');
+      return viagemId;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  // Desloca todos os horários da viagem para que a parada de sequência 1 parta no novo horário
+  async deslocarPartida(viagemId, horario) {
+    await pool.query(
+      `UPDATE horarios_paradas hp
+       SET partida = hp.partida + ($2::time - inicio.partida),
+           chegada = hp.chegada + ($2::time - inicio.partida)
+       FROM horarios_paradas inicio
+       WHERE hp.viagem_id = $1 AND inicio.viagem_id = $1 AND inicio.sequencia = 1`,
+      [viagemId, horario]
+    );
+  }
+
+  // Os horários da viagem são apagados em cascata (ON DELETE CASCADE)
+  async excluirPartida(viagemId) {
+    await pool.query('DELETE FROM viagens WHERE id = $1', [viagemId]);
+  }
 }
 
 module.exports = new LinhasRepository();

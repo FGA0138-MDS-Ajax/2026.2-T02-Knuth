@@ -6,6 +6,12 @@ jest.mock('../repositories/linhasRepository', () => ({
   criar: jest.fn(),
   atualizar: jest.fn(),
   excluir: jest.fn(),
+  listarPartidas: jest.fn(),
+  buscarPartida: jest.fn(),
+  buscarPartidaMaisProxima: jest.fn(),
+  criarPartida: jest.fn(),
+  deslocarPartida: jest.fn(),
+  excluirPartida: jest.fn(),
 }));
 
 const linhasRepository = require('../repositories/linhasRepository');
@@ -424,6 +430,168 @@ describe('LinhasService', () => {
       await linhasService.excluirLinha('0.110');
 
       expect(linhasRepository.excluir).toHaveBeenCalledWith('0.110');
+    });
+  });
+
+  describe('listarPartidas (RF23)', () => {
+    it('valida o sentido e o tipo de dia', async () => {
+      await expect(linhasService.listarPartidas('0.110', 'CIRCULAR', 'SABADO')).rejects.toMatchObject({
+        status: 400,
+        message: 'O sentido deve ser IDA ou VOLTA.',
+      });
+      await expect(linhasService.listarPartidas('0.110', 'IDA', 'FERIADAO')).rejects.toMatchObject({
+        status: 400,
+        message: 'O tipo de dia deve ser DIA_UTIL, SABADO ou DOMINGO_FERIADO.',
+      });
+      expect(linhasRepository.listarPartidas).not.toHaveBeenCalled();
+    });
+
+    it('falha se a linha não existir', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue(null);
+
+      await expect(linhasService.listarPartidas('999', 'IDA', 'SABADO')).rejects.toMatchObject({
+        status: 404,
+        message: 'Linha não encontrada.',
+      });
+    });
+
+    it('devolve o id da viagem e o horário de cada partida', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue({ id: '0.110' });
+      linhasRepository.listarPartidas.mockResolvedValue([
+        { viagem_id: 'TRIP_1', horario: '05:00' },
+        { viagem_id: 'TRIP_2', horario: '05:30' },
+      ]);
+
+      const resultado = await linhasService.listarPartidas('0.110', 'IDA', 'SABADO');
+
+      expect(linhasRepository.listarPartidas).toHaveBeenCalledWith('0.110', 'IDA', 'SABADO');
+      expect(resultado).toEqual([
+        { viagemId: 'TRIP_1', horario: '05:00' },
+        { viagemId: 'TRIP_2', horario: '05:30' },
+      ]);
+    });
+  });
+
+  describe('incluirPartida (RF23)', () => {
+    const dados = { sentido: 'IDA', tipoDia: 'SABADO', horario: '05:07' };
+
+    it('valida sentido, tipo de dia e horário', async () => {
+      await expect(linhasService.incluirPartida('0.110', { ...dados, sentido: 'X' })).rejects.toMatchObject({ status: 400 });
+      await expect(linhasService.incluirPartida('0.110', { ...dados, tipoDia: 'X' })).rejects.toMatchObject({ status: 400 });
+      await expect(linhasService.incluirPartida('0.110', { ...dados, horario: '5:7' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O horário deve estar no formato HH:MM.',
+      });
+      expect(linhasRepository.criarPartida).not.toHaveBeenCalled();
+    });
+
+    it('falha se a linha não existir', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue(null);
+
+      await expect(linhasService.incluirPartida('999', dados)).rejects.toMatchObject({
+        status: 404,
+        message: 'Linha não encontrada.',
+      });
+    });
+
+    it('exige uma viagem do mesmo sentido e tipo de dia para copiar', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue({ id: '0.110' });
+      linhasRepository.buscarPartidaMaisProxima.mockResolvedValue(null);
+
+      await expect(linhasService.incluirPartida('0.110', dados)).rejects.toMatchObject({
+        status: 400,
+        message: 'A linha não tem nenhuma viagem neste sentido e tipo de dia para servir de modelo.',
+      });
+      expect(linhasRepository.criarPartida).not.toHaveBeenCalled();
+    });
+
+    it('impede duas partidas no mesmo horário', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue({ id: '0.110' });
+      linhasRepository.buscarPartidaMaisProxima.mockResolvedValue({ viagem_id: 'TRIP_1', horario: '05:07' });
+
+      await expect(linhasService.incluirPartida('0.110', dados)).rejects.toMatchObject({
+        status: 409,
+        message: 'Já existe uma partida às 05:07 neste sentido e tipo de dia.',
+      });
+      expect(linhasRepository.criarPartida).not.toHaveBeenCalled();
+    });
+
+    it('copia a viagem mais próxima deslocando os horários para a nova partida', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue({ id: '0.110' });
+      linhasRepository.buscarPartidaMaisProxima.mockResolvedValue({ viagem_id: 'TRIP_1', horario: '05:01' });
+      linhasRepository.criarPartida.mockResolvedValue('MANUAL_1');
+
+      const resultado = await linhasService.incluirPartida('0.110', dados);
+
+      expect(linhasRepository.buscarPartidaMaisProxima).toHaveBeenCalledWith('0.110', 'IDA', 'SABADO', '05:07:00');
+      expect(linhasRepository.criarPartida).toHaveBeenCalledWith('TRIP_1', '05:07:00');
+      expect(resultado).toEqual({ viagemId: 'MANUAL_1', horario: '05:07' });
+    });
+  });
+
+  describe('alterarPartida (RF23)', () => {
+    const partida = { viagem_id: 'TRIP_1', sentido: 'IDA', tipo_dia: 'SABADO', horario: '05:00' };
+
+    it('valida o horário', async () => {
+      await expect(linhasService.alterarPartida('0.110', 'TRIP_1', { horario: '25:00' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O horário deve estar no formato HH:MM.',
+      });
+      expect(linhasRepository.deslocarPartida).not.toHaveBeenCalled();
+    });
+
+    it('falha se a partida não for da linha', async () => {
+      linhasRepository.buscarPartida.mockResolvedValue(null);
+
+      await expect(linhasService.alterarPartida('0.110', 'TRIP_X', { horario: '05:10' })).rejects.toMatchObject({
+        status: 404,
+        message: 'Partida não encontrada.',
+      });
+      expect(linhasRepository.buscarPartida).toHaveBeenCalledWith('0.110', 'TRIP_X');
+    });
+
+    it('impede mudar para o horário de outra partida', async () => {
+      linhasRepository.buscarPartida.mockResolvedValue(partida);
+      linhasRepository.buscarPartidaMaisProxima.mockResolvedValue({ viagem_id: 'TRIP_2', horario: '05:30' });
+
+      await expect(linhasService.alterarPartida('0.110', 'TRIP_1', { horario: '05:30' })).rejects.toMatchObject({
+        status: 409,
+        message: 'Já existe uma partida às 05:30 neste sentido e tipo de dia.',
+      });
+      expect(linhasRepository.deslocarPartida).not.toHaveBeenCalled();
+    });
+
+    it('desloca os horários da viagem para o novo horário', async () => {
+      linhasRepository.buscarPartida.mockResolvedValue(partida);
+      linhasRepository.buscarPartidaMaisProxima.mockResolvedValue({ viagem_id: 'TRIP_1', horario: '05:00' });
+      linhasRepository.deslocarPartida.mockResolvedValue();
+
+      const resultado = await linhasService.alterarPartida('0.110', 'TRIP_1', { horario: '05:10' });
+
+      expect(linhasRepository.buscarPartidaMaisProxima).toHaveBeenCalledWith('0.110', 'IDA', 'SABADO', '05:10:00');
+      expect(linhasRepository.deslocarPartida).toHaveBeenCalledWith('TRIP_1', '05:10:00');
+      expect(resultado).toEqual({ viagemId: 'TRIP_1', horario: '05:10' });
+    });
+  });
+
+  describe('excluirPartida (RF23)', () => {
+    it('falha se a partida não for da linha', async () => {
+      linhasRepository.buscarPartida.mockResolvedValue(null);
+
+      await expect(linhasService.excluirPartida('0.110', 'TRIP_X')).rejects.toMatchObject({
+        status: 404,
+        message: 'Partida não encontrada.',
+      });
+      expect(linhasRepository.excluirPartida).not.toHaveBeenCalled();
+    });
+
+    it('exclui a viagem da partida', async () => {
+      linhasRepository.buscarPartida.mockResolvedValue({ viagem_id: 'TRIP_1' });
+      linhasRepository.excluirPartida.mockResolvedValue();
+
+      await linhasService.excluirPartida('0.110', 'TRIP_1');
+
+      expect(linhasRepository.excluirPartida).toHaveBeenCalledWith('TRIP_1');
     });
   });
 });

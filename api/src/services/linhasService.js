@@ -1,4 +1,5 @@
 const linhasRepository = require('../repositories/linhasRepository');
+const { normalizarHorario } = require('../utils/horarioConsulta');
 
 function normalizarNumeroOpcional(valor) {
   if (valor === null || valor === undefined || valor === '') {
@@ -61,6 +62,23 @@ function validarLinha(dados) {
     operadora: lerTexto(dados.operadora, 'A operadora', 120) || null,
     extensaoKm: lerNumero(dados.extensao_km, 'A extensão deve ser um número entre 0 e 999999,99.', 999999.99)
   };
+}
+
+// RF23 - Validações das partidas (viagens) da linha
+const SENTIDOS_VALIDOS = ['IDA', 'VOLTA'];
+const TIPOS_DIA_VALIDOS = ['DIA_UTIL', 'SABADO', 'DOMINGO_FERIADO'];
+
+function validarSentidoETipoDia(sentido, tipoDia) {
+  if (!SENTIDOS_VALIDOS.includes(sentido)) throw erroComStatus('O sentido deve ser IDA ou VOLTA.', 400);
+  if (!TIPOS_DIA_VALIDOS.includes(tipoDia)) {
+    throw erroComStatus('O tipo de dia deve ser DIA_UTIL, SABADO ou DOMINGO_FERIADO.', 400);
+  }
+}
+
+function validarHorario(horario) {
+  const normalizado = normalizarHorario(horario);
+  if (!normalizado) throw erroComStatus('O horário deve estar no formato HH:MM.', 400);
+  return normalizado;
 }
 
 class LinhasService {
@@ -165,6 +183,63 @@ class LinhasService {
     const linha = await linhasRepository.buscarPorId(id);
     if (!linha) throw erroComStatus('Linha não encontrada.', 404);
     await linhasRepository.excluir(id);
+  }
+
+  // RF23: Partidas (viagens) da linha por sentido e tipo de dia
+  async listarPartidas(linhaId, sentido, tipoDia) {
+    validarSentidoETipoDia(sentido, tipoDia);
+    const linha = await linhasRepository.buscarPorId(linhaId);
+    if (!linha) throw erroComStatus('Linha não encontrada.', 404);
+
+    const rows = await linhasRepository.listarPartidas(linhaId, sentido, tipoDia);
+    return rows.map((row) => ({ viagemId: row.viagem_id, horario: row.horario }));
+  }
+
+  // Nova partida = cópia da viagem mais próxima do mesmo sentido e tipo de dia, com todos os horários deslocados
+  async incluirPartida(linhaId, dados) {
+    const { sentido, tipoDia } = dados;
+    validarSentidoETipoDia(sentido, tipoDia);
+    const horario = validarHorario(dados.horario);
+
+    const linha = await linhasRepository.buscarPorId(linhaId);
+    if (!linha) throw erroComStatus('Linha não encontrada.', 404);
+
+    const modelo = await linhasRepository.buscarPartidaMaisProxima(linhaId, sentido, tipoDia, horario);
+    if (!modelo) {
+      throw erroComStatus('A linha não tem nenhuma viagem neste sentido e tipo de dia para servir de modelo.', 400);
+    }
+    if (modelo.horario === horario.slice(0, 5)) {
+      throw erroComStatus(`Já existe uma partida às ${modelo.horario} neste sentido e tipo de dia.`, 409);
+    }
+
+    const viagemId = await linhasRepository.criarPartida(modelo.viagem_id, horario);
+    return { viagemId, horario: horario.slice(0, 5) };
+  }
+
+  async alterarPartida(linhaId, viagemId, dados) {
+    const horario = validarHorario(dados.horario);
+
+    const partida = await linhasRepository.buscarPartida(linhaId, viagemId);
+    if (!partida) throw erroComStatus('Partida não encontrada.', 404);
+
+    const maisProxima = await linhasRepository.buscarPartidaMaisProxima(
+      linhaId,
+      partida.sentido,
+      partida.tipo_dia,
+      horario
+    );
+    if (maisProxima && maisProxima.viagem_id !== viagemId && maisProxima.horario === horario.slice(0, 5)) {
+      throw erroComStatus(`Já existe uma partida às ${maisProxima.horario} neste sentido e tipo de dia.`, 409);
+    }
+
+    await linhasRepository.deslocarPartida(viagemId, horario);
+    return { viagemId, horario: horario.slice(0, 5) };
+  }
+
+  async excluirPartida(linhaId, viagemId) {
+    const partida = await linhasRepository.buscarPartida(linhaId, viagemId);
+    if (!partida) throw erroComStatus('Partida não encontrada.', 404);
+    await linhasRepository.excluirPartida(viagemId);
   }
 }
 

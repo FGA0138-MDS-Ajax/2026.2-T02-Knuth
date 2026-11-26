@@ -5,6 +5,10 @@ jest.mock('../services/linhasService', () => ({
   criarLinha: jest.fn(),
   editarLinha: jest.fn(),
   excluirLinha: jest.fn(),
+  listarPartidas: jest.fn(),
+  incluirPartida: jest.fn(),
+  alterarPartida: jest.fn(),
+  excluirPartida: jest.fn(),
 }));
 
 jest.mock('../services/paradasService', () => ({
@@ -23,6 +27,10 @@ app.use(express.json());
 app.post('/linhas', controller.criarLinha);
 app.put('/linhas/:id', controller.editarLinha);
 app.delete('/linhas/:id', controller.excluirLinha);
+app.get('/linhas/:id/partidas', controller.listarPartidas);
+app.post('/linhas/:id/partidas', controller.incluirPartida);
+app.put('/linhas/:id/partidas/:viagemId', controller.alterarPartida);
+app.delete('/linhas/:id/partidas/:viagemId', controller.excluirPartida);
 app.get('/paradas/:id', controller.obterParada);
 app.post('/paradas', controller.criarParada);
 app.put('/paradas/:id', controller.editarParada);
@@ -154,6 +162,129 @@ describe('manterLinhasParadasController', () => {
 
       expect(resposta.status).toBe(500);
       expect(resposta.body).toEqual({ erro: 'INTERNAL_ERROR', detalhes: 'Erro interno ao excluir a linha.' });
+    });
+  });
+
+  describe('GET /linhas/:id/partidas', () => {
+    it('deve responder 200 com as partidas do sentido e tipo de dia', async () => {
+      linhasService.listarPartidas.mockResolvedValue([{ viagemId: 'TRIP_1', horario: '05:00' }]);
+
+      const resposta = await request(app).get('/linhas/0.110/partidas').query({ sentido: 'IDA', tipoDia: 'SABADO' });
+
+      expect(resposta.status).toBe(200);
+      expect(resposta.body).toEqual([{ viagemId: 'TRIP_1', horario: '05:00' }]);
+      expect(linhasService.listarPartidas).toHaveBeenCalledWith('0.110', 'IDA', 'SABADO');
+    });
+
+    it('deve responder 400 quando o sentido ou o tipo de dia forem inválidos', async () => {
+      linhasService.listarPartidas.mockRejectedValue(erroComStatus('O sentido deve ser IDA ou VOLTA.', 400));
+
+      const resposta = await request(app).get('/linhas/0.110/partidas');
+
+      expect(resposta.status).toBe(400);
+      expect(resposta.body).toEqual({ erro: 'BAD_REQUEST', detalhes: 'O sentido deve ser IDA ou VOLTA.' });
+      expect(linhasService.listarPartidas).toHaveBeenCalledWith('0.110', undefined, undefined);
+    });
+
+    it('deve responder 500 em erro inesperado', async () => {
+      linhasService.listarPartidas.mockRejectedValue(new Error('falha no banco'));
+
+      const resposta = await request(app).get('/linhas/0.110/partidas').query({ sentido: 'IDA', tipoDia: 'SABADO' });
+
+      expect(resposta.status).toBe(500);
+      expect(resposta.body).toEqual({ erro: 'INTERNAL_ERROR', detalhes: 'Erro interno ao listar as partidas.' });
+    });
+  });
+
+  describe('POST /linhas/:id/partidas', () => {
+    it('deve responder 201 com a partida criada', async () => {
+      const corpo = { sentido: 'IDA', tipoDia: 'SABADO', horario: '05:07' };
+      linhasService.incluirPartida.mockResolvedValue({ viagemId: 'MANUAL_1', horario: '05:07' });
+
+      const resposta = await request(app).post('/linhas/0.110/partidas').send(corpo);
+
+      expect(resposta.status).toBe(201);
+      expect(resposta.body).toEqual({ viagemId: 'MANUAL_1', horario: '05:07' });
+      expect(linhasService.incluirPartida).toHaveBeenCalledWith('0.110', corpo);
+    });
+
+    it('deve responder 409 quando já houver partida no horário', async () => {
+      const mensagem = 'Já existe uma partida às 05:07 neste sentido e tipo de dia.';
+      linhasService.incluirPartida.mockRejectedValue(erroComStatus(mensagem, 409));
+
+      const resposta = await request(app).post('/linhas/0.110/partidas').send({ horario: '05:07' });
+
+      expect(resposta.status).toBe(409);
+      expect(resposta.body).toEqual({ erro: 'CONFLICT', detalhes: mensagem });
+    });
+
+    it('deve responder 500 em erro inesperado', async () => {
+      linhasService.incluirPartida.mockRejectedValue(new Error('falha no banco'));
+
+      const resposta = await request(app).post('/linhas/0.110/partidas').send({ horario: '05:07' });
+
+      expect(resposta.status).toBe(500);
+      expect(resposta.body).toEqual({ erro: 'INTERNAL_ERROR', detalhes: 'Erro interno ao incluir a partida.' });
+    });
+  });
+
+  describe('PUT /linhas/:id/partidas/:viagemId', () => {
+    it('deve responder 200 com a partida alterada', async () => {
+      linhasService.alterarPartida.mockResolvedValue({ viagemId: 'TRIP_1', horario: '05:10' });
+
+      const resposta = await request(app).put('/linhas/0.110/partidas/TRIP_1').send({ horario: '05:10' });
+
+      expect(resposta.status).toBe(200);
+      expect(resposta.body).toEqual({ viagemId: 'TRIP_1', horario: '05:10' });
+      expect(linhasService.alterarPartida).toHaveBeenCalledWith('0.110', 'TRIP_1', { horario: '05:10' });
+    });
+
+    it('deve responder 404 quando a partida não for da linha', async () => {
+      linhasService.alterarPartida.mockRejectedValue(erroComStatus('Partida não encontrada.', 404));
+
+      const resposta = await request(app).put('/linhas/0.110/partidas/TRIP_X').send({ horario: '05:10' });
+
+      expect(resposta.status).toBe(404);
+      expect(resposta.body).toEqual({ erro: 'NOT_FOUND', detalhes: 'Partida não encontrada.' });
+    });
+
+    it('deve responder 500 em erro inesperado', async () => {
+      linhasService.alterarPartida.mockRejectedValue(new Error('falha no banco'));
+
+      const resposta = await request(app).put('/linhas/0.110/partidas/TRIP_1').send({ horario: '05:10' });
+
+      expect(resposta.status).toBe(500);
+      expect(resposta.body).toEqual({ erro: 'INTERNAL_ERROR', detalhes: 'Erro interno ao alterar a partida.' });
+    });
+  });
+
+  describe('DELETE /linhas/:id/partidas/:viagemId', () => {
+    it('deve responder 200 ao excluir', async () => {
+      linhasService.excluirPartida.mockResolvedValue();
+
+      const resposta = await request(app).delete('/linhas/0.110/partidas/TRIP_1');
+
+      expect(resposta.status).toBe(200);
+      expect(resposta.body).toEqual({ mensagem: 'Partida excluída.' });
+      expect(linhasService.excluirPartida).toHaveBeenCalledWith('0.110', 'TRIP_1');
+    });
+
+    it('deve responder 404 quando a partida não for da linha', async () => {
+      linhasService.excluirPartida.mockRejectedValue(erroComStatus('Partida não encontrada.', 404));
+
+      const resposta = await request(app).delete('/linhas/0.110/partidas/TRIP_X');
+
+      expect(resposta.status).toBe(404);
+      expect(resposta.body.erro).toBe('NOT_FOUND');
+    });
+
+    it('deve responder 500 em erro inesperado', async () => {
+      linhasService.excluirPartida.mockRejectedValue(new Error('falha no banco'));
+
+      const resposta = await request(app).delete('/linhas/0.110/partidas/TRIP_1');
+
+      expect(resposta.status).toBe(500);
+      expect(resposta.body).toEqual({ erro: 'INTERNAL_ERROR', detalhes: 'Erro interno ao excluir a partida.' });
     });
   });
 
