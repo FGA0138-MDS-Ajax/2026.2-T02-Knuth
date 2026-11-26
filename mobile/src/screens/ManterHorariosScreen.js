@@ -10,7 +10,7 @@ const TIPOS_DIA = [
   { rotulo: 'Dom/Fer.', valor: 'DOMINGO_FERIADO' }
 ];
 
-export default function ManterHorariosScreen({ route }) {
+export default function ManterHorariosScreen({ route, navigation }) {
   const { linha } = route.params;
   const [sentido, setSentido] = useState('IDA');
   const [tipoDia, setTipoDia] = useState('DIA_UTIL');
@@ -104,6 +104,13 @@ export default function ManterHorariosScreen({ route }) {
         <Text style={styles.nomeLinha}>{linha.nome}</Text>
       </View>
 
+      <TouchableOpacity
+        style={styles.botaoItinerario}
+        onPress={() => navigation.navigate('ManterItinerario', { linha })}
+      >
+        <Text style={styles.botaoItinerarioTexto}>Editar itinerário</Text>
+      </TouchableOpacity>
+
       <View style={styles.sentidoContainer}>
         {['IDA', 'VOLTA'].map((s) => (
           <TouchableOpacity
@@ -172,6 +179,8 @@ const styles = StyleSheet.create({
   header: { marginBottom: 16, alignItems: 'center' },
   numeroLinha: { fontSize: 24, fontWeight: 'bold', color: '#006666' },
   nomeLinha: { fontSize: 16, color: '#666', textAlign: 'center' },
+  botaoItinerario: { paddingVertical: 8, paddingHorizontal: 18, borderRadius: 20, borderWidth: 1, borderColor: '#006666', alignSelf: 'center', marginBottom: 16 },
+  botaoItinerarioTexto: { color: '#006666', fontWeight: 'bold' },
 
   sentidoContainer: { flexDirection: 'row', justifyContent: 'center', marginBottom: 16, backgroundColor: '#E0E0E0', borderRadius: 8, alignSelf: 'center' },
   botaoSentido: { paddingVertical: 8, paddingHorizontal: 32, borderRadius: 8 },

@@ -36,7 +36,10 @@ const PARTIDAS = [
 
 // -----testes------
 describe('ManterHorariosScreen', () => {
-  const renderTela = () => render(<ManterHorariosScreen route={{ params: { linha: LINHA } }} />);
+  const navigation = { navigate: jest.fn() };
+
+  const renderTela = () =>
+    render(<ManterHorariosScreen route={{ params: { linha: LINHA } }} navigation={navigation} />);
 
   const confirmar = async () => {
     const aoConfirmar = confirmarAcao.mock.calls[0][3];
@@ -94,6 +97,16 @@ describe('ManterHorariosScreen', () => {
 
       await findByText('Nenhuma partida neste sentido e tipo de dia.');
       expect(mostrarAviso).toHaveBeenCalledWith('Erro', 'Não foi possível carregar as partidas.');
+    });
+
+    it('"Editar itinerário" abre o itinerário da linha', async () => {
+      listarPartidasAdmin.mockResolvedValue(PARTIDAS);
+      const { findByText, getByText } = renderTela();
+      await findByText('05:01');
+
+      fireEvent.press(getByText('Editar itinerário'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ManterItinerario', { linha: LINHA });
     });
   });
 

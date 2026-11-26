@@ -28,6 +28,7 @@ import ManterLinhasParadasScreen from './src/screens/ManterLinhasParadasScreen';
 import NovaLinhaScreen from './src/screens/NovaLinhaScreen';
 import NovaParadaScreen from './src/screens/NovaParadaScreen';
 import ManterHorariosScreen from './src/screens/ManterHorariosScreen';
+import ManterItinerarioScreen from './src/screens/ManterItinerarioScreen';
 import FavoritosScreen from './src/screens/FavoritosScreen';
 import AnalisarReportesScreen from './src/screens/AnalisarReportesScreen';
 import DetalheReporteScreen from './src/screens/DetalheReporteScreen';
@@ -138,6 +139,7 @@ export default function App() {
         <Stack.Screen name="NovaLinha" component={NovaLinhaScreen} options={{ title: 'Nova linha' }} />
         <Stack.Screen name="NovaParada" component={NovaParadaScreen} options={{ title: 'Nova parada' }} />
         <Stack.Screen name="ManterHorarios" component={ManterHorariosScreen} options={{ title: 'Horários da linha' }} />
+        <Stack.Screen name="ManterItinerario" component={ManterItinerarioScreen} options={{ title: 'Itinerário da linha' }} />
                 <Stack.Screen name="Favoritos" component={FavoritosScreen} options={{ title: 'Favoritos', headerBackVisible: false, headerLeft: () => null }} />
         <Stack.Screen name="AnalisarReportes" component={AnalisarReportesScreen} options={{ title: 'Analisar Reportes' }} />
         <Stack.Screen name="DetalheReporte" component={DetalheReporteScreen} options={{ title: 'Análise do Reporte' }} />

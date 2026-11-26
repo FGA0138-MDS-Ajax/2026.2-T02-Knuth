@@ -429,6 +429,26 @@ export const excluirPartida = async (token, linhaId, viagemId) => {
   return response.data;
 };
 
+export const incluirParadaNoItinerario = async (token, linhaId, dados) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/linhas/${linhaId}/itinerario`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const removerParadaDoItinerario = async (token, linhaId, sentido, sequencia) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/linhas/${linhaId}/itinerario/${sentido}/${sequencia}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
 export const obterParadaAdmin = async (token, id) => {
   const response = await axios.get(`${API_BASE_URL}/admin/paradas/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
