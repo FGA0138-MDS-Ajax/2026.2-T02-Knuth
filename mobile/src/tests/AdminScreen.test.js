@@ -137,6 +137,14 @@ describe('AdminScreen', () => {
       expect(navigation.navigate).toHaveBeenCalledWith('GerenciarUsuarios');
     });
 
+    it('"Manter linhas, paradas e horários" leva para a tela ManterLinhasParadas', async () => {
+      const { getByText } = await renderLiberada();
+
+      fireEvent.press(getByText('Manter linhas, paradas e horários'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ManterLinhasParadas');
+    });
+
     it('"Analisar reportes" leva para a tela AnalisarReportes', async () => {
       const { getByText } = await renderLiberada();
 

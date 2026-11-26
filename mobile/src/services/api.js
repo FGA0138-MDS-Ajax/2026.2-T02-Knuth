@@ -356,3 +356,35 @@ export const analisarReporteAdmin = async (token, id, dados) => {
   return response.data;
 };
 
+export const criarLinha = async (token, dados) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/linhas`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const editarLinha = async (token, id, dados) => {
+  const response = await axios.put(
+    `${API_BASE_URL}/admin/linhas/${id}`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const excluirLinha = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/linhas/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
