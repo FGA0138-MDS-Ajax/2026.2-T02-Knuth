@@ -126,6 +126,9 @@ export default function ManterLinhasParadasScreen({ navigation }) {
         <TouchableOpacity style={styles.botaoEditar} onPress={() => navigation.navigate('NovaLinha', { linha: item })}>
           <Text style={styles.botaoEditarTexto}>Editar</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.botaoEditar} onPress={() => navigation.navigate('ManterHorarios', { linha: item })}>
+          <Text style={styles.botaoEditarTexto}>Horários</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.botaoExcluir} onPress={() => confirmarExclusaoLinha(item)}>
           <Text style={styles.botaoExcluirTexto}>Excluir</Text>
         </TouchableOpacity>

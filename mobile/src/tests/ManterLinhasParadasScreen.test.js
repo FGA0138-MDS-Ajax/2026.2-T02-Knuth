@@ -133,6 +133,15 @@ describe('ManterLinhasParadasScreen', () => {
 
       expect(navigation.navigate).toHaveBeenCalledWith('NovaLinha', { linha: ASA_SUL });
     });
+
+    it('"Horários" abre as partidas da linha escolhida', async () => {
+      getLinhas.mockResolvedValue([ASA_SUL]);
+      const { findByText } = renderTela();
+
+      fireEvent.press(await findByText('Horários'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('ManterHorarios', { linha: ASA_SUL });
+    });
   });
 
   describe('exclusão', () => {
