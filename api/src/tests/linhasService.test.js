@@ -2,6 +2,10 @@ jest.mock('../repositories/linhasRepository', () => ({
   findLinhas: jest.fn(),
   findItinerarioByLinhaId: jest.fn(),
   findHorariosByLinhaId: jest.fn(),
+  buscarPorId: jest.fn(),
+  criar: jest.fn(),
+  atualizar: jest.fn(),
+  excluir: jest.fn(),
 }));
 
 const linhasRepository = require('../repositories/linhasRepository');
@@ -250,6 +254,176 @@ describe('LinhasService', () => {
       expect(resultado.faixaTarifaria).toBe('METROPOLITANA 2');
       expect(resultado.operadora).toBe('VIAÇÃO PIONEIRA BACIA - 02');
       expect(resultado.extensaoKm).toBe(42.35);
+    });
+  });
+
+  describe('criarLinha (RF23)', () => {
+    const dadosValidos = {
+      codigo: ' 0.110 ',
+      nome: '  Asa Sul / Rodoviária  ',
+      cor: '#006666',
+      tarifa: '5,50',
+      faixa_tarifaria: 'METROPOLITANA 1',
+      operadora: 'Urbi',
+      extensao_km: '12.5',
+    };
+
+    it('exige o código', async () => {
+      await expect(linhasService.criarLinha({ ...dadosValidos, codigo: '  ' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O código da linha é obrigatório.',
+      });
+      expect(linhasRepository.criar).not.toHaveBeenCalled();
+    });
+
+    it('aceita no código apenas números e pontos', async () => {
+      await expect(linhasService.criarLinha({ ...dadosValidos, codigo: '0.11A' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O código da linha deve ter apenas números e pontos (ex.: 0.110).',
+      });
+    });
+
+    it('exige o nome', async () => {
+      await expect(linhasService.criarLinha({ ...dadosValidos, nome: '' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O nome da linha é obrigatório.',
+      });
+    });
+
+    it('rejeita cor fora do formato #RRGGBB', async () => {
+      await expect(linhasService.criarLinha({ ...dadosValidos, cor: 'azul' })).rejects.toMatchObject({
+        status: 400,
+        message: 'A cor deve estar no formato #RRGGBB.',
+      });
+    });
+
+    it('rejeita tarifa negativa ou que não é número', async () => {
+      await expect(linhasService.criarLinha({ ...dadosValidos, tarifa: '-1' })).rejects.toMatchObject({
+        status: 400,
+        message: 'A tarifa deve ser um número entre 0 e 9999,99.',
+      });
+      await expect(linhasService.criarLinha({ ...dadosValidos, tarifa: 'cinco' })).rejects.toMatchObject({
+        status: 400,
+      });
+    });
+
+    it('rejeita extensão inválida', async () => {
+      await expect(linhasService.criarLinha({ ...dadosValidos, extensao_km: 'abc' })).rejects.toMatchObject({
+        status: 400,
+        message: 'A extensão deve ser um número entre 0 e 999999,99.',
+      });
+    });
+
+    it('limita o tamanho dos textos ao das colunas', async () => {
+      await expect(
+        linhasService.criarLinha({ ...dadosValidos, operadora: 'x'.repeat(121) })
+      ).rejects.toMatchObject({ status: 400, message: 'A operadora deve ter no máximo 120 caracteres.' });
+    });
+
+    it('impede código repetido', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue({ id: '0.110' });
+
+      await expect(linhasService.criarLinha(dadosValidos)).rejects.toMatchObject({
+        status: 409,
+        message: 'Já existe uma linha com o código 0.110.',
+      });
+      expect(linhasRepository.criar).not.toHaveBeenCalled();
+    });
+
+    it('cria a linha com os textos limpos e os números convertidos', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue(null);
+      linhasRepository.criar.mockResolvedValue({ id: '0.110' });
+
+      const resultado = await linhasService.criarLinha(dadosValidos);
+
+      expect(linhasRepository.buscarPorId).toHaveBeenCalledWith('0.110');
+      expect(linhasRepository.criar).toHaveBeenCalledWith({
+        codigo: '0.110',
+        nome: 'Asa Sul / Rodoviária',
+        cor: '#006666',
+        tarifa: 5.5,
+        faixaTarifaria: 'METROPOLITANA 1',
+        operadora: 'Urbi',
+        extensaoKm: 12.5,
+      });
+      expect(resultado).toEqual({ id: '0.110' });
+    });
+
+    it('grava como nulos os campos opcionais vazios', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue(null);
+      linhasRepository.criar.mockResolvedValue({ id: '0.110' });
+
+      await linhasService.criarLinha({ codigo: '0.110', nome: 'Asa Sul', cor: '', tarifa: '', faixa_tarifaria: '  ' });
+
+      expect(linhasRepository.criar).toHaveBeenCalledWith({
+        codigo: '0.110',
+        nome: 'Asa Sul',
+        cor: null,
+        tarifa: null,
+        faixaTarifaria: null,
+        operadora: null,
+        extensaoKm: null,
+      });
+    });
+  });
+
+  describe('editarLinha (RF23)', () => {
+    it('falha se a linha não existir', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue(null);
+
+      await expect(linhasService.editarLinha('999', { nome: 'X' })).rejects.toMatchObject({
+        status: 404,
+        message: 'Linha não encontrada.',
+      });
+      expect(linhasRepository.atualizar).not.toHaveBeenCalled();
+    });
+
+    it('valida os dados como na criação', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue({ id: '0.110' });
+
+      await expect(linhasService.editarLinha('0.110', { nome: '   ' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O nome da linha é obrigatório.',
+      });
+      expect(linhasRepository.atualizar).not.toHaveBeenCalled();
+    });
+
+    it('atualiza a linha sem repassar o código', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue({ id: '0.110' });
+      linhasRepository.atualizar.mockResolvedValue({ id: '0.110', nome: 'Asa Norte' });
+
+      const resultado = await linhasService.editarLinha('0.110', { codigo: '9.999', nome: 'Asa Norte', tarifa: 6 });
+
+      expect(linhasRepository.atualizar).toHaveBeenCalledWith('0.110', {
+        nome: 'Asa Norte',
+        cor: null,
+        tarifa: 6,
+        faixaTarifaria: null,
+        operadora: null,
+        extensaoKm: null,
+      });
+      expect(resultado).toEqual({ id: '0.110', nome: 'Asa Norte' });
+    });
+  });
+
+  describe('excluirLinha (RF23)', () => {
+    it('falha se a linha não existir', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue(null);
+
+      await expect(linhasService.excluirLinha('999')).rejects.toMatchObject({
+        status: 404,
+        message: 'Linha não encontrada.',
+      });
+      expect(linhasRepository.excluir).not.toHaveBeenCalled();
+    });
+
+    it('exclui a linha existente', async () => {
+      linhasRepository.buscarPorId.mockResolvedValue({ id: '0.110' });
+      linhasRepository.excluir.mockResolvedValue();
+
+      await linhasService.excluirLinha('0.110');
+
+      expect(linhasRepository.excluir).toHaveBeenCalledWith('0.110');
     });
   });
 });

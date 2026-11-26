@@ -119,4 +119,89 @@ describe('LinhasRepository', () => {
       expect(resultado).toEqual([]);
     });
   });
+
+  describe('buscarPorId (RF23)', () => {
+    it('busca a linha pelo id e devolve o registro', async () => {
+      const linha = { id: '0.110', codigo: '0.110', nome: 'Asa Sul' };
+      pool.query.mockResolvedValue({ rows: [linha] });
+
+      const resultado = await repository.buscarPorId('0.110');
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('FROM linhas WHERE id = $1');
+      expect(params).toEqual(['0.110']);
+      expect(resultado).toEqual(linha);
+    });
+
+    it('devolve null quando a linha não existe', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await expect(repository.buscarPorId('999')).resolves.toBeNull();
+    });
+  });
+
+  describe('criar (RF23)', () => {
+    it('insere a linha usando o código também como id', async () => {
+      const criada = { id: '0.110', codigo: '0.110', nome: 'Asa Sul' };
+      pool.query.mockResolvedValue({ rows: [criada] });
+
+      const resultado = await repository.criar({
+        codigo: '0.110',
+        nome: 'Asa Sul',
+        cor: '#006666',
+        tarifa: 5.5,
+        faixaTarifaria: 'METROPOLITANA 1',
+        operadora: 'Urbi',
+        extensaoKm: 12.5,
+      });
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('INSERT INTO linhas (id, codigo, nome, cor, tarifa, faixa_tarifaria, operadora, extensao_km)');
+      expect(sql).toContain('VALUES ($1, $1, $2, $3, $4, $5, $6, $7)');
+      expect(params).toEqual(['0.110', 'Asa Sul', '#006666', 5.5, 'METROPOLITANA 1', 'Urbi', 12.5]);
+      expect(resultado).toEqual(criada);
+    });
+
+    it('propaga o erro do banco', async () => {
+      pool.query.mockRejectedValue(new Error('falha no banco'));
+
+      await expect(repository.criar({ codigo: '0.110', nome: 'Asa Sul' })).rejects.toThrow('falha no banco');
+    });
+  });
+
+  describe('atualizar (RF23)', () => {
+    it('atualiza os dados da linha pelo id sem mudar o código', async () => {
+      const atualizada = { id: '0.110', codigo: '0.110', nome: 'Asa Norte' };
+      pool.query.mockResolvedValue({ rows: [atualizada] });
+
+      const resultado = await repository.atualizar('0.110', {
+        nome: 'Asa Norte',
+        cor: null,
+        tarifa: null,
+        faixaTarifaria: null,
+        operadora: null,
+        extensaoKm: null,
+      });
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('UPDATE linhas');
+      expect(sql).toContain('SET nome = $2, cor = $3, tarifa = $4, faixa_tarifaria = $5, operadora = $6, extensao_km = $7');
+      expect(sql).toContain('WHERE id = $1');
+      expect(sql).not.toContain('codigo =');
+      expect(params).toEqual(['0.110', 'Asa Norte', null, null, null, null, null]);
+      expect(resultado).toEqual(atualizada);
+    });
+  });
+
+  describe('excluir (RF23)', () => {
+    it('exclui a linha pelo id', async () => {
+      pool.query.mockResolvedValue({ rowCount: 1 });
+
+      await repository.excluir('0.110');
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toBe('DELETE FROM linhas WHERE id = $1');
+      expect(params).toEqual(['0.110']);
+    });
+  });
 });

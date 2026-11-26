@@ -53,6 +53,41 @@ class LinhasRepository {
     const { rows } = await pool.query(query, [linhaId]);
     return rows;
   }
+
+  // RF23 - Manutenção manual de linhas pelo administrador
+  async buscarPorId(id) {
+    const { rows } = await pool.query(
+      'SELECT id, codigo, nome, cor, tarifa, faixa_tarifaria, operadora, extensao_km FROM linhas WHERE id = $1',
+      [id]
+    );
+    return rows[0] || null;
+  }
+
+  async criar({ codigo, nome, cor, tarifa, faixaTarifaria, operadora, extensaoKm }) {
+    const { rows } = await pool.query(
+      `INSERT INTO linhas (id, codigo, nome, cor, tarifa, faixa_tarifaria, operadora, extensao_km)
+       VALUES ($1, $1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, codigo, nome, cor, tarifa, faixa_tarifaria, operadora, extensao_km`,
+      [codigo, nome, cor, tarifa, faixaTarifaria, operadora, extensaoKm]
+    );
+    return rows[0];
+  }
+
+  async atualizar(id, { nome, cor, tarifa, faixaTarifaria, operadora, extensaoKm }) {
+    const { rows } = await pool.query(
+      `UPDATE linhas
+       SET nome = $2, cor = $3, tarifa = $4, faixa_tarifaria = $5, operadora = $6, extensao_km = $7
+       WHERE id = $1
+       RETURNING id, codigo, nome, cor, tarifa, faixa_tarifaria, operadora, extensao_km`,
+      [id, nome, cor, tarifa, faixaTarifaria, operadora, extensaoKm]
+    );
+    return rows[0];
+  }
+
+  // Viagens, horários e favoritos da linha são apagados em cascata (ON DELETE CASCADE)
+  async excluir(id) {
+    await pool.query('DELETE FROM linhas WHERE id = $1', [id]);
+  }
 }
 
 module.exports = new LinhasRepository();

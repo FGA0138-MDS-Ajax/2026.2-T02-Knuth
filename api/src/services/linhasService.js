@@ -18,6 +18,51 @@ function anexarMetadadosLinha(destino, row) {
   if (extensaoKm !== undefined) destino.extensaoKm = extensaoKm;
 }
 
+// RF23 - Validações da manutenção manual de linhas
+// O código vira o id da linha (como no importador) e a consulta pública de itinerário só aceita números e pontos.
+const REGEX_CODIGO_LINHA = /^[0-9.]+$/;
+const REGEX_COR = /^#[0-9A-Fa-f]{6}$/;
+
+function erroComStatus(mensagem, status) {
+  const erro = new Error(mensagem);
+  erro.status = status;
+  return erro;
+}
+
+function lerTexto(valor, rotulo, limite) {
+  const texto = typeof valor === 'string' || typeof valor === 'number' ? String(valor).trim() : '';
+  if (texto.length > limite) {
+    throw erroComStatus(`${rotulo} deve ter no máximo ${limite} caracteres.`, 400);
+  }
+  return texto;
+}
+
+function lerNumero(valor, mensagem, maximo) {
+  if (valor === null || valor === undefined || String(valor).trim() === '') return null;
+  const numero = Number(String(valor).trim().replace(',', '.'));
+  if (!Number.isFinite(numero) || numero < 0 || numero > maximo) {
+    throw erroComStatus(mensagem, 400);
+  }
+  return numero;
+}
+
+function validarLinha(dados) {
+  const nome = lerTexto(dados.nome, 'O nome da linha', 255);
+  if (!nome) throw erroComStatus('O nome da linha é obrigatório.', 400);
+
+  const cor = lerTexto(dados.cor, 'A cor', 10);
+  if (cor && !REGEX_COR.test(cor)) throw erroComStatus('A cor deve estar no formato #RRGGBB.', 400);
+
+  return {
+    nome,
+    cor: cor || null,
+    tarifa: lerNumero(dados.tarifa, 'A tarifa deve ser um número entre 0 e 9999,99.', 9999.99),
+    faixaTarifaria: lerTexto(dados.faixa_tarifaria, 'A faixa tarifária', 50) || null,
+    operadora: lerTexto(dados.operadora, 'A operadora', 120) || null,
+    extensaoKm: lerNumero(dados.extensao_km, 'A extensão deve ser um número entre 0 e 999999,99.', 999999.99)
+  };
+}
+
 class LinhasService {
   // RF02 / Busca Geral: aceita tanto busca por texto quanto objeto de filtros (bacia, regiao, tipo)
   async obterLinhas(filtros) {
@@ -95,6 +140,32 @@ class LinhasService {
     return resultado;
   }
   
+  // RF23: Inclusão, alteração e exclusão manual de linhas pelo administrador
+  async criarLinha(dados) {
+    const codigo = lerTexto(dados.codigo, 'O código da linha', 50);
+    if (!codigo) throw erroComStatus('O código da linha é obrigatório.', 400);
+    if (!REGEX_CODIGO_LINHA.test(codigo)) {
+      throw erroComStatus('O código da linha deve ter apenas números e pontos (ex.: 0.110).', 400);
+    }
+    const linha = validarLinha(dados);
+
+    const existente = await linhasRepository.buscarPorId(codigo);
+    if (existente) throw erroComStatus(`Já existe uma linha com o código ${codigo}.`, 409);
+
+    return await linhasRepository.criar({ codigo, ...linha });
+  }
+
+  async editarLinha(id, dados) {
+    const linha = await linhasRepository.buscarPorId(id);
+    if (!linha) throw erroComStatus('Linha não encontrada.', 404);
+    return await linhasRepository.atualizar(id, validarLinha(dados));
+  }
+
+  async excluirLinha(id) {
+    const linha = await linhasRepository.buscarPorId(id);
+    if (!linha) throw erroComStatus('Linha não encontrada.', 404);
+    await linhasRepository.excluir(id);
+  }
 }
 
 module.exports = new LinhasService();

@@ -92,6 +92,12 @@ describe('adminRoutes', () => {
     expect(rota.handlers[1]).toBe(analisarReportesController.analisar);
   });
 
+  it('inclui as rotas de manutenção de linhas, paradas e horários (RF23)', () => {
+    const rotasRF23 = require('../routes/adminLinhasParadasRoutes');
+
+    expect(router.stack.some((camada) => camada.handle === rotasRF23)).toBe(true);
+  });
+
   describe('GET /perfil', () => {
     it('responde 200 com mensagem de acesso liberado e o usuário da requisição', () => {
       const rota = buscarRota(router, 'GET', '/perfil');
