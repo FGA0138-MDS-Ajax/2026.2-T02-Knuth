@@ -3,16 +3,26 @@ const path = require('path');
 jest.mock('pg', () => ({ Pool: jest.fn() }));
 jest.mock('dotenv', () => ({ config: jest.fn() }));
 
-const VARIAVEIS = ['DATABASE_URL', 'DB_USER', 'DB_HOST', 'DB_NAME', 'DB_PASSWORD', 'DB_PORT'];
+const VARIAVEIS = [
+  'DATABASE_URL',
+  'DB_USER',
+  'DB_HOST',
+  'DB_NAME',
+  'DB_PASSWORD',
+  'DB_PORT',
+];
 
 function carregar() {
   let resultado;
+
   jest.isolateModules(() => {
     const { Pool } = require('pg');
     const dotenv = require('dotenv');
     const pool = require('../config/database');
+
     resultado = { Pool, dotenv, pool };
   });
+
   return resultado;
 }
 
@@ -46,9 +56,11 @@ describe('database', () => {
     const { dotenv } = carregar();
 
     expect(dotenv.config).toHaveBeenCalledTimes(2);
+
     expect(dotenv.config).toHaveBeenNthCalledWith(1, {
       path: path.resolve(__dirname, '../../../.env'),
     });
+
     expect(dotenv.config).toHaveBeenNthCalledWith(2);
   });
 
@@ -60,7 +72,8 @@ describe('database', () => {
   });
 
   it('usa DATABASE_URL com SSL quando configurada', () => {
-    process.env.DATABASE_URL = 'postgresql://user:pass@neon.tech/rotasdf';
+    process.env.DATABASE_URL =
+      'postgresql://user:pass@neon.tech/rotasdf';
 
     const { Pool } = carregar();
 

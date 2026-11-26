@@ -25,6 +25,14 @@ import {
 import AlertaBanner from '../components/AlertaBanner';
 import FavoritoEstrela from '../components/FavoritoEstrela';
 import FavoritosCarregador from '../components/FavoritosCarregador';
+import {
+  MODOS_HORARIO,
+  OPCOES_MODO_HORARIO,
+  ATALHOS_HORARIO,
+  aplicarMascaraHorario,
+  validarHorarioTexto,
+  formatarResumoPlanejamento,
+} from '../utils/planejamentoHorario';
 
 export default function BuscarTrajetoScreen({ route, navigation }) {
   const origemInicial = route?.params?.origem || '';
@@ -36,6 +44,8 @@ export default function BuscarTrajetoScreen({ route, navigation }) {
   const [alertasOrigem, setAlertasOrigem] = useState([]);
   const [origemAfetadaPorAlerta, setOrigemAfetadaPorAlerta] = useState(false);
   const [destino, setDestino] = useState(destinoInicial);
+  const [modoHorario, setModoHorario] = useState(MODOS_HORARIO.AGORA);
+  const [horarioDesejado, setHorarioDesejado] = useState('');
   const [sugestoesOrigem, setSugestoesOrigem] = useState([]);
   const [sugestoesDestino, setSugestoesDestino] = useState([]);
   const [buscasRecentes, setBuscasRecentes] = useState([]);
@@ -194,11 +204,31 @@ export default function BuscarTrajetoScreen({ route, navigation }) {
       return;
     }
 
+    let planejamentoHorario = null;
+    if (modoHorario !== MODOS_HORARIO.AGORA) {
+      const horarioValido = validarHorarioTexto(horarioDesejado);
+      if (!horarioValido) {
+        setErro('Informe um horário válido no formato HH:MM (ex.: 08:30).');
+        return;
+      }
+      planejamentoHorario = {
+        referenciaHorario: modoHorario,
+        horario: horarioValido,
+      };
+    }
+
     setCarregando(true);
     try {
-      const opcoes = await getTrajetos(origemLimpa, destinoOriginal);
+      const opcoes = planejamentoHorario
+        ? await getTrajetos(origemLimpa, destinoOriginal, planejamentoHorario)
+        : await getTrajetos(origemLimpa, destinoOriginal);
       if (!opcoes || opcoes.length === 0) {
-        setErro('Nenhuma rota encontrada para esses locais.');
+        if (planejamentoHorario) {
+          const resumo = formatarResumoPlanejamento(planejamentoHorario);
+          setErro(`Nenhuma rota encontrada para o horário informado (${resumo}).`);
+        } else {
+          setErro('Nenhuma rota encontrada para esses locais.');
+        }
       } else {
         salvarTrajetoRecenteLocal(origemLimpa, destinoLimpo)
           .then(setBuscasRecentes)
@@ -208,11 +238,15 @@ export default function BuscarTrajetoScreen({ route, navigation }) {
             .then((usuarioId) => salvarBuscaRecente(origemLimpa, destinoLimpo, usuarioId))
             .catch(() => {});
         }
-        navigation.navigate('ResultadoTrajeto', {
+        const paramsNavegacao = {
           opcoes,
           origem: origemLimpa,
           destino: destinoLimpo,
-        });
+        };
+        if (planejamentoHorario) {
+          paramsNavegacao.planejamentoHorario = planejamentoHorario;
+        }
+        navigation.navigate('ResultadoTrajeto', paramsNavegacao);
       }
     } catch (error) {
       console.error(error);
@@ -343,6 +377,76 @@ export default function BuscarTrajetoScreen({ route, navigation }) {
         ) : null}
       </View>
 
+      <View style={styles.horarioCard}>
+        <Text style={styles.label}>Quando deseja viajar?</Text>
+        <View style={styles.modosRow}>
+          {OPCOES_MODO_HORARIO.map((opcao) => {
+            const ativo = modoHorario === opcao.id;
+            return (
+              <TouchableOpacity
+                key={opcao.id}
+                style={[styles.modoBotao, ativo && styles.modoBotaoAtivo]}
+                onPress={() => {
+                  setModoHorario(opcao.id);
+                  setErro('');
+                }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: ativo }}
+              >
+                <Text style={[styles.modoBotaoTexto, ativo && styles.modoBotaoTextoAtivo]}>
+                  {opcao.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        {modoHorario !== MODOS_HORARIO.AGORA ? (
+          <View style={styles.horarioInputBox}>
+            <Text style={styles.horarioSubLabel}>
+              {modoHorario === MODOS_HORARIO.PARTIDA
+                ? 'Horário desejado de partida (HH:MM):'
+                : 'Horário limite de chegada (HH:MM):'}
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ex: 08:30"
+              value={horarioDesejado}
+              onChangeText={(texto) => {
+                setHorarioDesejado(aplicarMascaraHorario(texto));
+                setErro('');
+              }}
+              keyboardType="numeric"
+              maxLength={5}
+            />
+            <View style={styles.atalhosHorarioRow}>
+              {ATALHOS_HORARIO.map((hora) => (
+                <TouchableOpacity
+                  key={hora}
+                  style={[
+                    styles.atalhoChip,
+                    horarioDesejado === hora && styles.atalhoChipAtivo,
+                  ]}
+                  onPress={() => {
+                    setHorarioDesejado(hora);
+                    setErro('');
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.atalhoChipTexto,
+                      horarioDesejado === hora && styles.atalhoChipTextoAtivo,
+                    ]}
+                  >
+                    {hora}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ) : null}
+      </View>
+
       {podeFavoritarTrajeto ? (
         <View style={styles.favoritarTrajetoRow}>
           <Text style={styles.favoritarTrajetoTexto}>Salvar este trajeto nos favoritos</Text>
@@ -404,6 +508,42 @@ const styles = StyleSheet.create({
   botaoAtualizar: { alignSelf: 'flex-start' },
   botaoAtualizarTexto: { fontSize: 13, color: '#006666', fontWeight: 'bold', textDecorationLine: 'underline' },
   inputContainer: { marginBottom: 20 },
+  horarioCard: {
+    backgroundColor: '#FFF',
+    padding: 14,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    marginBottom: 16,
+  },
+  modosRow: { flexDirection: 'row', gap: 8 },
+  modoBotao: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+    backgroundColor: '#F8FAFC',
+    alignItems: 'center',
+  },
+  modoBotaoAtivo: { backgroundColor: '#006666', borderColor: '#006666' },
+  modoBotaoTexto: { fontSize: 13, fontWeight: '600', color: '#334155' },
+  modoBotaoTextoAtivo: { color: '#FFF' },
+  horarioInputBox: { marginTop: 12 },
+  horarioSubLabel: { fontSize: 13, color: '#555', marginBottom: 6, fontWeight: '500' },
+  atalhosHorarioRow: { flexDirection: 'row', gap: 8, marginTop: 10 },
+  atalhoChip: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+    backgroundColor: '#F8FAFC',
+  },
+  atalhoChipAtivo: { backgroundColor: '#E0F2F1', borderColor: '#006666' },
+  atalhoChipTexto: { fontSize: 13, fontWeight: '600', color: '#334155' },
+  atalhoChipTextoAtivo: { color: '#006666' },
   label: { fontSize: 16, color: '#333', marginBottom: 8, fontWeight: '600' },
   input: { backgroundColor: '#FFF', padding: 15, borderRadius: 8, borderWidth: 1, borderColor: '#DDD', fontSize: 16 },
   listaSugestoes: {

@@ -252,6 +252,16 @@ describe('TrajetosService.obterTrajetos', () => {
         'falha no banco'
       );
     });
+
+    it('repassa filtroHorario para rotas diretas e com baldeação quando informado (RF06)', async () => {
+      const filtro = { referencia: 'CHEGADA', horario: '09:00:00' };
+      trajetosRepository.buscarRotasDiretas.mockResolvedValue([viagemDireta()]);
+
+      await trajetosService.obterTrajetos('Terminal Central', 'UNB', filtro);
+
+      expect(trajetosRepository.buscarRotasDiretas).toHaveBeenCalledWith([1], [2], filtro);
+      expect(trajetosRepository.buscarRotasComBaldeacao).toHaveBeenCalledWith([1], [2], filtro);
+    });
   });
 
   describe('ordenação e cálculo de caminhada (RF05)', () => {

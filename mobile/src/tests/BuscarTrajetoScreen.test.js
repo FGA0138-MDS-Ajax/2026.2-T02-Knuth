@@ -357,5 +357,65 @@ describe('BuscarTrajetoScreen', () => {
         destino: 'Rodoviária do Plano Piloto',
       });
     });
+
+    it('permite planejar viagem por horário de partida ("Partida às") (RF06)', async () => {
+      const opcoes = [{ duracaoMinutos: 25, partida: '08:30', chegada: '08:55', baldeacoes: 0 }];
+      getTrajetos.mockResolvedValue(opcoes);
+      const { getByText, getByPlaceholderText } = await renderComOrigem();
+
+      fireEvent.changeText(getByPlaceholderText(PLACEHOLDER_DESTINO), 'Rodoviária');
+      fireEvent.press(getByText('Partida às'));
+      fireEvent.changeText(getByPlaceholderText('Ex: 08:30'), '0830');
+      fireEvent.press(getByText('Buscar Trajetos'));
+
+      await waitFor(() =>
+        expect(getTrajetos).toHaveBeenCalledWith(PARADA.nome, 'Rodoviária', {
+          horario: '08:30',
+          referenciaHorario: 'PARTIDA',
+        })
+      );
+      expect(navigation.navigate).toHaveBeenCalledWith('ResultadoTrajeto', {
+        opcoes,
+        origem: PARADA.nome,
+        destino: 'Rodoviária',
+        planejamentoHorario: {
+          referenciaHorario: 'PARTIDA',
+          horario: '08:30',
+        },
+      });
+    });
+
+    it('permite planejar viagem por horário de chegada ("Chegada até") usando atalho e exibe aviso quando vazio (RF06)', async () => {
+      getTrajetos.mockResolvedValue([]);
+      const { getByText, findByText, getByPlaceholderText } = await renderComOrigem();
+
+      fireEvent.changeText(getByPlaceholderText(PLACEHOLDER_DESTINO), 'Rodoviária');
+      fireEvent.press(getByText('Chegada até'));
+      fireEvent.press(getByText('08:00'));
+      fireEvent.press(getByText('Buscar Trajetos'));
+
+      await waitFor(() =>
+        expect(getTrajetos).toHaveBeenCalledWith(PARADA.nome, 'Rodoviária', {
+          horario: '08:00',
+          referenciaHorario: 'CHEGADA',
+        })
+      );
+      expect(
+        await findByText('Nenhuma rota encontrada para o horário informado (Chegada até 08:00).')
+      ).toBeTruthy();
+      expect(navigation.navigate).not.toHaveBeenCalled();
+    });
+
+    it('valida formato do horário antes de consultar a API (RF06)', async () => {
+      const { getByText, getByPlaceholderText } = await renderComOrigem();
+
+      fireEvent.changeText(getByPlaceholderText(PLACEHOLDER_DESTINO), 'Rodoviária');
+      fireEvent.press(getByText('Partida às'));
+      fireEvent.changeText(getByPlaceholderText('Ex: 08:30'), '2599');
+      fireEvent.press(getByText('Buscar Trajetos'));
+
+      expect(getByText('Informe um horário válido no formato HH:MM (ex.: 08:30).')).toBeTruthy();
+      expect(getTrajetos).not.toHaveBeenCalled();
+    });
   });
 });

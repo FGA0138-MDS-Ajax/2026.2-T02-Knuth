@@ -104,12 +104,37 @@ class TrajetosRepository {
     return rows;
   }
 
-  async buscarRotasDiretas(idsOrigem, idsDestino) {
+  async buscarRotasDiretas(idsOrigem, idsDestino, filtroHorario = null) {
     const origens = normalizarIds(idsOrigem);
     const destinos = normalizarIds(idsDestino);
 
     if (origens.length === 0 || destinos.length === 0) {
       return [];
+    }
+
+    const params = [origens, destinos];
+    let filtroWhere = '';
+    let ordemJanela = '(hp2.sequencia - hp1.sequencia) ASC, hp1.partida ASC';
+    let ordemFinal = 'duracao ASC, horario_origem ASC';
+
+    if (filtroHorario && filtroHorario.horario) {
+      params.push(filtroHorario.horario);
+      const paramHorario = `$${params.length}`;
+
+      if (filtroHorario.referencia === 'CHEGADA') {
+        filtroWhere = `
+          AND CAST(hp2.partida AS TIME) >= CAST(hp1.partida AS TIME)
+          AND CAST(hp2.partida AS TIME) <= CAST(${paramHorario} AS TIME)
+        `;
+        ordemJanela = 'hp2.partida DESC, (hp2.sequencia - hp1.sequencia) ASC';
+        ordemFinal = 'horario_destino DESC, duracao ASC';
+      } else {
+        filtroWhere = `
+          AND CAST(hp1.partida AS TIME) >= CAST(${paramHorario} AS TIME)
+        `;
+        ordemJanela = 'hp1.partida ASC, (hp2.sequencia - hp1.sequencia) ASC';
+        ordemFinal = 'horario_origem ASC, duracao ASC';
+      }
     }
 
     const query = `
@@ -138,7 +163,7 @@ class TrajetosRepository {
           pd.longitude AS lng_destino,
           ROW_NUMBER() OVER (
             PARTITION BY l.codigo
-            ORDER BY (hp2.sequencia - hp1.sequencia) ASC, hp1.partida ASC
+            ORDER BY ${ordemJanela}
           ) AS ordem_linha
         FROM horarios_paradas hp1
         INNER JOIN horarios_paradas hp2
@@ -150,6 +175,7 @@ class TrajetosRepository {
         INNER JOIN paradas po ON po.id = hp1.parada_id
         INNER JOIN paradas pd ON pd.id = hp2.parada_id
         WHERE hp1.parada_id = ANY($1::text[])
+          ${filtroWhere}
       )
       SELECT
         viagem_id,
@@ -171,19 +197,50 @@ class TrajetosRepository {
         lng_destino
       FROM rotas_candidatas
       WHERE ordem_linha <= 2
-      ORDER BY duracao ASC, horario_origem ASC
+      ORDER BY ${ordemFinal}
       LIMIT 8;
     `;
-    const { rows } = await pool.query(query, [origens, destinos]);
+    const { rows } = await pool.query(query, params);
     return rows;
   }
 
-  async buscarRotasComBaldeacao(idsOrigem, idsDestino) {
+  async buscarRotasComBaldeacao(idsOrigem, idsDestino, filtroHorario = null) {
     const origens = normalizarIds(idsOrigem);
     const destinos = normalizarIds(idsDestino);
 
     if (origens.length === 0 || destinos.length === 0) {
       return [];
+    }
+
+    const params = [origens, destinos];
+    let filtroLeg1Where = '';
+    let ordemLeg1 = 'hp_o.partida ASC';
+    let filtroCandidatasWhere = '';
+    let ordemPar = `
+              EXTRACT(EPOCH FROM (CAST(hp_t2.partida AS TIME) - CAST(l1h.hora_chegada_transfer AS TIME))) ASC,
+              l1h.hora_origem ASC`;
+    let ordemFinal = 'duracao_total ASC, hora_origem ASC';
+
+    if (filtroHorario && filtroHorario.horario) {
+      params.push(filtroHorario.horario);
+      const paramHorario = `$${params.length}`;
+
+      if (filtroHorario.referencia === 'CHEGADA') {
+        filtroLeg1Where = `WHERE CAST(hp_o.partida AS TIME) <= CAST(${paramHorario} AS TIME)`;
+        ordemLeg1 = 'hp_o.partida DESC';
+        filtroCandidatasWhere = `
+          AND CAST(hp_d.partida AS TIME) >= CAST(l1h.hora_origem AS TIME)
+          AND CAST(hp_d.partida AS TIME) <= CAST(${paramHorario} AS TIME)
+        `;
+        ordemPar = `
+              hp_d.partida DESC,
+              EXTRACT(EPOCH FROM (CAST(hp_t2.partida AS TIME) - CAST(l1h.hora_chegada_transfer AS TIME))) ASC`;
+        ordemFinal = 'hora_destino DESC, duracao_total ASC';
+      } else {
+        filtroLeg1Where = `WHERE CAST(hp_o.partida AS TIME) >= CAST(${paramHorario} AS TIME)`;
+        ordemLeg1 = 'hp_o.partida ASC';
+        ordemFinal = 'hora_origem ASC, duracao_total ASC';
+      }
     }
 
     const query = `
@@ -277,9 +334,8 @@ class TrajetosRepository {
           po.latitude AS lat_origem,
           po.longitude AS lng_origem,
           ROW_NUMBER() OVER (
-            PARTITION BY tp.linha_1_id, tp.linha_2_id,
-              tp.parada_transfer_id
-            ORDER BY hp_o.partida ASC
+            PARTITION BY tp.linha_1_id, tp.linha_2_id, tp.parada_transfer_id
+            ORDER BY ${ordemLeg1}
           ) AS rn
         FROM top_padroes tp
         INNER JOIN viagens v1
@@ -294,6 +350,7 @@ class TrajetosRepository {
           AND hp_t.parada_id = tp.parada_transfer_id
           AND hp_t.sequencia > hp_o.sequencia
         INNER JOIN paradas po ON po.id = tp.origem_id
+        ${filtroLeg1Where}
       ),
       candidatas AS (
         SELECT
@@ -340,12 +397,7 @@ class TrajetosRepository {
           pd.longitude AS lng_destino,
           ROW_NUMBER() OVER (
             PARTITION BY l1h.linha_1, l2.codigo
-            ORDER BY
-              EXTRACT(EPOCH FROM (
-                CAST(hp_t2.partida AS TIME) -
-                CAST(l1h.hora_chegada_transfer AS TIME)
-              )) ASC,
-              l1h.hora_origem ASC
+            ORDER BY ${ordemPar}
           ) AS rn_par
         FROM leg1_horarios l1h
         INNER JOIN viagens v2
@@ -362,14 +414,9 @@ class TrajetosRepository {
         INNER JOIN paradas pt ON pt.id = l1h.parada_transfer_id
         INNER JOIN paradas pd ON pd.id = l1h.destino_id
         WHERE l1h.rn <= 5
-          AND CAST(hp_t2.partida AS TIME) >=
-              CAST(l1h.hora_chegada_transfer AS TIME)
-          AND (
-            EXTRACT(EPOCH FROM (
-              CAST(hp_t2.partida AS TIME) -
-              CAST(l1h.hora_chegada_transfer AS TIME)
-            )) / 60
-          ) <= 60
+          AND CAST(hp_t2.partida AS TIME) >= CAST(l1h.hora_chegada_transfer AS TIME)
+          AND (EXTRACT(EPOCH FROM (CAST(hp_t2.partida AS TIME) - CAST(l1h.hora_chegada_transfer AS TIME))) / 60) <= 60
+          ${filtroCandidatasWhere}
       )
       SELECT
         viagem_1_id,
@@ -403,11 +450,10 @@ class TrajetosRepository {
         lng_destino
       FROM candidatas
       WHERE rn_par = 1
-      ORDER BY duracao_total ASC, hora_origem ASC
+      ORDER BY ${ordemFinal}
       LIMIT 5;
     `;
-
-    const { rows } = await pool.query(query, [origens, destinos]);
+    const { rows } = await pool.query(query, params);
     return rows;
 }
 

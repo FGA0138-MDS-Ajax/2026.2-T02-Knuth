@@ -7,6 +7,7 @@ function paraNumeroValido(valor) {
   if (valor === null || valor === undefined || valor === '') {
     return null;
   }
+
   const numero = Number(valor);
   return Number.isFinite(numero) ? numero : null;
 }
@@ -15,6 +16,7 @@ function calcularDistanciaMetros(pontoA, pontoB) {
   if (!pontoA || !pontoB) {
     return 0;
   }
+
   if (
     pontoA.id !== null &&
     pontoA.id !== undefined &&
@@ -41,8 +43,15 @@ function calcularDistanciaMetros(pontoA, pontoB) {
 
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(Math.max(0, 1 - a)));
+    Math.cos(lat1Rad) *
+      Math.cos(lat2Rad) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+
+  const c = 2 * Math.atan2(
+    Math.sqrt(a),
+    Math.sqrt(Math.max(0, 1 - a))
+  );
 
   return Math.round(RAIO_TERRA_METROS * c);
 }
@@ -53,6 +62,7 @@ function calcularCaminhadaOpcao(pontoRefOrigem, pontoRefDestino, viagem) {
     latitude: viagem.lat_origem,
     longitude: viagem.lng_origem,
   };
+
   const pontoDesembarque = {
     id: viagem.destino_id,
     latitude: viagem.lat_destino,
@@ -65,7 +75,12 @@ function calcularCaminhadaOpcao(pontoRefOrigem, pontoRefDestino, viagem) {
   );
 }
 
-const PALETA_LINHAS_FALLBACK = ['#006666', '#1565C0', '#D97706', '#2E7D32'];
+const PALETA_LINHAS_FALLBACK = [
+  '#006666',
+  '#1565C0',
+  '#D97706',
+  '#2E7D32',
+];
 
 function criarPonto(id, nome, latitude, longitude, codigo = null) {
   if (
@@ -76,11 +91,14 @@ function criarPonto(id, nome, latitude, longitude, codigo = null) {
   ) {
     return null;
   }
+
   const lat = Number(latitude);
   const lng = Number(longitude);
+
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
     return null;
   }
+
   return {
     id: id !== null && id !== undefined ? String(id) : null,
     codigo: codigo || null,
@@ -93,17 +111,30 @@ function criarPonto(id, nome, latitude, longitude, codigo = null) {
 function escolherCorTrecho(corBruta, indice = 0) {
   if (corBruta && typeof corBruta === 'string') {
     const limpa = corBruta.trim();
+
     if (/^#?[0-9a-fA-F]{6}$/.test(limpa)) {
-      const hex = limpa.startsWith('#') ? limpa.toUpperCase() : `#${limpa.toUpperCase()}`;
+      const hex = limpa.startsWith('#')
+        ? limpa.toUpperCase()
+        : `#${limpa.toUpperCase()}`;
+
       if (hex !== '#FFFFFF') {
         return hex;
       }
     }
   }
-  return PALETA_LINHAS_FALLBACK[indice % PALETA_LINHAS_FALLBACK.length];
+
+  return PALETA_LINHAS_FALLBACK[
+    indice % PALETA_LINHAS_FALLBACK.length
+  ];
 }
 
-async function obterPontosTrecho(viagemId, seqInicio, seqFim, pontoInicio, pontoFim) {
+async function obterPontosTrecho(
+  viagemId,
+  seqInicio,
+  seqFim,
+  pontoInicio,
+  pontoFim
+) {
   if (
     typeof trajetosRepository.buscarParadasTrecho === 'function' &&
     viagemId &&
@@ -113,31 +144,57 @@ async function obterPontosTrecho(viagemId, seqInicio, seqFim, pontoInicio, ponto
     seqFim !== null
   ) {
     try {
-      const rows = await trajetosRepository.buscarParadasTrecho(viagemId, seqInicio, seqFim);
+      const rows = await trajetosRepository.buscarParadasTrecho(
+        viagemId,
+        seqInicio,
+        seqFim
+      );
+
       if (Array.isArray(rows) && rows.length > 0) {
         const pontos = rows
           .map((row) =>
-            criarPonto(row.parada_id, row.nome, row.latitude, row.longitude, row.codigo)
+            criarPonto(
+              row.parada_id,
+              row.nome,
+              row.latitude,
+              row.longitude,
+              row.codigo
+            )
           )
           .filter(Boolean);
+
         if (pontos.length >= 2) {
           return pontos;
         }
       }
     } catch (erro) {
-      console.error('Erro ao buscar paradas do trecho para o mapa:', erro);
+      console.error(
+        'Erro ao buscar paradas do trecho para o mapa:',
+        erro
+      );
     }
   }
 
   return [pontoInicio, pontoFim].filter(Boolean);
 }
 
-function adicionarCaminhadaSeDiferente(trechos, pontoA, pontoB, titulo) {
+function adicionarCaminhadaSeDiferente(
+  trechos,
+  pontoA,
+  pontoB,
+  titulo
+) {
   if (!pontoA || !pontoB) return;
-  const mesmoId = pontoA.id && pontoB.id && pontoA.id === pontoB.id;
+
+  const mesmoId =
+    pontoA.id &&
+    pontoB.id &&
+    pontoA.id === pontoB.id;
+
   const mesmaCoord =
     Math.abs(pontoA.latitude - pontoB.latitude) < 1e-5 &&
     Math.abs(pontoA.longitude - pontoB.longitude) < 1e-5;
+
   if (mesmoId || mesmaCoord) return;
 
   trechos.push({
@@ -148,9 +205,29 @@ function adicionarCaminhadaSeDiferente(trechos, pontoA, pontoB, titulo) {
 }
 
 class TrajetosService {
-  async obterTrajetos(origem, destino, criterioOrdenacao = null) {
-    const paradasOrigem = await trajetosRepository.buscarParadasPorNome(origem);
-    const paradasDestino = await trajetosRepository.buscarParadasPorNome(destino);
+  async obterTrajetos(
+    origem,
+    destino,
+    criterioOrdenacao = null,
+    filtroHorario = null
+  ) {
+    // Compatibilidade com chamadas anteriores da RF06
+    // que passam o filtro de horário no terceiro argumento.
+    if (
+      filtroHorario === null &&
+      criterioOrdenacao &&
+      typeof criterioOrdenacao === 'object' &&
+      criterioOrdenacao.horario
+    ) {
+      filtroHorario = criterioOrdenacao;
+      criterioOrdenacao = null;
+    }
+
+    const paradasOrigem =
+      await trajetosRepository.buscarParadasPorNome(origem);
+
+    const paradasDestino =
+      await trajetosRepository.buscarParadasPorNome(destino);
 
     if (paradasOrigem.length === 0 || paradasDestino.length === 0) {
       return [];
@@ -165,6 +242,7 @@ class TrajetosService {
       paradasOrigem[0]?.latitude,
       paradasOrigem[0]?.longitude
     );
+
     const pontoRefDestino = criarPonto(
       paradasDestino[0]?.id,
       paradasDestino[0]?.nome,
@@ -172,7 +250,18 @@ class TrajetosService {
       paradasDestino[0]?.longitude
     );
 
-    const diretas = await trajetosRepository.buscarRotasDiretas(idsOrigem, idsDestino);
+    // Busca de trajetos diretos, com filtro de horário opcional.
+    const diretas = filtroHorario
+      ? await trajetosRepository.buscarRotasDiretas(
+          idsOrigem,
+          idsDestino,
+          filtroHorario
+        )
+      : await trajetosRepository.buscarRotasDiretas(
+          idsOrigem,
+          idsDestino
+        );
+
     const opcoesDiretas = await Promise.all(
       diretas.map(async (viagem) => {
         const pontoOrigem = criarPonto(
@@ -181,6 +270,7 @@ class TrajetosService {
           viagem.lat_origem,
           viagem.lng_origem
         );
+
         const pontoDestino = criarPonto(
           viagem.destino_id,
           viagem.nome_destino,
@@ -208,7 +298,11 @@ class TrajetosService {
           chegada: viagem.horario_destino,
           duracaoMinutos: Math.max(Math.round(viagem.duracao), 1),
           baldeacoes: 0,
-          caminhadaMetros: calcularCaminhadaOpcao(pontoRefOrigem, pontoRefDestino, viagem),
+          caminhadaMetros: calcularCaminhadaOpcao(
+            pontoRefOrigem,
+            pontoRefDestino,
+            viagem
+          ),
           afetadaPorAlerta: false,
           etapas: [etapa],
         };
@@ -217,18 +311,21 @@ class TrajetosService {
           const corLinha = escolherCorTrecho(viagem.linha_cor, 0);
 
           const trechos = [];
+
           adicionarCaminhadaSeDiferente(
             trechos,
             pontoRefOrigem,
             pontosOnibus[0],
             'Caminhada até o embarque'
           );
+
           trechos.push({
             tipo: 'ONIBUS',
             linhaCodigo: viagem.linha_codigo,
             cor: corLinha,
             pontos: pontosOnibus,
           });
+
           adicionarCaminhadaSeDiferente(
             trechos,
             pontosOnibus[pontosOnibus.length - 1],
@@ -263,13 +360,26 @@ class TrajetosService {
       })
     );
 
-    const comBaldeacao = await trajetosRepository.buscarRotasComBaldeacao(idsOrigem, idsDestino);
+    // Busca de trajetos com baldeação,
+    // utilizando o filtro de horário quando informado.
+    const comBaldeacao = filtroHorario
+      ? await trajetosRepository.buscarRotasComBaldeacao(
+          idsOrigem,
+          idsDestino,
+          filtroHorario
+        )
+      : await trajetosRepository.buscarRotasComBaldeacao(
+          idsOrigem,
+          idsDestino
+        );
+
     const opcoesBaldeacao = await Promise.all(
       comBaldeacao.map(async (viagem) => {
         const tempoEspera = Math.round(
-          (new Date(`1970-01-01T${viagem.hora_saida_transfer}`) -
-            new Date(`1970-01-01T${viagem.hora_chegada_transfer}`)) /
-            60000
+          (
+            new Date(`1970-01-01T${viagem.hora_saida_transfer}`) -
+            new Date(`1970-01-01T${viagem.hora_chegada_transfer}`)
+          ) / 60000
         );
 
         const pontoOrigem = criarPonto(
@@ -278,12 +388,14 @@ class TrajetosService {
           viagem.lat_origem,
           viagem.lng_origem
         );
+
         const pontoTransfer = criarPonto(
           viagem.transfer_id,
           viagem.nome_transferencia,
           viagem.lat_transferencia,
           viagem.lng_transferencia
         );
+
         const pontoDestino = criarPonto(
           viagem.destino_id,
           viagem.nome_destino,
@@ -310,19 +422,27 @@ class TrajetosService {
 
         const etapa1 = {
           ordem: 1,
-          duracaoMinutos: Math.max(Math.round(viagem.duracao_total / 2), 1),
+          duracaoMinutos: Math.max(
+            Math.round(viagem.duracao_total / 2),
+            1
+          ),
           instrucao: `Embarque na linha ${viagem.linha_1} em "${viagem.nome_origem}" e desça em "${viagem.nome_transferencia}" após ${viagem.paradas_leg1} paradas.`,
           tipo: 'ONIBUS',
         };
+
         const etapa2 = {
           ordem: 2,
           duracaoMinutos: Math.max(tempoEspera, 1),
           instrucao: `Faça a baldeação na parada "${viagem.nome_transferencia}". Aguarde o próximo ônibus.`,
           tipo: 'CAMINHADA',
         };
+
         const etapa3 = {
           ordem: 3,
-          duracaoMinutos: Math.max(Math.round(viagem.duracao_total / 2), 1),
+          duracaoMinutos: Math.max(
+            Math.round(viagem.duracao_total / 2),
+            1
+          ),
           instrucao: `Embarque na linha ${viagem.linha_2} e desça em "${viagem.nome_destino}" após ${viagem.paradas_leg2} paradas.`,
           tipo: 'ONIBUS',
         };
@@ -330,44 +450,63 @@ class TrajetosService {
         const opcao = {
           partida: viagem.hora_origem,
           chegada: viagem.hora_destino,
-          duracaoMinutos: Math.max(Math.round(viagem.duracao_total), 1),
+          duracaoMinutos: Math.max(
+            Math.round(viagem.duracao_total),
+            1
+          ),
           baldeacoes: 1,
-          caminhadaMetros: calcularCaminhadaOpcao(pontoRefOrigem, pontoRefDestino, viagem),
+          caminhadaMetros: calcularCaminhadaOpcao(
+            pontoRefOrigem,
+            pontoRefDestino,
+            viagem
+          ),
           afetadaPorAlerta: false,
           etapas: [etapa1, etapa2, etapa3],
         };
 
         if (pontosLeg1.length >= 2 && pontosLeg2.length >= 2) {
           const cor1 = escolherCorTrecho(viagem.linha_1_cor, 0);
+
           let cor2 = escolherCorTrecho(viagem.linha_2_cor, 1);
+
           if (cor2 === cor1) {
-            cor2 = PALETA_LINHAS_FALLBACK.find((cor) => cor !== cor1) || '#1565C0';
+            cor2 =
+              PALETA_LINHAS_FALLBACK.find((cor) => cor !== cor1) ||
+              '#1565C0';
           }
 
           const trechos = [];
+
           adicionarCaminhadaSeDiferente(
             trechos,
             pontoRefOrigem,
             pontosLeg1[0],
             'Caminhada até o embarque'
           );
+
           trechos.push({
             tipo: 'ONIBUS',
             linhaCodigo: viagem.linha_1,
             cor: cor1,
             pontos: pontosLeg1,
           });
+
           trechos.push({
             tipo: 'CAMINHADA',
             titulo: `Baldeação em ${viagem.nome_transferencia}`,
-            pontos: [pontosLeg1[pontosLeg1.length - 1], pontosLeg2[0]],
+            pontos: [
+              pontosLeg1[pontosLeg1.length - 1],
+              pontosLeg2[0],
+            ],
           });
+
           trechos.push({
             tipo: 'ONIBUS',
             linhaCodigo: viagem.linha_2,
             cor: cor2,
             pontos: pontosLeg2,
           });
+
           adicionarCaminhadaSeDiferente(
             trechos,
             pontosLeg2[pontosLeg2.length - 1],
@@ -375,7 +514,9 @@ class TrajetosService {
             'Caminhada até o destino'
           );
 
-          const pontoBaldeacao = pontoTransfer || pontosLeg1[pontosLeg1.length - 1];
+          const pontoBaldeacao =
+            pontoTransfer || pontosLeg1[pontosLeg1.length - 1];
+
           opcao.mapa = {
             trechos,
             marcadores: [
@@ -411,10 +552,18 @@ class TrajetosService {
       })
     );
 
-    const opcoesFinais = [...opcoesDiretas, ...opcoesBaldeacao];
+    // Combina as opções diretas e com baldeação.
+    const opcoesFinais = [
+      ...opcoesDiretas,
+      ...opcoesBaldeacao,
+    ];
 
+    // Aplica o critério de ordenação, caso tenha sido informado.
     if (criterioOrdenacao) {
-      return ordenarOpcoesTrajeto(opcoesFinais, criterioOrdenacao);
+      return ordenarOpcoesTrajeto(
+        opcoesFinais,
+        criterioOrdenacao
+      );
     }
 
     return opcoesFinais;
