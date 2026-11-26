@@ -9,6 +9,8 @@ jest.mock('../services/linhasService', () => ({
   incluirPartida: jest.fn(),
   alterarPartida: jest.fn(),
   excluirPartida: jest.fn(),
+  incluirParadaNoItinerario: jest.fn(),
+  removerParadaDoItinerario: jest.fn(),
 }));
 
 jest.mock('../services/paradasService', () => ({
@@ -31,6 +33,8 @@ app.get('/linhas/:id/partidas', controller.listarPartidas);
 app.post('/linhas/:id/partidas', controller.incluirPartida);
 app.put('/linhas/:id/partidas/:viagemId', controller.alterarPartida);
 app.delete('/linhas/:id/partidas/:viagemId', controller.excluirPartida);
+app.post('/linhas/:id/itinerario', controller.incluirParadaNoItinerario);
+app.delete('/linhas/:id/itinerario/:sentido/:sequencia', controller.removerParadaDoItinerario);
 app.get('/paradas/:id', controller.obterParada);
 app.post('/paradas', controller.criarParada);
 app.put('/paradas/:id', controller.editarParada);
@@ -285,6 +289,76 @@ describe('manterLinhasParadasController', () => {
 
       expect(resposta.status).toBe(500);
       expect(resposta.body).toEqual({ erro: 'INTERNAL_ERROR', detalhes: 'Erro interno ao excluir a partida.' });
+    });
+  });
+
+  describe('POST /linhas/:id/itinerario', () => {
+    it('deve responder 201 ao incluir a parada no itinerário', async () => {
+      const corpo = { sentido: 'IDA', paradaId: '6710', depoisDaSequencia: 1 };
+      linhasService.incluirParadaNoItinerario.mockResolvedValue();
+
+      const resposta = await request(app).post('/linhas/2302/itinerario').send(corpo);
+
+      expect(resposta.status).toBe(201);
+      expect(resposta.body).toEqual({ mensagem: 'Parada incluída no itinerário.' });
+      expect(linhasService.incluirParadaNoItinerario).toHaveBeenCalledWith('2302', corpo);
+    });
+
+    it('deve responder 409 quando a parada já estiver no itinerário', async () => {
+      const mensagem = 'A parada já faz parte do itinerário deste sentido.';
+      linhasService.incluirParadaNoItinerario.mockRejectedValue(erroComStatus(mensagem, 409));
+
+      const resposta = await request(app).post('/linhas/2302/itinerario').send({ sentido: 'IDA', paradaId: '7032' });
+
+      expect(resposta.status).toBe(409);
+      expect(resposta.body).toEqual({ erro: 'CONFLICT', detalhes: mensagem });
+    });
+
+    it('deve responder 500 em erro inesperado', async () => {
+      linhasService.incluirParadaNoItinerario.mockRejectedValue(new Error('falha no banco'));
+
+      const resposta = await request(app).post('/linhas/2302/itinerario').send({ sentido: 'IDA', paradaId: '6710' });
+
+      expect(resposta.status).toBe(500);
+      expect(resposta.body).toEqual({
+        erro: 'INTERNAL_ERROR',
+        detalhes: 'Erro interno ao incluir a parada no itinerário.',
+      });
+    });
+  });
+
+  describe('DELETE /linhas/:id/itinerario/:sentido/:sequencia', () => {
+    it('deve responder 200 ao remover a parada do itinerário', async () => {
+      linhasService.removerParadaDoItinerario.mockResolvedValue();
+
+      const resposta = await request(app).delete('/linhas/2302/itinerario/IDA/5');
+
+      expect(resposta.status).toBe(200);
+      expect(resposta.body).toEqual({ mensagem: 'Parada removida do itinerário.' });
+      expect(linhasService.removerParadaDoItinerario).toHaveBeenCalledWith('2302', 'IDA', '5');
+    });
+
+    it('deve responder 404 quando não houver parada na posição', async () => {
+      linhasService.removerParadaDoItinerario.mockRejectedValue(
+        erroComStatus('Parada não encontrada no itinerário.', 404)
+      );
+
+      const resposta = await request(app).delete('/linhas/2302/itinerario/IDA/99');
+
+      expect(resposta.status).toBe(404);
+      expect(resposta.body).toEqual({ erro: 'NOT_FOUND', detalhes: 'Parada não encontrada no itinerário.' });
+    });
+
+    it('deve responder 500 em erro inesperado', async () => {
+      linhasService.removerParadaDoItinerario.mockRejectedValue(new Error('falha no banco'));
+
+      const resposta = await request(app).delete('/linhas/2302/itinerario/IDA/5');
+
+      expect(resposta.status).toBe(500);
+      expect(resposta.body).toEqual({
+        erro: 'INTERNAL_ERROR',
+        detalhes: 'Erro interno ao remover a parada do itinerário.',
+      });
     });
   });
 

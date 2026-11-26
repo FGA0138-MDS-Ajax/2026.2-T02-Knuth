@@ -851,6 +851,114 @@ paths:
         '500':
           $ref: '#/components/responses/ErroInterno'
 
+  /admin/linhas/{id}/itinerario:
+    post:
+      summary: Incluir parada no itinerário (RF23)
+      description: Inclui a parada no itinerário de um sentido, em todas as viagens desse sentido, depois da sequência informada (0 = no início). Em cada viagem, o horário da parada nova é o ponto médio entre a anterior e a seguinte; no fim, a última mais o intervalo médio entre paradas da viagem; no início, a primeira menos esse intervalo. O itinerário é consultado em GET /linhas/{id}/itinerario.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sentido, paradaId]
+              properties:
+                sentido:
+                  type: string
+                  enum: [IDA, VOLTA]
+                paradaId:
+                  type: string
+                  example: "6710"
+                depoisDaSequencia:
+                  type: integer
+                  minimum: 0
+                  default: 0
+                  description: Sequência da parada depois da qual a nova entra (0 = no início).
+                  example: 1
+      responses:
+        '201':
+          description: Parada incluída no itinerário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: Dados inválidos, posição fora do itinerário ou linha sem viagens nesse sentido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '409':
+          description: A parada já faz parte do itinerário desse sentido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/linhas/{id}/itinerario/{sentido}/{sequencia}:
+    delete:
+      summary: Remover parada do itinerário (RF23)
+      description: Remove a parada da sequência informada em todas as viagens do sentido. Os horários das outras paradas não mudam e o itinerário precisa continuar com pelo menos 2 paradas.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+        - name: sentido
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [IDA, VOLTA]
+        - name: sequencia
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Parada removida do itinerário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: Sentido ou posição inválidos, linha sem viagens nesse sentido ou itinerário com só 2 paradas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
   /admin/paradas:
     post:
       summary: Incluir parada manualmente (RF23)

@@ -1,4 +1,5 @@
 const linhasRepository = require('../repositories/linhasRepository');
+const paradasRepository = require('../repositories/paradasRepository');
 const { normalizarHorario } = require('../utils/horarioConsulta');
 
 function normalizarNumeroOpcional(valor) {
@@ -68,8 +69,12 @@ function validarLinha(dados) {
 const SENTIDOS_VALIDOS = ['IDA', 'VOLTA'];
 const TIPOS_DIA_VALIDOS = ['DIA_UTIL', 'SABADO', 'DOMINGO_FERIADO'];
 
-function validarSentidoETipoDia(sentido, tipoDia) {
+function validarSentido(sentido) {
   if (!SENTIDOS_VALIDOS.includes(sentido)) throw erroComStatus('O sentido deve ser IDA ou VOLTA.', 400);
+}
+
+function validarSentidoETipoDia(sentido, tipoDia) {
+  validarSentido(sentido);
   if (!TIPOS_DIA_VALIDOS.includes(tipoDia)) {
     throw erroComStatus('O tipo de dia deve ser DIA_UTIL, SABADO ou DOMINGO_FERIADO.', 400);
   }
@@ -79,6 +84,40 @@ function validarHorario(horario) {
   const normalizado = normalizarHorario(horario);
   if (!normalizado) throw erroComStatus('O horário deve estar no formato HH:MM.', 400);
   return normalizado;
+}
+
+// RF23 - Horário da parada nova no itinerário, em cada viagem:
+// entre duas paradas, o ponto médio entre a anterior e a seguinte; no fim, a última + o intervalo médio
+// entre paradas da viagem; no início, a primeira - esse intervalo. A virada da meia-noite é considerada.
+const SEGUNDOS_NO_DIA = 24 * 60 * 60;
+
+function horarioParaSegundos(horario) {
+  const [horas, minutos, segundos = 0] = String(horario).split(':').map(Number);
+  return horas * 3600 + minutos * 60 + segundos;
+}
+
+function segundosParaHorario(total) {
+  const segundos = ((Math.round(total) % SEGUNDOS_NO_DIA) + SEGUNDOS_NO_DIA) % SEGUNDOS_NO_DIA;
+  const doisDigitos = (n) => String(n).padStart(2, '0');
+  const horas = Math.floor(segundos / 3600);
+  const minutos = Math.floor((segundos % 3600) / 60);
+  return `${doisDigitos(horas)}:${doisDigitos(minutos)}:${doisDigitos(segundos % 60)}`;
+}
+
+// Tempo de "inicio" até "fim" andando para frente no relógio
+function duracaoEmSegundos(inicio, fim) {
+  return (horarioParaSegundos(fim) - horarioParaSegundos(inicio) + SEGUNDOS_NO_DIA) % SEGUNDOS_NO_DIA;
+}
+
+function calcularHorarioNovaParada({ anterior, proxima, primeira, ultima, total }) {
+  if (anterior && proxima) {
+    return segundosParaHorario(horarioParaSegundos(anterior) + duracaoEmSegundos(anterior, proxima) / 2);
+  }
+  const intervaloMedio = total > 1 ? duracaoEmSegundos(primeira, ultima) / (total - 1) : 0;
+  if (anterior) {
+    return segundosParaHorario(horarioParaSegundos(ultima) + intervaloMedio);
+  }
+  return segundosParaHorario(horarioParaSegundos(primeira) - intervaloMedio);
 }
 
 class LinhasService {
@@ -240,6 +279,67 @@ class LinhasService {
     const partida = await linhasRepository.buscarPartida(linhaId, viagemId);
     if (!partida) throw erroComStatus('Partida não encontrada.', 404);
     await linhasRepository.excluirPartida(viagemId);
+  }
+
+  // RF23: Inclui a parada no itinerário de um sentido, em todas as viagens desse sentido.
+  // depoisDaSequencia = 0 coloca a parada no início.
+  async incluirParadaNoItinerario(linhaId, dados) {
+    validarSentido(dados.sentido);
+    const paradaId = lerTexto(dados.paradaId, 'A parada', 50);
+    if (!paradaId) throw erroComStatus('Informe a parada que vai entrar no itinerário.', 400);
+    const depoisDaSequencia = Number(dados.depoisDaSequencia ?? 0);
+    if (!Number.isInteger(depoisDaSequencia) || depoisDaSequencia < 0) {
+      throw erroComStatus('A posição no itinerário é inválida.', 400);
+    }
+
+    const linha = await linhasRepository.buscarPorId(linhaId);
+    if (!linha) throw erroComStatus('Linha não encontrada.', 404);
+    const parada = await paradasRepository.findById(paradaId);
+    if (!parada) throw erroComStatus('Parada não encontrada.', 404);
+
+    const viagens = await linhasRepository.listarViagensDoSentido(linhaId, dados.sentido, depoisDaSequencia);
+    if (viagens.length === 0) throw erroComStatus('A linha não tem viagens neste sentido.', 400);
+    if (viagens.some((v) => depoisDaSequencia > Number(v.total))) {
+      throw erroComStatus('A posição no itinerário é inválida.', 400);
+    }
+    if (await linhasRepository.paradaEstaNoItinerario(linhaId, dados.sentido, paradaId)) {
+      throw erroComStatus('A parada já faz parte do itinerário deste sentido.', 409);
+    }
+
+    const horarios = viagens.map((v) => ({
+      viagemId: v.viagem_id,
+      horario: calcularHorarioNovaParada({
+        anterior: v.horario_na_sequencia,
+        proxima: v.horario_na_seguinte,
+        primeira: v.primeira,
+        ultima: v.ultima,
+        total: Number(v.total)
+      })
+    }));
+    await linhasRepository.incluirParadaNoItinerario(linhaId, dados.sentido, depoisDaSequencia, paradaId, horarios);
+  }
+
+  // RF23: Remove do itinerário de um sentido a parada da sequência informada, em todas as viagens
+  async removerParadaDoItinerario(linhaId, sentido, sequencia) {
+    validarSentido(sentido);
+    const posicao = Number(sequencia);
+    if (!Number.isInteger(posicao) || posicao < 1) {
+      throw erroComStatus('A posição no itinerário é inválida.', 400);
+    }
+
+    const linha = await linhasRepository.buscarPorId(linhaId);
+    if (!linha) throw erroComStatus('Linha não encontrada.', 404);
+
+    const viagens = await linhasRepository.listarViagensDoSentido(linhaId, sentido, posicao);
+    if (viagens.length === 0) throw erroComStatus('A linha não tem viagens neste sentido.', 400);
+    if (viagens.some((v) => !v.horario_na_sequencia)) {
+      throw erroComStatus('Parada não encontrada no itinerário.', 404);
+    }
+    if (viagens.some((v) => Number(v.total) <= 2)) {
+      throw erroComStatus('O itinerário precisa ter pelo menos 2 paradas.', 400);
+    }
+
+    await linhasRepository.removerParadaDoItinerario(linhaId, sentido, posicao);
   }
 }
 

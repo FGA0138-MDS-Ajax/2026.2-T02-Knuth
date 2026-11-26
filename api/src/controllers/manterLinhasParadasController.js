@@ -76,6 +76,24 @@ const excluirPartida = async (req, res) => {
   }
 };
 
+const incluirParadaNoItinerario = async (req, res) => {
+  try {
+    await linhasService.incluirParadaNoItinerario(req.params.id, req.body || {});
+    return res.status(201).json({ mensagem: 'Parada incluída no itinerário.' });
+  } catch (error) {
+    return responderErro(res, error, 'Erro interno ao incluir a parada no itinerário.');
+  }
+};
+
+const removerParadaDoItinerario = async (req, res) => {
+  try {
+    await linhasService.removerParadaDoItinerario(req.params.id, req.params.sentido, req.params.sequencia);
+    return res.status(200).json({ mensagem: 'Parada removida do itinerário.' });
+  } catch (error) {
+    return responderErro(res, error, 'Erro interno ao remover a parada do itinerário.');
+  }
+};
+
 const obterParada = async (req, res) => {
   try {
     const parada = await paradasService.obterParada(req.params.id);
@@ -120,6 +138,8 @@ module.exports = {
   incluirPartida,
   alterarPartida,
   excluirPartida,
+  incluirParadaNoItinerario,
+  removerParadaDoItinerario,
   obterParada,
   criarParada,
   editarParada,

@@ -12,6 +12,14 @@ router.post('/linhas/:id/partidas', authAdmin, manterLinhasParadasController.inc
 router.put('/linhas/:id/partidas/:viagemId', authAdmin, manterLinhasParadasController.alterarPartida);
 router.delete('/linhas/:id/partidas/:viagemId', authAdmin, manterLinhasParadasController.excluirPartida);
 
+// A consulta do itinerário é a mesma do passageiro (GET /linhas/:id/itinerario)
+router.post('/linhas/:id/itinerario', authAdmin, manterLinhasParadasController.incluirParadaNoItinerario);
+router.delete(
+  '/linhas/:id/itinerario/:sentido/:sequencia',
+  authAdmin,
+  manterLinhasParadasController.removerParadaDoItinerario
+);
+
 // A busca de paradas (GET /paradas) é a mesma usada no cadastro de alertas (adminAlertasRoutes)
 router.get('/paradas/:id', authAdmin, manterLinhasParadasController.obterParada);
 router.post('/paradas', authAdmin, manterLinhasParadasController.criarParada);

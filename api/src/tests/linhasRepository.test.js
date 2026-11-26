@@ -329,4 +329,119 @@ describe('LinhasRepository', () => {
       expect(params).toEqual(['TRIP_1']);
     });
   });
+
+  describe('listarViagensDoSentido (RF23)', () => {
+    it('traz, para cada viagem do sentido, os horários na posição e na seguinte, os extremos e o total', async () => {
+      const viagens = [{ viagem_id: 'TRIP_1', horario_na_sequencia: '05:00:00', total: '86' }];
+      pool.query.mockResolvedValue({ rows: viagens });
+
+      const resultado = await repository.listarViagensDoSentido('0.110', 'IDA', 3);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('atual.sequencia = $3');
+      expect(sql).toContain('seguinte.sequencia = $3 + 1');
+      expect(sql).toContain('(ARRAY_AGG(hp.partida ORDER BY hp.sequencia ASC))[1] AS primeira');
+      expect(sql).toContain('(ARRAY_AGG(hp.partida ORDER BY hp.sequencia DESC))[1] AS ultima');
+      expect(sql).toContain('COUNT(*) AS total');
+      expect(sql).toContain('WHERE v.linha_id = $1 AND v.sentido = $2');
+      expect(params).toEqual(['0.110', 'IDA', 3]);
+      expect(resultado).toEqual(viagens);
+    });
+  });
+
+  describe('paradaEstaNoItinerario (RF23)', () => {
+    it('devolve true quando alguma viagem do sentido passa pela parada', async () => {
+      pool.query.mockResolvedValue({ rows: [{ '?column?': 1 }] });
+
+      const resultado = await repository.paradaEstaNoItinerario('0.110', 'IDA', '3369');
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('WHERE v.linha_id = $1 AND v.sentido = $2 AND hp.parada_id = $3');
+      expect(params).toEqual(['0.110', 'IDA', '3369']);
+      expect(resultado).toBe(true);
+    });
+
+    it('devolve false quando a parada não está no itinerário', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await expect(repository.paradaEstaNoItinerario('0.110', 'IDA', '3369')).resolves.toBe(false);
+    });
+  });
+
+  describe('incluirParadaNoItinerario (RF23)', () => {
+    let client;
+    const horarios = [
+      { viagemId: 'TRIP_1', horario: '05:01:16' },
+      { viagemId: 'TRIP_2', horario: '05:14:16' },
+    ];
+
+    beforeEach(() => {
+      client = { query: jest.fn().mockResolvedValue({ rows: [] }), release: jest.fn() };
+      pool.connect.mockResolvedValue(client);
+    });
+
+    it('abre a posição, grava a parada em todas as viagens e atualiza os destinos numa transação', async () => {
+      await repository.incluirParadaNoItinerario('0.110', 'IDA', 1, '3369', horarios);
+
+      const chamadas = client.query.mock.calls;
+      expect(chamadas[0][0]).toBe('BEGIN');
+      expect(chamadas[1][0]).toContain('SET sequencia = hp.sequencia + 1');
+      expect(chamadas[1][0]).toContain('hp.sequencia > $3');
+      expect(chamadas[1][1]).toEqual(['0.110', 'IDA', 1]);
+      expect(chamadas[2][0]).toContain('FROM UNNEST($3::varchar[], $4::time[]) AS nova(viagem_id, horario)');
+      expect(chamadas[2][1]).toEqual(['3369', 2, ['TRIP_1', 'TRIP_2'], ['05:01:16', '05:14:16']]);
+      expect(chamadas[3][0]).toContain('SET destino = p.nome');
+      expect(chamadas[3][1]).toEqual(['0.110', 'IDA']);
+      expect(chamadas[4][0]).toBe('COMMIT');
+      expect(client.release).toHaveBeenCalled();
+    });
+
+    it('desfaz tudo e propaga o erro quando a gravação falha', async () => {
+      client.query.mockImplementation(async (sql) => {
+        if (sql.includes('UNNEST')) throw new Error('falha no banco');
+        return { rows: [] };
+      });
+
+      await expect(repository.incluirParadaNoItinerario('0.110', 'IDA', 1, '3369', horarios)).rejects.toThrow('falha no banco');
+      expect(client.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(client.query).not.toHaveBeenCalledWith('COMMIT');
+      expect(client.release).toHaveBeenCalled();
+    });
+  });
+
+  describe('removerParadaDoItinerario (RF23)', () => {
+    let client;
+
+    beforeEach(() => {
+      client = { query: jest.fn().mockResolvedValue({ rows: [] }), release: jest.fn() };
+      pool.connect.mockResolvedValue(client);
+    });
+
+    it('apaga a parada da posição, fecha a sequência e atualiza os destinos numa transação', async () => {
+      await repository.removerParadaDoItinerario('0.110', 'IDA', 5);
+
+      const chamadas = client.query.mock.calls;
+      expect(chamadas[0][0]).toBe('BEGIN');
+      expect(chamadas[1][0]).toContain('DELETE FROM horarios_paradas hp');
+      expect(chamadas[1][0]).toContain('hp.sequencia = $3');
+      expect(chamadas[1][1]).toEqual(['0.110', 'IDA', 5]);
+      expect(chamadas[2][0]).toContain('SET sequencia = hp.sequencia - 1');
+      expect(chamadas[2][0]).toContain('hp.sequencia > $3');
+      expect(chamadas[2][1]).toEqual(['0.110', 'IDA', 5]);
+      expect(chamadas[3][0]).toContain('SET destino = p.nome');
+      expect(chamadas[4][0]).toBe('COMMIT');
+      expect(client.release).toHaveBeenCalled();
+    });
+
+    it('desfaz tudo e propaga o erro quando a remoção falha', async () => {
+      client.query.mockImplementation(async (sql) => {
+        if (sql.includes('DELETE')) throw new Error('falha no banco');
+        return { rows: [] };
+      });
+
+      await expect(repository.removerParadaDoItinerario('0.110', 'IDA', 5)).rejects.toThrow('falha no banco');
+      expect(client.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(client.release).toHaveBeenCalled();
+    });
+  });
 });

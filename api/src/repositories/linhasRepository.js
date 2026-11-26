@@ -1,5 +1,19 @@
 const pool = require('../config/database');
 
+// RF23 - O destino da viagem é o nome da última parada do itinerário (como no importador)
+const atualizarDestinos = async (client, linhaId, sentido) => {
+  await client.query(
+    `UPDATE viagens v
+     SET destino = p.nome
+     FROM horarios_paradas hp
+     INNER JOIN paradas p ON p.id = hp.parada_id
+     WHERE hp.viagem_id = v.id
+       AND v.linha_id = $1 AND v.sentido = $2
+       AND hp.sequencia = (SELECT MAX(ult.sequencia) FROM horarios_paradas ult WHERE ult.viagem_id = v.id)`,
+    [linhaId, sentido]
+  );
+};
+
 class LinhasRepository {
   async findLinhas(filters = {}) {
     const { busca } = typeof filters === 'string' ? { busca: filters } : filters;
@@ -179,6 +193,101 @@ class LinhasRepository {
   // Os horários da viagem são apagados em cascata (ON DELETE CASCADE)
   async excluirPartida(viagemId) {
     await pool.query('DELETE FROM viagens WHERE id = $1', [viagemId]);
+  }
+
+  // RF23 - Itinerário: para cada viagem do sentido, o horário na sequência informada e na seguinte,
+  // o primeiro e o último horários e o total de paradas
+  async listarViagensDoSentido(linhaId, sentido, sequencia) {
+    const { rows } = await pool.query(
+      `SELECT v.id AS viagem_id,
+              atual.partida AS horario_na_sequencia,
+              seguinte.partida AS horario_na_seguinte,
+              extremos.primeira, extremos.ultima, extremos.total
+       FROM viagens v
+       LEFT JOIN horarios_paradas atual ON atual.viagem_id = v.id AND atual.sequencia = $3
+       LEFT JOIN horarios_paradas seguinte ON seguinte.viagem_id = v.id AND seguinte.sequencia = $3 + 1
+       CROSS JOIN LATERAL (
+         SELECT (ARRAY_AGG(hp.partida ORDER BY hp.sequencia ASC))[1] AS primeira,
+                (ARRAY_AGG(hp.partida ORDER BY hp.sequencia DESC))[1] AS ultima,
+                COUNT(*) AS total
+         FROM horarios_paradas hp
+         WHERE hp.viagem_id = v.id
+       ) extremos
+       WHERE v.linha_id = $1 AND v.sentido = $2
+       ORDER BY v.id`,
+      [linhaId, sentido, sequencia]
+    );
+    return rows;
+  }
+
+  async paradaEstaNoItinerario(linhaId, sentido, paradaId) {
+    const { rows } = await pool.query(
+      `SELECT 1
+       FROM horarios_paradas hp
+       INNER JOIN viagens v ON v.id = hp.viagem_id
+       WHERE v.linha_id = $1 AND v.sentido = $2 AND hp.parada_id = $3
+       LIMIT 1`,
+      [linhaId, sentido, paradaId]
+    );
+    return rows.length > 0;
+  }
+
+  // Abre a posição depois da sequência informada em todas as viagens do sentido e grava a parada nova
+  // com o horário calculado para cada viagem (horarios: [{ viagemId, horario }])
+  async incluirParadaNoItinerario(linhaId, sentido, depoisDaSequencia, paradaId, horarios) {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        `UPDATE horarios_paradas hp
+         SET sequencia = hp.sequencia + 1
+         FROM viagens v
+         WHERE v.id = hp.viagem_id AND v.linha_id = $1 AND v.sentido = $2 AND hp.sequencia > $3`,
+        [linhaId, sentido, depoisDaSequencia]
+      );
+      // Uma única inserção para todas as viagens do sentido
+      await client.query(
+        `INSERT INTO horarios_paradas (viagem_id, parada_id, sequencia, partida, chegada)
+         SELECT nova.viagem_id, $1, $2, nova.horario, nova.horario
+         FROM UNNEST($3::varchar[], $4::time[]) AS nova(viagem_id, horario)`,
+        [paradaId, depoisDaSequencia + 1, horarios.map((h) => h.viagemId), horarios.map((h) => h.horario)]
+      );
+      await atualizarDestinos(client, linhaId, sentido);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  // Tira a parada da sequência informada em todas as viagens do sentido; os outros horários não mudam
+  async removerParadaDoItinerario(linhaId, sentido, sequencia) {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        `DELETE FROM horarios_paradas hp
+         USING viagens v
+         WHERE v.id = hp.viagem_id AND v.linha_id = $1 AND v.sentido = $2 AND hp.sequencia = $3`,
+        [linhaId, sentido, sequencia]
+      );
+      await client.query(
+        `UPDATE horarios_paradas hp
+         SET sequencia = hp.sequencia - 1
+         FROM viagens v
+         WHERE v.id = hp.viagem_id AND v.linha_id = $1 AND v.sentido = $2 AND hp.sequencia > $3`,
+        [linhaId, sentido, sequencia]
+      );
+      await atualizarDestinos(client, linhaId, sentido);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 }
 
