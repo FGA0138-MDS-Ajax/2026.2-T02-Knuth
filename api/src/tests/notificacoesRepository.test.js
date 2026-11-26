@@ -62,4 +62,26 @@ describe('notificacoesRepository', () => {
       expect(resultado).toEqual(notificacoes);
     });
   });
+
+  describe('marcarComoLida', () => {
+    it('marca a notificação do usuário como lida e devolve o registro', async () => {
+      pool.query.mockResolvedValue({ rows: [{ id: 5, lida: true }] });
+
+      const resultado = await repository.marcarComoLida(5, 3);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toMatch(/UPDATE notificacoes/);
+      expect(sql).toMatch(/SET lida = TRUE/);
+      expect(params).toEqual([5, 3]);
+      expect(resultado).toEqual({ id: 5, lida: true });
+    });
+
+    it('devolve null quando a notificação não existe ou é de outro usuário', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      const resultado = await repository.marcarComoLida(99, 3);
+
+      expect(resultado).toBeNull();
+    });
+  });
 });
