@@ -19,6 +19,9 @@ router.put('/usuarios/:id', authAdmin, gerenciarUsuariosController.atualizar);
 router.delete('/usuarios/:id', authAdmin, gerenciarUsuariosController.excluir);
 router.use(require('./adminAlertasRoutes'));
 
+// RF23 - Manter linhas, paradas e horários
+router.use(require('./adminLinhasParadasRoutes'));
+
 // RF24 - Analisar reportes de usuários
 router.get('/reportes', authAdmin, analisarReportesController.listar);
 router.get('/reportes/:id', authAdmin, analisarReportesController.obterPorId);

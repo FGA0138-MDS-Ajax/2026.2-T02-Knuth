@@ -46,6 +46,48 @@ function horarioParaMinutos(horario) {
   return horas * 60 + minutos;
 }
 
+// RF23 - Validações da manutenção manual de paradas
+// O código vira o id da parada (como no importador) e é usado nas URLs da API.
+const REGEX_CODIGO_PARADA = /^[A-Za-z0-9.-]+$/;
+
+function erroComStatus(mensagem, status) {
+  const erro = new Error(mensagem);
+  erro.status = status;
+  return erro;
+}
+
+function lerTexto(valor, rotulo, limite) {
+  const texto = typeof valor === 'string' || typeof valor === 'number' ? String(valor).trim() : '';
+  if (texto.length > limite) {
+    throw erroComStatus(`${rotulo} deve ter no máximo ${limite} caracteres.`, 400);
+  }
+  return texto;
+}
+
+function lerCoordenada(valor, rotulo, limite) {
+  if (valor === null || valor === undefined || String(valor).trim() === '') {
+    throw erroComStatus(`${rotulo} é obrigatória.`, 400);
+  }
+  const numero = Number(String(valor).trim().replace(',', '.'));
+  if (!Number.isFinite(numero) || numero < -limite || numero > limite) {
+    throw erroComStatus(`${rotulo} deve ser um número entre -${limite} e ${limite}.`, 400);
+  }
+  return numero;
+}
+
+function validarParada(dados) {
+  const nome = lerTexto(dados.nome, 'O nome da parada', 255);
+  if (!nome) throw erroComStatus('O nome da parada é obrigatório.', 400);
+
+  return {
+    nome,
+    latitude: lerCoordenada(dados.latitude, 'A latitude', 90),
+    longitude: lerCoordenada(dados.longitude, 'A longitude', 180),
+    tipo: lerTexto(dados.tipo, 'O tipo', 50) || null,
+    estrutura: lerTexto(dados.estrutura, 'A estrutura', 80) || null
+  };
+}
+
 class ParadasService {
   async obterParadaMaisProxima(lat, lng) {
     return await paradasRepository.findNearestParada(lat, lng);
@@ -139,6 +181,45 @@ class ParadasService {
           ? 'Não há mais partidas previstas para hoje nesta parada.'
           : null,
     };
+  }
+
+  // RF23 - Inclusão, alteração e exclusão manual de paradas pelo administrador
+  async obterParada(id) {
+    const parada = await paradasRepository.findById(id);
+    if (!parada) throw erroComStatus('Parada não encontrada.', 404);
+    return parada;
+  }
+
+  async criarParada(dados) {
+    const codigo = lerTexto(dados.codigo, 'O código da parada', 50);
+    if (!codigo) throw erroComStatus('O código da parada é obrigatório.', 400);
+    if (!REGEX_CODIGO_PARADA.test(codigo)) {
+      throw erroComStatus('O código da parada deve ter apenas letras, números, ponto ou hífen.', 400);
+    }
+    const parada = validarParada(dados);
+
+    const existente = await paradasRepository.findById(codigo);
+    if (existente) throw erroComStatus(`Já existe uma parada com o código ${codigo}.`, 409);
+
+    return await paradasRepository.criar({ codigo, ...parada });
+  }
+
+  async editarParada(id, dados) {
+    const parada = await paradasRepository.findById(id);
+    if (!parada) throw erroComStatus('Parada não encontrada.', 404);
+    return await paradasRepository.atualizar(id, validarParada(dados));
+  }
+
+  async excluirParada(id) {
+    const parada = await paradasRepository.findById(id);
+    if (!parada) throw erroComStatus('Parada não encontrada.', 404);
+
+    const totalLinhas = await paradasRepository.contarLinhasNoItinerario(id);
+    if (totalLinhas > 0) {
+      const linhas = totalLinhas === 1 ? '1 linha' : `${totalLinhas} linhas`;
+      throw erroComStatus(`A parada não pode ser excluída porque faz parte do itinerário de ${linhas}.`, 409);
+    }
+    await paradasRepository.excluir(id);
   }
 }
 

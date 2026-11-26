@@ -356,3 +356,136 @@ export const analisarReporteAdmin = async (token, id, dados) => {
   return response.data;
 };
 
+export const criarLinha = async (token, dados) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/linhas`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const editarLinha = async (token, id, dados) => {
+  const response = await axios.put(
+    `${API_BASE_URL}/admin/linhas/${id}`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const excluirLinha = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/linhas/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const listarPartidasAdmin = async (token, linhaId, sentido, tipoDia) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/linhas/${linhaId}/partidas`, {
+    params: { sentido, tipoDia },
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const incluirPartida = async (token, linhaId, dados) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/linhas/${linhaId}/partidas`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const alterarPartida = async (token, linhaId, viagemId, dados) => {
+  const response = await axios.put(
+    `${API_BASE_URL}/admin/linhas/${linhaId}/partidas/${viagemId}`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const excluirPartida = async (token, linhaId, viagemId) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/linhas/${linhaId}/partidas/${viagemId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const incluirParadaNoItinerario = async (token, linhaId, dados) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/linhas/${linhaId}/itinerario`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const removerParadaDoItinerario = async (token, linhaId, sentido, sequencia) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/linhas/${linhaId}/itinerario/${sentido}/${sequencia}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const obterParadaAdmin = async (token, id) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/paradas/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const criarParada = async (token, dados) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/paradas`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const editarParada = async (token, id, dados) => {
+  const response = await axios.put(
+    `${API_BASE_URL}/admin/paradas/${id}`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const excluirParada = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/paradas/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+

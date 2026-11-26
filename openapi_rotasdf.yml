@@ -546,6 +546,560 @@ paths:
         '500':
           $ref: '#/components/responses/ErroInterno'
 
+  /admin/linhas:
+    post:
+      summary: Incluir linha manualmente (RF23)
+      description: Cadastra uma linha sem aguardar nova importação. O código (apenas números e pontos) também passa a ser o id da linha. Código e nome são obrigatórios.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinhaCadastro'
+      responses:
+        '201':
+          description: Linha incluída com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinhaCadastro'
+        '400':
+          description: Campos obrigatórios ausentes ou em formato inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '409':
+          description: Já existe uma linha com o código informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/linhas/{id}:
+    put:
+      summary: Alterar linha (RF23)
+      description: Corrige nome, cor, tarifa, faixa tarifária, operadora e extensão da linha. O nome é obrigatório e o código não pode ser alterado (o campo codigo é ignorado).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinhaCadastro'
+      responses:
+        '200':
+          description: Linha alterada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinhaCadastro'
+        '400':
+          description: Campos obrigatórios ausentes ou em formato inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+    delete:
+      summary: Excluir linha (RF23)
+      description: Exclui a linha junto com suas viagens, horários e favoritos (exclusão em cascata).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+      responses:
+        '200':
+          description: Linha excluída.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/linhas/{id}/partidas:
+    get:
+      summary: Listar partidas da linha (RF23)
+      description: Lista as viagens da linha em um sentido e tipo de dia, com o horário de partida (parada de sequência 1) e o id da viagem usado para alterar ou excluir a partida.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+        - name: sentido
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [IDA, VOLTA]
+        - name: tipoDia
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [DIA_UTIL, SABADO, DOMINGO_FERIADO]
+      responses:
+        '200':
+          description: Partidas em ordem de horário.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partida'
+        '400':
+          description: Sentido ou tipo de dia inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+    post:
+      summary: Incluir partida (RF23)
+      description: Cria uma viagem copiando a viagem do mesmo sentido e tipo de dia com a partida mais próxima do horário informado, deslocando todos os horários dela.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sentido, tipoDia, horario]
+              properties:
+                sentido:
+                  type: string
+                  enum: [IDA, VOLTA]
+                tipoDia:
+                  type: string
+                  enum: [DIA_UTIL, SABADO, DOMINGO_FERIADO]
+                horario:
+                  type: string
+                  example: "05:07"
+      responses:
+        '201':
+          description: Partida incluída com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partida'
+        '400':
+          description: Dados inválidos ou a linha não tem viagem nesse sentido e tipo de dia para servir de modelo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '409':
+          description: Já existe uma partida nesse horário, sentido e tipo de dia.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/linhas/{id}/partidas/{viagemId}:
+    put:
+      summary: Alterar partida (RF23)
+      description: Muda o horário de partida da viagem, deslocando todos os horários dela pela mesma diferença.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+        - name: viagemId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Id da viagem (ex. TRIP_26763)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [horario]
+              properties:
+                horario:
+                  type: string
+                  example: "05:09"
+      responses:
+        '200':
+          description: Partida alterada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partida'
+        '400':
+          description: Horário em formato inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '409':
+          description: Já existe outra partida nesse horário, sentido e tipo de dia.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+    delete:
+      summary: Excluir partida (RF23)
+      description: Exclui a viagem e todos os horários dela.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+        - name: viagemId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Id da viagem (ex. TRIP_26763)
+      responses:
+        '200':
+          description: Partida excluída.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/linhas/{id}/itinerario:
+    post:
+      summary: Incluir parada no itinerário (RF23)
+      description: Inclui a parada no itinerário de um sentido, em todas as viagens desse sentido, depois da sequência informada (0 = no início). Em cada viagem, o horário da parada nova é o ponto médio entre a anterior e a seguinte; no fim, a última mais o intervalo médio entre paradas da viagem; no início, a primeira menos esse intervalo. O itinerário é consultado em GET /linhas/{id}/itinerario.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sentido, paradaId]
+              properties:
+                sentido:
+                  type: string
+                  enum: [IDA, VOLTA]
+                paradaId:
+                  type: string
+                  example: "6710"
+                depoisDaSequencia:
+                  type: integer
+                  minimum: 0
+                  default: 0
+                  description: Sequência da parada depois da qual a nova entra (0 = no início).
+                  example: 1
+      responses:
+        '201':
+          description: Parada incluída no itinerário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: Dados inválidos, posição fora do itinerário ou linha sem viagens nesse sentido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '409':
+          description: A parada já faz parte do itinerário desse sentido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/linhas/{id}/itinerario/{sentido}/{sequencia}:
+    delete:
+      summary: Remover parada do itinerário (RF23)
+      description: Remove a parada da sequência informada em todas as viagens do sentido. Os horários das outras paradas não mudam e o itinerário precisa continuar com pelo menos 2 paradas.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da linha (ex. 0.110)
+        - name: sentido
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [IDA, VOLTA]
+        - name: sequencia
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Parada removida do itinerário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '400':
+          description: Sentido ou posição inválidos, linha sem viagens nesse sentido ou itinerário com só 2 paradas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/paradas:
+    post:
+      summary: Incluir parada manualmente (RF23)
+      description: Cadastra uma parada sem aguardar nova importação. O código (letras, números, ponto ou hífen) também passa a ser o id da parada. Código, nome, latitude e longitude são obrigatórios.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParadaCadastro'
+      responses:
+        '201':
+          description: Parada incluída com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParadaCadastro'
+        '400':
+          description: Campos obrigatórios ausentes ou em formato inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '409':
+          description: Já existe uma parada com o código informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/paradas/{id}:
+    get:
+      summary: Consultar parada para edição (RF23)
+      description: Retorna todos os dados da parada para a tela de edição do administrador.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da parada (ex. 3369)
+      responses:
+        '200':
+          description: Parada encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParadaCadastro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+    put:
+      summary: Alterar parada (RF23)
+      description: Corrige nome, latitude, longitude, tipo e estrutura da parada. Nome, latitude e longitude são obrigatórios e o código não pode ser alterado (o campo codigo é ignorado).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da parada (ex. 3369)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParadaCadastro'
+      responses:
+        '200':
+          description: Parada alterada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParadaCadastro'
+        '400':
+          description: Campos obrigatórios ausentes ou em formato inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+    delete:
+      summary: Excluir parada (RF23)
+      description: Exclui a parada e os favoritos dela. A exclusão é bloqueada quando a parada faz parte do itinerário de alguma linha.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da parada (ex. 3369)
+      responses:
+        '200':
+          description: Parada excluída.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '409':
+          description: A parada faz parte do itinerário de alguma linha e não pode ser excluída.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
   /favoritos:
     get:
       summary: Listar linhas, paradas e trajetos favoritos do passageiro (RF17)
@@ -921,6 +1475,83 @@ components:
           type: string
           format: date-time
           nullable: true
+
+    LinhaCadastro:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+          example: "0.110"
+        codigo:
+          type: string
+          description: Apenas números e pontos. Vira o id da linha e não pode ser alterado depois.
+          example: "0.110"
+        nome:
+          type: string
+          example: "Rodoviária do Plano Piloto/W3 Sul"
+        cor:
+          type: string
+          nullable: true
+          description: Formato #RRGGBB.
+          example: "#006666"
+        tarifa:
+          type: number
+          nullable: true
+          example: 5.5
+        faixa_tarifaria:
+          type: string
+          nullable: true
+          example: "METROPOLITANA 1"
+        operadora:
+          type: string
+          nullable: true
+          example: "Urbi · Bacia 03"
+        extensao_km:
+          type: number
+          nullable: true
+          example: 12.5
+
+    ParadaCadastro:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+          example: "3369"
+        codigo:
+          type: string
+          description: Letras, números, ponto ou hífen. Vira o id da parada e não pode ser alterado depois.
+          example: "3369"
+        nome:
+          type: string
+          example: "Rodoviária do Plano Piloto"
+        latitude:
+          type: number
+          example: -15.7942
+        longitude:
+          type: number
+          example: -47.8822
+        tipo:
+          type: string
+          nullable: true
+          example: "Placa"
+        estrutura:
+          type: string
+          nullable: true
+          example: "ACOSTAMENTO OU BAIA"
+
+    Partida:
+      type: object
+      properties:
+        viagemId:
+          type: string
+          description: Id da viagem. Viagens incluídas manualmente começam com MANUAL_.
+          example: "TRIP_26763"
+        horario:
+          type: string
+          description: Horário de partida (HH:MM) na parada de sequência 1.
+          example: "05:01"
 
     Favorito:
       type: object

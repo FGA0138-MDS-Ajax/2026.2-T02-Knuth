@@ -80,7 +80,7 @@ class ParadasRepository {
 
   async findById(paradaId) {
     const query = `
-      SELECT id, codigo, nome, latitude, longitude
+      SELECT id, codigo, nome, latitude, longitude, tipo, estrutura
       FROM paradas
       WHERE id = $1
       LIMIT 1;
@@ -124,6 +124,45 @@ class ParadasRepository {
     `;
     const { rows } = await pool.query(query, [paradaId, tipoDia, horarioReferencia, limite]);
     return rows;
+  }
+
+  // RF23 - Manutenção manual de paradas pelo administrador
+  async criar({ codigo, nome, latitude, longitude, tipo, estrutura }) {
+    const { rows } = await pool.query(
+      `INSERT INTO paradas (id, codigo, nome, latitude, longitude, tipo, estrutura)
+       VALUES ($1, $1, $2, $3, $4, $5, $6)
+       RETURNING id, codigo, nome, latitude, longitude, tipo, estrutura`,
+      [codigo, nome, latitude, longitude, tipo, estrutura]
+    );
+    return rows[0];
+  }
+
+  async atualizar(id, { nome, latitude, longitude, tipo, estrutura }) {
+    const { rows } = await pool.query(
+      `UPDATE paradas
+       SET nome = $2, latitude = $3, longitude = $4, tipo = $5, estrutura = $6
+       WHERE id = $1
+       RETURNING id, codigo, nome, latitude, longitude, tipo, estrutura`,
+      [id, nome, latitude, longitude, tipo, estrutura]
+    );
+    return rows[0];
+  }
+
+  // Quantas linhas passam pela parada: excluí-la apagaria em cascata os horários dessas viagens
+  async contarLinhasNoItinerario(id) {
+    const { rows } = await pool.query(
+      `SELECT COUNT(DISTINCT v.linha_id) AS total
+       FROM horarios_paradas hp
+       INNER JOIN viagens v ON v.id = hp.viagem_id
+       WHERE hp.parada_id = $1`,
+      [id]
+    );
+    return Number(rows[0].total);
+  }
+
+  // Os favoritos da parada são apagados em cascata (ON DELETE CASCADE)
+  async excluir(id) {
+    await pool.query('DELETE FROM paradas WHERE id = $1', [id]);
   }
 }
 
