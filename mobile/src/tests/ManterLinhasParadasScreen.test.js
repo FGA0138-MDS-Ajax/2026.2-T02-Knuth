@@ -3,7 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ManterLinhasParadasScreen from '../screens/ManterLinhasParadasScreen';
-import { getLinhas, excluirLinha } from '../services/api';
+import { getLinhas, excluirLinha, buscarParadasAdmin, obterParadaAdmin, excluirParada } from '../services/api';
 import { mostrarAviso, confirmarAcao } from '../utils/dialogos';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
@@ -18,6 +18,9 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 jest.mock('../services/api', () => ({
   getLinhas: jest.fn(),
   excluirLinha: jest.fn(),
+  buscarParadasAdmin: jest.fn(),
+  obterParadaAdmin: jest.fn(),
+  excluirParada: jest.fn(),
 }));
 
 jest.mock('../utils/dialogos', () => ({
@@ -36,8 +39,11 @@ jest.mock('@react-navigation/native', () => {
 
 const TOKEN = 'token-admin';
 const BUSCA_LINHA = 'Buscar linha por número ou nome';
+const BUSCA_PARADA = 'Buscar parada por nome ou código (mín. 2 letras)';
 const ASA_SUL = { id: '0.110', codigo: '0.110', nome: 'Rodoviária/Asa Sul', operadora: 'Urbi · Bacia 03' };
 const SANTA_MARIA = { id: '2302', codigo: '2302', nome: 'Santa Maria/Rodoviária', operadora: null };
+const RODOVIARIA = { id: '3369', codigo: '3369', nome: 'Rodoviária do Plano Piloto' };
+const RODOVIARIA_COMPLETA = { ...RODOVIARIA, latitude: '-15.79420000', longitude: '-47.88220000', tipo: 'Placa', estrutura: null };
 
 // -----testes------
 describe('ManterLinhasParadasScreen', () => {
@@ -179,6 +185,145 @@ describe('ManterLinhasParadasScreen', () => {
       await confirmar();
 
       expect(mostrarAviso).toHaveBeenCalledWith('Erro', 'Não foi possível excluir a linha.');
+    });
+  });
+
+  describe('paradas', () => {
+    // Abre a aba Paradas e busca o texto informado (a busca espera 400 ms depois da digitação)
+    const buscarParadas = async (tela, texto = 'rodov') => {
+      await tela.findByText('Nenhuma linha encontrada.');
+      fireEvent.press(tela.getByText('Paradas'));
+      fireEvent.changeText(tela.getByPlaceholderText(BUSCA_PARADA), texto);
+    };
+
+    beforeEach(() => {
+      getLinhas.mockResolvedValue([]);
+    });
+
+    it('pede ao menos 2 letras e não busca antes disso', async () => {
+      const tela = renderTela();
+      await buscarParadas(tela, 'r');
+
+      expect(tela.getByText('Digite ao menos 2 letras para buscar paradas.')).toBeTruthy();
+      expect(tela.getByText('Nova parada')).toBeTruthy();
+      expect(buscarParadasAdmin).not.toHaveBeenCalled();
+    });
+
+    it('busca as paradas com o token salvo e mostra nome e código', async () => {
+      buscarParadasAdmin.mockResolvedValue([RODOVIARIA]);
+      const tela = renderTela();
+      await buscarParadas(tela);
+
+      expect(await tela.findByText('Rodoviária do Plano Piloto')).toBeTruthy();
+      expect(tela.getByText('Código 3369')).toBeTruthy();
+      expect(buscarParadasAdmin).toHaveBeenCalledWith(TOKEN, 'rodov');
+    });
+
+    it('mostra a mensagem quando a busca não encontra paradas', async () => {
+      buscarParadasAdmin.mockResolvedValue([]);
+      const tela = renderTela();
+      await buscarParadas(tela, 'xyz');
+
+      await waitFor(() => expect(buscarParadasAdmin).toHaveBeenCalled());
+      expect(tela.getByText('Nenhuma parada encontrada.')).toBeTruthy();
+    });
+
+    it('avisa quando a busca de paradas falha', async () => {
+      buscarParadasAdmin.mockRejectedValue(new Error('Network Error'));
+      const tela = renderTela();
+      await buscarParadas(tela);
+
+      await waitFor(() =>
+        expect(mostrarAviso).toHaveBeenCalledWith('Erro', 'Não foi possível buscar as paradas.')
+      );
+    });
+
+    it('trocar de aba limpa a busca', async () => {
+      const tela = renderTela();
+      await tela.findByText('Nenhuma linha encontrada.');
+      fireEvent.changeText(tela.getByPlaceholderText(BUSCA_LINHA), '0.11');
+
+      fireEvent.press(tela.getByText('Paradas'));
+
+      expect(tela.getByPlaceholderText(BUSCA_PARADA).props.value).toBe('');
+    });
+
+    it('"Nova parada" abre o formulário vazio', async () => {
+      const tela = renderTela();
+      await buscarParadas(tela, '');
+
+      fireEvent.press(tela.getByText('Nova parada'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('NovaParada');
+    });
+
+    it('"Editar" carrega a parada completa e abre o formulário', async () => {
+      buscarParadasAdmin.mockResolvedValue([RODOVIARIA]);
+      obterParadaAdmin.mockResolvedValue(RODOVIARIA_COMPLETA);
+      const tela = renderTela();
+      await buscarParadas(tela);
+
+      fireEvent.press(await tela.findByText('Editar'));
+
+      await waitFor(() =>
+        expect(navigation.navigate).toHaveBeenCalledWith('NovaParada', { parada: RODOVIARIA_COMPLETA })
+      );
+      expect(obterParadaAdmin).toHaveBeenCalledWith(TOKEN, '3369');
+    });
+
+    it('"Editar" avisa quando não consegue carregar a parada', async () => {
+      buscarParadasAdmin.mockResolvedValue([RODOVIARIA]);
+      obterParadaAdmin.mockRejectedValue({ response: { data: { detalhes: 'Parada não encontrada.' } } });
+      const tela = renderTela();
+      await buscarParadas(tela);
+
+      fireEvent.press(await tela.findByText('Editar'));
+
+      await waitFor(() => expect(mostrarAviso).toHaveBeenCalledWith('Erro', 'Parada não encontrada.'));
+      expect(navigation.navigate).not.toHaveBeenCalled();
+    });
+
+    it('pede confirmação antes de excluir a parada', async () => {
+      buscarParadasAdmin.mockResolvedValue([RODOVIARIA]);
+      const tela = renderTela();
+      await buscarParadas(tela);
+
+      fireEvent.press(await tela.findByText('Excluir'));
+
+      expect(confirmarAcao).toHaveBeenCalledWith(
+        'Excluir parada',
+        'A parada Rodoviária do Plano Piloto será excluída e sairá dos favoritos dos passageiros. Esta ação não pode ser desfeita.',
+        'Excluir',
+        expect.any(Function)
+      );
+      expect(excluirParada).not.toHaveBeenCalled();
+    });
+
+    it('ao confirmar, exclui com o token salvo e tira a parada da lista', async () => {
+      buscarParadasAdmin.mockResolvedValue([RODOVIARIA]);
+      excluirParada.mockResolvedValue({ mensagem: 'Parada excluída.' });
+      const tela = renderTela();
+      await buscarParadas(tela);
+
+      fireEvent.press(await tela.findByText('Excluir'));
+      await confirmar();
+
+      expect(excluirParada).toHaveBeenCalledWith(TOKEN, '3369');
+      expect(tela.queryByText('Rodoviária do Plano Piloto')).toBeNull();
+    });
+
+    it('mostra o motivo quando a parada está no itinerário de alguma linha', async () => {
+      const motivo = 'A parada não pode ser excluída porque faz parte do itinerário de 3 linhas.';
+      buscarParadasAdmin.mockResolvedValue([RODOVIARIA]);
+      excluirParada.mockRejectedValue({ response: { data: { detalhes: motivo } } });
+      const tela = renderTela();
+      await buscarParadas(tela);
+
+      fireEvent.press(await tela.findByText('Excluir'));
+      await confirmar();
+
+      expect(mostrarAviso).toHaveBeenCalledWith('Erro', motivo);
+      expect(tela.getByText('Rodoviária do Plano Piloto')).toBeTruthy();
     });
   });
 });

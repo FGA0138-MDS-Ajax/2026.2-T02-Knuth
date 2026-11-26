@@ -388,3 +388,43 @@ export const excluirLinha = async (token, id) => {
   return response.data;
 };
 
+export const obterParadaAdmin = async (token, id) => {
+  const response = await axios.get(`${API_BASE_URL}/admin/paradas/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const criarParada = async (token, dados) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/paradas`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const editarParada = async (token, id, dados) => {
+  const response = await axios.put(
+    `${API_BASE_URL}/admin/paradas/${id}`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+export const excluirParada = async (token, id) => {
+  const response = await axios.delete(`${API_BASE_URL}/admin/paradas/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
