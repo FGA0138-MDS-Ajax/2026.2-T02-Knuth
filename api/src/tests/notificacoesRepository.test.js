@@ -44,4 +44,22 @@ describe('notificacoesRepository', () => {
       expect(resultado).toEqual([]);
     });
   });
+
+  describe('listarPorUsuario', () => {
+    it('lista as notificações do usuário da mais recente para a mais antiga', async () => {
+      const notificacoes = [
+        { id: 2, titulo: 'Desvio', lida: false },
+        { id: 1, titulo: 'Suspensão', lida: true }
+      ];
+      pool.query.mockResolvedValue({ rows: notificacoes });
+
+      const resultado = await repository.listarPorUsuario(3);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toMatch(/FROM notificacoes/);
+      expect(sql).toMatch(/ORDER BY criado_em DESC/);
+      expect(params).toEqual([3]);
+      expect(resultado).toEqual(notificacoes);
+    });
+  });
 });
