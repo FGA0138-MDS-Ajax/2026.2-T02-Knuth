@@ -110,6 +110,19 @@ describe('FavoritosSecao', () => {
     expect(navigation.navigate).toHaveBeenCalledWith('BuscarTrajeto', { origem: 'Rodoviária' });
   });
 
+  it('abre as próximas partidas ao tocar no botão Partidas de uma parada favorita (RF11)', () => {
+    estado = { logado: true, favoritos: [{ ...PARADA, paradaCodigo: 'P-101' }] };
+
+    const { getByText } = renderSecao();
+    fireEvent.press(getByText('Partidas'));
+
+    expect(navigation.navigate).toHaveBeenCalledWith('ProximasPartidas', {
+      paradaId: 'P1',
+      paradaNome: 'Rodoviária',
+      paradaCodigo: 'P-101',
+    });
+  });
+
   it('abre o planejador com origem e destino preenchidos ao tocar no cartão do trajeto', () => {
     estado = { logado: true, favoritos: [TRAJETO] };
 

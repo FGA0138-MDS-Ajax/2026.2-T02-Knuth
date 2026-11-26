@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import Constants from 'expo-constants';
 
@@ -30,13 +29,30 @@ export const getHorarios = async (linhaId, sentido = 'IDA') => {
 
 export const getTrajetos = async (origem, destino, opcoes = {}) => {
   const params = { origem, destino };
-  if (opcoes && opcoes.horario) {
+
+  // Compatibilidade com chamadas antigas da RF05
+  if (typeof opcoes === 'string') {
+    opcoes = { ordenarPor: opcoes };
+  }
+
+  // RF05 - Ordenação de trajetos
+  if (opcoes?.ordenarPor) {
+    params.ordenarPor = opcoes.ordenarPor;
+  }
+
+  // RF06 - Planejamento por horário
+  if (opcoes?.horario) {
     params.horario = opcoes.horario;
   }
-  if (opcoes && opcoes.referenciaHorario) {
+
+  if (opcoes?.referenciaHorario) {
     params.referenciaHorario = opcoes.referenciaHorario;
   }
-  const response = await axios.get(`${API_BASE_URL}/trajetos`, { params });
+
+  const response = await axios.get(`${API_BASE_URL}/trajetos`, {
+    params
+  });
+
   return response.data;
 };
 
@@ -54,21 +70,47 @@ export const buscarParadas = async (busca, limite = 8) => {
   return response.data;
 };
 
+export const getProximasPartidasParada = async (paradaId, opcoes = {}) => {
+  const params = {};
+
+  if (opcoes.horario) params.horario = opcoes.horario;
+  if (opcoes.tipoDia) params.tipoDia = opcoes.tipoDia;
+  if (opcoes.limite) params.limite = opcoes.limite;
+
+  const response = await axios.get(
+    `${API_BASE_URL}/paradas/${paradaId}/proximas-partidas`,
+    { params }
+  );
+
+  return response.data;
+};
+
 export const getBuscasRecentes = async (usuarioId = null, limite = 5) => {
   const params = { limite };
+
   if (usuarioId !== null && usuarioId !== undefined) {
     params.usuarioId = usuarioId;
   }
-  const response = await axios.get(`${API_BASE_URL}/buscas-recentes`, { params });
+
+  const response = await axios.get(`${API_BASE_URL}/buscas-recentes`, {
+    params
+  });
+
   return response.data;
 };
 
 export const salvarBuscaRecente = async (origem, destino, usuarioId = null) => {
   const payload = { origem, destino };
+
   if (usuarioId !== null && usuarioId !== undefined) {
     payload.usuarioId = usuarioId;
   }
-  const response = await axios.post(`${API_BASE_URL}/buscas-recentes`, payload);
+
+  const response = await axios.post(
+    `${API_BASE_URL}/buscas-recentes`,
+    payload
+  );
+
   return response.data;
 };
 
@@ -78,6 +120,7 @@ export const cadastrarUsuario = async (nome, email, senha) => {
     email,
     senha
   });
+
   return response.data;
 };
 
@@ -86,6 +129,7 @@ export const loginUsuario = async (email, senha) => {
     email,
     senha
   });
+
   return response.data;
 };
 
@@ -94,22 +138,29 @@ export const getAlertas = async (filtros) => {
     `${API_BASE_URL}/alertas`,
     filtros ? { params: filtros } : undefined
   );
+
   return response.data;
 };
 
 export const solicitarRecuperacaoSenha = async (email) => {
-  const response = await axios.post(`${API_BASE_URL}/usuarios/recuperar-senha`, {
-    email
-  });
+  const response = await axios.post(
+    `${API_BASE_URL}/usuarios/recuperar-senha`,
+    { email }
+  );
+
   return response.data;
 };
 
 export const redefinirSenha = async (email, codigo, novaSenha) => {
-  const response = await axios.post(`${API_BASE_URL}/usuarios/redefinir-senha`, {
-    email,
-    codigo,
-    novaSenha
-  });
+  const response = await axios.post(
+    `${API_BASE_URL}/usuarios/redefinir-senha`,
+    {
+      email,
+      codigo,
+      novaSenha
+    }
+  );
+
   return response.data;
 };
 
@@ -118,6 +169,7 @@ export const excluirMinhaConta = async (token, senha) => {
     headers: { Authorization: `Bearer ${token}` },
     data: { senha }
   });
+
   return response.data;
 };
 
@@ -135,6 +187,7 @@ export const reportarDivergencia = async ({
     paradaId: paradaId || null,
     usuarioId: usuarioId ?? null
   });
+
   return response.data;
 };
 
@@ -142,6 +195,7 @@ export const getPerfilAdmin = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/admin/perfil`, {
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
@@ -151,6 +205,7 @@ export const criarAdministrador = async (token, nome, email, senha) => {
     { nome, email, senha },
     { headers: { Authorization: `Bearer ${token}` } }
   );
+
   return response.data;
 };
 
@@ -159,13 +214,19 @@ export const listarUsuarios = async (token, tipo) => {
     params: { tipo },
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
 export const atualizarUsuario = async (token, id, dados) => {
-  const response = await axios.put(`${API_BASE_URL}/admin/usuarios/${id}`, dados, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const response = await axios.put(
+    `${API_BASE_URL}/admin/usuarios/${id}`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
   return response.data;
 };
 
@@ -173,6 +234,7 @@ export const excluirUsuario = async (token, id) => {
   const response = await axios.delete(`${API_BASE_URL}/admin/usuarios/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
@@ -180,20 +242,31 @@ export const listarAlertasAdmin = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/admin/alertas`, {
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
 export const criarAlerta = async (token, dados) => {
-  const response = await axios.post(`${API_BASE_URL}/admin/alertas`, dados, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const response = await axios.post(
+    `${API_BASE_URL}/admin/alertas`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
   return response.data;
 };
 
 export const encerrarAlerta = async (token, id) => {
-  const response = await axios.put(`${API_BASE_URL}/admin/alertas/${id}/encerrar`, {}, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const response = await axios.put(
+    `${API_BASE_URL}/admin/alertas/${id}/encerrar`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
   return response.data;
 };
 
@@ -201,13 +274,19 @@ export const excluirAlerta = async (token, id) => {
   const response = await axios.delete(`${API_BASE_URL}/admin/alertas/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
 export const editarAlerta = async (token, id, dados) => {
-  const response = await axios.put(`${API_BASE_URL}/admin/alertas/${id}`, dados, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const response = await axios.put(
+    `${API_BASE_URL}/admin/alertas/${id}`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
   return response.data;
 };
 
@@ -216,6 +295,7 @@ export const buscarParadasAdmin = async (token, busca) => {
     params: { busca },
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
@@ -223,13 +303,19 @@ export const getFavoritos = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/favoritos`, {
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
 export const adicionarFavorito = async (token, dados) => {
-  const response = await axios.post(`${API_BASE_URL}/favoritos`, dados, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const response = await axios.post(
+    `${API_BASE_URL}/favoritos`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
   return response.data;
 };
 
@@ -237,6 +323,7 @@ export const removerFavorito = async (token, id) => {
   const response = await axios.delete(`${API_BASE_URL}/favoritos/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
@@ -245,6 +332,7 @@ export const listarReportesAdmin = async (token, filtros = {}) => {
     params: filtros,
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
@@ -252,13 +340,19 @@ export const obterReporteAdmin = async (token, id) => {
   const response = await axios.get(`${API_BASE_URL}/admin/reportes/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
+
   return response.data;
 };
 
 export const analisarReporteAdmin = async (token, id, dados) => {
-  const response = await axios.patch(`${API_BASE_URL}/admin/reportes/${id}`, dados, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const response = await axios.patch(
+    `${API_BASE_URL}/admin/reportes/${id}`,
+    dados,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
   return response.data;
 };
 

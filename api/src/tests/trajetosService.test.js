@@ -2,6 +2,7 @@ jest.mock('../repositories/trajetosRepository', () => ({
   buscarParadasPorNome: jest.fn(),
   buscarRotasDiretas: jest.fn(),
   buscarRotasComBaldeacao: jest.fn(),
+  buscarParadasTrecho: jest.fn(),
 }));
 
 const trajetosRepository = require('../repositories/trajetosRepository');
@@ -260,6 +261,153 @@ describe('TrajetosService.obterTrajetos', () => {
 
       expect(trajetosRepository.buscarRotasDiretas).toHaveBeenCalledWith([1], [2], filtro);
       expect(trajetosRepository.buscarRotasComBaldeacao).toHaveBeenCalledWith([1], [2], filtro);
+    });
+  });
+
+  describe('ordenação e cálculo de caminhada (RF05)', () => {
+    it('calcula caminhadaMetros quando a parada de embarque/desembarque difere da referência', async () => {
+      mockParadas(
+        [{ id: '1', nome: 'Parada A', latitude: -15.7939, longitude: -47.8828 }],
+        [{ id: '2', nome: 'Parada B', latitude: -15.7801, longitude: -47.8792 }]
+      );
+      trajetosRepository.buscarRotasDiretas.mockResolvedValue([
+        viagemDireta({
+          origem_id: '10',
+          lat_origem: -15.7957,
+          lng_origem: -47.8828,
+          destino_id: '2',
+          lat_destino: -15.7801,
+          lng_destino: -47.8792,
+        }),
+      ]);
+
+      const [opcao] = await trajetosService.obterTrajetos('Parada A', 'Parada B');
+
+      expect(opcao.caminhadaMetros).toBeGreaterThan(150);
+      expect(opcao.caminhadaMetros).toBeLessThan(250);
+    });
+
+    it('ordena opções pelo critério TEMPO, BALDEACOES ou CAMINHADA', async () => {
+      mockParadas(
+        [{ id: '1', nome: 'Parada A', latitude: -15.7939, longitude: -47.8828 }],
+        [{ id: '2', nome: 'Parada B', latitude: -15.7801, longitude: -47.8792 }]
+      );
+      trajetosRepository.buscarRotasDiretas.mockResolvedValue([
+        viagemDireta({
+          horario_origem: '08:00:00',
+          duracao: 45,
+          origem_id: '10',
+          lat_origem: -15.7965,
+          lng_origem: -47.8828,
+          destino_id: '2',
+          lat_destino: -15.7801,
+          lng_destino: -47.8792,
+        }),
+      ]);
+      trajetosRepository.buscarRotasComBaldeacao.mockResolvedValue([
+        viagemComBaldeacao({
+          hora_origem: '08:05:00',
+          duracao_total: 25,
+          origem_id: '1',
+          lat_origem: -15.7939,
+          lng_origem: -47.8828,
+          destino_id: '2',
+          lat_destino: -15.7801,
+          lng_destino: -47.8792,
+        }),
+      ]);
+
+      const porTempo = await trajetosService.obterTrajetos('Parada A', 'Parada B', 'TEMPO');
+      expect(porTempo.map((o) => o.duracaoMinutos)).toEqual([25, 45]);
+
+      mockParadas(
+        [{ id: '1', nome: 'Parada A', latitude: -15.7939, longitude: -47.8828 }],
+        [{ id: '2', nome: 'Parada B', latitude: -15.7801, longitude: -47.8792 }]
+      );
+      const porBaldeacoes = await trajetosService.obterTrajetos(
+        'Parada A',
+        'Parada B',
+        'BALDEACOES'
+      );
+      expect(porBaldeacoes.map((o) => o.baldeacoes)).toEqual([0, 1]);
+
+      mockParadas(
+        [{ id: '1', nome: 'Parada A', latitude: -15.7939, longitude: -47.8828 }],
+        [{ id: '2', nome: 'Parada B', latitude: -15.7801, longitude: -47.8792 }]
+      );
+      const porCaminhada = await trajetosService.obterTrajetos(
+        'Parada A',
+        'Parada B',
+        'CAMINHADA'
+      );
+      expect(porCaminhada[0].caminhadaMetros).toBe(0);
+      expect(porCaminhada[1].caminhadaMetros).toBeGreaterThan(200);
+    });
+  });
+
+  describe('dados geográficos do trajeto para o mapa (RF04)', () => {
+    it('monta trechos e marcadores de embarque e desembarque em rota direta com paradas intermediárias', async () => {
+      trajetosRepository.buscarRotasDiretas.mockResolvedValue([
+        viagemDireta({
+          viagem_id: 'TRIP_1',
+          linha_cor: '#1565C0',
+          seq_origem: 1,
+          seq_destino: 3,
+          origem_id: '1',
+          lat_origem: -15.7938,
+          lng_origem: -47.8827,
+          destino_id: '2',
+          lat_destino: -15.763,
+          lng_destino: -47.871,
+        }),
+      ]);
+      trajetosRepository.buscarParadasTrecho.mockResolvedValue([
+        { sequencia: 1, parada_id: '1', codigo: 'P1', nome: 'Terminal Central', latitude: '-15.7938', longitude: '-47.8827' },
+        { sequencia: 2, parada_id: '9', codigo: 'P9', nome: 'Eixo Norte', latitude: '-15.7780', longitude: '-47.8760' },
+        { sequencia: 3, parada_id: '2', codigo: 'P2', nome: 'UNB', latitude: '-15.7630', longitude: '-47.8710' },
+      ]);
+
+      const [opcao] = await trajetosService.obterTrajetos('Terminal Central', 'UNB');
+
+      expect(trajetosRepository.buscarParadasTrecho).toHaveBeenCalledWith('TRIP_1', 1, 3);
+      expect(opcao.mapa.trechos).toHaveLength(1);
+      expect(opcao.mapa.trechos[0]).toMatchObject({
+        tipo: 'ONIBUS',
+        linhaCodigo: '101',
+        cor: '#1565C0',
+      });
+      expect(opcao.mapa.trechos[0].pontos).toHaveLength(3);
+      expect(opcao.mapa.marcadores.map((m) => m.tipo)).toEqual(['EMBARQUE', 'DESEMBARQUE']);
+    });
+
+    it('monta dois trechos de ônibus com cores distintas, trecho de baldeação e 3 marcadores', async () => {
+      trajetosRepository.buscarRotasComBaldeacao.mockResolvedValue([
+        viagemComBaldeacao({
+          viagem_1_id: 'T1',
+          viagem_2_id: 'T2',
+          linha_1_cor: '#006666',
+          linha_2_cor: '#006666',
+          origem_id: '1',
+          lat_origem: -15.79,
+          lng_origem: -47.88,
+          transfer_id: '5',
+          lat_transferencia: -15.80,
+          lng_transferencia: -47.89,
+          destino_id: '2',
+          lat_destino: -15.76,
+          lng_destino: -47.87,
+        }),
+      ]);
+
+      const [opcao] = await trajetosService.obterTrajetos('Terminal Central', 'UNB');
+
+      expect(opcao.mapa.trechos.map((t) => t.tipo)).toEqual(['ONIBUS', 'CAMINHADA', 'ONIBUS']);
+      expect(opcao.mapa.trechos[0].cor).not.toBe(opcao.mapa.trechos[2].cor);
+      expect(opcao.mapa.marcadores.map((m) => m.tipo)).toEqual([
+        'EMBARQUE',
+        'BALDEACAO',
+        'DESEMBARQUE',
+      ]);
     });
   });
 });

@@ -4,7 +4,8 @@ class LinhasRepository {
   async findLinhas(filters = {}) {
     const { busca } = typeof filters === 'string' ? { busca: filters } : filters;
 
-    let query = 'SELECT id, codigo, nome, cor FROM linhas WHERE 1=1';
+    let query =
+      'SELECT id, codigo, nome, cor, tarifa, faixa_tarifaria, operadora, extensao_km FROM linhas WHERE 1=1';
     const params = [];
 
     if (busca) {
@@ -20,8 +21,10 @@ class LinhasRepository {
     const query = `
       SELECT DISTINCT ON (v.sentido, hp.sequencia)
         l.id AS linha_id, l.codigo AS linha_codigo, l.nome AS linha_nome, l.cor AS linha_cor,
+        l.tarifa AS linha_tarifa, l.faixa_tarifaria AS linha_faixa_tarifaria,
+        l.operadora AS linha_operadora, l.extensao_km AS linha_extensao_km,
         v.sentido, hp.sequencia, p.id AS parada_id, p.codigo AS parada_codigo, p.nome AS parada_nome, 
-        p.latitude, p.longitude
+        p.latitude, p.longitude, p.tipo AS parada_tipo, p.estrutura AS parada_estrutura
       FROM linhas l
       INNER JOIN viagens v ON v.linha_id = l.id
       INNER JOIN horarios_paradas hp ON hp.viagem_id = v.id
@@ -36,7 +39,9 @@ class LinhasRepository {
   async findHorariosByLinhaId(linhaId) {
     const query = `
       SELECT 
-        l.id AS linha_id, l.codigo AS linha_codigo, l.nome AS linha_nome,
+        l.id AS linha_id, l.codigo AS linha_codigo, l.nome AS linha_nome, l.cor AS linha_cor,
+        l.tarifa AS linha_tarifa, l.faixa_tarifaria AS linha_faixa_tarifaria,
+        l.operadora AS linha_operadora, l.extensao_km AS linha_extensao_km,
         v.sentido, c.tipo_dia, TO_CHAR(hp.partida::time, 'HH24:MI') AS horario_partida
       FROM linhas l
       INNER JOIN viagens v ON v.linha_id = l.id

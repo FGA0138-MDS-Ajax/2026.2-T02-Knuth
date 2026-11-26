@@ -65,6 +65,18 @@ export default function FavoritosSecao({ navigation, store = favoritosStore }) {
                   <Text style={styles.nomeItem} numberOfLines={2}>{nomeParada}</Text>
                   <Text style={styles.subtituloItem}>Parada favorita • Toque para planejar</Text>
                 </View>
+                <TouchableOpacity
+                  style={styles.botaoPartidas}
+                  onPress={() =>
+                    navigation.navigate('ProximasPartidas', {
+                      paradaId: favorito.paradaId,
+                      paradaNome: nomeParada,
+                      paradaCodigo: favorito.paradaCodigo,
+                    })
+                  }
+                >
+                  <Text style={styles.botaoPartidasTexto}>Partidas</Text>
+                </TouchableOpacity>
                 <FavoritoEstrela
                   item={{ tipo: 'PARADA', paradaId: favorito.paradaId }}
                   store={store}
@@ -117,5 +129,7 @@ const styles = StyleSheet.create({
   badgeText: { color: '#FFF', fontWeight: 'bold', fontSize: 14 },
   infoItem: { flex: 1, marginRight: 8 },
   nomeItem: { flex: 1, fontSize: 14, fontWeight: '600', color: '#333', marginRight: 8 },
-  subtituloItem: { fontSize: 12, color: '#666', marginTop: 2 }
+  subtituloItem: { fontSize: 12, color: '#666', marginTop: 2 },
+  botaoPartidas: { backgroundColor: '#006666', paddingVertical: 5, paddingHorizontal: 10, borderRadius: 12, marginRight: 6 },
+  botaoPartidasTexto: { color: '#FFF', fontSize: 12, fontWeight: '600' },
 });

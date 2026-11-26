@@ -1,5 +1,23 @@
 const linhasRepository = require('../repositories/linhasRepository');
 
+function normalizarNumeroOpcional(valor) {
+  if (valor === null || valor === undefined || valor === '') {
+    return undefined;
+  }
+  const numero = Number(valor);
+  return Number.isNaN(numero) ? undefined : numero;
+}
+
+function anexarMetadadosLinha(destino, row) {
+  if (row.linha_cor) destino.cor = row.linha_cor;
+  const tarifa = normalizarNumeroOpcional(row.linha_tarifa);
+  if (tarifa !== undefined) destino.tarifa = tarifa;
+  if (row.linha_faixa_tarifaria) destino.faixaTarifaria = row.linha_faixa_tarifaria;
+  if (row.linha_operadora) destino.operadora = row.linha_operadora;
+  const extensaoKm = normalizarNumeroOpcional(row.linha_extensao_km);
+  if (extensaoKm !== undefined) destino.extensaoKm = extensaoKm;
+}
+
 class LinhasService {
   // RF02 / Busca Geral: aceita tanto busca por texto quanto objeto de filtros (bacia, regiao, tipo)
   async obterLinhas(filtros) {
@@ -24,6 +42,7 @@ class LinhasService {
       cor: rows[0].linha_cor,
       itinerario: { IDA: [], VOLTA: [] }
     };
+    anexarMetadadosLinha(resultado, rows[0]);
 
     rows.forEach(row => {
       const parada = {
@@ -34,6 +53,8 @@ class LinhasService {
         latitude: parseFloat(row.latitude),
         longitude: parseFloat(row.longitude)
       };
+      if (row.parada_tipo) parada.tipo = row.parada_tipo;
+      if (row.parada_estrutura) parada.estrutura = row.parada_estrutura;
 
       if (row.sentido === 'IDA') {
         resultado.itinerario.IDA.push(parada);
@@ -60,6 +81,7 @@ class LinhasService {
         VOLTA: { DIA_UTIL: [], SABADO: [], DOMINGO_FERIADO: [] }
       }
     };
+    anexarMetadadosLinha(resultado, rows[0]);
 
     rows.forEach(row => {
       const { sentido, tipo_dia, horario_partida } = row;

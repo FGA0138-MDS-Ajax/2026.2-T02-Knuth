@@ -175,4 +175,96 @@ describe('ResultadoTrajetoScreen', () => {
       expect(navigation.navigate).not.toHaveBeenCalled();
     });
   });
+
+  describe('ordenação e filtro de opções (RF05)', () => {
+    const OPCOES_COMPARACAO = [
+      {
+        duracaoMinutos: 45,
+        partida: '08:00',
+        chegada: '08:45',
+        baldeacoes: 0,
+        caminhadaMetros: 300,
+        etapas: [{ ordem: 1, tipo: 'ONIBUS', instrucao: 'Linha 100' }],
+      },
+      {
+        duracaoMinutos: 20,
+        partida: '08:05',
+        chegada: '08:25',
+        baldeacoes: 1,
+        caminhadaMetros: 120,
+        etapas: [{ ordem: 1, tipo: 'ONIBUS', instrucao: 'Linha 200' }],
+      },
+      {
+        duracaoMinutos: 35,
+        partida: '08:10',
+        chegada: '08:45',
+        baldeacoes: 2,
+        caminhadaMetros: 0,
+        etapas: [{ ordem: 1, tipo: 'ONIBUS', instrucao: 'Linha 300' }],
+      },
+    ];
+
+    it('reordena por menor tempo total e destaca a melhor opção', () => {
+      const { getByText, getAllByText } = renderTela(OPCOES_COMPARACAO);
+
+      fireEvent.press(getByText('Menor tempo'));
+
+      const duracoes = getAllByText(/ min$/).map((no) => no.props.children);
+      expect(duracoes).toEqual(['20 min', '35 min', '45 min']);
+      expect(getByText('Mais rápida')).toBeTruthy();
+    });
+
+    it('reordena por menor número de baldeações', () => {
+      const { getByText, getAllByText } = renderTela(OPCOES_COMPARACAO);
+
+      fireEvent.press(getByText('Menos baldeações'));
+
+      const duracoes = getAllByText(/ min$/).map((no) => no.props.children);
+      expect(duracoes).toEqual(['45 min', '20 min', '35 min']);
+      expect(getByText('1 baldeação')).toBeTruthy();
+    });
+
+    it('reordena por menor distância de caminhada e exibe a caminhada nos cards', () => {
+      const { getByText, getAllByText } = renderTela(OPCOES_COMPARACAO);
+
+      expect(getByText('• 300 m a pé')).toBeTruthy();
+      expect(getByText('• 120 m a pé')).toBeTruthy();
+      expect(getByText('• Sem caminhada')).toBeTruthy();
+
+      fireEvent.press(getByText('Menor caminhada'));
+
+      const duracoes = getAllByText(/ min$/).map((no) => no.props.children);
+      expect(duracoes).toEqual(['35 min', '20 min', '45 min']);
+    });
+
+    it('preserva os dados completos da opção ao abrir o detalhe após reordenar', () => {
+      const { getByText } = renderTela(OPCOES_COMPARACAO);
+
+      fireEvent.press(getByText('Menor caminhada'));
+      fireEvent.press(getByText('35 min'));
+
+      expect(navigation.navigate).toHaveBeenCalledWith('TrajetoDetalhe', {
+        opcaoTrajeto: OPCOES_COMPARACAO[2],
+      });
+    });
+
+    it('filtra somente opções diretas e permite limpar o filtro quando vazio', () => {
+      const { getByText, getAllByText } = renderTela(OPCOES_COMPARACAO);
+
+      fireEvent.press(getByText('Somente diretos'));
+
+      expect(getAllByText(/ min$/).map((no) => no.props.children)).toEqual(['45 min']);
+
+      const somenteComBaldeacao = [OPCOES_COMPARACAO[1], OPCOES_COMPARACAO[2]];
+      const telaSemDiretas = renderTela(somenteComBaldeacao);
+
+      fireEvent.press(telaSemDiretas.getByText('Somente diretos'));
+      expect(
+        telaSemDiretas.getByText('Nenhuma opção direta encontrada para este trajeto.')
+      ).toBeTruthy();
+
+      fireEvent.press(telaSemDiretas.getByText('Mostrar todas as opções'));
+      expect(telaSemDiretas.getAllByText(/ min$/)).toHaveLength(2);
+    });
+  });
 });

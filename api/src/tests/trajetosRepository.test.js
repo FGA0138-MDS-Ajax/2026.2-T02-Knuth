@@ -196,4 +196,29 @@ describe('TrajetosRepository', () => {
       expect(params).toEqual([['10'], ['20'], '10:00:00']);
     });
   });
+
+  describe('buscarParadasTrecho (RF04)', () => {
+    it('busca a sequência ordenada de paradas com coordenadas entre seqInicio e seqFim', async () => {
+      const paradas = [
+        { sequencia: 1, parada_id: '10', codigo: 'P10', nome: 'Origem', latitude: '-15.79', longitude: '-47.88' },
+        { sequencia: 2, parada_id: '11', codigo: 'P11', nome: 'Meio', latitude: '-15.80', longitude: '-47.89' },
+      ];
+      pool.query.mockResolvedValue({ rows: paradas });
+
+      const resultado = await repository.buscarParadasTrecho('TRIP_1', 1, 2);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toContain('FROM horarios_paradas hp');
+      expect(sql).toContain('hp.sequencia >= $2');
+      expect(sql).toContain('hp.sequencia <= $3');
+      expect(sql).toContain('ORDER BY hp.sequencia ASC');
+      expect(params).toEqual(['TRIP_1', 1, 2]);
+      expect(resultado).toEqual(paradas);
+    });
+
+    it('retorna lista vazia sem consultar o banco quando faltam parâmetros', async () => {
+      expect(await repository.buscarParadasTrecho(null, 1, 5)).toEqual([]);
+      expect(pool.query).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -1,16 +1,28 @@
+const path = require('path');
+
 jest.mock('pg', () => ({ Pool: jest.fn() }));
 jest.mock('dotenv', () => ({ config: jest.fn() }));
 
-const VARIAVEIS = ['DATABASE_URL', 'DB_USER', 'DB_HOST', 'DB_NAME', 'DB_PASSWORD', 'DB_PORT'];
+const VARIAVEIS = [
+  'DATABASE_URL',
+  'DB_USER',
+  'DB_HOST',
+  'DB_NAME',
+  'DB_PASSWORD',
+  'DB_PORT',
+];
 
 function carregar() {
   let resultado;
+
   jest.isolateModules(() => {
     const { Pool } = require('pg');
     const dotenv = require('dotenv');
     const pool = require('../config/database');
+
     resultado = { Pool, dotenv, pool };
   });
+
   return resultado;
 }
 
@@ -40,10 +52,16 @@ describe('database', () => {
     });
   });
 
-  it('carrega as variáveis do arquivo .env', () => {
+  it('carrega as variáveis do arquivo .env da raiz e do módulo api', () => {
     const { dotenv } = carregar();
 
     expect(dotenv.config).toHaveBeenCalledTimes(2);
+
+    expect(dotenv.config).toHaveBeenNthCalledWith(1, {
+      path: path.resolve(__dirname, '../../../.env'),
+    });
+
+    expect(dotenv.config).toHaveBeenNthCalledWith(2);
   });
 
   it('cria um único pool e o exporta', () => {
@@ -53,13 +71,14 @@ describe('database', () => {
     expect(pool).toBe(Pool.mock.instances[0]);
   });
 
-  it('usa DATABASE_URL com SSL quando definida', () => {
-    process.env.DATABASE_URL = 'postgres://user:pass@host.neon.tech/rotasdf';
+  it('usa DATABASE_URL com SSL quando configurada', () => {
+    process.env.DATABASE_URL =
+      'postgresql://user:pass@neon.tech/rotasdf';
 
     const { Pool } = carregar();
 
     expect(Pool).toHaveBeenCalledWith({
-      connectionString: 'postgres://user:pass@host.neon.tech/rotasdf',
+      connectionString: 'postgresql://user:pass@neon.tech/rotasdf',
       ssl: { rejectUnauthorized: false },
     });
   });
