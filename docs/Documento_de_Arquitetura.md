@@ -1,15 +1,15 @@
 # RotasDF — Documento de Arquitetura
 
-**Grupo Knuth (T02_KNUTH)** · Versão 1.1.0
+**Grupo Knuth (T02_KNUTH)** · Versão 1.2.0
 
 ## Integrantes do Grupo
 
 | Matrícula | Nome | Função (responsabilidade) | Pontos de participação |
 |---|---|---|---|
-| 252014223 | Gabriel Sakai e Silva | Analista de qualidade / desenvolvedor | 16,6 |
-| 242015601 | Emanuele Victor Santos | Scrum master / Líder do grupo / desenvolvedor | 16,6 |
-| 232013990 | Gabriel Felix Mota Soares | Dono do produto / desenvolvedor | 16,6 |
-| 190128160 | Guilherme Maciel de Meneses | Desenvolvedor | 16,6 |
+| 252014223 | Gabriel Sakai e Silva | Analista de qualidade / desenvolvedor | 16,7 |
+| 242015601 | Emanuele Victor Santos | Scrum master / Líder do grupo / desenvolvedor | 16,7 |
+| 232013990 | Gabriel Felix Mota Soares | Dono do produto / desenvolvedor | 16,7 |
+| 190128160 | Guilherme Maciel de Meneses | Desenvolvedor | 16,7 |
 | 222024819 | Gabriela Xavier Rodrigues | Desenvolvedor | 16,6 |
 | 242015460 | Denilson Lima Santos | Desenvolvedor | 16,6 |
 
@@ -19,7 +19,8 @@
 |---|---|---|---|
 | 07/10/2026 | 1.0 | Versão inicial do Documento de Arquitetura | Todos |
 | 27/10/2026 | 1.1.0 | Revisão do Sumário, correção da formatação ABNT em cabeçalhos e referências, e inserção do Diagrama de Implantação | Denilson Lima Santos |
-|15/11/2026 | 1.1.1 | Atualização do documento de acordo com o progresso feito | Gabriel Sakai e Silva |
+| 15/11/2026 | 1.1.1 | Atualização do documento de acordo com o progresso feito | Gabriel Sakai e Silva |
+| 22/11/2026 | 1.2.0 | Correção dos apontamentos da inspeção: alinhamento da branch de integração (`developer` -> `main`) na MR04 (DEF-013), revisão das remissões às MRs e critérios da Visão (DEF-025), formalização do acesso a dados via driver `pg` com SQL direto (DEF-027), sincronização do fluxo de importação GTFS e atualização das referências ABNT | Emanuele Victor Santos |
 
 ## Sumário
 
@@ -46,7 +47,7 @@ Este documento descreve a arquitetura do sistema RotasDF, desenvolvido pelo grup
 
 ### 1.2 Escopo
 
-O detalhamento do escopo encontra-se na Visão, versão 1.0.0, seção 4 (Declaração de Escopo do Projeto). Em linhas gerais, o produto compreende uma plataforma digital de transporte público que reúne, em uma interface responsiva e acessível:
+O detalhamento do escopo encontra-se no Documento de Visão do Produto e do Projeto (doravante, Visão), versão 1.3.1, seção 4 (Declaração de Escopo do Projeto). Em linhas gerais, o produto compreende uma plataforma digital de transporte público que reúne, em uma interface responsiva e acessível:
 
 - consulta de linhas, paradas, itinerários e quadros de horários;
 - planejamento de trajetos entre origem e destino;
@@ -78,14 +79,14 @@ O servidor de aplicação é organizado como um **monólito modular**: uma únic
 #### Regras de dependência
 
 - O front-end só se comunica com o servidor de aplicação, pela API REST.
-- Os módulos só acessam o banco pelos repositórios; nenhum módulo executa SQL diretamente nem conhece HTTP.
+- Os módulos só acessam o banco pelos repositórios (via driver `pg` com consultas SQL parametrizadas); nenhum módulo executa SQL diretamente nem conhece HTTP.
 - Um módulo não acessa as tabelas de outro: usa o serviço do módulo correspondente.
 
-**Tecnologias:** React Native no front-end mobile; Node.js e Python no servidor; PostgreSQL no banco de dados; Docker, GitHub e VS Code no processo e na infraestrutura.
+**Tecnologias:** React Native no front-end mobile; Node.js e Python no servidor; PostgreSQL no banco de dados (acessado via driver `pg` em Node.js e `psycopg2` no importador Python); Docker, GitHub e VS Code no processo e na infraestrutura.
 
 ### 2.2 Justificativa da escolha arquitetural
 
-A escolha considera os seguintes pontos do Documento de Visão do Produto e do Projeto (doravante, Visão), incluindo a Declaração de Escopo (seção 4):
+A escolha considera os seguintes pontos da Visão (v1.3.1), incluindo a Declaração de Escopo (seção 4):
 
 #### Fatores que orientaram a decisão
 
@@ -93,14 +94,14 @@ A escolha considera os seguintes pontos do Documento de Visão do Produto e do P
 - **Interface mobile responsiva e acessível (Visão, seções 1.2 e 4.1).** O diferencial do produto é a acessibilidade e a facilidade de uso em dispositivos móveis. Separar a apresentação (React Native) da lógica permite evoluir a interface mobile com rapidez, sem afetar as regras de negócio.
 - **Entregas incrementais em Sprints semanais (Visão, seções 2.1 e 2.3).** Os módulos são entregues progressivamente, do módulo base (S1) aos recursos avançados (S5). Módulos independentes dentro de um único monólito permitem que cada Sprint entregue um incremento sem a sobrecarga operacional de vários serviços.
 - **Equipe de 6 integrantes e prazo curto (26/10 a 29/11/2026).** O monólito modular reduz a complexidade de implantação e de integração em comparação a microsserviços e mantém baixo acoplamento entre os módulos, o que facilita uma eventual separação futura (RICHARDS, 2015).
-- **Dados oficiais em formato padronizado (Visão, RF20).** Um serviço de importação isolado das consultas permite validar e carregar os dados GTFS sem afetar a experiência do passageiro.
-- **Práticas de XP e qualidade (Visão, seções 2.1, 3 e 5.1).** Camadas e módulos bem delimitados favorecem os testes unitários por módulo e a meta de 80% de cobertura (MR05).
+- **Dados oficiais em formato padronizado (Visão, RF20).** Um serviço de importação isolado das consultas permite validar e carregar os dados GTFS sem afetar a experiência do passageiro (MR08).
+- **Práticas de XP e qualidade (Visão, seções 2.1, 3 e 6.1).** Camadas e módulos bem delimitados favorecem os testes unitários por módulo e a meta de 80% de cobertura (MR05).
 
 #### Alternativas consideradas e descartadas
 
 - **Microsserviços.** Cada módulo seria um serviço independente. Foi descartada porque exigiria comunicação entre serviços, monitoramento e implantação mais complexos, sem benefício proporcional para uma equipe de 6 pessoas e cinco semanas de desenvolvimento (SOMMERVILLE, 2019; RICHARDS, 2015). A organização em módulos permite migrar para essa abordagem no futuro, se necessário.
-- **Aplicação web tradicional sem aplicativo mobile.** Foi descartada porque a interface mobile com mapa e navegação por geolocalização nativa, previstas na Visão (seção 1.4), exigem uma experiência nativa ou híbrida otimizada para smartphones (React Native). A API REST também permite reutilizar o back-end em outros clientes no futuro.
-- **Back-end como serviço (BaaS) ou funções sem servidor.** Foi descartada porque o cálculo de trajetos e a importação e validação dos dados GTFS exigem lógica própria e controle sobre o banco relacional (PostgreSQL), já definido na Visão.
+- **Aplicação web tradicional sem aplicativo mobile.** Foi descartada porque a interface mobile com mapa e navegação por geolocalização nativa, previstas na Visão (seção 1.4), exigem uma experiência nativa ou híbrida otimizada para smartphones (React Native). A API REST também permite reutilizar o back-end em outros clientes no futuro (MR01, MR02).
+- **Back-end como serviço (BaaS) ou funções sem servidor.** Foi descartada porque o cálculo de trajetos e a importação e validação dos dados GTFS exigem lógica própria e controle transacional sobre o banco relacional (PostgreSQL), já definido na Visão.
 
 #### Consequências e riscos aceitos
 
@@ -120,38 +121,38 @@ A figura a seguir apresenta o estilo arquitetural escolhido, com as camadas, os 
 
 **Camada de apresentação (front-end)**
 
-- **Aplicativo Mobile (React Native):** exibe as telas de busca, trajetos, linhas, horários, alertas, conta e administração em dispositivos Android e iOS, consumindo a API REST.
+- **Aplicativo Mobile (React Native):** exibe as telas de busca, trajetos, linhas, horários, alertas, conta e administração em dispositivos Android e iOS, consumindo a API REST (MR01, MR02).
 - **Componente de Mapa:** desenha itinerários, paradas e trajetos na interface móvel (RF04, RF08).
-- **Geolocalização (GPS nativo do dispositivo):** obtém a localização atual do usuário via sensores nativos do smartphone/tablet, mediante autorização (RF03).
+- **Geolocalização (GPS nativo do dispositivo):** obtém a localização atual do usuário via sensores nativos do smartphone/tablet, mediante autorização explícita (RF03, MR06).
 
 **Camada de aplicação/negócio (servidor de aplicação)**
 
-- **Controladores REST (Node.js, Express):** recebem as requisições HTTP, validam entradas, chamam os módulos e padronizam respostas e erros.
+- **Controladores REST (Node.js, Express):** recebem as requisições HTTP, validam entradas, chamam os módulos e padronizam respostas e erros (MR02).
 - **Linhas, Paradas e Horários:** consulta de linhas, itinerários, paradas, quadros de horários e próximas partidas (RF07 a RF12).
 - **Trajetos:** cálculo de opções de trajeto, etapas, baldeações e tempo estimado, com ordenação e filtros (RF01 a RF06).
 - **Alertas:** cadastro, consulta e encerramento de alertas, associados a linhas e paradas; expiração automática dos vencidos (RF13, RF14, RF22).
-- **Autenticação e Autorização:** autentica administradores e passageiros e aplica permissões por perfil (RF16, RF21).
+- **Autenticação e Autorização:** autentica administradores e passageiros e aplica permissões por perfil (RF16, RF21, MR06).
 - **Conta e Personalização:** buscas recentes, favoritos, reporte de divergências e notificações de alterações em favoritos (RF15 a RF19).
 - **Administração:** manutenção manual de linhas, paradas e horários e análise de reportes (RF23, RF24).
-- **Serviço de Importação GTFS (Python):** lê, valida e carrega os dados oficiais na base (RF20).
-- **Adaptadores de integração:** concentram a comunicação com serviços externos (posição da frota em tempo real e central de trânsito) e tratam falhas.
+- **Serviço de Importação GTFS (Python):** lê, valida e carrega os dados oficiais na base (RF20, MR08).
+- **Adaptadores de integração:** concentram a comunicação com serviços externos (posição da frota em tempo real e central de trânsito) e tratam falhas (MR08).
 
 **Camada de persistência (banco de dados)**
 
-- **Repositórios (driver pg, SQL direto):** isolam o acesso ao banco.
+- **Repositórios (driver `pg`, SQL direto parametrizado):** isolam o acesso ao banco sem uso de ORM.
 - **Banco de dados (PostgreSQL):** persiste linhas, paradas, itinerários, horários, alertas, usuários, favoritos e reportes.
 
 **Interfaces e conectores**
 
-- **API REST (aplicativo mobile → controladores):** recebe requisições HTTPS com JSON/parâmetros e devolve JSON com código HTTP padronizado.
+- **API REST (aplicativo mobile → controladores):** recebe requisições HTTPS com JSON/parâmetros e devolve JSON com código HTTP padronizado (MR02).
 - **Chamada de módulo (controladores → módulos):** recebe objetos já validados e devolve o resultado da regra de negócio.
-- **Acesso a dados (módulos → repositórios → PostgreSQL):** comandos de leitura e escrita via driver pg, com SQL direto.
-- **Importação (fonte oficial GTFS → serviço de importação):** valida arquivos GTFS antes da persistência no banco.
+- **Acesso a dados (módulos → repositórios → PostgreSQL):** comandos de leitura e escrita via driver `pg`, com consultas SQL diretas e parametrizadas.
+- **Importação (fonte oficial GTFS → serviço de importação):** valida arquivos GTFS antes da persistência transacional no banco (MR08).
 - **Notificação (módulo Conta → e-mail / push no aplicativo mobile):** notificação enviada a usuários cadastrados sobre alterações nos favoritos (RF15).
 
 ### 2.4 Metas e restrições arquiteturais
 
-Cada item abaixo traz a meta ou restrição e sua justificativa, com a seção da Visão de onde ela decorre. Quando o valor ou o mecanismo é decisão da equipe, e não consta na Visão, isso está indicado.
+Cada item abaixo traz a meta ou restrição e sua justificativa, com a seção da Visão (v1.3.1) de onde ela decorre. Quando o valor ou o mecanismo é decisão da equipe, e não consta na Visão, isso está indicado.
 
 #### MR01 — Responsividade e acessibilidade
 
@@ -161,42 +162,42 @@ Cada item abaixo traz a meta ou restrição e sua justificativa, com a seção d
 #### MR02 — Padrão de API
 
 - **Restrição:** API REST em JSON, com verbos e códigos HTTP adequados, prefixo `/api/v1`, formato único de erro e documentação em OpenAPI (FIELDING, 2000; OPENAPI INITIATIVE, 2021).
-- **Justificativa:** um contrato único entre front-end e back-end reduz retrabalho e facilita os testes de integração previstos na Visão (seção 6.1).
+- **Justificativa:** um contrato único entre front-end e back-end reduz retrabalho e facilita os testes de integração e sistema previstos na Visão (seção 6.1).
 
 #### MR03 — Padrão de codificação
 
 - **Restrição:** ESLint e Prettier para JavaScript/React Native e PEP 8 para Python (VAN ROSSUM; WARSAW; COGHLAN, 2001), com Clean Code (MARTIN, 2009); funções curtas, nomes em camelCase (JavaScript) e snake_case (Python), um módulo por funcionalidade.
-- **Justificativa:** a Visão (seções 2.1 e 3) exige Coding Standards e Clean Code, sem definir as ferramentas, que são escolha da equipe. As ferramentas rodam no pipeline de CI, e código fora do padrão não é integrado.
+- **Justificativa:** a Visão (seções 2.1 e 3) exige Coding Standards e Clean Code, sem definir as ferramentas, que são escolha da equipe.
 
 #### MR04 — Revisão por pares, integração contínua e branches
 
-- **Restrição:** todo código entra pela `main` apenas por Pull Request revisado (Analista de Qualidade). As branches são `feature/*`, `developer`, `main` e `docs`, sem commits diretos na `main`.
-- **Justificativa:** é a Definição de Pronto e a política de branches da Visão, e reduz defeitos antes das inspeções de repositório.
+- **Restrição:** o desenvolvimento ocorre em branches específicas (`feature/*`, `fix/*`, `chore/*`, `hotfix/*`), que são integradas primeiramente na branch `developer` por meio de Pull Request revisado e aprovado por outro integrante (preferencialmente o Analista de Qualidade), conforme a Política de Commits (§3). Após validação do incremento, o código estabilizado segue de `developer` para `main` também via Pull Request aprovado; a documentação é mantida na branch `docs` sob a mesma regra de revisão. São proibidos commits diretos em `developer`, `main` e `docs`.
+- **Justificativa:** alinha-se integralmente à Definição de Pronto (DoD) da Visão (seções 2.1(c) e 3(e)) e à Política de Commits do repositório, reduzindo defeitos antes das inspeções e garantindo rastreabilidade das revisões.
 
 #### MR05 — Cobertura de testes
 
-- **Meta:** cobertura mínima de 80% do código desenvolvido, medida ao final de cada Sprint pelo pipeline, principalmente nas regras de negócio.
-- **Justificativa:** A separação em camadas permite testar as regras sem HTTP nem banco.
+- **Meta:** cobertura mínima de 80% do código desenvolvido, medida via Jest (`--coverage`) ao final de cada Sprint, principalmente nas regras de negócio e controladores.
+- **Justificativa:** a separação em camadas permite testar as regras de negócio de forma isolada, sem dependência de HTTP ou banco de dados, atendendo à estratégia de verificação da Visão (seção 6.1).
 
 #### MR06 — Segurança e privacidade
 
-- **Meta:** comunicação por HTTPS; senhas armazenadas apenas como hash (bcrypt); acesso por tokens com expiração e por perfil, validado no servidor; entradas validadas e consultas parametrizadas; segredos em variáveis de ambiente. A geolocalização só é usada com autorização do usuário e os dados pessoais seguem a LGPD (BRASIL, 2018): coleta mínima e exclusão de conta.
+- **Meta:** comunicação por HTTPS; senhas armazenadas apenas como hash (`bcrypt`); acesso por tokens JWT com expiração e por perfil, validado no servidor; entradas validadas e consultas SQL parametrizadas (prevenção contra SQL Injection); segredos mantidos exclusivamente em variáveis de ambiente não versionadas. A geolocalização só é usada com autorização explícita do usuário e os dados pessoais seguem a LGPD (BRASIL, 2018): coleta mínima e exclusão de conta.
 - **Justificativa:** a Visão define os três perfis (seção 4.2) e exige autorização para a localização (RF03), autenticação (RF16, RF21) e exclusão de conta (RF16); os mecanismos citados são escolha da equipe. O sistema trata dados pessoais, como e-mail e localização.
 
 #### MR07 — Ambientes padronizados com Docker
 
-- **Restrição:** servidor de aplicação e banco de dados executam em contêineres descritos em arquivos versionados (Dockerfile e Docker Compose) para suporte ao back-end da aplicação mobile nos ambientes de desenvolvimento, homologação e produção.
-- **Justificativa:** a Visão (seções 1.4 e 2.1) prevê o Docker para padronizar os ambientes de desenvolvimento e implantação, o que reduz diferenças entre máquinas e facilita o pipeline.
+- **Restrição:** servidor de aplicação e banco de dados executam em contêineres descritos em arquivos versionados (`Dockerfile` e `docker-compose.yml`) para suporte ao back-end da aplicação mobile nos ambientes de desenvolvimento, homologação e produção.
+- **Justificativa:** a Visão (seções 1.4 e 2.1) prevê o Docker para padronizar os ambientes de desenvolvimento e implantação, o que reduz diferenças entre máquinas e facilita a execução dos testes.
 
 #### MR08 — Dados oficiais validados e tolerância a falhas externas
 
-- **Restrição:** os dados de transporte são importados de fonte oficial em formato GTFS e validados antes de atualizar a base (GTFS, 2026); se a validação falhar, a base não é alterada. Falhas de serviços externos passam pelos adaptadores de integração e não podem tornar o sistema indisponível: o sistema segue com os dados programados e avisa o usuário.
-- **Justificativa:** a Visão prevê a importação com validação (RF20), classifica como alto o risco de falhas na integração ou obtenção dos dados (seção 2.5). Dados incorretos ou indisponíveis reproduzem a causa "baixa confiabilidade" do Ishikawa.
+- **Restrição:** os dados de transporte são importados de fonte oficial em formato GTFS e validados estrutural e referencialmente antes de atualizar a base em transação única (GTFS, 2026); se a validação falhar, a base permanece inalterada (roll-back). Falhas ou indisponibilidade de serviços externos passam pelos adaptadores de integração e não podem tornar o sistema indisponível: o sistema segue operando com os dados programados e informa o usuário.
+- **Justificativa:** a Visão prevê a importação com validação (RF20, critério de aceitação correspondente) e classifica como alto o risco de falhas na integração ou obtenção dos dados (seção 2.5). Dados incorretos ou indisponíveis reproduzem a causa "baixa confiabilidade" do Diagrama de Ishikawa.
 
 #### MR09 — Tecnologias e prazo
 
-- **Restrição:** GitHub, VS Code, Python, Node.js, React Native, PostgreSQL e Docker; entrega em cinco Sprints semanais, de 26/10 a 29/11/2026, com ponto de controle, inspeção e apresentação final. A Visão lista Python e Node.js sem dividir suas funções; a equipe decidiu usar Node.js na API, React Native no aplicativo mobile e Python na importação. Mudanças são avaliadas pelos critérios de replanejamento (Visão, seção 2.5) e registradas no histórico de revisões.
-- **Justificativa:** tecnologias (seção 1.4) e cronograma (seções 2.3 e 3) já estão definidos na Visão; o monólito modular permite entregar um módulo por Sprint e reduz o risco de chegar às inspeções sem versão funcional.
+- **Restrição:** GitHub, VS Code, Python, Node.js, React Native, PostgreSQL e Docker; entrega em cinco Sprints semanais, de 26/10 a 29/11/2026, com ponto de controle, inspeção e apresentação final. A Visão lista Python e Node.js sem dividir suas funções; a equipe decidiu usar Node.js na API, React Native no aplicativo mobile e Python na importação GTFS. Mudanças são avaliadas pelos critérios de replanejamento (Visão, seção 2.5) e registradas no histórico de revisões.
+- **Justificativa:** tecnologias (seção 1.4) e cronograma (seções 2.3 e 3) já estão definidos na Visão; o monólito modular permite entregar incrementos funcionais por Sprint e reduz o risco de chegar às inspeções sem versão operacional.
 
 ### 2.5 Visões
 
@@ -210,9 +211,9 @@ Os atores do sistema são:
 
 - **Passageiro Anônimo:** pode consultar rotas, horários, mapas e trajetos livremente.
 - **Passageiro Cadastrado:** possui login e senha. Além das permissões do anônimo, pode salvar rotas favoritas, registrar histórico de buscas, gerenciar preferências e reportar divergências.
-- **Administrador:** importar dados GTFS, gerenciar alertas, analisar reportes, manter dados manualmente.
+- **Administrador:** responsável por importar dados GTFS, gerenciar alertas, analisar reportes e manter dados manualmente.
 
-A Figura 2 apresenta a descrição resumida de cada caso de uso mapeado no sistema RotasDF, organizados por módulo funcional, conforme os requisitos estabelecidos no Backlog do Produto.
+A Figura 2 apresenta a descrição resumida de cada caso de uso mapeado no sistema RotasDF, organizados por módulo funcional, conforme os requisitos estabelecidos no Backlog do Produto (Visão, Tabela 7).
 
 <p align="center"><b>Figura 2: Diagrama de caso de uso</b></p>
 
@@ -222,15 +223,15 @@ A Figura 2 apresenta a descrição resumida de cada caso de uso mapeado no siste
 
 A visão de organização lógica apresenta a decomposição do RotasDF em módulos coesos, definidos de acordo com as principais responsabilidades funcionais do sistema. Essa organização é compatível com a arquitetura em três camadas e com o modelo de monólito modular definido nas seções anteriores. Dessa forma, os módulos permanecem integrados em uma única aplicação de servidor, mas possuem responsabilidades bem delimitadas e baixo acoplamento.
 
-A organização lógica foi definida considerando os cenários funcionais e os requisitos apresentados na Declaração de Escopo do projeto.
+A organização lógica foi definida considerando os cenários funcionais e os requisitos apresentados na Declaração de Escopo da Visão (seção 4).
 
 ##### Módulo de Linhas, Paradas e Horários
 
 Este módulo é responsável pelas funcionalidades relacionadas à consulta e à organização das informações básicas do transporte público. Ele disponibiliza dados sobre linhas, itinerários, paradas, horários e próximas partidas.
 
-Sua responsabilidade está relacionada principalmente aos requisitos RF07 a RF12 e ao cenário C2 — Consulta de linhas e paradas, além de parte do cenário C3 — Consulta de horários. O módulo recebe solicitações dos controladores REST, aplica as regras de negócio correspondentes e utiliza os repositórios para consultar os dados persistidos no PostgreSQL.
+Sua responsabilidade está relacionada principalmente aos requisitos RF07 a RF12 e ao cenário C2 — Consulta de linhas e paradas, além de parte do cenário C3 — Consulta de horários. O módulo recebe solicitações dos controladores REST, aplica as regras de negócio correspondentes e utiliza os repositórios (via driver `pg`) para consultar os dados persistidos no PostgreSQL.
 
-O módulo não acessa diretamente outros módulos nem o banco de dados. Quando necessita de informações persistidas, utiliza sua camada de repositórios, mantendo o acesso aos dados isolado da lógica de negócio.
+O módulo não acessa diretamente outros módulos nem o banco de dados sem passar pelos repositórios, mantendo o acesso aos dados isolado da lógica de negócio.
 
 ##### Módulo de Trajetos
 
@@ -238,7 +239,7 @@ O módulo de Trajetos concentra as regras responsáveis pelo planejamento de des
 
 Está diretamente relacionado ao cenário C1 — Planejamento de trajetos e aos requisitos RF01 a RF06. Também utiliza informações de linhas, paradas e horários para construir as opções de deslocamento.
 
-A comunicação com os demais componentes ocorre por meio das chamadas internas entre módulos, realizadas pelo servidor de aplicação. O módulo de Trajetos não conhece HTTP nem acessa diretamente o banco de dados, recebendo dados previamente validados pelos controladores e utilizando os repositórios para persistência quando necessário.
+A comunicação com os demais componentes ocorre por meio das chamadas internas entre módulos, realizadas pelo servidor de aplicação. O módulo de Trajetos não conhece HTTP nem acessa diretamente o banco de dados, recebendo dados previamente validados pelos controladores e utilizando os serviços do módulo de Linhas, Paradas e Horários.
 
 ##### Módulo de Alertas
 
@@ -252,9 +253,9 @@ Os alertas podem ser consultados pelo passageiro por meio da API REST, enquanto 
 
 Este módulo concentra as regras relacionadas à identificação dos usuários e ao controle de permissões de acesso. É responsável pela autenticação de passageiros e administradores e pela aplicação das permissões correspondentes a cada perfil.
 
-O módulo está relacionado aos requisitos RF16 e RF21 e aos perfis Passageiro Cadastrado e Administrador definidos na Visão do Produto.
+O módulo está relacionado aos requisitos RF16 e RF21 e aos perfis Passageiro Cadastrado e Administrador definidos na Visão (seção 4.2).
 
-A autenticação ocorre por meio da API REST, enquanto a autorização é aplicada no servidor antes da execução das operações protegidas. Dessa forma, o cliente não é responsável por garantir as permissões de acesso. As credenciais e os tokens são tratados de acordo com as restrições de segurança definidas na arquitetura.
+A autenticação ocorre por meio da API REST, enquanto a autorização é aplicada no servidor antes da execução das operações protegidas. Dessa forma, o cliente não é responsável por garantir as permissões de acesso. As credenciais e os tokens JWT são tratados de acordo com as restrições de segurança definidas na MR06.
 
 ##### Módulo de Conta e Personalização
 
@@ -270,15 +271,15 @@ O módulo de Administração reúne as operações destinadas ao gerenciamento d
 
 Suas principais responsabilidades são a manutenção manual de linhas, paradas, itinerários e horários, o gerenciamento dos alertas e a análise dos reportes recebidos. Está relacionado aos requisitos RF22, RF23 e RF24 e ao cenário C6 — Gestão dos dados de transporte.
 
-O acesso a esse módulo é restrito ao perfil Administrador. Para realizar suas operações, o módulo utiliza os serviços de Autenticação e Autorização e os repositórios responsáveis pela persistência das informações.
+O acesso a esse módulo é restrito ao perfil Administrador. Para realizar suas operações, o módulo utiliza os serviços de Autenticação e Autorização e os serviços/repositórios responsáveis pela persistência das informações.
 
 ##### Módulo de Importação GTFS
 
-O módulo de Importação GTFS é responsável por receber, validar e carregar na base os dados oficiais de transporte público disponibilizados no formato GTFS.
+O módulo de Importação GTFS é responsável por ler, validar e carregar na base os dados oficiais de transporte público disponibilizados no formato GTFS.
 
-A importação é executada exclusivamente pelo Administrador e está relacionada ao requisito RF20. Antes da atualização da base, os dados recebidos são validados. Caso sejam identificados erros, a atualização não deve ser realizada, preservando a integridade dos dados já existentes.
+A importação é uma operação administrativa relacionada ao requisito RF20 e à restrição MR08. Antes da atualização da base, os arquivos recebidos são validados. Caso sejam identificados erros, a atualização não é realizada, preservando a integridade dos dados já existentes.
 
-Esse módulo é implementado como um serviço específico em Python, enquanto a API principal do sistema é implementada em Node.js. A separação lógica permite que o processamento e a validação dos arquivos GTFS ocorram sem misturar essa responsabilidade às operações de consulta realizadas pelos passageiros.
+Esse módulo é implementado como um processo específico em Python (`gtfs/importador.py`), executado sob demanda pelo Administrador, enquanto a API principal do sistema é implementada em Node.js. A separação lógica permite que o processamento e a validação dos arquivos GTFS ocorram sem misturar essa responsabilidade às operações de consulta realizadas pelos passageiros.
 
 ##### Módulo de Adaptadores de Integração
 
@@ -286,28 +287,28 @@ O módulo de Adaptadores de Integração concentra a comunicação do sistema co
 
 Os adaptadores têm como responsabilidade isolar as particularidades das APIs externas e tratar situações de indisponibilidade, erros e tempo limite. Dessa maneira, a dependência de serviços externos não é propagada diretamente para os demais módulos do sistema.
 
-Quando uma informação externa não estiver disponível, o sistema deve continuar utilizando os dados programados disponíveis, conforme as regras de tolerância a falhas definidas na arquitetura.
+Quando uma informação externa não estiver disponível, o sistema deve continuar utilizando os dados programados disponíveis, conforme as regras de tolerância a falhas definidas na MR08.
 
 ##### Comunicação entre os módulos
 
-A comunicação entre os componentes segue as regras de dependência estabelecidas na arquitetura. O aplicativo mobile não acessa diretamente os módulos internos ou o banco de dados: suas solicitações são encaminhadas aos Controladores REST, que validam as entradas e direcionam as operações ao módulo responsável.
+A comunicação entre os componentes segue as regras de dependência estabelecidas na seção 2.1. O aplicativo mobile não acessa diretamente os módulos internos ou o banco de dados: suas solicitações são encaminhadas aos Controladores REST, que validam as entradas e direcionam as operações ao módulo responsável.
 
 A comunicação entre os controladores e os módulos ocorre por meio de chamadas internas, utilizando objetos previamente validados. Os módulos não conhecem HTTP e não dependem diretamente da camada de apresentação.
 
-Quando um módulo necessita persistir ou consultar informações, utiliza seus respectivos Repositórios, que fazem a comunicação com o PostgreSQL. Dessa forma, o acesso ao banco permanece isolado da lógica de negócio.
+Quando um módulo necessita persistir ou consultar informações, utiliza seus respectivos Repositórios, que executam SQL direto via driver `pg` no PostgreSQL. Dessa forma, o acesso ao banco permanece isolado da lógica de negócio.
 
 As principais relações lógicas são:
 
-- **Aplicativo Mobile → Controladores REST:** comunicação por API REST, utilizando HTTPS e JSON;
+- **Aplicativo Mobile → Controladores REST:** comunicação por API REST, utilizando HTTPS e JSON (MR02);
 - **Controladores REST → Módulos de negócio:** chamadas internas com dados previamente validados;
 - **Trajetos → Linhas, Paradas e Horários:** utilização das informações necessárias para cálculo e composição dos trajetos;
-- **Conta e Personalização → Autenticação e Autorização:** identificação do usuário e validação de permissões;
+- **Conta e Personalização → Autenticação e Autorização:** identificação do usuário e validação de permissões (MR06);
 - **Conta e Personalização → Alertas:** identificação de alterações que afetam itens favoritos;
-- **Administração → Autenticação e Autorização:** validação do perfil de Administrador;
+- **Administração → Autenticação e Autorização:** validação do perfil de Administrador (MR06);
 - **Módulos de negócio → Repositórios:** acesso às informações persistidas;
-- **Repositórios → PostgreSQL:** operações de leitura e escrita;
-- **Administração → Importação GTFS:** acionamento das operações de importação por usuário autorizado;
-- **Módulos que necessitam de informações externas → Adaptadores de Integração:** acesso controlado aos serviços externos.
+- **Repositórios → PostgreSQL:** operações de leitura e escrita via driver `pg` (SQL direto parametrizado);
+- **Operação Administrativa → Importação GTFS:** execução sob demanda do pipeline Python de importação e validação GTFS (RF20, MR08);
+- **Módulos que necessitam de informações externas → Adaptadores de Integração:** acesso controlado aos serviços externos (MR08).
 
 ##### Diagrama de pacotes
 
@@ -325,7 +326,7 @@ A visão estrutural descreve como o RotasDF é composto e como suas partes se re
 
 ##### Diagrama de componentes
 
-A Figura 4 organiza os componentes nas três camadas da arquitetura. Os oito módulos de negócio são os mesmos do diagrama de pacotes. A Importação GTFS aparece entre eles por ser um módulo lógico do sistema, mas é executada como um serviço Python, em processo separado do servidor Node.js. O círculo indica uma interface fornecida, e a seta tracejada parte do componente que usa em direção ao componente ou à interface usada. Para manter a figura legível, as dependências entre módulos aparecem como setas diretas; cada uma corresponde ao uso da interface de serviço do módulo de destino, listada no Quadro 1.
+A Figura 4 organiza os componentes nas três camadas da arquitetura. Os oito módulos de negócio são os mesmos do diagrama de pacotes. A Importação GTFS aparece entre eles por ser um módulo lógico do sistema, mas é executada como um processo Python separado do servidor Node.js. O círculo indica uma interface fornecida, e a seta tracejada parte do componente que usa em direção ao componente ou à interface usada. Para manter a figura legível, as dependências entre módulos aparecem como setas diretas; cada uma corresponde ao uso da interface de serviço do módulo de destino, listada no Quadro 1.
 
 <p align="center"><b>Figura 4 — Diagrama de componentes do RotasDF</b></p>
 
@@ -342,20 +343,20 @@ O Quadro 1 resume a responsabilidade de cada componente e as interfaces que ele 
 | **Camada de apresentação (aplicativo mobile)** | | | |
 | Telas (React Native) | Telas de busca, trajetos, linhas, horários, alertas, conta e administração para Android e iOS, com acessibilidade (MR01). | — | Mapa; Geolocalização; Cliente da API |
 | Mapa (ex.: Leaflet) | Desenha itinerários, paradas e trajetos (RF04, RF08). | — | Serviço externo de mapas e geocodificação |
-| Geolocalização | Obtém a posição atual pelo GPS do aparelho, com autorização do usuário (RF03). | — | GPS do aparelho (sistema operacional) |
-| Cliente da API | Centraliza as chamadas HTTP, envia o token e trata o formato único de erro. | — | API REST `/api/v1` |
+| Geolocalização | Obtém a posição atual pelo GPS do aparelho, com autorização do usuário (RF03, MR06). | — | GPS do aparelho (sistema operacional) |
+| Cliente da API | Centraliza as chamadas HTTP, envia o token JWT e trata o formato único de erro (MR02). | — | API REST `/api/v1` |
 | **Camada de aplicação / negócio** | | | |
 | Controladores REST (Node.js, Express) | Recebem as requisições, validam as entradas, chamam os módulos e padronizam respostas e erros (MR02). | API REST `/api/v1` | Interfaces dos módulos |
 | Linhas, Paradas e Horários | Consulta de linhas, itinerários, paradas, horários e próximas partidas (RF07 a RF12); operações de escrita usadas na manutenção manual (RF23). | ServicoLinhas | ProvedorPosicaoFrota; AcessoDados |
 | Trajetos | Cálculo, detalhamento e ordenação das opções de trajeto (RF01 a RF06). | ServicoTrajetos | ServicoLinhas |
 | Alertas | Cadastro, consulta, encerramento e expiração de alertas; emite o evento `alertaPublicado` (RF13, RF14, RF22). | ServicoAlertas | ProvedorCentralTransito; AcessoDados |
-| Autenticação e Autorização | Cadastro e login de passageiros e administradores, emissão e validação de tokens e permissões por perfil (RF16, RF21, MR06). | ServicoAutenticacao | AcessoDados |
+| Autenticação e Autorização | Cadastro e login de passageiros e administradores, emissão e validação de tokens JWT e permissões por perfil (RF16, RF21, MR06). | ServicoAutenticacao | AcessoDados |
 | Conta e Personalização | Favoritos, buscas recentes, reportes de divergência e notificações (RF15 a RF19). | ServicoConta | ServicoAutenticacao; ServicoAlertas (evento); e-mail / push; AcessoDados |
-| Administração | Gestão de alertas, manutenção manual da base, análise de reportes e disparo da importação (RF22 a RF24). | ServicoAdministracao | ServicoAutenticacao; ServicoLinhas; ServicoAlertas; ServicoConta; ServicoImportacao |
-| Importação GTFS (Python) | Lê o pacote GTFS, valida estrutura e consistência e carrega a base em transação única, em processo separado do servidor (RF20, MR08). | ServicoImportacao | Fonte oficial GTFS; PostgreSQL |
+| Administração | Gestão de alertas, manutenção manual da base e análise de reportes (RF22 a RF24). | ServicoAdministracao | ServicoAutenticacao; ServicoLinhas; ServicoAlertas; ServicoConta |
+| Importação GTFS (Python) | Lê o pacote GTFS, valida estrutura e consistência e carrega a base em transação única, executado sob demanda pelo Administrador em processo separado do servidor (RF20, MR08). | ServicoImportacao | Fonte oficial GTFS; PostgreSQL (`psycopg2`) |
 | Adaptadores de integração | Comunicação com a posição da frota e a central de trânsito, com tempo limite e tratamento de falhas (MR08). | ProvedorPosicaoFrota; ProvedorCentralTransito | Serviços externos (HTTPS) |
 | **Camada de persistência** | | | |
-| Repositórios (driver pg, SQL direto) | Isolam o acesso ao banco; cada módulo usa só os repositórios das suas tabelas. | AcessoDados | PostgreSQL (SQL, porta 5432) |
+| Repositórios (driver `pg`, SQL direto) | Isolam o acesso ao banco sem ORM; cada módulo usa só os repositórios das suas tabelas. | AcessoDados | PostgreSQL (SQL, porta 5432) |
 | PostgreSQL | Armazena dados de transporte, alertas, usuários, favoritos, buscas, reportes e o histórico de importações. | Conexão SQL (porta 5432) | — |
 
 *Fonte: Elaborado pelos autores (2026).*
@@ -364,12 +365,12 @@ As conexões entre os componentes seguem as regras de dependência da seção 2.
 
 - **Entrada única pela API.** O aplicativo mobile só chega ao servidor pela API REST `/api/v1`, por HTTPS e em JSON (MR02). Os controladores validam as entradas e encaminham cada operação ao módulo responsável.
 - **Identificação e perfil.** Conta e Personalização e Administração usam `ServicoAutenticacao` para identificar o usuário e verificar o perfil antes de executar operações protegidas (MR06).
-- **Dependências em um só sentido.** Trajetos depende de Linhas, Paradas e Horários; Conta e Personalização depende de Alertas; Administração depende de Linhas, Paradas e Horários, Alertas, Conta e Personalização e Importação GTFS; Linhas, Paradas e Horários e Alertas dependem dos Adaptadores de integração. Não há ciclos, o que permite testar cada módulo com as dependências simuladas (MR05).
+- **Dependências em um só sentido.** Trajetos depende de Linhas, Paradas e Horários; Conta e Personalização depende de Alertas; Administração depende de Linhas, Paradas e Horários, Alertas e Conta e Personalização; Linhas, Paradas e Horários e Alertas dependem dos Adaptadores de integração. Não há ciclos, o que permite testar cada módulo com as dependências simuladas (MR05).
 - **Administração sem acesso a tabelas de outros módulos.** A gestão de alertas (RF22), a manutenção manual da base (RF23) e a análise de reportes (RF24) são feitas pelos serviços dos módulos donos desses dados, e não pelos repositórios deles, conforme a regra da seção 2.1.
 - **Notificação por evento.** Ao publicar um alerta, o módulo Alertas emite o evento interno `alertaPublicado`; Conta e Personalização o escuta, identifica os passageiros com favoritos afetados e envia a notificação por e-mail ou push no aparelho (RF15). Assim, Alertas não precisa conhecer Conta, e a dependência continua em um só sentido.
-- **Serviços externos isolados.** As consultas à posição da frota e à central de trânsito passam pelos Adaptadores de integração, que aplicam tempo limite e tratam falhas. Se um serviço não responder, o sistema segue com os dados programados e avisa o usuário (MR08; Visão, critério de aceitação do RF12 / US12).
-- **Importação em processo separado.** Administração dispara a importação pela interface `ServicoImportacao`, e o serviço Python a executa em segundo plano. Como os repositórios do servidor são escritos em Node.js, a Importação GTFS tem acesso a dados próprio: lê o pacote GTFS, valida estrutura e consistência e grava os dados em uma única transação. Se a validação encontrar erros, a base não é alterada, e o resultado fica registrado no histórico de importações (RF20, MR08).
-- **Acesso a dados só pelos repositórios.** No servidor, apenas os repositórios executam SQL no PostgreSQL, e cada módulo usa somente os repositórios das tabelas que lhe pertencem (Figura 4).
+- **Serviços externos isolados.** As consultas à posição da frota e à central de trânsito passam pelos Adaptadores de integração, que aplicam tempo limite e tratam falhas. Se um serviço não responder, o sistema segue com os dados programados e avisa o usuário (MR08; Visão, critérios de aceitação do RF12).
+- **Importação em processo separado.** O serviço Python (`gtfs/importador.py`) implementa a interface lógica `ServicoImportacao` e é executado sob demanda pelo Administrador: lê o pacote GTFS, valida estrutura e consistência e grava os dados no PostgreSQL em uma única transação. Se a validação encontrar erros, a base não é alterada, e o resultado fica registrado no histórico de importações (RF20, MR08).
+- **Acesso a dados só pelos repositórios (sem ORM).** No servidor Node.js, apenas os repositórios executam SQL direto via driver `pg` no PostgreSQL, e cada módulo usa somente os repositórios das tabelas que lhe pertencem (Figura 4).
 
 ##### Diagramas de classes
 
@@ -383,7 +384,7 @@ O diagrama de classes foi dividido em duas figuras para manter a legibilidade. A
 
 Os principais pontos do modelo de domínio são:
 
-- **Dados de transporte.** As classes seguem a estrutura do GTFS: Linha corresponde a *routes*, Viagem a *trips*, Parada a *stops*, HorarioParada a *stop_times* e Calendario a *calendar*. Uma linha é composta por viagens; cada viagem opera conforme um calendário e percorre uma sequência ordenada de horários, cada um em uma parada. O itinerário (RF08) é a sequência de paradas de uma viagem em cada sentido, e o quadro de horários (RF10) reúne as partidas das viagens de acordo com o tipo de dia.
+- **Dados de transporte.** As classes seguem a estrutura do GTFS: Linha corresponde a *routes*, Viagem a *trips*, Parada a *stops*, HorarioParada a *stop_times* e Calendario a *calendar* (GTFS, 2026). Uma linha é composta por viagens; cada viagem opera conforme um calendário e percorre uma sequência ordenada de horários, cada um em uma parada. O itinerário (RF08) é a sequência de paradas de uma viagem em cada sentido, e o quadro de horários (RF10) reúne as partidas das viagens de acordo com o tipo de dia.
 - **Alertas.** Um alerta afeta zero ou mais linhas e paradas e é publicado por um administrador (RF13, RF14, RF22). O método `estaVigente()` considera o período de vigência e o encerramento manual, o que permite deixar de exibir alertas vencidos sem intervenção.
 - **Usuários e perfis.** Usuario é abstrata e se especializa em Passageiro e Administrador, que correspondem aos perfis Passageiro Cadastrado e Administrador. O Passageiro Anônimo não é persistido: corresponde às requisições feitas sem token. A senha é guardada só como hash (MR06), e `excluirConta()` atende à exclusão de conta prevista na LGPD (RF16).
 - **Conta e personalização.** Favoritos e buscas recentes compõem o passageiro e são excluídos com a conta (RF17, RF18). Reporte registra a divergência enviada pelo passageiro (RF19) e a classificação feita pelo administrador (RF24).
@@ -398,10 +399,10 @@ Os principais pontos do modelo de domínio são:
 
 O módulo Trajetos foi detalhado por ser o mais complexo do sistema e por ilustrar a organização interna que todos os módulos seguem:
 
-- **Camadas dentro do módulo.** `ControladorTrajetos` recebe a requisição HTTP, valida os parâmetros e monta uma `ConsultaTrajeto`; `ServicoTrajetos` coordena a busca e não conhece HTTP, o que permite testá-lo sem o servidor. Nos módulos que têm tabelas próprias, o serviço usa também os repositórios.
+- **Camadas dentro do módulo.** `ControladorTrajetos` recebe a requisição HTTP, valida os parâmetros e monta uma `ConsultaTrajeto`; `ServicoTrajetos` coordena a busca e não conhece HTTP, o que permite testá-lo sem o servidor. Nos módulos que têm tabelas próprias, o serviço usa também os repositórios (via driver `pg`).
 - **Sem tabelas próprias.** Trajetos não tem repositórios: as paradas e os horários vêm da interface `ServicoLinhas`, a única dependência do módulo (seção 2.5.2). O método `paradasProximas()` devolve as paradas dentro de um raio a partir de um ponto, e `partidas()` devolve os horários de saída da parada `o` com destino à parada `d` após o instante `apos`.
 - **Sinalização de alertas.** Para marcar as opções afetadas por alterações no serviço (RF14), o controlador consulta `ServicoAlertas` e associa os alertas vigentes a cada `OpcaoTrajeto`. Como a chamada parte do controlador, que pode acionar qualquer módulo, Trajetos continua dependendo apenas de Linhas, Paradas e Horários.
-- **Cálculo isolado.** `CalculadoraDeTrajetos` concentra o algoritmo de busca, limitado pelo raio de caminhada e pelo número máximo de baldeações. Esses parâmetros controlam o tempo de resposta (MR01), e a classe é o principal alvo dos testes unitários, com `ServicoLinhas` simulada (MR06).
+- **Cálculo isolado.** `CalculadoraDeTrajetos` concentra o algoritmo de busca, limitado pelo raio de caminhada e pelo número máximo de baldeações. Esses parâmetros controlam o tempo de resposta (MR01), e a classe é o principal alvo dos testes unitários, com `ServicoLinhas` simulada (MR05).
 - **Ordenação extensível.** A ordenação usa o padrão *Strategy* (GAMMA et al., 2000): cada critério do RF05 é uma classe que implementa `EstrategiaOrdenacao`, e o serviço escolhe a estratégia conforme o `CriterioOrdenacao` da consulta. Um novo critério exige apenas uma nova classe, sem alterar o serviço.
 - **Instruções em linguagem simples.** Cada `OpcaoTrajeto` é composta por etapas ordenadas. `Etapa` é abstrata e se especializa em `EtapaCaminhada` e `EtapaOnibus`, que implementam `instrucao()` para gerar o texto exibido ao passageiro, como "Caminhe 300 m até a parada X" ou "Embarque na linha Y e desça após 6 paradas" (RF02).
 - **Horário de partida ou de chegada.** `ReferenciaHorario` indica se o horário da consulta é de partida ou de chegada (RF06). `Coordenada` é um tipo de valor: o aplicativo converte endereços em coordenadas antes de chamar a API (seção 2.3).
@@ -416,17 +417,17 @@ O sistema RotasDF será implantado em um ambiente de computação em nuvem (*Clo
 
 - **Tecnologia:** sistemas operacionais mobile (Android e iOS).
 - **Artefato:** aplicativo mobile (compilado via React Native).
-- **Justificativa:** visando priorizar a acessibilidade, a mobilidade e a praticidade para o passageiro em trânsito, o aplicativo mobile garante integração nativa com os sensores do dispositivo (como o GPS) e proporciona um tempo de resposta otimizado.
+- **Justificativa:** visando priorizar a acessibilidade, a mobilidade e a praticidade para o passageiro em trânsito, o aplicativo mobile garante integração nativa com os sensores do dispositivo (como o GPS) e proporciona um tempo de resposta otimizado (MR01).
 
 **Nó Servidor de Aplicação (`<<Execution Environment>>`):** representa o servidor virtual em plataforma de nuvem (PaaS — ex.: Render, Heroku ou AWS) responsável pela hospedagem da lógica de negócio.
 
-- **Tecnologia:** ambiente de execução Node.js conteinerizado via Docker. O serviço de importação de dados GTFS, desenvolvido em Python, é executado sob demanda, por linha de comando, em processo separado do servidor: o script `gtfs/importador.py` lê os arquivos CSV da pasta `gtfs/data` e grava no PostgreSQL configurado pelas variáveis de ambiente DB_USER, DB_PASSWORD, DB_HOST, DB_PORT e DB_NAME. No incremento atual o disparo é manual, sem agendamento nem acionamento pela API.
+- **Tecnologia:** ambiente de execução Node.js conteinerizado via Docker. O serviço de importação de dados GTFS, desenvolvido em Python (`gtfs/importador.py`), é executado sob demanda pelo Administrador, por linha de comando, em processo separado do servidor: lê os arquivos CSV da pasta `gtfs/data` e grava no PostgreSQL configurado pelas variáveis de ambiente `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` e `DB_NAME` (MR06, MR08). No incremento atual o disparo é manual, sem agendamento nem acionamento pela API.
 - **Artefato:** monólito modular da API REST.
 - **Justificativa:** o uso de contêineres em uma plataforma gerenciada facilita as práticas de Integração e Entrega Contínuas (CI/CD) automatizadas pelo GitHub Actions (MR04). Essa abordagem permite que a equipe realize implantações contínuas de novos testes e funcionalidades sem a necessidade de gerenciar uma infraestrutura de baixo nível.
 
 **Nó Servidor de Banco de Dados (`<<Database Server>>`):** representa o serviço de banco de dados relacional gerenciado.
 
-- **Tecnologia:** Sistema Gerenciador de Banco de Dados PostgreSQL.
+- **Tecnologia:** Sistema Gerenciador de Banco de Dados PostgreSQL (acessado pela API via driver `pg` com SQL direto).
 - **Artefato:** esquemas e tabelas de dados relacionais e georreferenciados.
 - **Justificativa:** o PostgreSQL é uma solução robusta para manter a integridade transacional das informações de transporte e lidar com a estrutura complexa do formato GTFS. A eventual adoção da extensão PostGIS permite escalabilidade caso o sistema demande consultas espaciais mais complexas de geolocalização no futuro.
 
@@ -438,8 +439,8 @@ A representação visual ilustra a comunicação entre os nós físicos do siste
 
 ![Diagrama de implantação: dispositivo cliente com aplicativo React Native, plataforma em nuvem (PaaS) com servidor de aplicação e servidor de banco de dados PostgreSQL, e serviços externos de mapas](imagens/arq-fig7-implantacao.png)
 
-- O Dispositivo Cliente comunica-se de forma segura com o Servidor de Aplicação por meio do protocolo HTTPS, consumindo a API REST.
-- O Servidor de Aplicação conecta-se ao Servidor de Banco de Dados internamente via protocolo TCP/IP (Porta 5432) para operações de leitura e escrita.
+- O Dispositivo Cliente comunica-se de forma segura com o Servidor de Aplicação por meio do protocolo HTTPS, consumindo a API REST (MR02, MR06).
+- O Servidor de Aplicação conecta-se ao Servidor de Banco de Dados internamente via protocolo TCP/IP (Porta 5432) para operações de leitura e escrita via driver `pg`.
 - O Dispositivo Cliente também realiza requisições externas diretas (HTTPS) para a API de Mapas (ex.: provedores utilizados pelo Leaflet) para renderização cartográfica.
 
 ### 2.7 Restrições adicionais
@@ -453,30 +454,40 @@ O funcionamento e a arquitetura do RotasDF são guiados não apenas pelas tecnol
 
 #### 2. Características de qualidade (baseadas na ISO/IEC 25010)
 
-- **Usabilidade:** é a principal diretriz de qualidade do RotasDF. O sistema deve atender às diretrizes de acessibilidade WCAG 2.1 nível AA. Isso restringe o uso de componentes visuais que não sejam legíveis por leitores de tela e proíbe fluxos de navegação que dependam exclusivamente do mouse.
+- **Usabilidade:** é a principal diretriz de qualidade do RotasDF. O sistema deve atender às diretrizes de acessibilidade WCAG 2.1 nível AA (MR01). Isso restringe o uso de componentes visuais que não sejam legíveis por leitores de tela e proíbe fluxos de navegação que dependam exclusivamente do mouse.
 - **Portabilidade e compatibilidade:** o aplicativo mobile deve funcionar de maneira uniforme nos principais sistemas operacionais móveis (Android e iOS) em suas versões mais recentes.
-- **Confiabilidade:** como o produto visa mitigar a desinformação no transporte público, a base de dados não pode ser editada livremente pelos usuários. A integridade dos itinerários é garantida pela validação dos pacotes oficiais GTFS antes da persistência.
+- **Confiabilidade:** como o produto visa mitigar a desinformação no transporte público, a base de dados não pode ser editada livremente pelos usuários. A integridade dos itinerários é garantida pela validação transacional dos pacotes oficiais GTFS antes da persistência (MR08).
 
 #### 3. Segurança e perfis de usuário
 
-Devido à natureza aberta do aplicativo, o acesso é segmentado por perfis, e a comunicação é estritamente protegida por criptografia de transporte (HTTPS/TLS) para evitar interceptação de dados de geolocalização e credenciais.
+Devido à natureza aberta do aplicativo, o acesso é segmentado por perfis, e a comunicação é estritamente protegida por criptografia de transporte (HTTPS/TLS) para evitar interceptação de dados de geolocalização e credenciais (MR06).
 
 A autorização é baseada em tokens JWT (*JSON Web Token*), gerenciando os seguintes acessos:
 
-- **Passageiro Anônimo:** possui permissão apenas de leitura. Pode consultar rotas, horários, mapas e trajetos livremente, sem necessidade de identificação. A localização (GPS) só é coletada mediante prompt de autorização explícita do sistema operacional mobile.
-- **Passageiro Cadastrado:** exige login e senha (armazenada em hash via bcrypt). Além das permissões do perfil anônimo, possui acesso de escrita restrito à sua própria conta (salvar rotas favoritas, registrar histórico de buscas, gerenciar preferências e reportar divergências nos ônibus/paradas).
-- **Administrador:** exige autenticação de alto nível (contas pré-cadastradas internamente). Possui permissão de escrita global para gerenciar alertas no sistema, aprovar/revisar reportes de passageiros e executar o módulo de importação e validação de dados GTFS. Não tem acesso às senhas cruas nem ao histórico exato de geolocalização de usuários específicos, respeitando as normativas da LGPD.
+- **Passageiro Anônimo:** possui permissão apenas de leitura. Pode consultar rotas, horários, mapas e trajetos livremente, sem necessidade de identificação. A localização (GPS) só é coletada mediante prompt de autorização explícita do sistema operacional mobile (MR06).
+- **Passageiro Cadastrado:** exige login e senha (armazenada em hash via `bcrypt`). Além das permissões do anônimo, possui acesso de escrita restrito à sua própria conta (salvar rotas favoritas, registrar histórico de buscas, gerenciar preferências e reportar divergências nos ônibus/paradas).
+- **Administrador:** exige autenticação de alto nível (contas pré-cadastradas internamente). Possui permissão de escrita global para gerenciar alertas no sistema, aprovar/revisar reportes de passageiros e executar sob demanda o pipeline de importação e validação de dados GTFS (RF20, MR08). Não tem acesso às senhas cruas nem ao histórico exato de geolocalização de usuários específicos, respeitando as normativas da LGPD (BRASIL, 2018).
 
 ---
 
 ## 3 Referências
 
+BRASIL. **Lei nº 13.709, de 14 de agosto de 2018**. Lei Geral de Proteção de Dados Pessoais (LGPD). Brasília, DF: Presidência da República, 2018. Disponível em: <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm>. Acesso em: 8 out. 2026.
+
+FIELDING, Roy Thomas. **Architectural Styles and the Design of Network-based Software Architectures**. 2000. Tese (Doutorado em Ciência da Computação) — University of California, Irvine, 2000.
+
 GAMMA, Erich et al. **Padrões de projeto**: soluções reutilizáveis de software orientado a objetos. Porto Alegre: Bookman, 2000.
 
-KRUCHTEN, Philippe. The 4+1 View Model of Architecture. **IEEE Software**, v. 12, n. 6, p. 42-50, nov. 1995.
+GTFS. **General Transit Feed Specification Reference**. MobilityData, 2026. Disponível em: <https://gtfs.org/documentation/schedule/reference/>. Acesso em: 8 out. 2026.
+
+MARTIN, Robert C. **Código limpo**: habilidades práticas do Agile Software. Rio de Janeiro: Alta Books, 2009.
 
 OBJECT MANAGEMENT GROUP. **OMG Unified Modeling Language (OMG UML)**: version 2.5.1. [S. l.]: OMG, 2017. Disponível em: <https://www.omg.org/spec/UML/2.5.1>. Acesso em: 8 out. 2026.
+
+OPENAPI INITIATIVE. **OpenAPI Specification**: version 3.1.0. [S. l.]: Linux Foundation, 2021. Disponível em: <https://spec.openapis.org/oas/v3.1.0>. Acesso em: 8 out. 2026.
 
 RICHARDS, Mark. **Software Architecture Patterns**. Sebastopol: O'Reilly Media, 2015.
 
 SOMMERVILLE, Ian. **Engenharia de Software**. 10. ed. São Paulo: Pearson Education do Brasil, 2019.
+
+VAN ROSSUM, Guido; WARSAW, Barry; COGHLAN, Nick. **PEP 8 — Style Guide for Python Code**. Python Software Foundation, 2001. Disponível em: <https://peps.python.org/pep-0008/>. Acesso em: 8 out. 2026.
