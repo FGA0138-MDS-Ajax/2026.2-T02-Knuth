@@ -3,6 +3,10 @@ jest.mock('../repositories/paradasRepository', () => ({
   buscarPorNome: jest.fn(),
   findById: jest.fn(),
   findProximasPartidas: jest.fn(),
+  criar: jest.fn(),
+  atualizar: jest.fn(),
+  contarLinhasNoItinerario: jest.fn(),
+  excluir: jest.fn(),
 }));
 
 const paradasRepository = require('../repositories/paradasRepository');
@@ -184,6 +188,209 @@ describe('ParadasService', () => {
       await expect(
         paradasService.obterProximasPartidas('3369', { tipoDia: 'FERIADAO' })
       ).rejects.toMatchObject({ status: 400 });
+    });
+  });
+
+  describe('obterParada (RF23)', () => {
+    it('devolve a parada encontrada', async () => {
+      const parada = { id: '3369', codigo: '3369', nome: 'Rodoviária' };
+      paradasRepository.findById.mockResolvedValue(parada);
+
+      await expect(paradasService.obterParada('3369')).resolves.toBe(parada);
+      expect(paradasRepository.findById).toHaveBeenCalledWith('3369');
+    });
+
+    it('falha com 404 quando a parada não existe', async () => {
+      paradasRepository.findById.mockResolvedValue(null);
+
+      await expect(paradasService.obterParada('999')).rejects.toMatchObject({
+        status: 404,
+        message: 'Parada não encontrada.',
+      });
+    });
+  });
+
+  describe('criarParada (RF23)', () => {
+    const dadosValidos = {
+      codigo: ' 3369 ',
+      nome: '  Rodoviária do Plano Piloto  ',
+      latitude: '-15,7942',
+      longitude: -47.8822,
+      tipo: 'Placa',
+      estrutura: 'SEM ESTRUTURA',
+    };
+
+    it('exige o código', async () => {
+      await expect(paradasService.criarParada({ ...dadosValidos, codigo: '' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O código da parada é obrigatório.',
+      });
+      expect(paradasRepository.criar).not.toHaveBeenCalled();
+    });
+
+    it('aceita no código apenas letras, números, ponto ou hífen', async () => {
+      await expect(paradasService.criarParada({ ...dadosValidos, codigo: '33 69' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O código da parada deve ter apenas letras, números, ponto ou hífen.',
+      });
+    });
+
+    it('exige o nome', async () => {
+      await expect(paradasService.criarParada({ ...dadosValidos, nome: '  ' })).rejects.toMatchObject({
+        status: 400,
+        message: 'O nome da parada é obrigatório.',
+      });
+    });
+
+    it('exige latitude e longitude', async () => {
+      await expect(paradasService.criarParada({ ...dadosValidos, latitude: '' })).rejects.toMatchObject({
+        status: 400,
+        message: 'A latitude é obrigatória.',
+      });
+      await expect(paradasService.criarParada({ ...dadosValidos, longitude: null })).rejects.toMatchObject({
+        status: 400,
+        message: 'A longitude é obrigatória.',
+      });
+    });
+
+    it('rejeita coordenadas que não são números ou estão fora do intervalo', async () => {
+      await expect(paradasService.criarParada({ ...dadosValidos, latitude: 'abc' })).rejects.toMatchObject({
+        status: 400,
+        message: 'A latitude deve ser um número entre -90 e 90.',
+      });
+      await expect(paradasService.criarParada({ ...dadosValidos, longitude: 200 })).rejects.toMatchObject({
+        status: 400,
+        message: 'A longitude deve ser um número entre -180 e 180.',
+      });
+    });
+
+    it('limita o tamanho dos textos ao das colunas', async () => {
+      await expect(
+        paradasService.criarParada({ ...dadosValidos, estrutura: 'x'.repeat(81) })
+      ).rejects.toMatchObject({ status: 400, message: 'A estrutura deve ter no máximo 80 caracteres.' });
+    });
+
+    it('impede código repetido', async () => {
+      paradasRepository.findById.mockResolvedValue({ id: '3369' });
+
+      await expect(paradasService.criarParada(dadosValidos)).rejects.toMatchObject({
+        status: 409,
+        message: 'Já existe uma parada com o código 3369.',
+      });
+      expect(paradasRepository.criar).not.toHaveBeenCalled();
+    });
+
+    it('cria a parada com os textos limpos e as coordenadas convertidas', async () => {
+      paradasRepository.findById.mockResolvedValue(null);
+      paradasRepository.criar.mockResolvedValue({ id: '3369' });
+
+      const resultado = await paradasService.criarParada(dadosValidos);
+
+      expect(paradasRepository.findById).toHaveBeenCalledWith('3369');
+      expect(paradasRepository.criar).toHaveBeenCalledWith({
+        codigo: '3369',
+        nome: 'Rodoviária do Plano Piloto',
+        latitude: -15.7942,
+        longitude: -47.8822,
+        tipo: 'Placa',
+        estrutura: 'SEM ESTRUTURA',
+      });
+      expect(resultado).toEqual({ id: '3369' });
+    });
+
+    it('grava como nulos tipo e estrutura vazios', async () => {
+      paradasRepository.findById.mockResolvedValue(null);
+      paradasRepository.criar.mockResolvedValue({ id: '3369' });
+
+      await paradasService.criarParada({ ...dadosValidos, tipo: '', estrutura: undefined });
+
+      expect(paradasRepository.criar).toHaveBeenCalledWith(
+        expect.objectContaining({ tipo: null, estrutura: null })
+      );
+    });
+  });
+
+  describe('editarParada (RF23)', () => {
+    it('falha se a parada não existir', async () => {
+      paradasRepository.findById.mockResolvedValue(null);
+
+      await expect(
+        paradasService.editarParada('999', { nome: 'X', latitude: -15, longitude: -47 })
+      ).rejects.toMatchObject({ status: 404, message: 'Parada não encontrada.' });
+      expect(paradasRepository.atualizar).not.toHaveBeenCalled();
+    });
+
+    it('valida os dados como na criação', async () => {
+      paradasRepository.findById.mockResolvedValue({ id: '3369' });
+
+      await expect(
+        paradasService.editarParada('3369', { nome: 'Rodoviária', longitude: -47 })
+      ).rejects.toMatchObject({ status: 400, message: 'A latitude é obrigatória.' });
+      expect(paradasRepository.atualizar).not.toHaveBeenCalled();
+    });
+
+    it('atualiza a parada sem repassar o código', async () => {
+      paradasRepository.findById.mockResolvedValue({ id: '3369' });
+      paradasRepository.atualizar.mockResolvedValue({ id: '3369', nome: 'Rodoviária' });
+
+      const resultado = await paradasService.editarParada('3369', {
+        codigo: '9999',
+        nome: 'Rodoviária',
+        latitude: -15.79,
+        longitude: '-47,88',
+      });
+
+      expect(paradasRepository.atualizar).toHaveBeenCalledWith('3369', {
+        nome: 'Rodoviária',
+        latitude: -15.79,
+        longitude: -47.88,
+        tipo: null,
+        estrutura: null,
+      });
+      expect(resultado).toEqual({ id: '3369', nome: 'Rodoviária' });
+    });
+  });
+
+  describe('excluirParada (RF23)', () => {
+    it('falha se a parada não existir', async () => {
+      paradasRepository.findById.mockResolvedValue(null);
+
+      await expect(paradasService.excluirParada('999')).rejects.toMatchObject({
+        status: 404,
+        message: 'Parada não encontrada.',
+      });
+      expect(paradasRepository.excluir).not.toHaveBeenCalled();
+    });
+
+    it('bloqueia a exclusão de parada que está no itinerário de alguma linha', async () => {
+      paradasRepository.findById.mockResolvedValue({ id: '3369' });
+      paradasRepository.contarLinhasNoItinerario.mockResolvedValue(3);
+
+      await expect(paradasService.excluirParada('3369')).rejects.toMatchObject({
+        status: 409,
+        message: 'A parada não pode ser excluída porque faz parte do itinerário de 3 linhas.',
+      });
+      expect(paradasRepository.excluir).not.toHaveBeenCalled();
+    });
+
+    it('usa o singular quando a parada está no itinerário de uma linha', async () => {
+      paradasRepository.findById.mockResolvedValue({ id: '3369' });
+      paradasRepository.contarLinhasNoItinerario.mockResolvedValue(1);
+
+      await expect(paradasService.excluirParada('3369')).rejects.toMatchObject({
+        message: 'A parada não pode ser excluída porque faz parte do itinerário de 1 linha.',
+      });
+    });
+
+    it('exclui a parada que não está em nenhum itinerário', async () => {
+      paradasRepository.findById.mockResolvedValue({ id: '3369' });
+      paradasRepository.contarLinhasNoItinerario.mockResolvedValue(0);
+      paradasRepository.excluir.mockResolvedValue();
+
+      await paradasService.excluirParada('3369');
+
+      expect(paradasRepository.contarLinhasNoItinerario).toHaveBeenCalledWith('3369');
+      expect(paradasRepository.excluir).toHaveBeenCalledWith('3369');
     });
   });
 });

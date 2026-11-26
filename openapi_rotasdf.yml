@@ -653,6 +653,147 @@ paths:
         '500':
           $ref: '#/components/responses/ErroInterno'
 
+  /admin/paradas:
+    post:
+      summary: Incluir parada manualmente (RF23)
+      description: Cadastra uma parada sem aguardar nova importação. O código (letras, números, ponto ou hífen) também passa a ser o id da parada. Código, nome, latitude e longitude são obrigatórios.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParadaCadastro'
+      responses:
+        '201':
+          description: Parada incluída com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParadaCadastro'
+        '400':
+          description: Campos obrigatórios ausentes ou em formato inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '409':
+          description: Já existe uma parada com o código informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+  /admin/paradas/{id}:
+    get:
+      summary: Consultar parada para edição (RF23)
+      description: Retorna todos os dados da parada para a tela de edição do administrador.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da parada (ex. 3369)
+      responses:
+        '200':
+          description: Parada encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParadaCadastro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+    put:
+      summary: Alterar parada (RF23)
+      description: Corrige nome, latitude, longitude, tipo e estrutura da parada. Nome, latitude e longitude são obrigatórios e o código não pode ser alterado (o campo codigo é ignorado).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da parada (ex. 3369)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParadaCadastro'
+      responses:
+        '200':
+          description: Parada alterada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParadaCadastro'
+        '400':
+          description: Campos obrigatórios ausentes ou em formato inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
+    delete:
+      summary: Excluir parada (RF23)
+      description: Exclui a parada e os favoritos dela. A exclusão é bloqueada quando a parada faz parte do itinerário de alguma linha.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Código da parada (ex. 3369)
+      responses:
+        '200':
+          description: Parada excluída.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemSucesso'
+        '401':
+          description: Token ausente ou inválido.
+        '403':
+          description: Acesso restrito ao perfil Administrador.
+        '404':
+          $ref: '#/components/responses/ErroNaoEncontrado'
+        '409':
+          description: A parada faz parte do itinerário de alguma linha e não pode ser excluída.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        '500':
+          $ref: '#/components/responses/ErroInterno'
+
   /favoritos:
     get:
       summary: Listar linhas, paradas e trajetos favoritos do passageiro (RF17)
@@ -1064,6 +1205,35 @@ components:
           type: number
           nullable: true
           example: 12.5
+
+    ParadaCadastro:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+          example: "3369"
+        codigo:
+          type: string
+          description: Letras, números, ponto ou hífen. Vira o id da parada e não pode ser alterado depois.
+          example: "3369"
+        nome:
+          type: string
+          example: "Rodoviária do Plano Piloto"
+        latitude:
+          type: number
+          example: -15.7942
+        longitude:
+          type: number
+          example: -47.8822
+        tipo:
+          type: string
+          nullable: true
+          example: "Placa"
+        estrutura:
+          type: string
+          nullable: true
+          example: "ACOSTAMENTO OU BAIA"
 
     Favorito:
       type: object
