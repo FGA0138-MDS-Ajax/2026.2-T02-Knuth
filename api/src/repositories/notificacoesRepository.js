@@ -32,7 +32,8 @@ const listarPorUsuario = async (usuarioId) => {
   const resultado = await pool.query(
     `SELECT id, alerta_id, item_tipo, item_id, titulo, resumo, lida, criado_em
      FROM notificacoes
-     WHERE usuario_id = $1
+    WHERE usuario_id = $1
+    AND (lida = FALSE OR criado_em > NOW() - INTERVAL '7 days')
      ORDER BY criado_em DESC, id DESC`,
     [usuarioId]
   );
