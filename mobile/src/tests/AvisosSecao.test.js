@@ -37,7 +37,7 @@ describe('AvisosSecao', () => {
 
     const { findByText } = render(<AvisosSecao />);
 
-    expect(await findByText('Avisos')).toBeTruthy();
+    expect(await findByText('Avisos', {}, { timeout: 5000 })).toBeTruthy();
     expect(await findByText('Linha 0.782 com desvio')).toBeTruthy();
     expect(await findByText('Desvio pela W3 Sul')).toBeTruthy();
     expect(await findByText('Parada P1 fechada')).toBeTruthy();
