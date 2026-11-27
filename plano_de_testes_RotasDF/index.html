@@ -1,0 +1,3690 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Plano de Testes — RotasDF - RotasDF - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plano-de-testes-rotasdf" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="RotasDF - Documentação" class="md-header__button md-logo" aria-label="RotasDF - Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RotasDF - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plano de Testes — RotasDF
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="RotasDF - Documentação" class="md-nav__button md-logo" aria-label="RotasDF - Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RotasDF - Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Documento_de_Visao_do_Produto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão do Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Documento_de_Arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Política_de_Commits" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Política de commits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plano_de_Metricas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Métricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Atas de Reunião
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Atas de Reunião
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../atas-reuniao/ata-reuniao-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ata 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sumario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sumário
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-estrategia-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Estratégia de testes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-testes-de-repositorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Testes de repositórios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Testes de repositórios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-alertasrepository-rf13-rf14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. AlertasRepository (RF13, RF14)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-buscasrecentesrepository-rf18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. BuscasRecentesRepository (RF18)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-usuariosrepository-rf16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. UsuariosRepository (RF16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-paradasrepository-rf01-rf03" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4. ParadasRepository (RF01, RF03)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-linhasrepository-rf07-rf08-rf10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5. LinhasRepository (RF07, RF08, RF10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-trajetosrepository-rf01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6. TrajetosRepository (RF01)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-gerenciarusuariosrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7. GerenciarUsuariosRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-adminrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8. AdminRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-recuperacaosenharepository-rf16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9. RecuperacaoSenhaRepository (RF16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-favoritosrepository-rf17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10. FavoritosRepository (RF17)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-analisarreportesrepository-rf24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11. AnalisarReportesRepository (RF24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-notificacoesrepository-rf15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12. NotificacoesRepository (RF15)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-testes-de-servicos-e-controladores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Testes de serviços e controladores
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Testes de serviços e controladores">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-alertasservice-rf13-rf14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. AlertasService (RF13, RF14)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-buscasrecentesservice-rf18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. BuscasRecentesService (RF18)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-usuariosservice-rf16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. UsuariosService (RF16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-paradasservice-rf01-rf03" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4. ParadasService (RF01, RF03)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-linhasservice-rf07-rf08-rf10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5. LinhasService (RF07, RF08, RF10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-trajetosservice-rf01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6. TrajetosService (RF01)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-gerenciarusuariosservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7. GerenciarUsuariosService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-adminservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8. AdminService
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-controladores-sinalizacao-de-alertas-nos-itens-afetados-rf14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9. Controladores — Sinalização de Alertas nos Itens Afetados (RF14)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-controladores-e-servicos-recuperacao-de-senha-e-exclusao-de-conta-rf16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10. Controladores e Serviços — Recuperação de Senha e Exclusão de Conta (RF16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-gerenciaralertasservice-rf22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11. GerenciarAlertasService (RF22)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-gerenciaralertascontroller-rf22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12. GerenciarAlertasController (RF22)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-favoritosservice-rf17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13. FavoritosService (RF17)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-favoritoscontroller-e-rotas-rf17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14. FavoritosController e rotas (RF17)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#315-analisarreportesservice-rf24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.15. AnalisarReportesService (RF24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#316-analisarreportescontroller-e-rotas-administrativas-rf24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.16. AnalisarReportesController e rotas administrativas (RF24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#317-paradascontroller-e-rotas-proximas-partidas-em-uma-parada-rf11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.17. ParadasController e rotas — Próximas Partidas em uma Parada (RF11)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#318-notificacoesservice-notificacaoemailservice-notificacoescontroller-e-rotas-rf15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.18. NotificacoesService, NotificacaoEmailService, NotificacoesController e rotas (RF15)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-testes-de-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Testes de middleware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-testes-de-interface-react-native" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Testes de interface (React Native)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-testes-de-integracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Testes de integração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Testes de integração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-integracao-da-api-com-postgresql-usando-testcontainers-rf07-rf08-rf10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1. Integração da API com PostgreSQL usando Testcontainers (RF07, RF08, RF10)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1. Integração da API com PostgreSQL usando Testcontainers (RF07, RF08, RF10)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#611-preparacao-do-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1.1. Preparação do ambiente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#612-casos-de-teste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1.2. Casos de teste
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#613-isolamento-de-dependencias-externas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1.3. Isolamento de dependências externas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#614-encerramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1.4. Encerramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#615-resultado-observado-na-execucao-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1.5. Resultado observado na execução local
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-integracao-de-componentes-do-mobile-linhasscreen-rf07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2. Integração de componentes do Mobile — LinhasScreen (RF07)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-separacao-de-execucao-por-tipo-de-teste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3. Separação de execução por tipo de teste
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-estado-da-integracao-com-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4. Estado da integração com CI/CD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-testes-de-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Testes de sistema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Testes de sistema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-objetivo-e-escopo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1. Objetivo e escopo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-organizacao-das-suites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2. Organização das suítes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-preparacao-do-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3. Preparação do ambiente
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.3. Preparação do ambiente">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#731-configuracao-das-variaveis-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3.1. Configuração das variáveis de ambiente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#732-preparacao-do-banco-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3.2. Preparação do banco de dados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#733-funcoes-auxiliares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3.3. Funções auxiliares
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-casos-de-teste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4. Casos de teste
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.4. Casos de teste">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#741-consultas-publicas-consultassistemajs-rf01-rf03-rf07-rf08-rf10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4.1. Consultas públicas — consultas.sistema.js (RF01, RF03, RF07, RF08, RF10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#742-jornada-do-passageiro-passageirosistemajs-rf16-rf17-rf18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4.2. Jornada do passageiro — passageiro.sistema.js (RF16, RF17, RF18)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#743-recuperacao-de-senha-recuperacaosenhasistemajs-rf16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4.3. Recuperação de senha — recuperacaoSenha.sistema.js (RF16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#744-administracao-de-usuarios-administracaosistemajs-rf21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4.4. Administração de usuários — administracao.sistema.js (RF21)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#745-gerenciamento-de-alertas-alertassistemajs-rf13-rf14-rf22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4.5. Gerenciamento de alertas — alertas.sistema.js (RF13, RF14, RF22)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#746-reportes-de-divergencia-reportessistemajs-rf19-rf24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4.6. Reportes de divergência — reportes.sistema.js (RF19, RF24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-configuracao-e-execucao-dos-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5. Configuração e execução dos testes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-integracao-com-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6. Integração com CI/CD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-isolamento-e-encerramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7. Isolamento e encerramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#78-criterios-de-avaliacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.8. Critérios de avaliação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-tratamento-de-erros-e-condicoes-especiais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Tratamento de erros e condições especiais
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-consideracoes-finais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Considerações finais
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-cobertura-de-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Cobertura de testes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="plano-de-testes-rotasdf">Plano de Testes — RotasDF</h1>
+<h2 id="sumario">Sumário</h2>
+<ol>
+<li>
+<p><a href="#1-estratégia-de-testes">Estratégia de testes</a></p>
+</li>
+<li>
+<p><a href="#2-testes-de-repositórios">Testes de repositórios</a></p>
+</li>
+<li>
+<p><a href="#3-testes-de-serviços-e-controladores">Testes de serviços e controladores</a></p>
+</li>
+<li>
+<p><a href="#4-testes-de-middleware">Testes de middleware</a></p>
+</li>
+<li>
+<p><a href="#5-testes-de-interface-react-native">Testes de interface (React Native)</a></p>
+</li>
+<li>
+<p><a href="#6-testes-de-integração">Testes de integração</a></p>
+</li>
+<li>
+<p><a href="#7-testes-de-sistema">Testes de sistema</a></p>
+</li>
+<li>
+<p><a href="#8-tratamento-de-erros-e-condições-especiais">Tratamento de erros e condições especiais</a></p>
+</li>
+<li>
+<p><a href="#9-considerações-finais">Considerações finais</a></p>
+</li>
+<li>
+<p><a href="#10-cobertura-de-testes">Cobertura de testes</a></p>
+</li>
+</ol>
+<hr />
+<h2 id="1-estrategia-de-testes">1. Estratégia de testes</h2>
+<ul>
+<li>
+<p><strong>Testes unitários:</strong> foco na validação isolada dos serviços, repositórios e controladores.</p>
+</li>
+<li>
+<p><strong>Testes funcionais de interface:</strong> validação das telas React Native quanto à renderização, às interações e ao estado da interface.</p>
+</li>
+<li>
+<p><strong>Testes de integração:</strong> na API, validação da comunicação entre Express e PostgreSQL real, com Testcontainers; no Mobile, validação integrada da tela <code>LinhasScreen</code> e suas interações, com a chamada à API simulada por mock.</p>
+</li>
+<li>
+<p><strong>Testes de sistema:</strong> desenvolvidos na Sprint 4, verificando o funcionamento integrado das principais funcionalidades da API, incluindo autenticação, consultas, favoritos, recuperação de senha, administração, alertas e reportes.</p>
+</li>
+</ul>
+<p>Os testes unitários utilizam <strong>mocks</strong> para isolar dependências. Os testes de integração da API e os testes de sistema exercitam a persistência de dados no PostgreSQL. A integração de componentes do Mobile usa respostas simuladas da API e, portanto, <strong>não valida uma conexão real entre aplicativo e backend</strong>.</p>
+<p>Os testes automatizados de sistema apresentados neste plano verificam os fluxos da API e do banco de dados. A validação das interações e da renderização da interface React Native é realizada separadamente pelos testes funcionais de interface.</p>
+<p>As indicações <code>RFxx</code> associadas aos componentes e às suítes são referências de <strong>rastreabilidade</strong> à Tabela 9 (Backlog do Produto), seção 4.4 do documento <em>RotasDF — Visão do Produto e do Projeto</em>, versão 1.1.0. Elas identificam os requisitos relacionados aos cenários descritos, sem afirmar que cada requisito foi integralmente coberto. Componentes sem correspondência funcional direta no backlog foram mantidos sem código RF.</p>
+<hr />
+<h2 id="2-testes-de-repositorios">2. Testes de repositórios</h2>
+<h3 id="21-alertasrepository-rf13-rf14">2.1. <code>AlertasRepository</code> (RF13, RF14)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findAlertasVigentes</code></td>
+<td>Retorna todos os alertas vigentes (considerando vigência e não encerrados).</td>
+<td>Retorna uma lista ou propaga o erro.</td>
+</tr>
+<tr>
+<td><code>findAlertaVigenteById</code></td>
+<td>Retorna um alerta ativo pelo ID.</td>
+<td>Retorna o alerta ou <code>null</code>; trata erros.</td>
+</tr>
+<tr>
+<td><code>findAlertasVigentesPorItens</code></td>
+<td>Retorna alertas vigentes que afetam uma lista de linhas e/ou paradas (RF14).</td>
+<td>Retorna os alertas correspondentes, lista vazia sem ir ao banco quando os parâmetros são vazios, ou propaga o erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-buscasrecentesrepository-rf18">2.2. <code>BuscasRecentesRepository</code> (RF18)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>salvarBusca</code></td>
+<td>Insere uma busca e retorna o registro.</td>
+<td>Executa a consulta com os valores corretos.</td>
+</tr>
+<tr>
+<td><code>listarBuscasRecentes</code></td>
+<td>Lista buscas recentes com filtro.</td>
+<td>Retorna uma lista ou uma lista vazia.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-usuariosrepository-rf16">2.3. <code>UsuariosRepository</code> (RF16)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criar</code></td>
+<td>Insere um usuário sem expor a senha.</td>
+<td>Executa a consulta corretamente e retorna o usuário.</td>
+</tr>
+<tr>
+<td><code>buscarPorEmail</code></td>
+<td>Busca um usuário pelo e-mail.</td>
+<td>Retorna o usuário ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>buscarPorId</code></td>
+<td>Busca um usuário pelo ID (RF16).</td>
+<td>Retorna o usuário encontrado ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>atualizarSenha</code></td>
+<td>Atualiza o hash da senha de um usuário pelo ID (RF16).</td>
+<td>Executa <code>UPDATE usuarios SET senha_hash = $2 WHERE id = $1</code>.</td>
+</tr>
+<tr>
+<td><code>excluir</code></td>
+<td>Remove o registro do usuário pelo ID (RF16).</td>
+<td>Executa a exclusão ou propaga o erro do banco.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-paradasrepository-rf01-rf03">2.4. <code>ParadasRepository</code> (RF01, RF03)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findNearestParada</code></td>
+<td>Busca a parada mais próxima.</td>
+<td>Retorna a parada ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>buscarPorNome</code></td>
+<td>Busca paradas ignorando acentos/caixa, com fronteira de palavras curtas e limite configurável.</td>
+<td>Retorna as paradas correspondentes ordenadas por relevância ou lista vazia para termo vazio.</td>
+</tr>
+<tr>
+<td><code>findById</code></td>
+<td>Busca os dados de uma parada pelo identificador (RF11).</td>
+<td>Retorna a parada encontrada ou <code>null</code> quando inexistente.</td>
+</tr>
+<tr>
+<td><code>findProximasPartidas</code></td>
+<td>Consulta próximas partidas programadas da parada filtrando por tipo de dia e horário de referência sem duplicatas de linha/sentido/horário (RF11).</td>
+<td>Retorna as partidas ordenadas cronologicamente respeitando o limite informado.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="25-linhasrepository-rf07-rf08-rf10">2.5. <code>LinhasRepository</code> (RF07, RF08, RF10)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findLinhas</code></td>
+<td>Busca linhas com ou sem filtros.</td>
+<td>Retorna as linhas ou uma lista vazia.</td>
+</tr>
+<tr>
+<td><code>findItinerarioByLinhaId</code></td>
+<td>Busca o itinerário de uma linha.</td>
+<td>Retorna o resultado ou uma lista vazia.</td>
+</tr>
+<tr>
+<td><code>findHorariosByLinhaId</code></td>
+<td>Busca os horários de uma linha.</td>
+<td>Retorna os horários ou uma lista vazia.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="26-trajetosrepository-rf01">2.6. <code>TrajetosRepository</code> (RF01)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>buscarParadasPorNome</code></td>
+<td>Busca múltiplas paradas candidatas ignorando acentos, com aliases locais (ex.: <strong>Rodoviária do Plano Piloto</strong> → <code>ROD.PP</code>) e expansão em raio de 350 m para parada única.</td>
+<td>Retorna até 15 paradas candidatas ordenadas por relevância ou lista vazia para termo vazio/inexistente.</td>
+</tr>
+<tr>
+<td><code>buscarRotasDiretas</code></td>
+<td>Busca rotas diretas aceitando listas ou IDs unitários de origem/destino, com ajuste de virada de meia-noite, diversidade de linhas e filtro opcional por horário de partida (<code>PARTIDA</code> &gt;= horário) ou chegada (<code>CHEGADA</code> &lt;= horário) (RF01 / RF06).</td>
+<td>Retorna até 8 opções diretas ordenadas conforme o critério de duração ou proximidade ao horário alvo, ou lista vazia sem consultar o banco quando algum lado está vazio.</td>
+</tr>
+<tr>
+<td><code>buscarRotasComBaldeacao</code></td>
+<td>Busca rotas com 1 baldeação via CTEs materializadas por padrão <code>(linha_id, sentido)</code>, janela de espera de até 60 minutos e filtro opcional por horário de partida ou chegada (RF01 / RF06).</td>
+<td>Retorna até 5 opções com baldeação distintas por par de linhas respeitando o horário informado ou lista vazia.</td>
+</tr>
+<tr>
+<td><code>buscarParadasTrecho</code></td>
+<td>Busca a sequência ordenada de paradas com coordenadas (<code>latitude</code>, <code>longitude</code>) entre <code>seqInicio</code> e <code>seqFim</code> de uma viagem para desenho no mapa (RF04).</td>
+<td>Retorna as paradas ordenadas por <code>sequencia ASC</code> ou lista vazia sem consultar o banco quando faltam parâmetros.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="27-gerenciarusuariosrepository">2.7. <code>GerenciarUsuariosRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista usuários com filtro.</td>
+<td>Retorna a lista filtrada ou completa.</td>
+</tr>
+<tr>
+<td><code>buscarPorId</code></td>
+<td>Busca um usuário pelo ID.</td>
+<td>Retorna o usuário ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>contarAdmins</code></td>
+<td>Conta o total de administradores.</td>
+<td>Retorna a contagem.</td>
+</tr>
+<tr>
+<td><code>atualizar</code></td>
+<td>Atualiza os dados do usuário, incluindo senha opcional.</td>
+<td>Retorna o usuário atualizado.</td>
+</tr>
+<tr>
+<td><code>excluir</code></td>
+<td>Remove um usuário pelo ID.</td>
+<td>Confirma a remoção ou propaga o erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="28-adminrepository">2.8. <code>AdminRepository</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criar</code></td>
+<td>Cria um administrador com tipo fixo.</td>
+<td>Executa a consulta corretamente e retorna o resultado esperado.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="29-recuperacaosenharepository-rf16">2.9. <code>RecuperacaoSenhaRepository</code> (RF16)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invalidarPendentes</code></td>
+<td>Marca como usados todos os códigos de recuperação pendentes do usuário.</td>
+<td>Atualiza <code>usado_em = NOW()</code> nos registros não utilizados do <code>usuario_id</code>.</td>
+</tr>
+<tr>
+<td><code>criar</code></td>
+<td>Armazena o hash do código de 6 dígitos com data de expiração.</td>
+<td>Insere na tabela <code>recuperacoes_senha</code> e retorna os metadados sem expor <code>codigo_hash</code>.</td>
+</tr>
+<tr>
+<td><code>buscarAtiva</code></td>
+<td>Consulta o código mais recente ainda válido (não usado e não expirado).</td>
+<td>Retorna o registro ativo ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>registrarTentativa</code></td>
+<td>Incrementa o contador de tentativas inválidas de um código.</td>
+<td>Atualiza <code>tentativas = tentativas + 1</code> e retorna o total atualizado.</td>
+</tr>
+<tr>
+<td><code>marcarUsada</code></td>
+<td>Marca um código de recuperação como utilizado ou bloqueado.</td>
+<td>Atualiza <code>usado_em = NOW()</code> para o registro informado.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="210-favoritosrepository-rf17">2.10. <code>FavoritosRepository</code> (RF17)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista os favoritos de um usuário, do mais recente ao mais antigo, com os dados da linha e da parada.</td>
+<td>Retorna apenas os favoritos do usuário ou lista vazia; propaga o erro do banco.</td>
+</tr>
+<tr>
+<td><code>adicionar</code></td>
+<td>Insere um favorito de linha, parada ou trajeto e devolve o registro já com os dados da linha e da parada.</td>
+<td>Devolve o favorito criado, ou <code>null</code> quando ele já existia; propaga o erro do banco.</td>
+</tr>
+<tr>
+<td><code>remover</code></td>
+<td>Remove o favorito somente se pertencer ao usuário.</td>
+<td>Retorna <code>true</code> quando removeu e <code>false</code> quando não havia favorito.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="211-analisarreportesrepository-rf24">2.11. <code>AnalisarReportesRepository</code> (RF24)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista os reportes de divergência com <code>LEFT JOIN</code> em <code>usuarios</code>, com filtros opcionais de <code>status</code> e <code>tipo</code>, priorizando pendentes e mais recentes.</td>
+<td>Executa a consulta com os filtros corretos e retorna a lista de reportes ou propaga o erro do banco.</td>
+</tr>
+<tr>
+<td><code>buscarPorId</code></td>
+<td>Busca um reporte específico pelo ID com dados do autor.</td>
+<td>Retorna o reporte encontrado ou <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>atualizarAnalise</code></td>
+<td>Atualiza <code>status</code>, <code>observacao_admin</code> e define <code>analisado_em</code> (<code>NULL</code> quando <code>PENDENTE</code>, <code>NOW()</code> nos demais).</td>
+<td>Retorna o reporte atualizado ou <code>null</code> caso o ID não exista.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="212-notificacoesrepository-rf15">2.12. <code>NotificacoesRepository</code> (RF15)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criarParaFavoritosAfetados</code></td>
+<td>Cria uma notificação para cada usuário que favoritou uma das linhas ou paradas afetadas pelo alerta.</td>
+<td>Insere em uma única consulta, ignora duplicidades e devolve os usuários notificados com nome e e-mail; não consulta o banco quando não há linhas nem paradas.</td>
+</tr>
+<tr>
+<td><code>listarPorUsuario</code></td>
+<td>Lista as notificações do usuário, da mais recente para a mais antiga.</td>
+<td>Retorna todas as não lidas e apenas as lidas nos últimos 7 dias.</td>
+</tr>
+<tr>
+<td><code>marcarComoLida</code></td>
+<td>Marca a notificação do usuário como lida.</td>
+<td>Retorna o registro atualizado ou <code>null</code> quando ela não existe ou pertence a outro usuário.</td>
+</tr>
+<tr>
+<td><code>contarNaoLidas</code></td>
+<td>Conta as notificações não lidas do usuário.</td>
+<td>Retorna o total como número.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-testes-de-servicos-e-controladores">3. Testes de serviços e controladores</h2>
+<h3 id="31-alertasservice-rf13-rf14">3.1. <code>AlertasService</code> (RF13, RF14)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listarAlertasVigentes</code></td>
+<td>Retorna alertas ou erros.</td>
+<td>Retorna a lista correta ou um erro.</td>
+</tr>
+<tr>
+<td><code>obterAlertaVigente</code></td>
+<td>Retorna um alerta ativo pelo ID ou <code>null</code>.</td>
+<td>Retorna os dados ou <code>null</code>; trata erros.</td>
+</tr>
+<tr>
+<td><code>vigentesPara</code></td>
+<td>Normaliza/deduplica IDs de linhas e paradas e busca alertas vigentes afetados (RF14).</td>
+<td>Consulta o repositório com listas normalizadas ou retorna lista vazia quando não há itens válidos.</td>
+</tr>
+<tr>
+<td><code>filtrarAlertasParaItens</code></td>
+<td>Filtra alertas vigentes por linhas (ID/código) e paradas (ID/código/nome) (RF14).</td>
+<td>Retorna apenas os alertas que afetam os itens informados.</td>
+</tr>
+<tr>
+<td><code>extrairItensDoTrajeto</code></td>
+<td>Extrai códigos de linhas e nomes/IDs de paradas das etapas de uma opção de trajeto (RF14).</td>
+<td>Retorna as listas normalizadas de linhas e paradas envolvidas no trajeto.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-buscasrecentesservice-rf18">3.2. <code>BuscasRecentesService</code> (RF18)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>registrarBusca</code></td>
+<td>Valida e registra buscas.</td>
+<td>Trata e retorna os dados corretamente.</td>
+</tr>
+<tr>
+<td><code>obterBuscasRecentes</code></td>
+<td>Lista buscas com parâmetros e valores padrão.</td>
+<td>Retorna as buscas ou uma lista vazia.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-usuariosservice-rf16">3.3. <code>UsuariosService</code> (RF16)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cadastrar</code></td>
+<td>Valida os dados e realiza o cadastro.</td>
+<td>Cria o usuário ou lança erros.</td>
+</tr>
+<tr>
+<td><code>login</code></td>
+<td>Realiza a autenticação e emite um token.</td>
+<td>Retorna o token e o usuário, ou um erro.</td>
+</tr>
+<tr>
+<td><code>solicitarRecuperacaoSenha</code></td>
+<td>Gera código de 6 dígitos, invalida códigos anteriores, salva o hash com expiração de 15 min e dispara o envio por e-mail sem revelar se o e-mail existe (RF16).</td>
+<td>Retorna mensagem padrão; rejeita com <code>400</code> se o e-mail estiver vazio.</td>
+</tr>
+<tr>
+<td><code>redefinirSenha</code></td>
+<td>Valida e-mail, código de 6 dígitos, limite de 5 tentativas e tamanho mínimo da nova senha (6 caracteres), atualizando o hash da senha (RF16).</td>
+<td>Atualiza a senha e invalida o código utilizado, ou lança erro <code>400</code> para código inválido/expirado/excedido.</td>
+</tr>
+<tr>
+<td><code>excluirConta</code></td>
+<td>Valida a senha atual do passageiro autenticado e remove sua própria conta, bloqueando autoexclusão de administradores (RF16).</td>
+<td>Exclui o passageiro com confirmação de senha ou lança erro <code>400</code>/<code>401</code>/<code>403</code>/<code>404</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="34-paradasservice-rf01-rf03">3.4. <code>ParadasService</code> (RF01, RF03)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obterParadaMaisProxima</code></td>
+<td>Busca a parada mais próxima usando latitude e longitude.</td>
+<td>Retorna a parada, <code>null</code> ou um erro.</td>
+</tr>
+<tr>
+<td><code>buscarParadas</code></td>
+<td>Valida o termo mínimo (2 caracteres) e o limite (1–25) para autocomplete (<code>GET /paradas</code>).</td>
+<td>Retorna lista vazia para termos curtos/vazios ou repassa termo aparado e limite ao repositório.</td>
+</tr>
+<tr>
+<td><code>obterProximasPartidas</code></td>
+<td>Detecta automaticamente horário e tipo de dia em Brasília (<code>America/Sao_Paulo</code>), valida parâmetros opcionais (<code>horario</code>, <code>tipoDia</code>, <code>limite</code>) e calcula <code>minutosRestantes</code> (RF11).</td>
+<td>Retorna partidas ordenadas cronologicamente, mensagem explícita quando não há mais saídas no dia, <code>null</code> para parada inexistente ou erro <code>400</code> para parâmetros inválidos.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="35-linhasservice-rf07-rf08-rf10">3.5. <code>LinhasService</code> (RF07, RF08, RF10)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obterLinhas</code></td>
+<td>Busca linhas com filtros ou por texto.</td>
+<td>Retorna as linhas ou um erro.</td>
+</tr>
+<tr>
+<td><code>obterItinerario</code></td>
+<td>Retorna o itinerário pelo ID, incluindo metadados opcionais da linha (<code>tarifa</code>, <code>faixaTarifaria</code>, <code>operadora</code>, <code>extensaoKm</code>, <code>cor</code>).</td>
+<td>Retorna dados estruturados, <code>null</code> ou um erro.</td>
+</tr>
+<tr>
+<td><code>obterQuadroHorarios</code></td>
+<td>Retorna o quadro de horários agrupado por sentido e tipo de dia, anexando metadados enriquecidos da linha (<code>cor</code>, <code>tarifa</code>, <code>faixaTarifaria</code>, <code>operadora</code>, <code>extensaoKm</code>) quando disponíveis.</td>
+<td>Retorna os dados agrupados com metadados, <code>null</code> ou um erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="36-trajetosservice-rf01">3.6. <code>TrajetosService</code> (RF01)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>obterTrajetos</code></td>
+<td>Resolve todas as paradas candidatas de origem e destino, combina rotas diretas e com baldeação, calcula <code>caminhadaMetros</code> (Haversine quando há deslocamento entre paradas diferentes), aplica ordenação opcional (<code>TEMPO</code>, <code>BALDEACOES</code>, <code>CAMINHADA</code> — RF05) e monta dados geográficos (<code>mapa.trechos</code> e <code>mapa.marcadores</code>) com cores distintas por linha, trechos de caminhada/baldeação e marcadores de embarque, baldeação e desembarque (RF01 / RF04 / RF05).</td>
+<td>Repassa todos os IDs candidatos ao repositório, calcula <code>caminhadaMetros</code>, ordena conforme a estratégia selecionada ou mantém ordem padrão, retorna lista combinada enriquecida com <code>mapa</code> quando há coordenadas ou propaga erro.</td>
+</tr>
+<tr>
+<td><code>ordenacaoTrajetos</code></td>
+<td>Normalização de critérios (<code>TEMPO</code>, <code>BALDEACOES</code>, <code>CAMINHADA</code>) e execução das estratégias <em>Strategy</em> (<code>EstrategiaMenorTempo</code>, <code>EstrategiaMenosBaldeacoes</code>, <code>EstrategiaMenorCaminhada</code>) (RF05).</td>
+<td>Reordena opções de trajeto conforme o critério com desempates consistentes (tempo, baldeações, caminhada e partida), preserva imutabilidade da lista original e ignora critérios ausentes ou inválidos.</td>
+</tr>
+<tr>
+<td><code>horarioConsulta</code></td>
+<td>Normalização e validação estrita de <code>horario</code> (<code>HH:MM</code> / <code>HH:MM:SS</code>) e <code>referenciaHorario</code> (<code>PARTIDA</code> / <code>CHEGADA</code>), com <code>PARTIDA</code> como referência padrão (RF06).</td>
+<td>Retorna <code>{ filtro: { referencia, horario }, erro: null }</code> para combinações válidas, <code>{ filtro: null, erro: null }</code> quando omitidos e mensagem de erro clara para formatos ou combinações inválidas.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="37-gerenciarusuariosservice">3.7. <code>GerenciarUsuariosService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista usuários com filtro.</td>
+<td>Retorna a lista ou um erro.</td>
+</tr>
+<tr>
+<td><code>atualizar</code></td>
+<td>Atualiza os dados conforme as regras.</td>
+<td>Retorna o resultado atualizado ou um erro.</td>
+</tr>
+<tr>
+<td><code>excluir</code></td>
+<td>Valida e exclui usuários.</td>
+<td>Confirma a exclusão ou retorna um erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="38-adminservice">3.8. <code>AdminService</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criarAdministrador</code></td>
+<td>Valida os dados e cria um administrador.</td>
+<td>Cria o administrador ou retorna um erro.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="39-controladores-sinalizacao-de-alertas-nos-itens-afetados-rf14">3.9. Controladores — Sinalização de Alertas nos Itens Afetados (RF14)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AlertasController.getAlertasVigentes</code></td>
+<td>Lista todos os alertas vigentes ou filtra por <code>?linhaId</code> e <code>?paradaId</code>.</td>
+<td>Chama <code>vigentesPara</code> quando há filtros na query ou <code>listarAlertasVigentes</code> caso contrário, respondendo <code>200</code>.</td>
+</tr>
+<tr>
+<td><code>LinhasController.getLinhas</code></td>
+<td>Enriquece cada linha retornada com <code>afetadaPorAlerta</code> e <code>alertas</code>.</td>
+<td>Responde <code>200</code> com a lista de linhas sinalizadas; mantém resposta <code>200</code> sem alertas caso a consulta de alertas falhe.</td>
+</tr>
+<tr>
+<td><code>LinhasController.getItinerario</code></td>
+<td>Sinaliza alertas vigentes tanto na linha quanto individualmente nas paradas de <code>IDA</code> e <code>VOLTA</code>.</td>
+<td>Responde <code>200</code> com <code>afetadaPorAlerta</code> e <code>alertas</code> no cabeçalho da linha e em cada parada afetada.</td>
+</tr>
+<tr>
+<td><code>LinhasController.getHorarios</code></td>
+<td>Anexa <code>afetadaPorAlerta</code> e <code>alertas</code> vigentes ao quadro de horários da linha.</td>
+<td>Responde <code>200</code> com o quadro de horários enriquecido com os alertas da linha.</td>
+</tr>
+<tr>
+<td><code>ParadasController.getParadaProxima</code></td>
+<td>Anexa <code>afetadaPorAlerta</code> e <code>alertas</code> vigentes à parada mais próxima encontrada pelo GPS.</td>
+<td>Responde <code>200</code> com a parada sinalizada; degrada graciosamente se a consulta de alertas falhar.</td>
+</tr>
+<tr>
+<td><code>TrajetosController.getTrajetos</code></td>
+<td>Valida <code>origem</code>, <code>destino</code>, critério opcional <code>ordenarPor</code> (<code>TEMPO</code>, <code>BALDEACOES</code>, <code>CAMINHADA</code> — RF05) e filtro opcional por horário (<code>horario</code> e <code>referenciaHorario</code> <code>PARTIDA</code>/<code>CHEGADA</code> — RF06), extrai linhas e paradas das etapas de cada opção e associa os alertas vigentes correspondentes (RF14).</td>
+<td>Repassa <code>ordenarPor</code> e filtro de horário normalizados ao serviço, responde <code>400</code> para parâmetros inválidos e <code>200</code> com cada opção enriquecida com <code>afetadaPorAlerta</code> e <code>alertas</code>; mantém funcionamento caso o serviço de alertas falhe.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="310-controladores-e-servicos-recuperacao-de-senha-e-exclusao-de-conta-rf16">3.10. Controladores e Serviços — Recuperação de Senha e Exclusão de Conta (RF16)</h3>
+<table>
+<thead>
+<tr>
+<th>Componente / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EmailService.enviarCodigoRecuperacao</code></td>
+<td>Registra/dispara o envio do código temporário de recuperação com destinatário e tempo de validade.</td>
+<td>Registra a mensagem contendo nome, e-mail, código de 6 dígitos e validade em minutos.</td>
+</tr>
+<tr>
+<td><code>UsuariosController.solicitarRecuperacaoSenha</code></td>
+<td>Recebe <code>POST /api/v1/usuarios/recuperar-senha</code> e aciona o serviço de recuperação.</td>
+<td>Responde <code>200</code> com a mensagem de confirmação, <code>400</code> quando falta o e-mail ou <code>500</code> em falha inesperada.</td>
+</tr>
+<tr>
+<td><code>UsuariosController.redefinirSenha</code></td>
+<td>Recebe <code>POST /api/v1/usuarios/redefinir-senha</code> com <code>email</code>, <code>codigo</code> e <code>novaSenha</code>.</td>
+<td>Responde <code>200</code> ao redefinir a senha, <code>400</code> para dados/código inválidos ou <code>500</code> em erro interno.</td>
+</tr>
+<tr>
+<td><code>UsuariosController.excluirConta</code></td>
+<td>Recebe <code>DELETE /api/v1/usuarios/me</code> autenticado com a senha de confirmação no corpo.</td>
+<td>Responde <code>200</code> ao excluir a conta, ou <code>400</code>/<code>401</code>/<code>403</code>/<code>404</code>/<code>500</code> conforme a validação.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="311-gerenciaralertasservice-rf22">3.11. <code>GerenciarAlertasService</code> (RF22)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>criar</code></td>
+<td>Valida tipo, título, descrição, datas e listas de linhas/paradas antes de gravar.</td>
+<td>Rejeita tipo inválido, título ou descrição ausentes, datas inválidas, fim não posterior ao início e linhas/paradas que não sejam lista.</td>
+</tr>
+<tr>
+<td><code>criar</code></td>
+<td>Cria o alerta com dados válidos, com ou sem linhas e com paradas afetadas.</td>
+<td>Chama o repositório com os dados normalizados (lista vazia quando não há linhas) e retorna o alerta criado.</td>
+</tr>
+<tr>
+<td><code>listar</code></td>
+<td>Lista todos os alertas para o administrador.</td>
+<td>Retorna todos os alertas, inclusive encerrados e expirados.</td>
+</tr>
+<tr>
+<td><code>editar</code></td>
+<td>Altera um alerta existente com as mesmas validações da criação.</td>
+<td>Retorna o alerta atualizado; falha se o alerta não existir, se estiver encerrado ou se os dados forem inválidos.</td>
+</tr>
+<tr>
+<td><code>encerrar</code></td>
+<td>Encerra um alerta em andamento.</td>
+<td>Encerra o alerta; falha se não existir ou se já estiver encerrado.</td>
+</tr>
+<tr>
+<td><code>excluir</code></td>
+<td>Exclui alertas encerrados ou expirados.</td>
+<td>Exclui o alerta; falha se não existir e impede a exclusão de alerta ainda em andamento.</td>
+</tr>
+<tr>
+<td><code>buscarParadas</code></td>
+<td>Busca paradas pelo texto para escolha das paradas afetadas.</td>
+<td>Retorna lista vazia quando a busca é curta e consulta o repositório com o texto sem espaços nas pontas.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="312-gerenciaralertascontroller-rf22">3.12. <code>GerenciarAlertasController</code> (RF22)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Recebe <code>GET /api/v1/admin/alertas</code>.</td>
+<td>Responde <code>200</code> com a lista de alertas.</td>
+</tr>
+<tr>
+<td><code>criar</code></td>
+<td>Recebe <code>POST /api/v1/admin/alertas</code>.</td>
+<td>Responde <code>201</code> ao criar ou <code>400</code> quando o serviço rejeita os dados.</td>
+</tr>
+<tr>
+<td><code>editar</code></td>
+<td>Recebe <code>PUT /api/v1/admin/alertas/:id</code>.</td>
+<td>Responde <code>200</code> ao editar, <code>404</code> se o alerta não existir ou <code>400</code> se estiver encerrado ou o id não for numérico.</td>
+</tr>
+<tr>
+<td><code>encerrar</code></td>
+<td>Recebe <code>PUT /api/v1/admin/alertas/:id/encerrar</code>.</td>
+<td>Responde <code>200</code> ao encerrar, <code>404</code> se o alerta não existir ou <code>400</code> se já estiver encerrado ou o id for inválido.</td>
+</tr>
+<tr>
+<td><code>buscarParadas</code></td>
+<td>Recebe <code>GET /api/v1/admin/paradas?busca=</code>.</td>
+<td>Responde <code>200</code> com as paradas encontradas e aceita busca ausente.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="313-favoritosservice-rf17">3.13. <code>FavoritosService</code> (RF17)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Lista os favoritos do usuário logado.</td>
+<td>Retorna a lista do usuário.</td>
+</tr>
+<tr>
+<td><code>adicionar</code></td>
+<td>Valida o tipo (<code>LINHA</code>, <code>PARADA</code> ou <code>TRAJETO</code>) e o campo exigido por cada tipo.</td>
+<td>Rejeita tipo inválido ou campo ausente (400); ignora campos que não pertencem ao tipo.</td>
+</tr>
+<tr>
+<td><code>adicionar</code></td>
+<td>Salva o favorito e trata duplicidade e referência inexistente.</td>
+<td>Salva com sucesso; responde 409 se já existia e 404 se a linha ou a parada não existir.</td>
+</tr>
+<tr>
+<td><code>remover</code></td>
+<td>Valida o ID e remove o favorito do usuário.</td>
+<td>Responde 400 para ID inválido e 404 se o favorito não existir ou for de outro usuário.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="314-favoritoscontroller-e-rotas-rf17">3.14. <code>FavoritosController</code> e rotas (RF17)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Recebe <code>GET /api/v1/favoritos</code>.</td>
+<td>Responde <code>200</code> com os favoritos do usuário do token.</td>
+</tr>
+<tr>
+<td><code>adicionar</code></td>
+<td>Recebe <code>POST /api/v1/favoritos</code>.</td>
+<td>Responde <code>201</code>, ou <code>400</code>, <code>404</code> e <code>409</code> conforme a regra violada.</td>
+</tr>
+<tr>
+<td><code>remover</code></td>
+<td>Recebe <code>DELETE /api/v1/favoritos/:id</code>.</td>
+<td>Responde <code>200</code>, ou <code>400</code> e <code>404</code>.</td>
+</tr>
+<tr>
+<td>todos</td>
+<td>Usuário que não é passageiro.</td>
+<td>Responde <code>403</code> (administrador não usa favoritos).</td>
+</tr>
+<tr>
+<td><code>favoritosRoutes</code></td>
+<td>Rotas <code>GET /</code>, <code>POST /</code> e <code>DELETE /:id</code>.</td>
+<td>Todas passam pelo <code>authUsuario</code>; não há rota <code>PUT</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="315-analisarreportesservice-rf24">3.15. <code>AnalisarReportesService</code> (RF24)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Normaliza e valida filtros opcionais de <code>status</code> (<code>PENDENTE</code>, <code>PROCEDENTE</code>, <code>IMPROCEDENTE</code>) e <code>tipo</code> (<code>HORARIO</code>, <code>PARADA</code>, <code>ITINERARIO</code>).</td>
+<td>Retorna a lista filtrada ou lança erro <code>400</code> para filtro inválido.</td>
+</tr>
+<tr>
+<td><code>obterPorId</code></td>
+<td>Valida ID inteiro positivo e consulta o reporte.</td>
+<td>Retorna o reporte, lança <code>400</code> para ID inválido ou <code>404</code> quando não encontrado.</td>
+</tr>
+<tr>
+<td><code>analisar</code></td>
+<td>Valida ID, classificação e exige registro da correção (<code>observacaoAdmin</code> / <code>correcaoRealizada</code>) quando <code>PROCEDENTE</code>.</td>
+<td>Atualiza classificação e correção registrada; lança <code>400</code> para dados inválidos/ausência de correção em procedente ou <code>404</code> se não existir.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="316-analisarreportescontroller-e-rotas-administrativas-rf24">3.16. <code>AnalisarReportesController</code> e rotas administrativas (RF24)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar</code></td>
+<td>Recebe <code>GET /api/v1/admin/reportes</code> com filtros opcionais na query.</td>
+<td>Responde <code>200</code> com a lista, <code>400</code> para filtro inválido ou <code>500</code> em falha inesperada.</td>
+</tr>
+<tr>
+<td><code>obterPorId</code></td>
+<td>Recebe <code>GET /api/v1/admin/reportes/:id</code>.</td>
+<td>Responde <code>200</code> com o reporte, <code>404</code> se inexistente ou <code>500</code> em erro interno.</td>
+</tr>
+<tr>
+<td><code>analisar</code></td>
+<td>Recebe <code>PATCH /api/v1/admin/reportes/:id</code> com <code>status</code> e <code>observacaoAdmin</code> / <code>correcaoRealizada</code>.</td>
+<td>Responde <code>200</code> com o reporte atualizado, <code>400</code> quando inválido, <code>404</code> se não encontrado ou <code>500</code> em erro interno.</td>
+</tr>
+<tr>
+<td><code>adminRoutes</code></td>
+<td>Rotas <code>GET /reportes</code>, <code>GET /reportes/:id</code> e <code>PATCH /reportes/:id</code>.</td>
+<td>Todas exigem <code>authAdmin</code> como primeiro middleware antes do controlador.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="317-paradascontroller-e-rotas-proximas-partidas-em-uma-parada-rf11">3.17. <code>ParadasController</code> e rotas — Próximas Partidas em uma Parada (RF11)</h3>
+<table>
+<thead>
+<tr>
+<th>Controlador / método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ParadasController.getProximasPartidas</code></td>
+<td>Recebe <code>GET /api/v1/paradas/:id/proximas-partidas</code> com parâmetros opcionais (<code>horario</code>, <code>tipoDia</code>, <code>limite</code>) e integra alertas vigentes da parada (RF11 / RF14).</td>
+<td>Responde <code>200</code> com a parada, próximas partidas e alertas (degradando graciosamente se a consulta de alertas falhar), <code>400</code> para ID/parâmetros inválidos, <code>404</code> se a parada não existir ou <code>500</code> em falha inesperada.</td>
+</tr>
+<tr>
+<td><code>paradasRoutes</code></td>
+<td>Rotas <code>GET /</code>, <code>GET /proximas</code> e <code>GET /:id/proximas-partidas</code>.</td>
+<td>Registra exatamente as três rotas vinculadas a <code>buscarParadas</code>, <code>getParadaProxima</code> e <code>getProximasPartidas</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="318-notificacoesservice-notificacaoemailservice-notificacoescontroller-e-rotas-rf15">3.18. <code>NotificacoesService</code>, <code>NotificacaoEmailService</code>, <code>NotificacoesController</code> e rotas (RF15)</h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notificarFavoritosAfetados</code></td>
+<td>Notifica quem favoritou as linhas ou paradas do alerta publicado.</td>
+<td>Cria as notificações, envia o e-mail a cada usuário e devolve a quantidade de destinatários; a falha no envio de um e-mail não interrompe os demais.</td>
+</tr>
+<tr>
+<td><code>listar</code> e <code>contarNaoLidas</code></td>
+<td>Consulta as notificações e o total de não lidas do passageiro.</td>
+<td>Repassa o resultado do repositório.</td>
+</tr>
+<tr>
+<td><code>marcarComoLida</code></td>
+<td>Marca uma notificação do usuário como lida.</td>
+<td>Retorna a notificação ou lança erro 404 quando ela não é encontrada.</td>
+</tr>
+<tr>
+<td><code>enviarNotificacaoAlerta</code></td>
+<td>Monta o aviso de alerta em item favorito.</td>
+<td>Simula o envio por e-mail registrando a mensagem no console, como no RF16.</td>
+</tr>
+<tr>
+<td><code>GerenciarAlertasService.criar</code></td>
+<td>Dispara a notificação ao publicar um alerta.</td>
+<td>Chama <code>notificarFavoritosAfetados</code> com o alerta criado; se a notificação falhar, registra o erro e mantém o alerta criado.</td>
+</tr>
+<tr>
+<td><code>GET /notificacoes</code>, <code>GET /notificacoes/nao-lidas</code> e <code>PUT /notificacoes/:id/lida</code></td>
+<td>Rotas do passageiro autenticado.</td>
+<td>Exigem token (401 sem ele) e perfil de passageiro (403 para os demais); respondem 200 em caso de sucesso e 404 quando a notificação não existe.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-testes-de-middleware">4. Testes de middleware</h2>
+<table>
+<thead>
+<tr>
+<th>Middleware</th>
+<th>Cenário</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>authAdmin</code> (RF21)</td>
+<td>Token ausente ou malformado.</td>
+<td>Retorna <code>401 Unauthorized</code>.</td>
+</tr>
+<tr>
+<td><code>authAdmin</code> (RF21)</td>
+<td>Token expirado ou inválido.</td>
+<td>Retorna <code>401 Unauthorized</code>.</td>
+</tr>
+<tr>
+<td><code>authAdmin</code> (RF21)</td>
+<td>Usuário sem permissão de administrador.</td>
+<td>Retorna <code>403 Forbidden</code>.</td>
+</tr>
+<tr>
+<td><code>authAdmin</code> (RF21)</td>
+<td>Token válido e usuário administrador.</td>
+<td>Continua a requisição e adiciona os dados a <code>req.usuario</code>.</td>
+</tr>
+<tr>
+<td><code>authUsuario</code> (RF16)</td>
+<td>Cabeçalho <code>Authorization</code> ausente, sem esquema <code>Bearer</code>, token malformado, expirado ou sem <code>id</code> (RF16).</td>
+<td>Retorna <code>401 Unauthorized</code>.</td>
+</tr>
+<tr>
+<td><code>authUsuario</code> (RF16)</td>
+<td>Token JWT válido de passageiro ou administrador (RF16).</td>
+<td>Continua a requisição e popula <code>req.usuario</code> com os dados decodificados.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-testes-de-interface-react-native">5. Testes de interface (React Native)</h2>
+<table>
+<thead>
+<tr>
+<th>Tela / Componente</th>
+<th>Caso / cenário</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AlertaBanner</code> e <code>AlertaBadge</code> (RF14)</td>
+<td>Renderização de banners e badges de sinalização de alertas (RF14).</td>
+<td>Exibe cores e rótulos por tipo (<code>Desvio</code>, <code>Suspensão</code>, <code>Paralisação</code>, <code>Alteração de Horário</code>), contagem de múltiplos alertas, oculta quando não há alertas e aciona <code>onPress</code> para detalhes.</td>
+</tr>
+<tr>
+<td><code>LinhasScreen</code> (RF07, RF14, RF18)</td>
+<td>Carregamento, filtro, listagem, navegação, sinalização de alertas (RF14) e buscas recentes de linhas (RF18).</td>
+<td>Exibe indicador de carregamento, permite filtrar por código ou nome, destaca visualmente linhas com <code>afetadaPorAlerta</code> (<code>AlertaBadge</code>), salva linhas/termos acessados no histórico e exibe chips clicáveis de buscas recentes para repetir a consulta ou abrir horários.</td>
+</tr>
+<tr>
+<td><code>HorariosScreen</code> (RF10, RF14, RF19)</td>
+<td>Carregamento, filtro por sentido/tipo de dia, banner de alerta da linha (RF14) e atalho para reporte (RF19).</td>
+<td>Exibe os horários corretos, renderiza o <code>AlertaBanner</code> quando a linha possui alertas vigentes, navega para o itinerário e abre <code>ReportarDivergencia</code> com <code>HORARIO</code> e código da linha.</td>
+</tr>
+<tr>
+<td><code>ItinerarioScreen</code> (RF08, RF11, RF14, RF17, RF19)</td>
+<td>Carregamento do itinerário por sentido, alternância <code>Lista</code>/<code>Mapa</code> (RF08), sinalização de alertas (RF14), reporte (RF19), favoritar paradas (RF17) e acesso às próximas partidas da parada (RF11).</td>
+<td>Lista as paradas em <code>IDA</code>/<code>VOLTA</code>, alterna para visualização do percurso no mapa com marcadores de início e fim, exibe alertas da linha/paradas, botão de favoritar em cada parada, navega para <code>ProximasPartidas</code> ao tocar na parada e abre <code>ReportarDivergencia</code>.</td>
+</tr>
+<tr>
+<td><code>ProximasPartidasScreen</code> (RF11)</td>
+<td>Carregamento, listagem cronológica de próximas partidas em uma parada, alertas vigentes, atualização manual, estado vazio e navegação (RF11).</td>
+<td>Exibe indicador de carregamento, lista partidas com linha, sentido, horário (<code>HH:MM</code>) e tempo restante (<code>Agora</code> / <code>em X min</code>), exibe alertas vigentes da parada, informa explicitamente quando não há mais partidas previstas no dia, trata erros com botão de tentar novamente e navega para <code>Horarios</code> ao tocar em uma partida.</td>
+</tr>
+<tr>
+<td><code>AlertasScreen</code> (RF13)</td>
+<td>Listagem, filtros, título/descrição, mensagens de erro e atualizações.</td>
+<td>Exibe alertas vigentes com título, descrição e itens afetados, filtra por categoria, apresenta mensagens de lista vazia e de erro e utiliza <code>AsyncStorage</code>.</td>
+</tr>
+<tr>
+<td><code>AdminScreen</code> (RF21, RF24)</td>
+<td>Acesso, logout e navegação (incluindo atalho para análise de reportes — RF24).</td>
+<td>Exibe <strong>spinner</strong>, controla o acesso restrito ou liberado, navega para <code>CriarAdmin</code>, <code>GerenciarUsuarios</code> e <code>AnalisarReportes</code> e remove os dados no logout.</td>
+</tr>
+<tr>
+<td><code>CadastroScreen</code> (RF16)</td>
+<td>Validação, cadastro e navegação.</td>
+<td>Valida campos obrigatórios, exibe mensagens e indicador de carregamento e realiza a navegação.</td>
+</tr>
+<tr>
+<td><code>LoginScreen</code> (RF16, RF21)</td>
+<td>Validação, login, armazenamento, falhas e atalho de recuperação de senha (RF16).</td>
+<td>Valida campos, exibe mensagens, salva o token, navega para <code>RecuperarSenha</code> levando o e-mail preenchido e apresenta erros e indicador de carregamento.</td>
+</tr>
+<tr>
+<td><code>RecuperarSenhaScreen</code> (RF16)</td>
+<td>Fluxo em duas etapas para solicitar código por e-mail e redefinir a senha (RF16).</td>
+<td>Valida formato de e-mail, código de 6 dígitos, tamanho mínimo e confirmação da nova senha, permite reenviar código ou trocar e-mail e redireciona ao login após sucesso.</td>
+</tr>
+<tr>
+<td><code>ExcluirContaScreen</code> (RF16)</td>
+<td>Confirmação de senha e diálogo destrutivo para exclusão definitiva da própria conta (RF16).</td>
+<td>Exige senha atual, solicita confirmação, chama <code>DELETE /usuarios/me</code>, limpa <code>AsyncStorage</code> (<code>@rotasdf_token</code>, <code>@rotasdf_usuario</code>, <code>@rotasdf_buscas_recentes</code>) e redireciona para <code>Linhas</code>.</td>
+</tr>
+<tr>
+<td><code>ConfiguracoesScreen</code> (RF16, RF19)</td>
+<td>Exibição de perfil, limpeza de histórico, logout, atalho para reporte (RF19) e exclusão de conta para passageiros (RF16).</td>
+<td>Exibe dados do passageiro logado, navega para <code>ReportarDivergencia</code>, mostra <strong>"Excluir minha conta"</strong> apenas para passageiros autenticados e executa logout.</td>
+</tr>
+<tr>
+<td><code>dialogos</code> (RF16)</td>
+<td>Utilitário multiplataforma de alertas e confirmações (<code>mostrarAviso</code> e <code>confirmarAcao</code>) (RF16).</td>
+<td>Utiliza <code>Alert.alert</code> no Android/iOS e <code>window.alert</code>/<code>window.confirm</code> na Web.</td>
+</tr>
+<tr>
+<td><code>BuscarTrajetoScreen</code> (RF01, RF03, RF06, RF14, RF17, RF18)</td>
+<td>GPS, permissão, edição manual de origem, autocomplete de paradas (<code>GET /paradas</code>), planejamento por horário (<code>Agora</code> / <code>Partida às</code> / <code>Chegada até</code> com máscara, atalhos e validação — RF06), buscas, buscas recentes de trajetos (RF18), alerta na parada de origem (RF14) e favoritos de parada/trajeto (RF17).</td>
+<td>Trata permissão de GPS e localização, permite digitar outra origem manualmente e selecionar sugestões de paradas no destino, permite definir horário de partida ou chegada validando formato e exibindo aviso específico quando não há atendimento no período, salva e exibe buscas recentes (local + <code>/buscas-recentes</code>) permitindo repeti-las com um toque, exibe <code>AlertaBanner</code>, aceita origem/destino pré-preenchidos por rota, permite favoritar a parada próxima ou o trajeto e navega com <code>{ opcoes, origem, destino, planejamentoHorario }</code>.</td>
+</tr>
+<tr>
+<td><code>planejamentoHorario</code> (RF06)</td>
+<td>Utilitário cliente de máscara <code>HH:MM</code> (<code>aplicarMascaraHorario</code>), validação (<code>validarHorarioTexto</code>) e formatação de resumo (<code>formatarResumoPlanejamento</code>) (RF06).</td>
+<td>Formata dígitos em <code>HH:MM</code>, aceita apenas horários válidos (<code>00:00</code> a <code>23:59</code>) e gera resumos legíveis (<code>Partida às HH:MM</code> / <code>Chegada até HH:MM</code>).</td>
+</tr>
+<tr>
+<td><code>ResultadoTrajetoScreen</code> (RF01, RF02, RF05, RF06, RF14, RF17)</td>
+<td>Exibição com duração formatada em horas e minutos, selo de planejamento por horário (RF06), ordenação por menor tempo/menos baldeações/menor caminhada, filtro <code>Somente diretos</code>, selo de melhor opção e exibição de caminhada (RF05), navegação preservando dados, destaque de alertas (RF14) e favoritar trajeto pesquisado (RF17).</td>
+<td>Exibe cartões de opções com duração formatada (<code>25 min</code>, <code>1h</code>, <code>1h 30min</code>), baldeações, distância de caminhada, badge do planejamento por horário quando informado, reordena e filtra opções dinamicamente com destaque na melhor opção e estado vazio com botão de limpar filtro, destaca <code>afetadaPorAlerta</code>, exibe <code>Origem → Destino</code> com <code>FavoritoEstrela</code> e navega para os detalhes preservando a opção selecionada.</td>
+</tr>
+<tr>
+<td><code>ordenarTrajetos</code> (RF05)</td>
+<td>Utilitário cliente de ordenação/filtragem (<code>ordenarEFiltrarTrajetos</code>), formatação de caminhada (<code>formatarCaminhada</code>) e selo da melhor opção (<code>obterSeloMelhorOpcao</code>) (RF05).</td>
+<td>Ordena por <code>TEMPO</code>, <code>BALDEACOES</code> ou <code>CAMINHADA</code> sem mutar a lista original, combina com o filtro <code>somenteDiretos</code>, formata metros/quilômetros (<code>Sem caminhada</code>, <code>185 m a pé</code>, <code>1,3 km a pé</code>) e retorna o selo correspondente ao critério ativo.</td>
+</tr>
+<tr>
+<td><code>TrajetoDetalheScreen</code> (RF02, RF04, RF14)</td>
+<td>Exibição detalhada das etapas com duração em horas e minutos, alternância <code>Etapas</code>/<code>Ver no mapa</code> (RF04) e banner de alertas do trajeto (RF14).</td>
+<td>Exibe duração total e por etapa formatadas em horas e minutos, mostra <code>AlertaBanner</code> quando o trajeto é afetado por alerta vigente, alterna para o <code>MapaTrajeto</code> exibindo trechos e marcadores (ou aviso quando não há coordenadas), lista etapas ordenadas com ícones e apresenta mensagem quando não há etapas.</td>
+</tr>
+<tr>
+<td><code>MapaTrajeto</code> e <code>mapaHtml</code> (RF04, RF08)</td>
+<td>Geração do mapa Leaflet/OpenStreetMap e renderização de trechos e marcadores de trajetos e itinerários (RF04 / RF08).</td>
+<td>Diferencia visualmente trechos de ônibus (linha sólida colorida por linha) e trechos a pé/baldeação (linha tracejada), exibe marcadores <code>Embarque</code>, <code>Baldeação</code> e <code>Desembarque</code>, renderiza legenda e trata graciosamente ausência de coordenadas.</td>
+</tr>
+<tr>
+<td><code>buscasRecentesStorage</code> (RF18)</td>
+<td>Armazenamento local (<code>@rotasdf_buscas_recentes</code>), ordenação, deduplicação e mesclagem com histórico remoto (RF18).</td>
+<td>Salva até 5 trajetos e 5 linhas recentes da mais recente para a mais antiga sem duplicatas, mescla histórico local e remoto e lê o <code>usuarioId</code> logado com tolerância a erros.</td>
+</tr>
+<tr>
+<td><code>formatarMetadadosLinha</code></td>
+<td>Formatação de cor por bacia (<code>obterCorLinha</code>), tarifa (<code>formatarTarifa</code>), extensão (<code>formatarExtensao</code>) e normalização de operadoras (<code>formatarOperadora</code>).</td>
+<td>Normaliza hex de cores com fallback <code>#006666</code> para branco/inválido, formata valores em <code>R$ X,XX</code> e <code>X,X km</code>, padroniza operadoras por bacia do DF e substitui nomes de permissionários pessoa física por <code>Transporte Complementar (STPCR)</code>.</td>
+</tr>
+<tr>
+<td><code>GerenciarUsuariosScreen</code></td>
+<td>Listagem, filtros, navegação e erros.</td>
+<td>Lista usuários, identifica o usuário atual, aplica filtros e apresenta alertas.</td>
+</tr>
+<tr>
+<td><code>CriarAdminScreen</code></td>
+<td>Cadastro, validação, mensagens e navegação.</td>
+<td>Exibe campos e mensagens, indicador de carregamento e retorna após o sucesso.</td>
+</tr>
+<tr>
+<td><code>EditarUsuarioScreen</code></td>
+<td>Edição, validação, exclusão e mensagens.</td>
+<td>Exibe campos, realiza validações, solicita confirmação de exclusão e apresenta alertas.</td>
+</tr>
+<tr>
+<td><code>FavoritoEstrela</code> (RF17)</td>
+<td>Botão de favoritar e desfavoritar um item (RF17).</td>
+<td>Mostra estrela cheia ou vazia, alterna pelo store, avisa quando não foi possível (por exemplo, sem login) e se atualiza com a lista.</td>
+</tr>
+<tr>
+<td><code>FavoritosSecao</code> e <code>FavoritosCarregador</code> (RF11, RF17)</td>
+<td>Lista de linhas, paradas e trajetos favoritos em destaque na tela inicial e na aba Favoritos (RF17) com atalho de próximas partidas (RF11).</td>
+<td>Mostra a dica quando não há favoritos, lista linhas (abre <code>Horarios</code>), paradas (abre <code>BuscarTrajeto</code> com origem e oferece botão <strong>Partidas</strong> para abrir <code>ProximasPartidas</code>) e trajetos (abre <code>BuscarTrajeto</code> com origem/destino); esconde-se sem passageiro logado.</td>
+</tr>
+<tr>
+<td><code>RodapeNavegacao</code></td>
+<td>Barra de abas Linhas e Favoritos com <strong>safe area</strong> inferior e ação <code>onPressAtiva</code> (voltar ao topo).</td>
+<td>Marca a aba ativa, aplica <code>paddingBottom</code> conforme o recuo inferior da <strong>safe area</strong> do dispositivo, navega ao tocar na outra aba e dispara <code>onPressAtiva</code> (rolando a lista de linhas ao topo) ao tocar na aba já aberta.</td>
+</tr>
+<tr>
+<td><code>FavoritosScreen</code> (RF17)</td>
+<td>Aba Favoritos (RF17).</td>
+<td>Carrega e lista os favoritos do passageiro; sem login, pede para entrar e leva à tela de login.</td>
+</tr>
+<tr>
+<td><code>AnalisarReportesScreen</code> (RF24)</td>
+<td>Listagem, filtros por status, exibição de badges/referências, navegação e tratamento de erros (RF24).</td>
+<td>Exibe indicador de carregamento, lista reportes com tipo, status, linha/parada e autor, filtra por <code>Pendentes</code>/<code>Procedentes</code>/<code>Improcedentes</code>, navega para <code>DetalheReporte</code> e exibe avisos de erro.</td>
+</tr>
+<tr>
+<td><code>DetalheReporteScreen</code> (RF24)</td>
+<td>Classificação de reporte e registro da correção realizada pelo administrador (RF24).</td>
+<td>Exibe detalhes do reporte, exige descrição da correção ao selecionar <code>Procedente</code>, permite <code>Improcedente</code>/<code>Pendente</code> sem observação obrigatória, chama <code>PATCH /admin/reportes/:id</code> e retorna após salvar.</td>
+</tr>
+<tr>
+<td><code>ReportarDivergenciaScreen</code> (RF19)</td>
+<td>Validação, pré-preenchimento de linha/parada e envio de reporte de divergência pelo passageiro (RF19).</td>
+<td>Permite escolher <code>Horário</code>, <code>Parada</code> ou <code>Itinerário</code>, exige ao menos linha ou parada e descrição com no mínimo 10 caracteres, anexa <code>usuarioId</code> quando logado, chama <code>POST /reportes</code> e trata erros da API.</td>
+</tr>
+<tr>
+<td><code>AvisosSecao</code> (RF15)</td>
+<td>Seção "Avisos" na aba Favoritos.</td>
+<td>Lista os avisos do passageiro com título e resumo, destaca os não lidos e mostra o contador (<code>1 novo</code>); ao tocar em um aviso não lido, marca como lido; não exibe nada sem avisos, sem login ou quando a busca falha.</td>
+</tr>
+<tr>
+<td><code>SeloAvisos</code> e <code>RodapeNavegacao</code> (RF15)</td>
+<td>Selo de avisos não lidos no ícone Favoritos do rodapé.</td>
+<td>Mostra a quantidade (<code>9+</code> acima de nove), atualiza quando a tela volta ao foco, some quando não há avisos e fica oculto na própria aba Favoritos.</td>
+</tr>
+<tr>
+<td><code>FavoritosScreen</code> (RF15)</td>
+<td>Exibição dos avisos para quem está logado.</td>
+<td>Mostra a seção de avisos apenas para usuário logado e mantém o aviso de login para os demais.</td>
+</tr>
+<tr>
+<td>Funções de notificação da API (RF15)</td>
+<td><code>getNotificacoes</code>, <code>getNotificacoesNaoLidas</code> e <code>marcarNotificacaoLida</code>.</td>
+<td>Chamam <code>/notificacoes</code>, <code>/notificacoes/nao-lidas</code> e <code>/notificacoes/:id/lida</code> enviando o token no cabeçalho.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-testes-de-integracao">6. Testes de integração</h2>
+<h3 id="61-integracao-da-api-com-postgresql-usando-testcontainers-rf07-rf08-rf10">6.1. Integração da API com PostgreSQL usando Testcontainers (RF07, RF08, RF10)</h3>
+<p>O teste de integração verifica se as rotas da API de linhas conseguem consultar dados armazenados em um banco PostgreSQL real, iniciado temporariamente por meio do Testcontainers.</p>
+<p><strong>Tecnologias utilizadas:</strong></p>
+<ul>
+<li>
+<p>Jest para execução dos testes.</p>
+</li>
+<li>
+<p>Supertest para realizar requisições HTTP à aplicação Express.</p>
+</li>
+<li>
+<p>Testcontainers para iniciar um container PostgreSQL.</p>
+</li>
+<li>
+<p>PostgreSQL 15 (<code>postgres:15-alpine</code>) como banco de dados de teste.</p>
+</li>
+<li>
+<p><code>pg</code> para conectar ao banco e preparar os dados iniciais.</p>
+</li>
+</ul>
+<h4 id="611-preparacao-do-ambiente">6.1.1. Preparação do ambiente</h4>
+<ol>
+<li>
+<p>É iniciado um container PostgreSQL temporário.</p>
+</li>
+<li>
+<p>As variáveis de ambiente (<code>DB_HOST</code>, <code>DB_PORT</code>, <code>DB_USER</code>, <code>DB_PASSWORD</code> e <code>DB_NAME</code>) são configuradas com os dados fornecidos pelo container.</p>
+</li>
+<li>
+<p>O arquivo <code>infrastructure/init.sql</code> é executado para criar a estrutura do banco.</p>
+</li>
+<li>
+<p>São inseridos dados de teste nas tabelas de calendário, linhas, paradas, viagens e horários das paradas.</p>
+</li>
+<li>
+<p>A aplicação Express é carregada após a configuração das variáveis de ambiente, para utilizar o banco temporário.</p>
+</li>
+</ol>
+<h4 id="612-casos-de-teste">6.1.2. Casos de teste</h4>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/v1/linhas?busca=0.600</code></td>
+<td>Busca uma linha pelo código no PostgreSQL.</td>
+<td>Retorna HTTP <code>200</code>, uma linha e os dados esperados (<code>codigo: 0.600</code>, <code>nome: Planaltina</code>).</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/linhas/1/itinerario</code></td>
+<td>Consulta o itinerário da linha cadastrada no banco.</td>
+<td>Retorna HTTP <code>200</code>, o código da linha e duas paradas no sentido <code>IDA</code>, com a primeira parada identificada como <code>Terminal</code>.</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/linhas/1/horarios</code></td>
+<td>Consulta o quadro de horários da linha cadastrada.</td>
+<td>Retorna HTTP <code>200</code> e o horário <code>05:00</code> no quadro de horários do sentido <code>IDA</code> para <code>DIA_UTIL</code>.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="613-isolamento-de-dependencias-externas">6.1.3. Isolamento de dependências externas</h4>
+<p>No teste de integração da API de linhas, o serviço <code>alertasService</code> é simulado. Essa decisão mantém o foco do teste nas rotas de linhas e na integração dessas rotas com o PostgreSQL, evitando que dependências do módulo de alertas interfiram no resultado.</p>
+<p>Portanto, o banco de dados utilizado para as consultas de linhas é real, mas o serviço de alertas não é exercitado de forma integrada nesse conjunto de testes.</p>
+<h4 id="614-encerramento">6.1.4. Encerramento</h4>
+<p>Após a execução:</p>
+<ul>
+<li>
+<p>A conexão auxiliar <code>Client</code>, utilizada para criar o esquema e preparar os dados, é encerrada.</p>
+</li>
+<li>
+<p>O pool de conexões PostgreSQL utilizado pela aplicação é encerrado com <code>pool.end()</code>.</p>
+</li>
+<li>
+<p>O container PostgreSQL é interrompido <strong>depois</strong> do encerramento das conexões, evitando o erro <code>57P01</code> de conexão terminada durante a parada do banco.</p>
+</li>
+</ul>
+<h4 id="615-resultado-observado-na-execucao-local">6.1.5. Resultado observado na execução local</h4>
+<p>Em <strong>22/11/2026</strong>, a suíte <code>api/src/tests/Integração/linhas.integration.test.js</code> foi executada com Jest, Supertest e PostgreSQL temporário via Testcontainers. O resultado informado pelo Jest foi <strong>PASS</strong>, com tempo de aproximadamente <strong>5,152 segundos</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Caso de teste</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/v1/linhas?busca=0.600</code></td>
+<td>Aprovado</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/linhas/1/itinerario</code></td>
+<td>Aprovado</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/linhas/1/horarios</code></td>
+<td>Aprovado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total desta suíte:</strong> 1 suíte aprovada e 3 casos de teste aprovados. A mensagem informativa do <code>dotenv</code> exibida no console não altera o resultado <code>PASS</code>. Este resultado comprova a execução <strong>local</strong>, não uma aprovação já verificada no GitHub Actions.</p>
+<h3 id="62-integracao-de-componentes-do-mobile-linhasscreen-rf07">6.2. Integração de componentes do Mobile — <code>LinhasScreen</code> (RF07)</h3>
+<p>O teste de integração do Mobile, apresentado no arquivo <code>linhas.integration.test.js</code>, exercita conjuntamente a tela React Native <code>LinhasScreen</code>, seus estados de carregamento, entrada de busca, renderização da lista e navegação. A função <code>getLinhas</code> do serviço de API é <strong>simulada com Jest</strong>, assim como as funções de buscas recentes; os ícones do Expo também são simulados.</p>
+<p><strong>Tecnologias utilizadas:</strong> Jest, React Native Testing Library (<code>render</code>, <code>screen</code>, <code>fireEvent</code>, <code>waitFor</code>) e mocks de dependências externas.</p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Carregamento e listagem</td>
+<td>Renderizar a tela e aguardar o retorno simulado de duas linhas (<code>0.600</code> e <code>0.110</code>).</td>
+<td>Apresentar o carregamento e exibir os códigos e nomes das linhas retornadas.</td>
+</tr>
+<tr>
+<td>2. Filtragem em tempo real</td>
+<td>Digitar <code>0.110</code> no campo de busca.</td>
+<td>Exibir a linha correspondente e remover <code>0.600</code> da lista visível.</td>
+</tr>
+<tr>
+<td>3. Busca sem resultados</td>
+<td>Digitar <code>Linha Fantasma</code> no campo de busca.</td>
+<td>Exibir a mensagem de nenhum resultado encontrado.</td>
+</tr>
+<tr>
+<td>4. Navegação</td>
+<td>Pressionar o card da linha <code>0.600</code>.</td>
+<td>Chamar a navegação para <code>Horarios</code>, com <code>{ linhaId: '1' }</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Escopo e limitações:</strong> são quatro casos escritos para a integração de componentes da interface, <strong>não</strong> para integração real Mobile–API–PostgreSQL. Nenhum banco de dados ou Docker é necessário nessa suíte. A execução bem-sucedida desses quatro casos <strong>ainda não foi comprovada por um log enviado</strong>; portanto, ficam registrados como casos implementados/propostos, com resultado pendente de confirmação.</p>
+<p>Os caminhos relativos dos imports e mocks precisam corresponder à estrutura real do projeto Mobile. O diretório <code>Integração</code> e o padrão de nome <code>*.integration.test.js</code> devem coincidir com a configuração do Jest.</p>
+<h3 id="63-separacao-de-execucao-por-tipo-de-teste">6.3. Separação de execução por tipo de teste</h3>
+<p>A execução isolada facilita o diagnóstico e evita que testes dependentes de PostgreSQL/Docker sejam iniciados durante a suíte unitária. Abaixo estão os <strong>scripts sugeridos</strong> para os respectivos arquivos <code>package.json</code>; a aplicação efetiva dessas alterações deve ser conferida no repositório.</p>
+<p><strong>API — seção <code>scripts</code> do <code>api/package.json</code>:</strong></p>
+<pre><code class="language-json">{
+  &quot;test&quot;: &quot;jest --testPathIgnorePatterns=\&quot;sistema|Integração\&quot;&quot;,
+  &quot;test:sistema&quot;: &quot;jest --config jest.sistema.config.js --runInBand&quot;,
+  &quot;test:integracao&quot;: &quot;jest --runInBand Integração&quot;
+}
+</code></pre>
+<p><strong>Mobile — comandos a incorporar à seção <code>scripts</code> de <code>mobile/package.json</code>, preservando os demais scripts (por exemplo, <code>start</code>, <code>android</code>, <code>ios</code> e <code>web</code>):</strong></p>
+<pre><code class="language-json">{
+  &quot;test&quot;: &quot;jest --testPathIgnorePatterns=Integração&quot;,
+  &quot;test:integracao&quot;: &quot;jest --runInBand Integração&quot;
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Diretório</th>
+<th>Comando</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>api</code></td>
+<td><code>npm test</code></td>
+<td>Executar os testes comuns da API, excluindo <code>sistema</code> e <code>Integração</code>.</td>
+</tr>
+<tr>
+<td><code>api</code></td>
+<td><code>npm run test:integracao</code></td>
+<td>Executar os testes da pasta <code>Integração</code> da API, com Testcontainers.</td>
+</tr>
+<tr>
+<td><code>api</code></td>
+<td><code>npm run test:sistema</code></td>
+<td>Executar as suítes pelo <code>jest.sistema.config.js</code>, com PostgreSQL de teste.</td>
+</tr>
+<tr>
+<td><code>mobile</code></td>
+<td><code>npm test</code></td>
+<td>Executar os testes comuns do Mobile, excluindo <code>Integração</code>.</td>
+</tr>
+<tr>
+<td><code>mobile</code></td>
+<td><code>npm run test:integracao</code></td>
+<td>Executar os testes de integração de componentes do Mobile.</td>
+</tr>
+</tbody>
+</table>
+<p>Os comandos foram separados por diretório: executar o script de integração da API dentro de <code>api</code> e o do Mobile dentro de <code>mobile</code>. O filtro pelo nome <code>Integração</code> pressupõe que as suítes estejam nesse diretório, incluindo o acento e a mesma capitalização, principalmente no CI Linux.</p>
+<h3 id="64-estado-da-integracao-com-cicd">6.4. Estado da integração com CI/CD</h3>
+<ul>
+<li>
+<p><strong>Testes comuns:</strong> os workflows que usam <code>npm test</code> passam a executar apenas os testes não excluídos quando os scripts acima estiverem aplicados.</p>
+</li>
+<li>
+<p><strong>Testes de sistema da API:</strong> há configuração documentada em <code>ci-sistema-api.yml</code>, que utiliza <code>npm run test:sistema</code> e um serviço PostgreSQL.</p>
+</li>
+<li>
+<p><strong>Integração da API:</strong> o resultado local está aprovado. Ainda é necessário <strong>confirmar ou configurar</strong> no GitHub Actions um job que execute <code>npm run test:integracao</code> em ambiente com Docker e as dependências instaladas com <code>npm ci</code>.</p>
+</li>
+<li>
+<p><strong>Integração do Mobile:</strong> ainda é necessário executar os quatro casos localmente e adicionar ou confirmar sua execução no CI com <code>npm run test:integracao</code> no diretório <code>mobile</code>.</p>
+</li>
+</ul>
+<p><strong>Não se deve registrar aprovação no CI de nenhuma dessas suítes de integração sem o respectivo resultado do workflow.</strong></p>
+<hr />
+<h2 id="7-testes-de-sistema">7. Testes de sistema</h2>
+<h3 id="71-objetivo-e-escopo">7.1. Objetivo e escopo</h3>
+<p>Os testes de sistema verificam os principais fluxos funcionais da API do RotasDF, exercitando a aplicação Express e sua comunicação com o banco PostgreSQL.</p>
+<p>Diferentemente dos testes unitários, esses testes realizam requisições HTTP por meio do Supertest, verificando a execução conjunta das rotas, dos controladores, dos serviços, dos repositórios e da persistência de dados.</p>
+<p><strong>Tecnologias utilizadas:</strong></p>
+<ul>
+<li>
+<p>Jest para organização e execução dos testes automatizados.</p>
+</li>
+<li>
+<p>Supertest para realizar requisições HTTP à aplicação Express.</p>
+</li>
+<li>
+<p>PostgreSQL para persistência dos dados durante os testes.</p>
+</li>
+<li>
+<p><code>pg</code> para preparação e consultas ao banco de dados.</p>
+</li>
+<li>
+<p><code>bcrypt</code> e <code>jsonwebtoken</code> para apoiar os cenários de autenticação.</p>
+</li>
+<li>
+<p>GitHub Actions para execução automatizada em CI/CD.</p>
+</li>
+</ul>
+<p>Os testes de sistema estão organizados em seis suítes, cada uma responsável por verificar um conjunto específico de funcionalidades da API.</p>
+<h3 id="72-organizacao-das-suites">7.2. Organização das suítes</h3>
+<table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Funcionalidades verificadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>consultas.sistema.js</code> (RF01, RF03, RF07, RF08, RF10)</td>
+<td>Consultas de linhas, itinerários, horários, paradas e trajetos.</td>
+</tr>
+<tr>
+<td><code>passageiro.sistema.js</code> (RF16, RF17, RF18)</td>
+<td>Cadastro, login, favoritos, buscas recentes e exclusão da própria conta.</td>
+</tr>
+<tr>
+<td><code>recuperacaoSenha.sistema.js</code> (RF16)</td>
+<td>Solicitação de códigos, redefinição e regras de segurança da recuperação de senha.</td>
+</tr>
+<tr>
+<td><code>administracao.sistema.js</code> (RF21)</td>
+<td>Controle de acesso, criação de administradores, listagem, atualização e exclusão de usuários.</td>
+</tr>
+<tr>
+<td><code>alertas.sistema.js</code> (RF13, RF14, RF22)</td>
+<td>Gerenciamento, vigência e sinalização de alertas nas consultas públicas.</td>
+</tr>
+<tr>
+<td><code>reportes.sistema.js</code> (RF19, RF24)</td>
+<td>Registro, consulta, análise, classificação e reabertura de reportes de divergência.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-preparacao-do-ambiente">7.3. Preparação do ambiente</h3>
+<p>A execução das suítes utiliza os arquivos <code>ambiente.js</code>, <code>auxiliares.js</code>, <code>preparoBanco.js</code> e <code>jest.sistema.config.js</code>.</p>
+<h4 id="731-configuracao-das-variaveis-de-ambiente">7.3.1. Configuração das variáveis de ambiente</h4>
+<p>O arquivo <code>ambiente.js</code> configura:</p>
+<ul>
+<li>
+<p><code>NODE_ENV=test</code>, identificando o ambiente de testes.</p>
+</li>
+<li>
+<p><code>JWT_SECRET</code>, contendo um segredo próprio para os testes.</p>
+</li>
+<li>
+<p><code>RECUPERACAO_SENHA_EXPOR_CODIGO=true</code>, permitindo a verificação automatizada do código de recuperação.</p>
+</li>
+<li>
+<p><code>DB_NAME</code>, utilizando o valor de <code>DB_NAME_SISTEMA</code> ou o nome padrão <code>rotasdf_teste</code>.</p>
+</li>
+</ul>
+<h4 id="732-preparacao-do-banco-de-dados">7.3.2. Preparação do banco de dados</h4>
+<p>O arquivo <code>preparoBanco.js</code> é responsável por preparar a base utilizada pelos testes.</p>
+<p><strong>Etapas realizadas:</strong></p>
+<ol>
+<li>
+<p>Valida o nome do banco, exigindo que contenha <code>test</code>.</p>
+</li>
+<li>
+<p>Conecta-se ao servidor PostgreSQL.</p>
+</li>
+<li>
+<p>Cria o banco de testes caso ele ainda não exista.</p>
+</li>
+<li>
+<p>Executa o esquema definido em <code>infrastructure/init.sql</code>.</p>
+</li>
+<li>
+<p>Limpa as tabelas utilizadas pelos cenários.</p>
+</li>
+<li>
+<p>Insere dados controlados de linhas, paradas, calendários, viagens e horários.</p>
+</li>
+</ol>
+<p>Os dados iniciais incluem três linhas fictícias (<code>Sistema Alfa</code>, <code>Sistema Beta</code> e <code>Sistema Gama</code>), seis paradas e viagens de ida e volta.</p>
+<h4 id="733-funcoes-auxiliares">7.3.3. Funções auxiliares</h4>
+<p>O arquivo <code>auxiliares.js</code> contém funções reutilizáveis:</p>
+<table>
+<thead>
+<tr>
+<th>Função</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>api</code></td>
+<td>Realiza requisições HTTP à aplicação Express utilizando Supertest.</td>
+</tr>
+<tr>
+<td><code>cabecalho</code></td>
+<td>Prepara o cabeçalho de autorização com token JWT.</td>
+</tr>
+<tr>
+<td><code>emailUnico</code></td>
+<td>Gera e-mails diferentes para os testes.</td>
+</tr>
+<tr>
+<td><code>isoEmHoras</code></td>
+<td>Gera datas relativas ao horário atual.</td>
+</tr>
+<tr>
+<td><code>cadastrarPassageiro</code></td>
+<td>Cadastra um passageiro para os cenários.</td>
+</tr>
+<tr>
+<td><code>logar</code></td>
+<td>Realiza a autenticação de um usuário.</td>
+</tr>
+<tr>
+<td><code>criarPassageiroLogado</code></td>
+<td>Prepara um passageiro autenticado.</td>
+</tr>
+<tr>
+<td><code>criarAdminLogado</code></td>
+<td>Prepara um administrador autenticado.</td>
+</tr>
+<tr>
+<td><code>resetarDados</code></td>
+<td>Limpa os dados transacionais utilizados pelas suítes.</td>
+</tr>
+<tr>
+<td><code>encerrarConexoes</code></td>
+<td>Encerra o pool de conexões PostgreSQL.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="74-casos-de-teste">7.4. Casos de teste</h3>
+<h4 id="741-consultas-publicas-consultassistemajs-rf01-rf03-rf07-rf08-rf10">7.4.1. Consultas públicas — <code>consultas.sistema.js</code> (RF01, RF03, RF07, RF08, RF10)</h4>
+<table>
+<thead>
+<tr>
+<th>Funcionalidade</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Listagem de linhas</td>
+<td>Consultar as linhas cadastradas sem alertas vigentes.</td>
+<td>Retorna HTTP <code>200</code>, as linhas esperadas e nenhuma sinalização de alerta.</td>
+</tr>
+<tr>
+<td>Busca por código e nome</td>
+<td>Pesquisar linhas pelo código ou nome, independentemente de maiúsculas e minúsculas.</td>
+<td>Retorna somente as linhas correspondentes.</td>
+</tr>
+<tr>
+<td>Busca sem resultados</td>
+<td>Consultar linha inexistente.</td>
+<td>Retorna HTTP <code>200</code> e lista vazia.</td>
+</tr>
+<tr>
+<td>Itinerário</td>
+<td>Consultar paradas de ida e volta.</td>
+<td>Retorna as paradas na ordem correta.</td>
+</tr>
+<tr>
+<td>Coordenadas</td>
+<td>Verificar latitude e longitude das paradas.</td>
+<td>Retorna coordenadas numéricas.</td>
+</tr>
+<tr>
+<td>Validação de itinerário</td>
+<td>Consultar utilizando ID inválido.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Itinerário inexistente</td>
+<td>Consultar linha sem itinerário.</td>
+<td>Retorna HTTP <code>404</code>.</td>
+</tr>
+<tr>
+<td>Quadro de horários</td>
+<td>Consultar horários por sentido e tipo de dia.</td>
+<td>Retorna horários agrupados e ordenados.</td>
+</tr>
+<tr>
+<td>Horários por linha</td>
+<td>Consultar horários de uma linha específica.</td>
+<td>Retorna somente os horários correspondentes.</td>
+</tr>
+<tr>
+<td>Horários inexistentes</td>
+<td>Consultar linha sem quadro de horários.</td>
+<td>Retorna HTTP <code>404</code>.</td>
+</tr>
+<tr>
+<td>Busca de paradas</td>
+<td>Pesquisar paradas pelo nome.</td>
+<td>Retorna os resultados priorizando correspondências exatas.</td>
+</tr>
+<tr>
+<td>Limite de paradas</td>
+<td>Consultar paradas informando um limite.</td>
+<td>Respeita a quantidade solicitada.</td>
+</tr>
+<tr>
+<td>Normalização da busca</td>
+<td>Pesquisar paradas com diferenças de acentuação e capitalização.</td>
+<td>Retorna os resultados correspondentes.</td>
+</tr>
+<tr>
+<td>Termos curtos ou ausentes</td>
+<td>Consultar paradas sem termo adequado.</td>
+<td>Retorna lista vazia.</td>
+</tr>
+<tr>
+<td>Parada mais próxima</td>
+<td>Consultar a parada mais próxima utilizando coordenadas.</td>
+<td>Retorna a parada correspondente.</td>
+</tr>
+<tr>
+<td>Validação de coordenadas</td>
+<td>Consultar sem latitude ou longitude válidas.</td>
+<td>Retorna erro de validação.</td>
+</tr>
+<tr>
+<td>Trajetos diretos</td>
+<td>Consultar origem e destino conectados por uma viagem direta.</td>
+<td>Retorna opções sem baldeação, organizadas por horário.</td>
+</tr>
+<tr>
+<td>Trajetos com baldeação</td>
+<td>Consultar um percurso que exige troca de linha.</td>
+<td>Retorna opção com baldeação.</td>
+</tr>
+<tr>
+<td>Validação de trajetos</td>
+<td>Informar origem ou destino ausente ou inexistente.</td>
+<td>Retorna erro ou lista vazia, conforme o cenário.</td>
+</tr>
+<tr>
+<td>Sentido da viagem</td>
+<td>Consultar percurso no sentido contrário ao disponível.</td>
+<td>Não retorna rota incompatível.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="742-jornada-do-passageiro-passageirosistemajs-rf16-rf17-rf18">7.4.2. Jornada do passageiro — <code>passageiro.sistema.js</code> (RF16, RF17, RF18)</h4>
+<table>
+<thead>
+<tr>
+<th>Funcionalidade</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cadastro</td>
+<td>Cadastrar passageiro com dados válidos.</td>
+<td>Retorna HTTP <code>201</code>, sem expor dados sensíveis.</td>
+</tr>
+<tr>
+<td>E-mail duplicado</td>
+<td>Cadastrar usuário com e-mail existente.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Campos obrigatórios</td>
+<td>Cadastrar usuário sem informações necessárias.</td>
+<td>Retorna HTTP <code>400</code> e mensagem apropriada.</td>
+</tr>
+<tr>
+<td>Login</td>
+<td>Autenticar passageiro cadastrado.</td>
+<td>Retorna HTTP <code>200</code>, token JWT e dados do usuário.</td>
+</tr>
+<tr>
+<td>Falha de autenticação</td>
+<td>Informar senha errada ou e-mail inexistente.</td>
+<td>Retorna HTTP <code>401</code> com mensagem padronizada.</td>
+</tr>
+<tr>
+<td>Autorização de favoritos</td>
+<td>Consultar favoritos sem token ou com token inválido.</td>
+<td>Retorna HTTP <code>401</code>.</td>
+</tr>
+<tr>
+<td>Lista inicial</td>
+<td>Consultar favoritos de passageiro sem registros.</td>
+<td>Retorna lista vazia.</td>
+</tr>
+<tr>
+<td>Favoritar linha</td>
+<td>Adicionar linha aos favoritos.</td>
+<td>Retorna HTTP <code>201</code> com dados da linha.</td>
+</tr>
+<tr>
+<td>Favoritar parada</td>
+<td>Adicionar parada aos favoritos.</td>
+<td>Retorna HTTP <code>201</code> com dados da parada.</td>
+</tr>
+<tr>
+<td>Favoritar trajeto</td>
+<td>Adicionar trajeto aos favoritos.</td>
+<td>Retorna HTTP <code>201</code> com origem e destino.</td>
+</tr>
+<tr>
+<td>Duplicidade</td>
+<td>Tentar adicionar favorito já cadastrado.</td>
+<td>Retorna HTTP <code>409</code>.</td>
+</tr>
+<tr>
+<td>Validação de favoritos</td>
+<td>Informar tipo inválido ou dados incorretos.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Referência inexistente</td>
+<td>Favoritar linha ou parada inexistente.</td>
+<td>Retorna HTTP <code>404</code>.</td>
+</tr>
+<tr>
+<td>Listagem de favoritos</td>
+<td>Consultar favoritos cadastrados.</td>
+<td>Retorna os itens associados ao passageiro.</td>
+</tr>
+<tr>
+<td>Isolamento de dados</td>
+<td>Consultar favoritos de diferentes passageiros.</td>
+<td>Cada passageiro visualiza somente seus registros.</td>
+</tr>
+<tr>
+<td>Remoção</td>
+<td>Excluir favorito cadastrado.</td>
+<td>Remove o registro e impede nova exclusão do mesmo item.</td>
+</tr>
+<tr>
+<td>Validação da remoção</td>
+<td>Informar ID inválido.</td>
+<td>Retorna erro de validação.</td>
+</tr>
+<tr>
+<td>Restrição administrativa</td>
+<td>Administrador tenta utilizar favoritos.</td>
+<td>Bloqueia a operação.</td>
+</tr>
+<tr>
+<td>Buscas recentes</td>
+<td>Registrar busca com origem e destino.</td>
+<td>Registra a busca associada ao usuário.</td>
+</tr>
+<tr>
+<td>Validação de busca</td>
+<td>Registrar busca sem origem ou destino.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Histórico de buscas</td>
+<td>Listar buscas recentes.</td>
+<td>Retorna os registros ordenados e respeita o limite.</td>
+</tr>
+<tr>
+<td>Exclusão da própria conta</td>
+<td>Passageiro solicita exclusão com senha correta.</td>
+<td>Exclui a conta e os dados relacionados.</td>
+</tr>
+<tr>
+<td>Validação da exclusão</td>
+<td>Solicitar exclusão sem autenticação ou confirmação válida.</td>
+<td>Bloqueia a operação.</td>
+</tr>
+<tr>
+<td>Restrição administrativa</td>
+<td>Administrador tenta excluir a própria conta pela rota de passageiro.</td>
+<td>Bloqueia a operação.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="743-recuperacao-de-senha-recuperacaosenhasistemajs-rf16">7.4.3. Recuperação de senha — <code>recuperacaoSenha.sistema.js</code> (RF16)</h4>
+<table>
+<thead>
+<tr>
+<th>Funcionalidade</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solicitação de código</td>
+<td>Solicitar recuperação sem e-mail.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Privacidade</td>
+<td>Solicitar código para e-mail cadastrado ou desconhecido.</td>
+<td>Retorna a mesma mensagem pública.</td>
+</tr>
+<tr>
+<td>Geração de código</td>
+<td>Solicitar recuperação para usuário cadastrado.</td>
+<td>Gera código de seis dígitos e armazena seu hash.</td>
+</tr>
+<tr>
+<td>Validação da redefinição</td>
+<td>Omitir e-mail, código ou nova senha.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Tamanho da senha</td>
+<td>Informar nova senha com menos de seis caracteres.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>E-mail desconhecido</td>
+<td>Solicitar redefinição para conta inexistente.</td>
+<td>Não revela a existência da conta.</td>
+</tr>
+<tr>
+<td>Código correto</td>
+<td>Redefinir senha utilizando código válido.</td>
+<td>Altera a senha e permite login com a nova senha.</td>
+</tr>
+<tr>
+<td>Senha anterior</td>
+<td>Tentar login com senha antiga após redefinição.</td>
+<td>Retorna HTTP <code>401</code>.</td>
+</tr>
+<tr>
+<td>Reutilização</td>
+<td>Utilizar novamente um código consumido.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Código incorreto</td>
+<td>Informar código errado.</td>
+<td>Incrementa o contador de tentativas e preserva a senha antiga.</td>
+</tr>
+<tr>
+<td>Limite de tentativas</td>
+<td>Realizar cinco tentativas incorretas.</td>
+<td>Bloqueia o código e exige nova solicitação.</td>
+</tr>
+<tr>
+<td>Expiração</td>
+<td>Utilizar código após o prazo de validade.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Novo código</td>
+<td>Solicitar outro código antes de utilizar o anterior.</td>
+<td>Invalida o código antigo e aceita o novo.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="744-administracao-de-usuarios-administracaosistemajs-rf21">7.4.4. Administração de usuários — <code>administracao.sistema.js</code> (RF21)</h4>
+<table>
+<thead>
+<tr>
+<th>Funcionalidade</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acesso sem token</td>
+<td>Consultar rotas administrativas sem autenticação.</td>
+<td>Retorna HTTP <code>401</code>.</td>
+</tr>
+<tr>
+<td>Acesso de passageiro</td>
+<td>Tentar acessar área administrativa como passageiro.</td>
+<td>Retorna HTTP <code>403</code>.</td>
+</tr>
+<tr>
+<td>Acesso de administrador</td>
+<td>Consultar perfil administrativo com token válido.</td>
+<td>Retorna HTTP <code>200</code>.</td>
+</tr>
+<tr>
+<td>Proteção das operações</td>
+<td>Passageiro tenta listar, criar, atualizar ou excluir usuários.</td>
+<td>Retorna HTTP <code>403</code>.</td>
+</tr>
+<tr>
+<td>Criação de administrador</td>
+<td>Criar administrador e realizar login na nova conta.</td>
+<td>Retorna HTTP <code>201</code> e permite acesso à área administrativa.</td>
+</tr>
+<tr>
+<td>Validação de cadastro</td>
+<td>Criar administrador com campos ausentes, senha curta ou e-mail duplicado.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Listagem de usuários</td>
+<td>Consultar todos os usuários.</td>
+<td>Retorna a lista sem expor hashes de senha.</td>
+</tr>
+<tr>
+<td>Filtro de usuários</td>
+<td>Filtrar usuários pelo tipo.</td>
+<td>Retorna somente os registros correspondentes.</td>
+</tr>
+<tr>
+<td>Atualização de dados</td>
+<td>Alterar nome de passageiro.</td>
+<td>Retorna os dados atualizados.</td>
+</tr>
+<tr>
+<td>Alteração de senha</td>
+<td>Modificar a senha de usuário.</td>
+<td>Aceita login com a senha nova e rejeita a anterior.</td>
+</tr>
+<tr>
+<td>Promoção de usuário</td>
+<td>Alterar perfil de passageiro para administrador.</td>
+<td>Atualiza o tipo do usuário.</td>
+</tr>
+<tr>
+<td>Validação de atualização</td>
+<td>Enviar dados inválidos.</td>
+<td>Retorna erro de validação.</td>
+</tr>
+<tr>
+<td>Autorrestrição</td>
+<td>Administrador tenta rebaixar a própria conta.</td>
+<td>Impede a operação.</td>
+</tr>
+<tr>
+<td>Exclusão de passageiro</td>
+<td>Excluir passageiro cadastrado.</td>
+<td>Remove o registro.</td>
+</tr>
+<tr>
+<td>Exclusão de administrador</td>
+<td>Excluir outro administrador quando permitido.</td>
+<td>Remove o registro.</td>
+</tr>
+<tr>
+<td>Proteção da própria conta</td>
+<td>Administrador tenta excluir a própria conta.</td>
+<td>Bloqueia a exclusão.</td>
+</tr>
+<tr>
+<td>Usuário inexistente</td>
+<td>Excluir usuário não cadastrado.</td>
+<td>Retorna HTTP <code>404</code>.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="745-gerenciamento-de-alertas-alertassistemajs-rf13-rf14-rf22">7.4.5. Gerenciamento de alertas — <code>alertas.sistema.js</code> (RF13, RF14, RF22)</h4>
+<table>
+<thead>
+<tr>
+<th>Funcionalidade</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acesso sem token</td>
+<td>Consultar gerenciamento de alertas sem autenticação.</td>
+<td>Retorna HTTP <code>401</code>.</td>
+</tr>
+<tr>
+<td>Acesso de passageiro</td>
+<td>Tentar gerenciar alertas com perfil de passageiro.</td>
+<td>Retorna HTTP <code>403</code>.</td>
+</tr>
+<tr>
+<td>Tipo inválido</td>
+<td>Criar alerta com tipo não permitido.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Campos obrigatórios</td>
+<td>Criar alerta sem título ou descrição válida.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Datas inválidas</td>
+<td>Informar datas incorretas ou fim anterior ao início.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Listas inválidas</td>
+<td>Informar linhas ou paradas fora do formato esperado.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Criação de alerta</td>
+<td>Criar alerta vinculado a linha e parada.</td>
+<td>Registra os relacionamentos esperados.</td>
+</tr>
+<tr>
+<td>Vigência</td>
+<td>Consultar alertas ativos.</td>
+<td>Retorna os alertas vigentes com seus itens afetados.</td>
+</tr>
+<tr>
+<td>Consulta individual</td>
+<td>Consultar alerta pelo ID.</td>
+<td>Retorna os dados ou HTTP <code>404</code>.</td>
+</tr>
+<tr>
+<td>Filtros</td>
+<td>Filtrar alertas por linha ou parada.</td>
+<td>Retorna somente os registros correspondentes.</td>
+</tr>
+<tr>
+<td>Sinalização de linhas</td>
+<td>Consultar linhas afetadas e não afetadas.</td>
+<td>Identifica corretamente os alertas associados.</td>
+</tr>
+<tr>
+<td>Sinalização de itinerário</td>
+<td>Consultar itinerário com parada afetada.</td>
+<td>Marca somente os elementos relacionados ao alerta.</td>
+</tr>
+<tr>
+<td>Sinalização de horários</td>
+<td>Consultar quadro de horários de linha afetada.</td>
+<td>Retorna a sinalização apropriada.</td>
+</tr>
+<tr>
+<td>Sinalização de paradas</td>
+<td>Consultar parada afetada por alerta.</td>
+<td>Identifica corretamente a parada afetada.</td>
+</tr>
+<tr>
+<td>Sinalização de trajetos</td>
+<td>Buscar trajetos que passam por linhas ou paradas afetadas.</td>
+<td>Identifica as opções atingidas.</td>
+</tr>
+<tr>
+<td>Edição de alerta</td>
+<td>Alterar título e itens afetados.</td>
+<td>Atualiza os dados do alerta.</td>
+</tr>
+<tr>
+<td>Listagem administrativa</td>
+<td>Consultar alertas na área administrativa.</td>
+<td>Retorna os registros com informações relacionadas.</td>
+</tr>
+<tr>
+<td>Exclusão de alerta vigente</td>
+<td>Tentar excluir alerta em andamento.</td>
+<td>Impede a exclusão.</td>
+</tr>
+<tr>
+<td>Encerramento</td>
+<td>Encerrar alerta vigente.</td>
+<td>Altera sua situação e remove o alerta da listagem de vigentes.</td>
+</tr>
+<tr>
+<td>Operações repetidas</td>
+<td>Encerrar novamente ou editar alerta encerrado.</td>
+<td>Bloqueia a operação.</td>
+</tr>
+<tr>
+<td>Exclusão após encerramento</td>
+<td>Excluir alerta encerrado.</td>
+<td>Permite a exclusão.</td>
+</tr>
+<tr>
+<td>Identificadores inválidos</td>
+<td>Editar, encerrar ou excluir alerta com ID incorreto.</td>
+<td>Retorna erro apropriado.</td>
+</tr>
+<tr>
+<td>Alerta futuro</td>
+<td>Consultar alerta cuja vigência ainda não começou.</td>
+<td>Não aparece ao passageiro, mas permanece acessível administrativamente.</td>
+</tr>
+<tr>
+<td>Alerta expirado</td>
+<td>Consultar alerta após o período de vigência.</td>
+<td>Não aparece na listagem pública de vigentes.</td>
+</tr>
+<tr>
+<td>Busca administrativa de paradas</td>
+<td>Pesquisar paradas pelo nome ou código.</td>
+<td>Retorna resultados correspondentes e lista vazia para buscas muito curtas.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="746-reportes-de-divergencia-reportessistemajs-rf19-rf24">7.4.6. Reportes de divergência — <code>reportes.sistema.js</code> (RF19, RF24)</h4>
+<table>
+<thead>
+<tr>
+<th>Funcionalidade</th>
+<th>Cenário / objetivo</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registro de reporte</td>
+<td>Registrar divergência vinculada a usuário e linha.</td>
+<td>Retorna HTTP <code>201</code> e status <code>PENDENTE</code>.</td>
+</tr>
+<tr>
+<td>Normalização</td>
+<td>Registrar reporte somente com parada e tipo em letras minúsculas.</td>
+<td>Normaliza o tipo e aceita os campos opcionais.</td>
+</tr>
+<tr>
+<td>Tipo inválido</td>
+<td>Informar tipo de divergência não permitido.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Descrição inválida</td>
+<td>Informar descrição com menos de dez caracteres.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Referência ausente</td>
+<td>Registrar reporte sem linha nem parada.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Acesso sem token</td>
+<td>Tentar acessar análise de reportes sem autenticação.</td>
+<td>Retorna HTTP <code>401</code>.</td>
+</tr>
+<tr>
+<td>Acesso de passageiro</td>
+<td>Passageiro tenta consultar área administrativa de reportes.</td>
+<td>Retorna HTTP <code>403</code>.</td>
+</tr>
+<tr>
+<td>Listagem</td>
+<td>Consultar reportes cadastrados.</td>
+<td>Retorna os registros esperados.</td>
+</tr>
+<tr>
+<td>Filtros</td>
+<td>Filtrar reportes por status e tipo.</td>
+<td>Retorna somente os registros correspondentes.</td>
+</tr>
+<tr>
+<td>Filtros inválidos</td>
+<td>Informar tipo ou status desconhecido.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Detalhamento</td>
+<td>Consultar reporte com informações do passageiro.</td>
+<td>Retorna os dados associados à ocorrência.</td>
+</tr>
+<tr>
+<td>ID inválido</td>
+<td>Consultar reporte com identificador malformado.</td>
+<td>Retorna HTTP <code>400</code>.</td>
+</tr>
+<tr>
+<td>Registro inexistente</td>
+<td>Consultar reporte não cadastrado.</td>
+<td>Retorna HTTP <code>404</code>.</td>
+</tr>
+<tr>
+<td>Validação da análise</td>
+<td>Informar status inválido ou dados insuficientes.</td>
+<td>Retorna erro de validação.</td>
+</tr>
+<tr>
+<td>Classificação procedente</td>
+<td>Analisar reporte como <code>PROCEDENTE</code>.</td>
+<td>Atualiza o status e registra a correção realizada.</td>
+</tr>
+<tr>
+<td>Campo alternativo</td>
+<td>Informar correção pelo campo <code>correcaoRealizada</code>.</td>
+<td>Aceita a informação na análise.</td>
+</tr>
+<tr>
+<td>Classificação improcedente</td>
+<td>Analisar reporte como <code>IMPROCEDENTE</code>.</td>
+<td>Atualiza o status sem exigir observação.</td>
+</tr>
+<tr>
+<td>Ordenação</td>
+<td>Consultar reportes após análises.</td>
+<td>Mantém registros pendentes com prioridade na listagem.</td>
+</tr>
+<tr>
+<td>Reabertura</td>
+<td>Alterar reporte analisado para <code>PENDENTE</code>.</td>
+<td>Reabre o registro e limpa a data de análise.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="75-configuracao-e-execucao-dos-testes">7.5. Configuração e execução dos testes</h3>
+<p>O arquivo <code>jest.sistema.config.js</code> configura a execução das suítes de sistema.</p>
+<p><strong>Configurações utilizadas:</strong></p>
+<ul>
+<li>
+<p>Ambiente de execução: <code>node</code>.</p>
+</li>
+<li>
+<p>Padrão de arquivos: <code>src/tests/sistema/**/*.sistema.js</code>.</p>
+</li>
+<li>
+<p>Inicialização de variáveis de ambiente por <code>ambiente.js</code>.</p>
+</li>
+<li>
+<p>Preparação global do banco por <code>preparoBanco.js</code>.</p>
+</li>
+<li>
+<p>Tempo limite por teste de 30 segundos.</p>
+</li>
+<li>
+<p>Execução com um trabalhador (<code>maxWorkers: 1</code>).</p>
+</li>
+</ul>
+<p>O comando utilizado pelo workflow para executar as suítes é:</p>
+<p><code>npm run test:sistema</code></p>
+<p>A execução pressupõe que esse script esteja configurado no <code>package.json</code> da API.</p>
+<h3 id="76-integracao-com-cicd">7.6. Integração com CI/CD</h3>
+<p>O arquivo <code>ci-sistema-api.yml</code> configura a execução automática dos testes de sistema da API no GitHub Actions.</p>
+<p>O workflow é acionado em eventos de <code>push</code> e <code>pull_request</code> nas branches <code>developer</code> e <code>main</code>.</p>
+<p><strong>Etapas do pipeline:</strong></p>
+<ol>
+<li>
+<p>Inicializa um ambiente Ubuntu.</p>
+</li>
+<li>
+<p>Disponibiliza PostgreSQL 15 usando a imagem <code>postgres:15-alpine</code>.</p>
+</li>
+<li>
+<p>Configura Node.js 20.</p>
+</li>
+<li>
+<p>Instala as dependências da API utilizando <code>npm ci</code>.</p>
+</li>
+<li>
+<p>Configura as variáveis de conexão ao banco.</p>
+</li>
+<li>
+<p>Executa <code>npm run test:sistema</code>.</p>
+</li>
+</ol>
+<p>O workflow utiliza <code>api</code> como diretório de trabalho.</p>
+<h3 id="77-isolamento-e-encerramento">7.7. Isolamento e encerramento</h3>
+<p>Os testes utilizam dados controlados para garantir previsibilidade e evitar interferência de registros externos.</p>
+<p>O arquivo <code>preparoBanco.js</code> prepara a estrutura e os dados iniciais. A função <code>resetarDados</code> limpa as tabelas transacionais utilizadas pelos cenários.</p>
+<p>Os usuários necessários são criados pelas funções auxiliares, permitindo validar autenticação, permissões e isolamento dos dados entre usuários.</p>
+<p>Ao final das suítes, a função <code>encerrarConexoes</code> encerra o pool PostgreSQL.</p>
+<p>Diferentemente do teste de integração descrito na seção 6, os testes de sistema utilizam uma instância PostgreSQL configurada no ambiente local ou disponibilizada como serviço no GitHub Actions, sem inicializá-la diretamente pelo Testcontainers.</p>
+<h3 id="78-criterios-de-avaliacao">7.8. Critérios de avaliação</h3>
+<p>A avaliação dos testes considera:</p>
+<ul>
+<li>
+<p>Retorno dos códigos HTTP esperados.</p>
+</li>
+<li>
+<p>Correspondência entre respostas da API e registros no PostgreSQL.</p>
+</li>
+<li>
+<p>Validação das regras de negócio.</p>
+</li>
+<li>
+<p>Funcionamento da autenticação e autorização.</p>
+</li>
+<li>
+<p>Proteção das rotas administrativas.</p>
+</li>
+<li>
+<p>Isolamento dos dados entre usuários.</p>
+</li>
+<li>
+<p>Persistência, atualização e exclusão corretas dos registros.</p>
+</li>
+<li>
+<p>Tratamento de entradas inválidas e informações inexistentes.</p>
+</li>
+<li>
+<p>Funcionamento dos fluxos de cadastro, login, recuperação de senha, consultas, favoritos, alertas e reportes.</p>
+</li>
+</ul>
+<p>Os arquivos fornecidos contêm os testes e seus resultados esperados. A aprovação ou reprovação efetiva de cada caso depende da execução das suítes no ambiente configurado.</p>
+<hr />
+<h2 id="8-tratamento-de-erros-e-condicoes-especiais">8. Tratamento de erros e condições especiais</h2>
+<ul>
+<li>
+<p>Validação rigorosa de entradas vazias, inválidas ou mal formatadas.</p>
+</li>
+<li>
+<p>Mensagens claras para erros retornados pela API.</p>
+</li>
+<li>
+<p>Indicadores visuais para processos em andamento.</p>
+</li>
+<li>
+<p>Proteção contra ações não autorizadas, como rebaixamentos ou exclusões indevidas.</p>
+</li>
+<li>
+<p>Recuperação e apresentação adequada de informações em casos de falha de conexão.</p>
+</li>
+</ul>
+<hr />
+<h2 id="9-consideracoes-finais">9. Considerações finais</h2>
+<ul>
+<li>
+<p>Garantia de cobertura mínima de 80% nas regras de negócio e na interface.</p>
+</li>
+<li>
+<p>Uso de <strong>mocks</strong> para isolar os testes e garantir confiabilidade.</p>
+</li>
+<li>
+<p>Execução de testes comuns e de sistema em seus respectivos fluxos de CI/CD; a execução automática das suítes de integração da API e do Mobile deve ser confirmada ou adicionada aos workflows.</p>
+</li>
+<li>
+<p>Documentação colaborativa para evolução contínua do plano de testes.</p>
+</li>
+</ul>
+<hr />
+<h2 id="10-cobertura-de-testes">10. Cobertura de testes</h2>
+<p>A cobertura foi medida com <code>npx jest --coverage</code> nas pastas <code>api</code> e <code>mobile</code>, sobre a branch <code>developer</code> no commit <code>ae272234</code> (21/11/2026). A meta definida na seção 6.1 do Documento de Visão é de 80%.</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Suítes</th>
+<th>Testes</th>
+<th>Statements</th>
+<th>Branches</th>
+<th>Funções</th>
+<th>Linhas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API</td>
+<td>49</td>
+<td>513</td>
+<td>94,84%</td>
+<td>91,83%</td>
+<td>94,11%</td>
+<td>95,38%</td>
+</tr>
+<tr>
+<td>Mobile</td>
+<td>28</td>
+<td>344</td>
+<td>89,32%</td>
+<td>83,23%</td>
+<td>81,96%</td>
+<td>89,84%</td>
+</tr>
+</tbody>
+</table>
+<p>Os dois módulos atendem à meta de 80% em todas as métricas. A medição é feita manualmente: o workflow de CI executa <code>npm test</code> sem a opção <code>--coverage</code>.</p>
+<p>Os valores apresentados correspondem ao commit e à data informados. A inclusão das suítes de sistema e de integração neste plano não altera retroativamente essa medição. Para atualizar as quantidades e os percentuais de cobertura, é necessária uma nova execução com os testes incorporados à branch avaliada.</p>
+<p>Como referência de execução, houve <strong>49 suítes e 513 testes aprovados</strong> nos testes comuns da API, além da <strong>suíte de integração da API com 3 casos aprovados</strong>. São conjuntos distintos e não uma nova medição consolidada de cobertura. O Mobile tem <strong>4 casos de integração de componentes descritos</strong>, mas sua aprovação ainda precisa ser demonstrada por uma execução do Jest.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

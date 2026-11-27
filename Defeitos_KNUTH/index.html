@@ -1,0 +1,1779 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Todos os Defeitos – Inspeção do Grupo KNUTH (RotasDF) - RotasDF - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#todos-os-defeitos-inspecao-do-grupo-knuth-rotasdf" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="RotasDF - Documentação" class="md-header__button md-logo" aria-label="RotasDF - Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RotasDF - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Todos os Defeitos – Inspeção do Grupo KNUTH (RotasDF)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="RotasDF - Documentação" class="md-nav__button md-logo" aria-label="RotasDF - Documentação" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RotasDF - Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Documento_de_Visao_do_Produto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão do Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Documento_de_Arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Política_de_Commits" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Política de commits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Plano_de_Metricas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Métricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Atas de Reunião
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Atas de Reunião
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../atas-reuniao/ata-reuniao-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ata 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#resumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visão geral
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defeito-critico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defeito crítico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Defeito crítico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#def-041-backlog-sem-criterios-de-aceitacao-suficientemente-operacionalizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-041 – Backlog sem critérios de aceitação suficientemente operacionalizados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defeitos-altos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defeitos altos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Defeitos altos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#def-010-pdfs-publicados-divergem-dos-arquivos-markdown-atuais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-010 – PDFs publicados divergem dos arquivos Markdown atuais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-013-documentos-indicam-ramos-diferentes-para-integracao-do-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-013 – Documentos indicam ramos diferentes para integração do código
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-015-faltam-registros-rastreaveis-das-cerimonias-para-s1-a-s3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-015 – Faltam registros rastreáveis das cerimônias para S1 a S3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-017-planejamento-da-visao-nao-reflete-o-replanejamento-registrado-separadamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-017 – Planejamento da Visão não reflete o replanejamento registrado separadamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-019-automacao-de-testes-declarada-sem-implementacao-publicada-correspondente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-019 – Automação de testes declarada sem implementação publicada correspondente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-020-planejamento-de-testes-com-definicao-operacional-incompleta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-020 – Planejamento de testes com definição operacional incompleta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-021-meta-de-cobertura-de-testes-sem-evidencia-publicada-de-medicao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-021 – Meta de cobertura de testes sem evidência publicada de medição
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-022-exclusao-de-teste-e-lacunas-de-verificacao-no-incremento-integrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-022 – Exclusão de teste e lacunas de verificação no incremento integrado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-025-referencias-cruzadas-as-mr-nao-acompanham-a-numeracao-atual-do-markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-025 – Referências cruzadas às MR não acompanham a numeração atual do Markdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-027-uso-de-orm-declarado-na-arquitetura-diverge-do-acesso-a-dados-implementado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-027 – Uso de ORM declarado na arquitetura diverge do acesso a dados implementado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-029-arquivo-de-ambiente-versionado-em-desacordo-com-a-politica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-029 – Arquivo de ambiente versionado em desacordo com a política
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-030-revisao-de-codigo-exigida-pela-politica-sem-registro-nos-prs-integrados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-030 – Revisão de código exigida pela política sem registro nos PRs integrados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-035-coleta-tstp-vencida-sem-dados-publicados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-035 – Coleta TSTP vencida sem dados publicados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-038-base-e-analise-tch-contradizem-backlog-e-datas-de-integracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-038 – Base e análise TCH contradizem backlog e datas de integração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defeitos-medios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defeitos médios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Defeitos médios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#def-001-margens-laterais-insuficientes-nos-pdfs-publicados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-001 – Margens laterais insuficientes nos PDFs publicados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-002-paginacao-dos-pdfs-posicionada-no-rodape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-002 – Paginação dos PDFs posicionada no rodapé
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-003-figuras-1-2-e-7-sem-indicacao-de-fonte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-003 – Figuras 1, 2 e 7 sem indicação de fonte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-005-tabela-de-riscos-com-colunas-desalinhadas-e-um-risco-truncado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-005 – Tabela de riscos com colunas desalinhadas e um risco truncado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-006-texto-da-visao-sem-chamadas-as-obras-da-bibliografia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-006 – Texto da Visão sem chamadas às obras da bibliografia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-007-citacoes-da-arquitetura-sem-referencias-bibliograficas-correspondentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-007 – Citações da Arquitetura sem referências bibliográficas correspondentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-008-referencia-de-kruchten-sem-chamada-no-texto-da-arquitetura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-008 – Referência de Kruchten sem chamada no texto da Arquitetura
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-011-versoes-dos-cabecalhos-divergem-dos-historicos-de-revisao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-011 – Versões dos cabeçalhos divergem dos históricos de revisão
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-014-figura-do-fluxo-de-sprint-nao-incorporada-a-visao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-014 – Figura do fluxo de Sprint não incorporada à Visão
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-016-acompanhamento-por-github-projects-declarado-sem-quadro-vinculado-acessivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-016 – Acompanhamento por GitHub Projects declarado sem quadro vinculado acessível
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-018-plano-atribui-a-visao-uma-meta-que-nao-esta-no-trecho-citado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-018 – Plano atribui à Visão uma meta que não está no trecho citado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-023-notacao-de-generalizacao-de-atores-inconsistente-no-diagrama" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-023 – Notação de generalização de atores inconsistente no diagrama
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-024-extensao-de-gerenciamento-de-alertas-para-importacao-gtfs-sem-justificativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-024 – Extensão de gerenciamento de alertas para importação GTFS sem justificativa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-026-configuracao-versionada-de-conteineres-cobre-apenas-parte-da-restricao-mr07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-026 – Configuração versionada de contêineres cobre apenas parte da restrição MR07
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-028-visao-de-implantacao-deixa-indefinido-o-modo-de-execucao-do-importador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-028 – Visão de implantação deixa indefinido o modo de execução do importador
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-031-identificacao-dos-itens-de-configuracao-nao-esta-consolidada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-031 – Identificação dos itens de configuração não está consolidada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-032-excecoes-ao-fluxo-obrigatorio-de-pr-sao-ambiguas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-032 – Exceções ao fluxo obrigatório de PR são ambíguas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-033-mensagem-de-commit-nao-representa-adequadamente-as-alteracoes-realizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-033 – Mensagem de commit não representa adequadamente as alterações realizadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-034-medicao-da-tch-das-sprints-1-e-2-nao-realizada-no-prazo-previsto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-034 – Medição da TCH das Sprints 1 e 2 não realizada no prazo previsto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-036-dod-usada-pela-metrica-difere-da-definicao-da-visao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-036 – DoD usada pela métrica difere da definição da Visão
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-037-registro-de-analise-das-medicoes-incompleto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-037 – Registro de análise das medições incompleto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-040-campo-de-comparacao-da-declaracao-de-posicao-nao-identifica-alternativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-040 – Campo de comparação da declaração de posição não identifica alternativa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defeitos-baixos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defeitos baixos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Defeitos baixos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#def-004-linha-de-fonte-fora-de-lugar-ou-sem-ilustracao-associada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-004 – Linha de fonte fora de lugar ou sem ilustração associada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-009-referencias-fora-da-ordem-alfabetica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-009 – Referências fora da ordem alfabética
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-012-soma-de-participacao-no-markdown-diverge-do-total-declarado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-012 – Soma de participação no Markdown diverge do total declarado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#def-039-o-registro-tem-marcas-de-citacao-sem-significado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DEF-039 – O registro tem marcas de citação sem significado
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="todos-os-defeitos-inspecao-do-grupo-knuth-rotasdf">Todos os Defeitos – Inspeção do Grupo KNUTH (RotasDF)</h1>
+<p>Extraído do Relatório de Inspeção do Grupo HOPPER (FGA0312 – Métodos de Desenvolvimento de Software, Turma 02, UnB), Quadro 21. Inspeção realizada em 16/11/2026.</p>
+<h2 id="resumo">Resumo</h2>
+<ul>
+<li><strong>Defeitos neste documento:</strong> 41 confirmados no relatório (1 Crítico, 14 Altos, 22 Médios e 4 Baixos).</li>
+<li><strong>Resultado da inspeção:</strong> Aprovado com ressalvas. Reparar e reinspecionar o DEF-041 e os defeitos Altos até a entrega final do software; corrigir os Médios no ciclo de revisão e os Baixos na edição dos trechos.</li>
+<li><strong>Estado inspecionado:</strong> branch docs no commit c7dd2d17 e branch developer no commit 84219bda. Repositório: https://github.com/FGA0138-MDS-Ajax/2026.2-T02-Knuth</li>
+<li><strong>Severidade Crítica:</strong> impede a aceitação do artefato ou invalida resultados. Deve ser corrigida antes de prosseguir e conta como condição de reprovação.</li>
+<li><strong>Severidade Alta:</strong> compromete a compreensão, a rastreabilidade ou a qualidade, com risco para as etapas seguintes, sem bloqueio imediato. Deve ser corrigida e submetida a nova checagem.</li>
+<li><strong>Severidade Média:</strong> afeta a legibilidade, a completude parcial ou o padrão, com risco localizado. Deve ser corrigida no ciclo de revisão.</li>
+<li><strong>Severidade Baixa:</strong> não afeta o entendimento, mas viola o padrão editorial. Deve ser corrigida na próxima edição do trecho.</li>
+</ul>
+<h2 id="visao-geral">Visão geral</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Sev.</th>
+<th>Tema</th>
+<th>Tipo</th>
+<th>Descrição</th>
+<th>Prazo</th>
+<th>Evidência de correção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEF-041</td>
+<td>Crítico</td>
+<td>Visão</td>
+<td>Omissão</td>
+<td>Backlog sem critérios de aceitação suficientemente operacionalizados</td>
+<td>Antes de prosseguir (condição de reprovação)</td>
+<td>docs/Documento_de_Visao_do_Produto.md, versão 1.3.0 – seção 4.4.1 (Tabela 8: critérios de aceitação verificáveis para US01–US24)</td>
+</tr>
+<tr>
+<td>DEF-010</td>
+<td>Alto</td>
+<td>Outros</td>
+<td>Inconsistência</td>
+<td>PDFs publicados divergem dos arquivos Markdown atuais</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-013</td>
+<td>Alto</td>
+<td>Visão</td>
+<td>Inconsistência</td>
+<td>Documentos indicam ramos diferentes para integração do código</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-015</td>
+<td>Alto</td>
+<td>Outros</td>
+<td>Omissão</td>
+<td>Faltam registros rastreáveis das cerimônias para S1 a S3</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-017</td>
+<td>Alto</td>
+<td>Visão</td>
+<td>Inconsistência</td>
+<td>Planejamento da Visão não reflete o replanejamento registrado separadamente</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-019</td>
+<td>Alto</td>
+<td>Testes</td>
+<td>Inconsistência</td>
+<td>Automação de testes declarada sem implementação publicada correspondente</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-020</td>
+<td>Alto</td>
+<td>Testes</td>
+<td>Omissão</td>
+<td>Planejamento de testes com definição operacional incompleta</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-021</td>
+<td>Alto</td>
+<td>Testes</td>
+<td>Omissão</td>
+<td>Meta de cobertura de testes sem evidência publicada de medição</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>docs/plano_de_testes_RotasDF.md, seção 8 — cobertura medida: API 94,84% e mobile 89,32% (statements)</td>
+</tr>
+<tr>
+<td>DEF-022</td>
+<td>Alto</td>
+<td>Testes</td>
+<td>Inconsistência</td>
+<td>Exclusão de teste e lacunas de verificação no incremento integrado</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>api/src/tests/linhasController.test.js, commit 3d38ba17 — testes de filtros de linhas (getLinhas) e de itinerário (getItinerario) restaurados</td>
+</tr>
+<tr>
+<td>DEF-025</td>
+<td>Alto</td>
+<td>Arquitetura</td>
+<td>Inconsistência</td>
+<td>Referências cruzadas às MR não acompanham a numeração atual do Markdown</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>docs/Documento_de_Arquitetura.md, linhas 97, 108, 109, 343, 348, 352, 355, 356, 365, 366, 367, 370, 371, 388, 413 e 425 — remissões ajustadas para MR01 a MR09 atuais; CT-03 substituído por RF12 / US12</td>
+</tr>
+<tr>
+<td>DEF-027</td>
+<td>Alto</td>
+<td>Arquitetura</td>
+<td>Inconsistência</td>
+<td>Uso de ORM declarado na arquitetura diverge do acesso a dados implementado</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>docs/Documento_de_Arquitetura.md, linhas 141, 148 e 358 — persistência descrita como driver pg com SQL direto</td>
+</tr>
+<tr>
+<td>DEF-029</td>
+<td>Alto</td>
+<td>Código</td>
+<td>Inconsistência</td>
+<td>Arquivo de ambiente versionado em desacordo com a política</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-030</td>
+<td>Alto</td>
+<td>Outros</td>
+<td>Inconsistência</td>
+<td>Revisão de código exigida pela política sem registro nos PRs integrados</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-035</td>
+<td>Alto</td>
+<td>Outros</td>
+<td>Omissão</td>
+<td>Coleta TSTP vencida sem dados publicados</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-038</td>
+<td>Alto</td>
+<td>Outros</td>
+<td>Inconsistência</td>
+<td>Base e análise TCH contradizem backlog e datas de integração</td>
+<td>Até a entrega final, com rechecagem</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-001</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Inconsistência</td>
+<td>Margens laterais insuficientes nos PDFs publicados</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-002</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Omissão</td>
+<td>Paginação dos PDFs posicionada no rodapé</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-003</td>
+<td>Médio</td>
+<td>Arquitetura</td>
+<td>Omissão</td>
+<td>Figuras 1, 2 e 7 sem indicação de fonte</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-005</td>
+<td>Médio</td>
+<td>Visão</td>
+<td>Ambiguidade</td>
+<td>Tabela de riscos com colunas desalinhadas e um risco truncado</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-006</td>
+<td>Médio</td>
+<td>Visão</td>
+<td>Omissão</td>
+<td>Texto da Visão sem chamadas às obras da bibliografia</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-007</td>
+<td>Médio</td>
+<td>Arquitetura</td>
+<td>Inconsistência</td>
+<td>Citações da Arquitetura sem referências bibliográficas correspondentes</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-008</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Inconsistência</td>
+<td>Referência de Kruchten sem chamada no texto da Arquitetura</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-011</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Inconsistência</td>
+<td>Versões dos cabeçalhos divergem dos históricos de revisão</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-014</td>
+<td>Médio</td>
+<td>Visão</td>
+<td>Omissão</td>
+<td>Figura do fluxo de Sprint não incorporada à Visão</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-016</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Omissão</td>
+<td>Acompanhamento por GitHub Projects declarado sem quadro vinculado acessível</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-018</td>
+<td>Médio</td>
+<td>Visão</td>
+<td>Inconsistência</td>
+<td>Plano atribui à Visão uma meta que não está no trecho citado</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-023</td>
+<td>Médio</td>
+<td>Arquitetura</td>
+<td>Inconsistência</td>
+<td>Notação de generalização de atores inconsistente no diagrama</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-024</td>
+<td>Médio</td>
+<td>Arquitetura</td>
+<td>Inconsistência</td>
+<td>Extensão de gerenciamento de alertas para importação GTFS sem justificativa</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-026</td>
+<td>Médio</td>
+<td>Arquitetura</td>
+<td>Inconsistência</td>
+<td>Configuração versionada de contêineres cobre apenas parte da restrição MR07</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-028</td>
+<td>Médio</td>
+<td>Arquitetura</td>
+<td>Ambiguidade</td>
+<td>Visão de implantação deixa indefinido o modo de execução do importador</td>
+<td>No ciclo de revisão</td>
+<td>docs/Documento_de_Arquitetura.md, linha 423 (seção 2.6) — importador executado sob demanda por linha de comando (gtfs/importador.py), com disparo manual</td>
+</tr>
+<tr>
+<td>DEF-031</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Omissão</td>
+<td>Identificação dos itens de configuração não está consolidada</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-032</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Ambiguidade</td>
+<td>Exceções ao fluxo obrigatório de PR são ambíguas</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-033</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Inconsistência</td>
+<td>Mensagem de commit não representa adequadamente as alterações realizadas</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-034</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Omissão</td>
+<td>Medição da TCH das Sprints 1 e 2 não realizada no prazo previsto</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-036</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Inconsistência</td>
+<td>DoD usada pela métrica difere da definição da Visão</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-037</td>
+<td>Médio</td>
+<td>Outros</td>
+<td>Omissão</td>
+<td>Registro de análise das medições incompleto</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-040</td>
+<td>Médio</td>
+<td>Visão</td>
+<td>Inconsistência</td>
+<td>Campo de comparação da declaração de posição não identifica alternativa</td>
+<td>No ciclo de revisão</td>
+<td>Não há evidência</td>
+</tr>
+<tr>
+<td>DEF-004</td>
+<td>Baixo</td>
+<td>Visão</td>
+<td>Inconsistência</td>
+<td>Linha de fonte fora de lugar ou sem ilustração associada</td>
+<td>Na próxima edição do trecho</td>
+<td>docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – fonte da Tabela 1 logo abaixo da tabela e linha de fonte órfã da seção 2.4 retirada</td>
+</tr>
+<tr>
+<td>DEF-009</td>
+<td>Baixo</td>
+<td>Visão</td>
+<td>Inconsistência</td>
+<td>Referências fora da ordem alfabética</td>
+<td>Na próxima edição do trecho</td>
+<td>docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – referências da seção 7 em ordem alfabética (NBR 6023)</td>
+</tr>
+<tr>
+<td>DEF-012</td>
+<td>Baixo</td>
+<td>Visão</td>
+<td>Inconsistência</td>
+<td>Soma de participação no Markdown diverge do total declarado</td>
+<td>Na próxima edição do trecho</td>
+<td>docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – participação ajustada para somar exatamente 100 (4 × 16,67 + 2 × 16,66)</td>
+</tr>
+<tr>
+<td>DEF-039</td>
+<td>Baixo</td>
+<td>Outros</td>
+<td>Ambiguidade</td>
+<td>O registro tem marcas de citação sem significado</td>
+<td>Na próxima edição do trecho</td>
+<td>metricas/projeto/registro-escopo.md – marcas “[cite: …]” retiradas (commit ed8c40ce)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="defeito-critico">Defeito crítico</h2>
+<h3 id="def-041-backlog-sem-criterios-de-aceitacao-suficientemente-operacionalizados">DEF-041 – Backlog sem critérios de aceitação suficientemente operacionalizados</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Crítico · Omissão · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 290–344 (Tabela 7)</li>
+<li><strong>Evidência:</strong> As 24 histórias da Tabela 7 descrevem funcionalidades e benefícios, mas não estabelecem os resultados esperados e condições de aprovação usados pela seção 6.1 e exigidos na coleta TCH. Os cenários da seção 4 não vinculam esses critérios a cada história. A cobrança é de condições verificáveis, não de coluna ou formato específico.</li>
+<li><strong>Impacto:</strong> A aceitação das histórias não pode ser aferida pelos parâmetros declarados. O formulário inclui requisito sem critério de aceitação entre os exemplos de severidade Crítica.</li>
+<li><strong>Reparo:</strong> Cada história do backlog deve ter critérios de aceitação verificáveis, usados para declará-la concluída. <strong>Prazo:</strong> antes de prosseguir (condição de reprovação).</li>
+<li><strong>Evidência de correção:</strong> docs/Documento_de_Visao_do_Produto.md, versão 1.3.0 – seção 4.4.1 (Tabela 8: critérios de aceitação verificáveis para US01–US24)</li>
+</ul>
+<h2 id="defeitos-altos">Defeitos altos</h2>
+<h3 id="def-010-pdfs-publicados-divergem-dos-arquivos-markdown-atuais">DEF-010 – PDFs publicados divergem dos arquivos Markdown atuais</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Outros</li>
+<li><strong>Localização:</strong> docs: PDFs em docs/ (commit 7d363535) comparados a docs/Documento_de_Visao_do_Produto.md, linha 23, e a docs/Documento_de_Arquitetura.md, linha 156 (MR01); PDF da Arquitetura, página 4</li>
+<li><strong>Evidência:</strong> A Visão PDF mantém histórico até 1.1.0, sem a revisão 1.2.0 de 15/11 presente no Markdown. A Arquitetura PDF conserva MR01 de desempenho; no Markdown MR01 é responsividade e acessibilidade. Os três PDFs foram adicionados no commit 7d363535.</li>
+<li><strong>Impacto:</strong> Versões publicadas do mesmo documento conduzem a informações diferentes sobre decisões e referências.</li>
+<li><strong>Reparo:</strong> Cada PDF publicado deve corresponder à versão vigente do respectivo .md, com o mesmo histórico de revisões e o mesmo conteúdo. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-013-documentos-indicam-ramos-diferentes-para-integracao-do-codigo">DEF-013 – Documentos indicam ramos diferentes para integração do código</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 132 (seção 2.1, item c) e 225 (seção 3, item e); docs/Documento_de_Arquitetura.md, linha 173 (MR04); docs/Política_de_Commits.md, linhas 12–18 (§3)</li>
+<li><strong>Evidência:</strong> A Visão 2.1(c) indica main, a seção 3(e) indica developer e a Arquitetura MR04 menciona entrada pela main. A política de commits estabelece integração na developer. A falta de código na main, isoladamente, não é penalizada.</li>
+<li><strong>Impacto:</strong> A orientação de integração é contraditória entre artefatos usados pela equipe.</li>
+<li><strong>Reparo:</strong> Visão, Arquitetura e Política de Commits devem indicar a mesma branch de integração do código revisado e o mesmo caminho até a main. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-015-faltam-registros-rastreaveis-das-cerimonias-para-s1-a-s3">DEF-015 – Faltam registros rastreáveis das cerimônias para S1 a S3</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Omissão · Outros</li>
+<li><strong>Localização:</strong> docs: docs/atas-reuniao/ata-reuniao-1.md (modelo do template); metricas/projeto/registro-escopo.md, linha 12</li>
+<li><strong>Evidência:</strong> O registro-escopo admite ausência de atas isoladas de Sprint Planning nas três primeiras Sprints; a única ata publicada é um template de 2024. Não foram encontrados registros equivalentes para as decisões de cada cerimônia.</li>
+<li><strong>Impacto:</strong> A discussão tempestiva de desvios não pode ser comprovada pelos registros publicados. Não se conclui que as reuniões deixaram de ocorrer.</li>
+<li><strong>Reparo:</strong> As cerimônias declaradas na Visão 2.1(b) devem ter registro rastreável (data, participantes e decisões), ao menos a partir da Sprint 4, e o modelo de ata do template deve ser substituído. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-017-planejamento-da-visao-nao-reflete-o-replanejamento-registrado-separadamente">DEF-017 – Planejamento da Visão não reflete o replanejamento registrado separadamente</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 165–181 (seção 2.3 e Tabela 3); metricas/projeto/tch.csv; metricas/projeto/registro-escopo.md, linhas 35–45 (seção 3)</li>
+<li><strong>Evidência:</strong> A seção 2.3 diz que o plano é atualizado a cada Sprint. A Tabela 3 conserva a programação original, enquanto registro-escopo relata passivo e replanejamento. Há decisões registradas, mas os artefatos não estão sincronizados.</li>
+<li><strong>Impacto:</strong> O leitor encontra orientações diferentes sobre o escopo em execução.</li>
+<li><strong>Reparo:</strong> A Tabela 3 deve refletir o replanejamento decidido (Sprints, entregas e situação), com a mudança registrada no histórico de revisões da Visão. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-019-automacao-de-testes-declarada-sem-implementacao-publicada-correspondente">DEF-019 – Automação de testes declarada sem implementação publicada correspondente</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Testes</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linha 378 (seção 6.1); .github/workflows/ci.yml (branch docs); branch developer, sem .github/workflows</li>
+<li><strong>Evidência:</strong> A Visão 6.1 afirma testes e bloqueio por cobertura em cada PR. No snapshot developer não há .github/workflows; o workflow da docs publica MkDocs, sem esse controle.</li>
+<li><strong>Impacto:</strong> O controle de integração prometido não pode ser reproduzido ou confirmado nos artefatos publicados.</li>
+<li><strong>Reparo:</strong> A automação descrita na seção 6.1 (testes e limite de cobertura a cada PR) deve estar implementada e verificável no repositório, ou o texto deve descrever o controle realmente praticado. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-020-planejamento-de-testes-com-definicao-operacional-incompleta">DEF-020 – Planejamento de testes com definição operacional incompleta</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Omissão · Testes</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 360–378 (seção 6.1) e 169–179 (Tabela 3)</li>
+<li><strong>Evidência:</strong> A Visão 6.1 contém estratégia, ferramentas, papéis genéricos e teste de sistema previsto para S4. Faltam técnicas selecionadas, casos com entradas e resultados esperados e sincronização dos testes unitários por atividade/Sprint. Permanecem referências a integração após sua retirada da lista de níveis.</li>
+<li><strong>Impacto:</strong> A execução dos testes unitários não possui planejamento suficientemente verificável. Não se exige arquivo separado nem adoção de todas as técnicas.</li>
+<li><strong>Reparo:</strong> O planejamento de testes deve definir técnicas, casos com entradas e resultados esperados, responsáveis e Sprints de execução, sem citar níveis já retirados. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-021-meta-de-cobertura-de-testes-sem-evidencia-publicada-de-medicao">DEF-021 – Meta de cobertura de testes sem evidência publicada de medição</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Omissão · Testes</li>
+<li><strong>Localização:</strong> developer: api/package.json, linha 7; mobile/package.json, linha 7</li>
+<li><strong>Evidência:</strong> Não foi encontrado relatório de cobertura correspondente ao snapshot. api/package.json usa jest, sem limiar configurado nesse arquivo. A falta de --coverage no script, por si, não prova que a cobertura nunca tenha sido medida por outro comando.</li>
+<li><strong>Impacto:</strong> Não é possível conferir o atendimento à meta de 80%. O bloqueio automático ausente é tratado em DEF-019.</li>
+<li><strong>Reparo:</strong> A cobertura de testes deve ser medida e o resultado publicado, de forma que a meta de 80% da Visão 6.1 possa ser conferida. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-022-exclusao-de-teste-e-lacunas-de-verificacao-no-incremento-integrado">DEF-022 – Exclusão de teste e lacunas de verificação no incremento integrado</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Testes</li>
+<li><strong>Localização:</strong> developer: commit 84219bda (16/11/2026), que remove api/src/controllers/linhascontroller.test.js</li>
+<li><strong>Evidência:</strong> O commit 84219bda remove api/src/controllers/linhascontroller.test.js, com 83 linhas, e altera mobile/src/services/api.js. O teste removido verifica filtros de linhas e validação de itinerário. Não há substituto correspondente no snapshot inspecionado.</li>
+<li><strong>Impacto:</strong> O incremento perde verificações antes existentes. O alcance foi limitado aos comportamentos efetivamente testados, sem alegar perda de testes de todos os requisitos citados no relato original.</li>
+<li><strong>Reparo:</strong> Os comportamentos verificados pelo teste removido (filtros de linhas e validação de itinerário) devem voltar a ter verificação automatizada, ou a remoção deve ser justificada. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-025-referencias-cruzadas-as-mr-nao-acompanham-a-numeracao-atual-do-markdown">DEF-025 – Referências cruzadas às MR não acompanham a numeração atual do Markdown</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Arquitetura</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linhas 97, 108, 109, 343, 348, 352, 355, 356, 365, 366, 370, 371, 388, 413 e 425</li>
+<li><strong>Evidência:</strong> Exemplos no Markdown: cobertura remete a MR06, segurança a MR07 e API a MR03; as seções correspondentes atuais são MR05, MR06 e MR02. CT-03 existe no PDF antigo publicado da Visão, mas não no Markdown atual.</li>
+<li><strong>Impacto:</strong> As justificativas arquiteturais remetem a restrições diferentes das pretendidas, comprometendo a rastreabilidade.</li>
+<li><strong>Reparo:</strong> Cada remissão a MR deve apontar para a meta ou restrição correspondente na numeração atual (MR01 a MR09), e a remissão a CT-03 deve indicar um elemento existente. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-027-uso-de-orm-declarado-na-arquitetura-diverge-do-acesso-a-dados-implementado">DEF-027 – Uso de ORM declarado na arquitetura diverge do acesso a dados implementado</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Arquitetura</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linhas 141, 148 e 358; developer: api/src/config/database.js, linhas 1–4</li>
+<li><strong>Evidência:</strong> As linhas 141, 148 e 358 declaram ORM; api/src/config/database.js e os repositórios usam pg e SQL direto. A ausência de mapa não recebe desconto genérico, pois parte desse escopo é prevista para S5.</li>
+<li><strong>Impacto:</strong> A orientação de implementação não corresponde ao mecanismo de persistência integrado.</li>
+<li><strong>Reparo:</strong> A Arquitetura deve descrever o mecanismo de persistência efetivamente usado, ou o código deve adotar o mecanismo descrito. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-029-arquivo-de-ambiente-versionado-em-desacordo-com-a-politica">DEF-029 – Arquivo de ambiente versionado em desacordo com a política</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Código</li>
+<li><strong>Localização:</strong> developer: .env, linhas 5 e 7 (alterado nos commits 246bd9f1 e 28d89283); docs: docs/Política_de_Commits.md, linha 21 (§4)</li>
+<li><strong>Evidência:</strong> A árvore developer contém .env com as chaves DB_PASSWORD e JWT_SECRET, entre outras (valores omitidos). O §4 da Política de Commits proíbe expressamente “credenciais, senhas, chaves de API ou arquivos de ambiente em qualquer commit”. Não se afirma que exista segredo ativo comprometido.</li>
+<li><strong>Impacto:</strong> Violação comprovada da política de higiene e risco de exposição de configuração. Alto; não há evidência suficiente nesta inspeção para afirmar incidente crítico.</li>
+<li><strong>Reparo:</strong> O arquivo de ambiente deve deixar de ser versionado, conforme o §4 da Política, e as credenciais expostas no histórico não devem permanecer em uso. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-030-revisao-de-codigo-exigida-pela-politica-sem-registro-nos-prs-integrados">DEF-030 – Revisão de código exigida pela política sem registro nos PRs integrados</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Outros</li>
+<li><strong>Localização:</strong> GitHub: os 22 Pull Requests mesclados na developer (#2 a #31), em https://github.com/FGA0138-MDS-Ajax/2026.2-T02-Knuth/pulls?q=is%3Apr+is%3Amerged; docs: docs/Política_de_Commits.md, linhas 12–18 (§3)</li>
+<li><strong>Evidência:</strong> Dos 22 PRs mesclados na developer, apenas o #7 tem aprovação registrada. Os PRs #2, #11, #12, #14, #15, #20, #21, #22, #24, #25 e #26, abertos pelo Analista de Qualidade, foram mesclados por ele mesmo; os PRs #17 e #23 foram mesclados pela própria autora. O §3 exige a revisão do Analista de Qualidade antes da integração.</li>
+<li><strong>Impacto:</strong> A política de revisão, que sustenta a DoD, não tem evidência de cumprimento.</li>
+<li><strong>Reparo:</strong> Cada PR integrado à developer deve ter revisão registrada antes do merge, conforme o §3, feita por pessoa diferente do autor. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-035-coleta-tstp-vencida-sem-dados-publicados">DEF-035 – Coleta TSTP vencida sem dados publicados</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Omissão · Outros</li>
+<li><strong>Localização:</strong> docs: metricas/negocio/relatorio-tstp.md; metricas/negocio/tstp.csv (inexistente); docs/Plano_de_Metricas.md, linha 69 (periodicidade)</li>
+<li><strong>Evidência:</strong> A rodada 1 está prevista para 15/11/2026. Em 16/11, metricas/negocio/relatorio-tstp.md permanece sem resultados e tstp.csv não consta da árvore. Não se cobram antecipadamente as rodadas de S4 e S5.</li>
+<li><strong>Impacto:</strong> Não é possível conferir a medição de negócio já prevista. A conclusão é falta de evidência publicada, não prova de ausência de sessão externa.</li>
+<li><strong>Reparo:</strong> Os resultados da rodada 1 da TSTP devem ser publicados no arquivo previsto pelo Plano, ou a mudança de cronograma deve ser registrada com justificativa. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h3 id="def-038-base-e-analise-tch-contradizem-backlog-e-datas-de-integracao">DEF-038 – Base e análise TCH contradizem backlog e datas de integração</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Alto · Inconsistência · Outros</li>
+<li><strong>Localização:</strong> docs: metricas/projeto/registro-escopo.md, linhas 16, 26, 28 e 39–45; docs/Documento_de_Visao_do_Produto.md, linhas 290–344 (Tabela 7); GitHub: PR #7, mesclado em 05/11/2026</li>
+<li><strong>Evidência:</strong> O registro aloca RF06/RF11 na S3, mas o backlog os situa em S5. Atribui o PR #7 à S3, embora o merge seja de 05/11 (S2). Declara 16 PRs e enumera 17. O CSV, contudo, registra TCH 0%: não se afirma inflação do numerador.</li>
+<li><strong>Impacto:</strong> A reconstrução da linha de base e a explicação dos desvios não são confiáveis sem conciliação das fontes.</li>
+<li><strong>Reparo:</strong> A linha de base e a análise da TCH devem coincidir com o backlog da Visão e com as datas de merge registradas no GitHub. <strong>Prazo:</strong> até a entrega final, com rechecagem.</li>
+</ul>
+<h2 id="defeitos-medios">Defeitos médios</h2>
+<h3 id="def-001-margens-laterais-insuficientes-nos-pdfs-publicados">DEF-001 – Margens laterais insuficientes nos PDFs publicados</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Outros</li>
+<li><strong>Localização:</strong> docs: docs/RotasDF - Visão do Produto e do Projeto.pdf e docs/RotasDF - Documento de Arquitetura.pdf; todas as páginas (medição nas páginas 3 e 5)</li>
+<li><strong>Evidência:</strong> Nas páginas 3 e 5 dos PDFs de Visão e Arquitetura, o texto alcança aproximadamente 1,8 cm das laterais. A medição foi feita pela posição do conteúdo em páginas A4; cabeçalhos e rodapés foram distinguidos do corpo.</li>
+<li><strong>Impacto:</strong> O corpo invade a área prevista pelo critério de margens ABNT.</li>
+<li><strong>Reparo:</strong> Os dois PDFs devem apresentar margens de 3 cm (superior e esquerda) e 2 cm (inferior e direita), conforme a NBR 14724. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-002-paginacao-dos-pdfs-posicionada-no-rodape">DEF-002 – Paginação dos PDFs posicionada no rodapé</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Omissão · Outros</li>
+<li><strong>Localização:</strong> docs: docs/RotasDF - Visão do Produto e do Projeto.pdf e docs/RotasDF - Documento de Arquitetura.pdf; rodapé de todas as páginas (“Página N”)</li>
+<li><strong>Evidência:</strong> Os PDFs de Visão e Arquitetura apresentam Página N na parte inferior. O apontamento se limita à posição da paginação cobrada no critério; não inclui desconto adicional por capa ou folha de rosto.</li>
+<li><strong>Impacto:</strong> A posição da paginação diverge do padrão formal adotado na inspeção.</li>
+<li><strong>Reparo:</strong> A numeração das páginas dos dois PDFs deve seguir a NBR 14724: algarismos arábicos no canto superior direito. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-003-figuras-1-2-e-7-sem-indicacao-de-fonte">DEF-003 – Figuras 1, 2 e 7 sem indicação de fonte</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Omissão · Arquitetura</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linhas 115–117 (Figura 1), 217–219 (Figura 2) e 437–439 (Figura 7); PDF correspondente</li>
+<li><strong>Evidência:</strong> As Figuras 3 a 6 têm “Fonte: Elaborado pelos autores (2026)”, mas as Figuras 1, 2 e 7 não têm a linha de fonte.</li>
+<li><strong>Impacto:</strong> Não fica identificada a autoria das ilustrações.</li>
+<li><strong>Reparo:</strong> As Figuras 1, 2 e 7 devem ter a linha “Fonte:” abaixo da ilustração, como as Figuras 3 a 6, no .md e no PDF. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-005-tabela-de-riscos-com-colunas-desalinhadas-e-um-risco-truncado">DEF-005 – Tabela de riscos com colunas desalinhadas e um risco truncado</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Ambiguidade · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 195–201 (Tabela 4) e 205–209 (texto dos riscos)</li>
+<li><strong>Evidência:</strong> O cabeçalho tem 3 colunas (Risco, Mitigação, Plano de contingência), mas as linhas têm 4 valores: o nível (Alto/Médio) cai na coluna Mitigação. O risco “Desenvolvedores com pouco” está incompleto, e o texto da linha 207 o descreve de outro modo (“não saberem o que fazer”).</li>
+<li><strong>Impacto:</strong> O nível, a mitigação e a contingência de cada risco não podem ser lidos com segurança.</li>
+<li><strong>Reparo:</strong> A Tabela 4 deve ter uma coluna para cada informação (risco, nível, mitigação e contingência), e o segundo risco deve estar completo e coerente com o texto explicativo. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-006-texto-da-visao-sem-chamadas-as-obras-da-bibliografia">DEF-006 – Texto da Visão sem chamadas às obras da bibliografia</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Omissão · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, seções 1 a 6 (linhas 50–378) e seção 7 (linhas 383–395)</li>
+<li><strong>Evidência:</strong> As seções 1 a 6 não estabelecem chamadas às seis obras listadas na seção 7. Foi examinada a associação entre texto e referências, além de buscas por padrões de citação.</li>
+<li><strong>Impacto:</strong> As fontes do conteúdo não ficam associadas aos trechos fundamentados. Problema de completude e padrão, classificado como Médio.</li>
+<li><strong>Reparo:</strong> As afirmações apoiadas em literatura devem trazer citações no padrão da NBR 10520, e cada obra da seção 7 deve ser citada no texto ou retirada da lista. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-007-citacoes-da-arquitetura-sem-referencias-bibliograficas-correspondentes">DEF-007 – Citações da Arquitetura sem referências bibliográficas correspondentes</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Arquitetura</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linhas 75, 163, 168, 183 e 193; seção 3 (linhas 472–482)</li>
+<li><strong>Evidência:</strong> FIELDING (2000), OPENAPI INITIATIVE (2021), VAN ROSSUM; WARSAW; COGHLAN (2001), MARTIN (2009), BRASIL (2018) e GTFS (2026) são citados, mas não aparecem nas cinco entradas da seção 3.</li>
+<li><strong>Impacto:</strong> A bibliografia fica incompleta e dificulta consultar as fontes. Severidade Média pelo impacto documental demonstrado.</li>
+<li><strong>Reparo:</strong> Cada obra citada (FIELDING, OPENAPI INITIATIVE, VAN ROSSUM; WARSAW; COGHLAN, MARTIN, BRASIL e GTFS) deve ter referência completa na seção 3, conforme a NBR 6023. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-008-referencia-de-kruchten-sem-chamada-no-texto-da-arquitetura">DEF-008 – Referência de Kruchten sem chamada no texto da Arquitetura</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Outros</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linha 476 (referência KRUCHTEN, 1995)</li>
+<li><strong>Evidência:</strong> KRUCHTEN (1995) consta da lista de referências, mas não foi localizada uma chamada correspondente no corpo. As referências não citadas da Visão já são tratadas em DEF-006.</li>
+<li><strong>Impacto:</strong> Há falta de correspondência entre bibliografia e texto, sem duplicar a ocorrência da Visão.</li>
+<li><strong>Reparo:</strong> A obra de Kruchten deve ser citada no trecho que ela fundamenta ou retirada da lista de referências. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-011-versoes-dos-cabecalhos-divergem-dos-historicos-de-revisao">DEF-011 – Versões dos cabeçalhos divergem dos históricos de revisão</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Outros</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 3 e 23; docs/Documento_de_Arquitetura.md, linhas 3 e 22</li>
+<li><strong>Evidência:</strong> Visão: cabeçalho 1.1.0 e histórico até 1.2.0. Arquitetura: cabeçalho 1.1.0 e histórico até 1.1.1. A notação 1.0 não gera outro desconto sem exigência expressa de SemVer.</li>
+<li><strong>Impacto:</strong> A identificação da revisão vigente é ambígua.</li>
+<li><strong>Reparo:</strong> O cabeçalho de cada documento deve indicar a mesma versão registrada na última linha do histórico de revisões. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-014-figura-do-fluxo-de-sprint-nao-incorporada-a-visao">DEF-014 – Figura do fluxo de Sprint não incorporada à Visão</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Omissão · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, seções 2.1 (linhas 120–147) e 3 (linhas 213–243); docs/imagens/visao-fig2-fluxo-sprint.png</li>
+<li><strong>Evidência:</strong> docs/imagens/visao-fig2-fluxo-sprint.png existe, mas não é incorporada nas seções 2.1 e 3. O quadro de conteúdo da Visão pede alinhamento de figuras e texto. O processo está descrito em prosa.</li>
+<li><strong>Impacto:</strong> A apresentação do processo fica parcialmente incompleta no critério de conteúdo; não significa inexistência de ciclo de vida.</li>
+<li><strong>Reparo:</strong> O ciclo de vida e o processo devem ser representados por figura numerada, com fonte e explicação no texto, coerente com as seções 2.1 e 3. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-016-acompanhamento-por-github-projects-declarado-sem-quadro-vinculado-acessivel">DEF-016 – Acompanhamento por GitHub Projects declarado sem quadro vinculado acessível</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Omissão · Outros</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 106 e 142; GitHub do repositório: abas Projects, Issues e Milestones (vazias em 16/11/2026)</li>
+<li><strong>Evidência:</strong> A Visão declara acompanhamento A Fazer/Em Andamento/Em Revisão/Concluído em GitHub Projects. A consulta do repositório retornou projectsV2 vazio, zero issues e zero milestones. Isso não exclui quadros privados ou externos não vinculados.</li>
+<li><strong>Impacto:</strong> O acompanhamento prometido não está disponível ao inspetor pelo repositório, reduzindo a rastreabilidade publicada.</li>
+<li><strong>Reparo:</strong> O acompanhamento declarado deve estar acessível a partir do repositório (quadro vinculado), ou a Visão deve descrever a ferramenta realmente usada. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-018-plano-atribui-a-visao-uma-meta-que-nao-esta-no-trecho-citado">DEF-018 – Plano atribui à Visão uma meta que não está no trecho citado</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 350–354 (seção 5 vigente) e versão de 28/10/2026 (commit d3af588c), linha 369; docs/Plano_de_Metricas.md, linhas 28, 124 e 154</li>
+<li><strong>Evidência:</strong> O Plano atribui a meta de 80% da TCH à seção 5 da Visão (linhas 28 e 124) e cita a “Visão, versão 1.0.0” (linha 154). A meta existia na seção 5 da versão de 28/10/2026 (commit d3af588c, linha 369), mas foi retirada na revisão 1.2.0, de 15/11/2026; na versão vigente, a seção 5 não traz a meta.</li>
+<li><strong>Impacto:</strong> A referência cruzada não permite localizar a definição da meta.</li>
+<li><strong>Reparo:</strong> A meta de 80% da TCH deve constar do trecho da Visão para o qual o Plano remete, ou o Plano deve indicar a origem correta da meta. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-023-notacao-de-generalizacao-de-atores-inconsistente-no-diagrama">DEF-023 – Notação de generalização de atores inconsistente no diagrama</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Arquitetura</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linhas 217–219 (Figura 2); docs/imagens/arq-fig2-casos-de-uso.png</li>
+<li><strong>Evidência:</strong> A Figura 2 usa ligação tracejada para generalização entre Passageiro Cadastrado e Passageiro Anônimo. As extensões RF15/RF18 também não explicitam a condição de autenticação. Não se afirma que o código autoriza acesso anônimo a essas funções.</li>
+<li><strong>Impacto:</strong> A notação e as condições de perfil dificultam interpretar corretamente o modelo de uso.</li>
+<li><strong>Reparo:</strong> A Figura 2 deve usar a notação UML de generalização entre atores (linha contínua com triângulo vazado) e explicitar a condição de autenticação nas extensões RF15 e RF18. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-024-extensao-de-gerenciamento-de-alertas-para-importacao-gtfs-sem-justificativa">DEF-024 – Extensão de gerenciamento de alertas para importação GTFS sem justificativa</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Arquitetura</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linhas 217–219 (Figura 2); docs/imagens/arq-fig2-casos-de-uso.png</li>
+<li><strong>Evidência:</strong> A Figura 2 liga Gerenciar Alertas (RF22) por extend a Importar GTFS (RF20), sem condição de extensão ou relação equivalente explicada no backlog. Há também o rótulo Buscas recenes.</li>
+<li><strong>Impacto:</strong> A relação do modelo não encontra sustentação explícita no escopo; o erro de rótulo é editorial e não gera outro ID.</li>
+<li><strong>Reparo:</strong> A relação entre Gerenciar Alertas (RF22) e Importar GTFS (RF20) deve ter respaldo no backlog ou ser retirada, e o rótulo “Buscas recenes” deve ser corrigido. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-026-configuracao-versionada-de-conteineres-cobre-apenas-parte-da-restricao-mr07">DEF-026 – Configuração versionada de contêineres cobre apenas parte da restrição MR07</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Arquitetura</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linha 188 (MR07); developer: infrastructure/docker-compose.yml, linhas 1–2</li>
+<li><strong>Evidência:</strong> A MR07 prevê Dockerfile e Compose para aplicação e banco. O snapshot developer contém infrastructure/docker-compose.yml somente com db e nenhum Dockerfile. Não se conclui que staging externo inexiste.</li>
+<li><strong>Impacto:</strong> A padronização de ambientes está parcialmente documentada e não pode ser reproduzida integralmente pelo repositório.</li>
+<li><strong>Reparo:</strong> A configuração de contêineres versionada deve cobrir o que a MR07 estabelece (aplicação e banco), ou a MR07 deve ser ajustada ao que foi adotado. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-028-visao-de-implantacao-deixa-indefinido-o-modo-de-execucao-do-importador">DEF-028 – Visão de implantação deixa indefinido o modo de execução do importador</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Ambiguidade · Arquitetura</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Arquitetura.md, linhas 421–423 (seção 2.6)</li>
+<li><strong>Evidência:</strong> A seção 2.6 admite execução no mesmo ambiente ou via cron job/worker, sem selecionar ou explicar o mecanismo de disparo e operação. A mera lista de provedores de nuvem possíveis não gera penalidade.</li>
+<li><strong>Impacto:</strong> Falta uma decisão operacional para reproduzir a implantação descrita.</li>
+<li><strong>Reparo:</strong> A visão de implantação deve indicar onde e como o importador GTFS é executado e disparado. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-031-identificacao-dos-itens-de-configuracao-nao-esta-consolidada">DEF-031 – Identificação dos itens de configuração não está consolidada</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Omissão · Outros</li>
+<li><strong>Localização:</strong> docs: docs/Política_de_Commits.md (documento inteiro); docs/Documento_de_Visao_do_Produto.md, seção 3 (linhas 213–243)</li>
+<li><strong>Evidência:</strong> A política define mensagens, branches e higiene, mas não há inventário que identifique o conjunto controlado de artefatos, sua localização e forma de identificação. A árvore do projeto não explicita sozinha esse controle.</li>
+<li><strong>Impacto:</strong> A gestão de configuração apresenta completude parcial, classificada como Média.</li>
+<li><strong>Reparo:</strong> Deve existir uma identificação dos itens de configuração: quais artefatos são controlados, onde ficam e como são versionados. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-032-excecoes-ao-fluxo-obrigatorio-de-pr-sao-ambiguas">DEF-032 – Exceções ao fluxo obrigatório de PR são ambíguas</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Ambiguidade · Outros</li>
+<li><strong>Localização:</strong> docs: docs/Política_de_Commits.md, linhas 12–14 (§3, exceções); developer: commits 00cec0a9 e ad11b025 (15/11/2026)</li>
+<li><strong>Evidência:</strong> O §3 permite envios diretos “a fim de testes”, que “foram apagadas” ou que “corrigem erros logísticos”, sem delimitar sua aplicação. Pela redação atual, o merge 00cec0a9, que integrou código do RF13 à developer sem PR e foi revertido em ad11b025, cabe na exceção de alterações apagadas. Não se exige Conventional Commits, aprovação formal na interface ou proteção de branch, pois esses controles não estão expressos nessa política.</li>
+<li><strong>Impacto:</strong> A exceção permite contornar o fluxo obrigatório de PR, inclusive para funcionalidades.</li>
+<li><strong>Reparo:</strong> As exceções ao fluxo de PR devem ser delimitadas de forma verificável: quais alterações, em quais branches e por quem. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-033-mensagem-de-commit-nao-representa-adequadamente-as-alteracoes-realizadas">DEF-033 – Mensagem de commit não representa adequadamente as alterações realizadas</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Outros</li>
+<li><strong>Localização:</strong> developer: commit 84219bda (16/11/2026); docs: docs/Política_de_Commits.md, linhas 5–10 (§1 e §2)</li>
+<li><strong>Evidência:</strong> O commit 84219bda, com a mensagem “corige erros de identação” (grafia original), remove um arquivo de testes e corrige fechamento/retorno de função em api.js. A política exige mensagens claras e commits de alteração lógica identificável.</li>
+<li><strong>Impacto:</strong> A descrição omite a perda de teste e prejudica a rastreabilidade do histórico; a mistura de estilos de mensagem não é penalizada.</li>
+<li><strong>Reparo:</strong> As mensagens de commit devem descrever todas as alterações feitas, e cada commit deve conter uma única alteração lógica, conforme os §1 e §2. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-034-medicao-da-tch-das-sprints-1-e-2-nao-realizada-no-prazo-previsto">DEF-034 – Medição da TCH das Sprints 1 e 2 não realizada no prazo previsto</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Omissão · Outros</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md na versão de 28/10/2026 (commit d3af588c), linhas 343–370 (seção 5, Métrica 1, “When: ao final de cada sprint”); metricas/projeto/registro-escopo.md, linha 12; docs/Plano_de_Metricas.md, linhas 17–22</li>
+<li><strong>Evidência:</strong> A Visão publicada em 28/10/2026 já previa medir as histórias concluídas “ao final de cada sprint”. As Sprints 1 e 2 terminaram em 01/11 e 08/11, mas o primeiro registro da TCH é de 15/11, quando o Plano de Métricas foi criado (commit b09dbed9). O registro-escopo informa que a linha de base dessas Sprints “foi reconstruída”.</li>
+<li><strong>Impacto:</strong> As medições das Sprints 1 e 2 não puderam orientar decisões no momento em que ocorreram.</li>
+<li><strong>Reparo:</strong> As próximas medições devem ser registradas ao final de cada Sprint, na data prevista, e o Plano deve indicar quais valores foram reconstruídos depois. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-036-dod-usada-pela-metrica-difere-da-definicao-da-visao">DEF-036 – DoD usada pela métrica difere da definição da Visão</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Outros</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 239–243 (DoD); docs/Plano_de_Metricas.md, linha 112 (seção 3.3)</li>
+<li><strong>Evidência:</strong> A Visão enumera implementação, testes unitários e revisão/merge. A coleta TCH do Plano acrescenta CI sem falhas e critérios de aceitação validados pelo PO.</li>
+<li><strong>Impacto:</strong> A definição operacional de história concluída não está sincronizada entre os documentos. O modelo GQM existe e não recebe desconto por esse motivo.</li>
+<li><strong>Reparo:</strong> A DoD usada na medição da TCH deve ser a mesma definida na Visão. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-037-registro-de-analise-das-medicoes-incompleto">DEF-037 – Registro de análise das medições incompleto</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Omissão · Outros</li>
+<li><strong>Localização:</strong> docs: docs/Plano_de_Metricas.md, linhas 131–146 (seção 4)</li>
+<li><strong>Evidência:</strong> A tabela da seção 4 do Plano está vazia. registro-escopo contém causas e decisões de replanejamento, mas não completa o registro por medição/faixa/análise previsto no plano.</li>
+<li><strong>Impacto:</strong> A relação entre cada medição e as decisões não está completamente registrada; não se afirma ausência total de análise.</li>
+<li><strong>Reparo:</strong> A tabela da seção 4 deve registrar, para cada Sprint medida, o valor, a faixa e a análise com a decisão tomada. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h3 id="def-040-campo-de-comparacao-da-declaracao-de-posicao-nao-identifica-alternativa">DEF-040 – Campo de comparação da declaração de posição não identifica alternativa</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Médio · Inconsistência · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linha 81 (Tabela 1, campo “Ao contrário”)</li>
+<li><strong>Evidência:</strong> Na Tabela 1, Ao contrário descreve Escassez de informação, em vez da alternativa/concorrente com que o produto é comparado. React/HTML/CSS ou interface responsiva não são tratados como contradição automática com mobile.</li>
+<li><strong>Impacto:</strong> A declaração de posição está parcialmente incompleta.</li>
+<li><strong>Reparo:</strong> O campo “Ao contrário” deve identificar a alternativa ou o concorrente com que o produto é comparado. <strong>Prazo:</strong> no ciclo de revisão.</li>
+</ul>
+<h2 id="defeitos-baixos">Defeitos baixos</h2>
+<h3 id="def-004-linha-de-fonte-fora-de-lugar-ou-sem-ilustracao-associada">DEF-004 – Linha de fonte fora de lugar ou sem ilustração associada</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Baixo · Inconsistência · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 73–86 (Tabela 1) e 191 (seção 2.4)</li>
+<li><strong>Evidência:</strong> A fonte da Tabela 1 aparece depois do parágrafo explicativo, separada da tabela (linha 86). A seção 2.4 traz “Fonte: Elaborado pelos autores (2026)” sem nenhuma tabela ou figura (linha 191).</li>
+<li><strong>Impacto:</strong> Fere a consistência editorial.</li>
+<li><strong>Reparo:</strong> A fonte da Tabela 1 deve ficar logo abaixo da tabela, e a linha de fonte da seção 2.4 deve ser associada a uma ilustração ou retirada. <strong>Prazo:</strong> na próxima edição do trecho.</li>
+<li><strong>Evidência de correção:</strong> docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – fonte da Tabela 1 logo abaixo da tabela e linha de fonte órfã da seção 2.4 retirada</li>
+</ul>
+<h3 id="def-009-referencias-fora-da-ordem-alfabetica">DEF-009 – Referências fora da ordem alfabética</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Baixo · Inconsistência · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 385–395 (seção 7; ISTQB na linha 395)</li>
+<li><strong>Evidência:</strong> A referência ao ISTQB vem depois de SOMMERVILLE, o que contraria a NBR 6023.</li>
+<li><strong>Impacto:</strong> Fere a consistência editorial.</li>
+<li><strong>Reparo:</strong> As referências da seção 7 devem seguir a ordem alfabética, conforme a NBR 6023. <strong>Prazo:</strong> na próxima edição do trecho.</li>
+<li><strong>Evidência de correção:</strong> docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – referências da seção 7 em ordem alfabética (NBR 6023)</li>
+</ul>
+<h3 id="def-012-soma-de-participacao-no-markdown-diverge-do-total-declarado">DEF-012 – Soma de participação no Markdown diverge do total declarado</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Baixo · Inconsistência · Visão</li>
+<li><strong>Localização:</strong> docs: docs/Documento_de_Visao_do_Produto.md, linhas 9–15 (tabela de integrantes)</li>
+<li><strong>Evidência:</strong> A Visão registra seis parcelas de 16,6, soma 99,6, e declara total 100. Trata-se de inconsistência aritmética de baixo impacto; diferenças por arredondamento no PDF não recebem nova penalidade.</li>
+<li><strong>Impacto:</strong> Inconsistência editorial local, sem alteração da avaliação técnica do produto.</li>
+<li><strong>Reparo:</strong> Os pontos de participação devem somar exatamente o total declarado (100). <strong>Prazo:</strong> na próxima edição do trecho.</li>
+<li><strong>Evidência de correção:</strong> docs/Documento_de_Visao_do_Produto.md, versão 1.3.1 – participação ajustada para somar exatamente 100 (4 × 16,67 + 2 × 16,66)</li>
+</ul>
+<h3 id="def-039-o-registro-tem-marcas-de-citacao-sem-significado">DEF-039 – O registro tem marcas de citação sem significado</h3>
+<ul>
+<li><strong>Severidade / Tipo / Tema:</strong> Baixo · Ambiguidade · Outros</li>
+<li><strong>Localização:</strong> docs: metricas/projeto/registro-escopo.md, linhas 26–28, 31 e 39–44</li>
+<li><strong>Evidência:</strong> Aparecem marcas como “[cite: 20]”, “[cite: 1, 11]” e “[cite: 5, 6, 7]”, sem nenhuma referência correspondente.</li>
+<li><strong>Impacto:</strong> O registro fica confuso para o leitor.</li>
+<li><strong>Reparo:</strong> As marcas “[cite: …]” devem ser retiradas ou substituídas por referências identificáveis. <strong>Prazo:</strong> na próxima edição do trecho.</li>
+<li><strong>Evidência de correção:</strong> metricas/projeto/registro-escopo.md – marcas “[cite: …]” retiradas (commit ed8c40ce)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
