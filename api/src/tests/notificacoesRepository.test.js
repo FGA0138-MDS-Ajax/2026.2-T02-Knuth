@@ -61,6 +61,15 @@ describe('notificacoesRepository', () => {
       expect(params).toEqual([3]);
       expect(resultado).toEqual(notificacoes);
     });
+
+    it('esconde avisos lidos com mais de 7 dias e mantém os não lidos', async () => {
+      pool.query.mockResolvedValue({ rows: [] });
+
+      await repository.listarPorUsuario(3);
+
+      const [sql] = pool.query.mock.calls[0];
+      expect(sql).toMatch(/lida = FALSE OR criado_em > NOW\(\) - INTERVAL '7 days'/);
+    });
   });
 
   describe('marcarComoLida', () => {
