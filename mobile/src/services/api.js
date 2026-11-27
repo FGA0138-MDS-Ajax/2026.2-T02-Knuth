@@ -489,3 +489,31 @@ export const excluirParada = async (token, id) => {
   return response.data;
 };
 
+
+export const getNotificacoes = async (token) => {
+  const response = await axios.get(`${API_BASE_URL}/notificacoes`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const getNotificacoesNaoLidas = async (token) => {
+  const response = await axios.get(`${API_BASE_URL}/notificacoes/nao-lidas`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  return response.data;
+};
+
+export const marcarNotificacaoLida = async (token, id) => {
+  const response = await axios.put(
+    `${API_BASE_URL}/notificacoes/${id}/lida`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
