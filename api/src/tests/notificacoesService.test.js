@@ -108,4 +108,12 @@ describe('notificacoesService', () => {
       await expect(service.marcarComoLida(99, 3)).rejects.toThrow('Notificação não encontrada.');
     });
   });
+
+  describe('erros', () => {
+    it('marca o erro de notificação inexistente com status 404', async () => {
+      repository.marcarComoLida.mockResolvedValue(null);
+
+      await expect(service.marcarComoLida(99, 3)).rejects.toMatchObject({ status: 404 });
+    });
+  });
 });
