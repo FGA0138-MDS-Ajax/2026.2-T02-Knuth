@@ -84,4 +84,18 @@ describe('notificacoesRepository', () => {
       expect(resultado).toBeNull();
     });
   });
+
+  describe('contarNaoLidas', () => {
+    it('devolve a quantidade de notificações não lidas do usuário', async () => {
+      pool.query.mockResolvedValue({ rows: [{ total: 4 }] });
+
+      const resultado = await repository.contarNaoLidas(3);
+
+      const [sql, params] = pool.query.mock.calls[0];
+      expect(sql).toMatch(/COUNT\(\*\)/);
+      expect(sql).toMatch(/lida = FALSE/);
+      expect(params).toEqual([3]);
+      expect(resultado).toBe(4);
+    });
+  });
 });
