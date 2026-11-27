@@ -137,6 +137,15 @@ As indicações `RFxx` associadas aos componentes e às suítes são referência
 | `buscarPorId` | Busca um reporte específico pelo ID com dados do autor. | Retorna o reporte encontrado ou `null`. |
 | `atualizarAnalise` | Atualiza `status`, `observacao_admin` e define `analisado_em` (`NULL` quando `PENDENTE`, `NOW()` nos demais). | Retorna o reporte atualizado ou `null` caso o ID não exista. |
 
+### 2.12. `NotificacoesRepository` (RF15)
+
+| Método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `criarParaFavoritosAfetados` | Cria uma notificação para cada usuário que favoritou uma das linhas ou paradas afetadas pelo alerta. | Insere em uma única consulta, ignora duplicidades e devolve os usuários notificados com nome e e-mail; não consulta o banco quando não há linhas nem paradas. |
+| `listarPorUsuario` | Lista as notificações do usuário, da mais recente para a mais antiga. | Retorna todas as não lidas e apenas as lidas nos últimos 7 dias. |
+| `marcarComoLida` | Marca a notificação do usuário como lida. | Retorna o registro atualizado ou `null` quando ela não existe ou pertence a outro usuário. |
+| `contarNaoLidas` | Conta as notificações não lidas do usuário. | Retorna o total como número. |
+
 ---
 
 ## 3. Testes de serviços e controladores
@@ -291,6 +300,17 @@ As indicações `RFxx` associadas aos componentes e às suítes são referência
 | `ParadasController.getProximasPartidas` | Recebe `GET /api/v1/paradas/:id/proximas-partidas` com parâmetros opcionais (`horario`, `tipoDia`, `limite`) e integra alertas vigentes da parada (RF11 / RF14). | Responde `200` com a parada, próximas partidas e alertas (degradando graciosamente se a consulta de alertas falhar), `400` para ID/parâmetros inválidos, `404` se a parada não existir ou `500` em falha inesperada. |
 | `paradasRoutes` | Rotas `GET /`, `GET /proximas` e `GET /:id/proximas-partidas`. | Registra exatamente as três rotas vinculadas a `buscarParadas`, `getParadaProxima` e `getProximasPartidas`. |
 
+### 3.18. `NotificacoesService`, `NotificacaoEmailService`, `NotificacoesController` e rotas (RF15)
+
+| Método | Cenário / objetivo | Resultado esperado |
+|---|---|---|
+| `notificarFavoritosAfetados` | Notifica quem favoritou as linhas ou paradas do alerta publicado. | Cria as notificações, envia o e-mail a cada usuário e devolve a quantidade de destinatários; a falha no envio de um e-mail não interrompe os demais. |
+| `listar` e `contarNaoLidas` | Consulta as notificações e o total de não lidas do passageiro. | Repassa o resultado do repositório. |
+| `marcarComoLida` | Marca uma notificação do usuário como lida. | Retorna a notificação ou lança erro 404 quando ela não é encontrada. |
+| `enviarNotificacaoAlerta` | Monta o aviso de alerta em item favorito. | Simula o envio por e-mail registrando a mensagem no console, como no RF16. |
+| `GerenciarAlertasService.criar` | Dispara a notificação ao publicar um alerta. | Chama `notificarFavoritosAfetados` com o alerta criado; se a notificação falhar, registra o erro e mantém o alerta criado. |
+| `GET /notificacoes`, `GET /notificacoes/nao-lidas` e `PUT /notificacoes/:id/lida` | Rotas do passageiro autenticado. | Exigem token (401 sem ele) e perfil de passageiro (403 para os demais); respondem 200 em caso de sucesso e 404 quando a notificação não existe. |
+
 ---
 
 ## 4. Testes de middleware
@@ -341,6 +361,10 @@ As indicações `RFxx` associadas aos componentes e às suítes são referência
 | `AnalisarReportesScreen` (RF24) | Listagem, filtros por status, exibição de badges/referências, navegação e tratamento de erros (RF24). | Exibe indicador de carregamento, lista reportes com tipo, status, linha/parada e autor, filtra por `Pendentes`/`Procedentes`/`Improcedentes`, navega para `DetalheReporte` e exibe avisos de erro. |
 | `DetalheReporteScreen` (RF24) | Classificação de reporte e registro da correção realizada pelo administrador (RF24). | Exibe detalhes do reporte, exige descrição da correção ao selecionar `Procedente`, permite `Improcedente`/`Pendente` sem observação obrigatória, chama `PATCH /admin/reportes/:id` e retorna após salvar. |
 | `ReportarDivergenciaScreen` (RF19) | Validação, pré-preenchimento de linha/parada e envio de reporte de divergência pelo passageiro (RF19). | Permite escolher `Horário`, `Parada` ou `Itinerário`, exige ao menos linha ou parada e descrição com no mínimo 10 caracteres, anexa `usuarioId` quando logado, chama `POST /reportes` e trata erros da API. |
+| `AvisosSecao` (RF15) | Seção "Avisos" na aba Favoritos. | Lista os avisos do passageiro com título e resumo, destaca os não lidos e mostra o contador (`1 novo`); ao tocar em um aviso não lido, marca como lido; não exibe nada sem avisos, sem login ou quando a busca falha. |
+| `SeloAvisos` e `RodapeNavegacao` (RF15) | Selo de avisos não lidos no ícone Favoritos do rodapé. | Mostra a quantidade (`9+` acima de nove), atualiza quando a tela volta ao foco, some quando não há avisos e fica oculto na própria aba Favoritos. |
+| `FavoritosScreen` (RF15) | Exibição dos avisos para quem está logado. | Mostra a seção de avisos apenas para usuário logado e mantém o aviso de login para os demais. |
+| Funções de notificação da API (RF15) | `getNotificacoes`, `getNotificacoesNaoLidas` e `marcarNotificacaoLida`. | Chamam `/notificacoes`, `/notificacoes/nao-lidas` e `/notificacoes/:id/lida` enviando o token no cabeçalho. |
 
 ---
 
