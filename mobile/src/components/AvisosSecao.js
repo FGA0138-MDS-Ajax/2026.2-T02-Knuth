@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getNotificacoes, marcarNotificacaoLida } from '../services/api';
 
 export default function AvisosSecao() {
@@ -12,6 +11,8 @@ export default function AvisosSecao() {
 
     const carregar = async () => {
       try {
+        const modulo = require('@react-native-async-storage/async-storage');
+        const AsyncStorage = modulo.default || modulo;
         const tokenSalvo = await AsyncStorage.getItem('@rotasdf_token');
         if (!tokenSalvo) {
           return;
