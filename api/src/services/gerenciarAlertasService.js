@@ -1,4 +1,5 @@
 const repo = require('../repositories/gerenciarAlertasRepository');
+const notificacoesService = require('./notificacoesService');
 
 const TIPOS_VALIDOS = ['DESVIO', 'SUSPENSAO', 'ALTERACAO_HORARIO', 'PARALISACAO'];
 
@@ -32,7 +33,15 @@ const validar = (dados) => {
 };
 
 const criar = async (dados) => {
-  return await repo.criar(validar(dados));
+  const alerta = await repo.criar(validar(dados));
+
+  try {
+    await notificacoesService.notificarFavoritosAfetados(alerta);
+  } catch (erro) {
+    console.error('Falha ao notificar favoritos:', erro.message || erro);
+  }
+
+  return alerta;
 };
 
 const editar = async (id, dados) => {

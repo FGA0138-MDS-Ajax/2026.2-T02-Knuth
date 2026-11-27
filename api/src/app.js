@@ -10,6 +10,7 @@ const alertasRoutes = require('./routes/alertasRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const reportesDivergenciaRoutes = require('./routes/reportesDivergenciaRoutes');
 const favoritosRoutes = require('./routes/favoritosRoutes');
+const notificacoesRoutes = require('./routes/notificacoesRoutes');
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use('/api/v1/alertas', alertasRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/reportes', reportesDivergenciaRoutes);
 app.use('/api/v1/favoritos', favoritosRoutes);
+app.use('/api/v1/notificacoes', notificacoesRoutes);
 
 module.exports = app;

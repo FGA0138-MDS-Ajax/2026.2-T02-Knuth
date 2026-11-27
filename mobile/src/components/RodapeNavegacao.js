@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import SeloAvisos from './SeloAvisos';
 
 const ABAS = [
   { nome: 'Linhas', icone: 'bus-outline', iconeAtivo: 'bus' },
@@ -34,6 +35,7 @@ export default function RodapeNavegacao({ navigation, ativa, onPressAtiva }) {
           >
             <Ionicons name={selecionada ? aba.iconeAtivo : aba.icone} size={22} color={cor} />
             <Text style={[styles.texto, { color: cor }]}>{aba.nome}</Text>
+            {aba.nome === 'Favoritos' && !selecionada && <SeloAvisos navigation={navigation} />}
           </TouchableOpacity>
         );
       })}

@@ -150,3 +150,17 @@ CREATE TABLE IF NOT EXISTS favoritos (
 CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_linha ON favoritos(usuario_id, linha_id) WHERE tipo = 'LINHA';
 CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_parada ON favoritos(usuario_id, parada_id) WHERE tipo = 'PARADA';
 CREATE UNIQUE INDEX IF NOT EXISTS ux_favoritos_trajeto ON favoritos(usuario_id, origem, destino) WHERE tipo = 'TRAJETO';
+CREATE TABLE IF NOT EXISTS notificacoes (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    alerta_id INTEGER NOT NULL REFERENCES alertas(id) ON DELETE CASCADE,
+    item_tipo VARCHAR(10) NOT NULL CHECK (item_tipo IN ('LINHA', 'PARADA')),
+    item_id VARCHAR(50) NOT NULL,
+    titulo VARCHAR(255),
+    resumo TEXT NOT NULL,
+    lida BOOLEAN NOT NULL DEFAULT FALSE,
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE (usuario_id, alerta_id, item_tipo, item_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_notificacoes_usuario ON notificacoes (usuario_id, lida);

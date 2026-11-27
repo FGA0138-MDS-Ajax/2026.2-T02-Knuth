@@ -1,7 +1,9 @@
 jest.mock('../repositories/gerenciarAlertasRepository');
+jest.mock('../services/notificacoesService');
 
 const repo = require('../repositories/gerenciarAlertasRepository');
 const service = require('../services/gerenciarAlertasService');
+const notificacoesService = require('../services/notificacoesService');
 
 const dadosValidos = {
   tipo: 'DESVIO',
@@ -209,6 +211,42 @@ describe('gerenciarAlertasService', () => {
 
       expect(repo.buscarParadas).toHaveBeenCalledWith('asa');
       expect(resultado).toEqual([{ id: 'P1', nome: 'Asa Sul' }]);
+    });
+  });
+
+  describe('notificação de favoritos', () => {
+    it('notifica os favoritos afetados depois de criar o alerta', async () => {
+      const alertaCriado = {
+        id: 9,
+        titulo: 'Desvio na Epia',
+        descricao: 'Linhas desviadas por causa de obras.',
+        linhas: ['0.782'],
+        paradas: []
+      };
+      repo.criar.mockResolvedValue(alertaCriado);
+
+      const resultado = await service.criar(dadosValidos);
+
+      expect(notificacoesService.notificarFavoritosAfetados).toHaveBeenCalledWith(alertaCriado);
+      expect(resultado).toEqual(alertaCriado);
+    });
+
+    it('não notifica quando a validação falha', async () => {
+      await expect(service.criar({ ...dadosValidos, tipo: 'OUTRO' })).rejects.toThrow('Tipo de alerta inválido.');
+
+      expect(notificacoesService.notificarFavoritosAfetados).not.toHaveBeenCalled();
+    });
+
+    it('mantém o alerta criado quando a notificação falha', async () => {
+      const alertaCriado = { id: 9, titulo: 'Desvio', descricao: 'Obras', linhas: ['0.782'], paradas: [] };
+      repo.criar.mockResolvedValue(alertaCriado);
+      notificacoesService.notificarFavoritosAfetados.mockRejectedValueOnce(new Error('falha'));
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      const resultado = await service.criar(dadosValidos);
+
+      expect(resultado).toEqual(alertaCriado);
+      console.error.mockRestore();
     });
   });
 });
