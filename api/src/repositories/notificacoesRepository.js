@@ -53,4 +53,21 @@ const marcarComoLida = async (id, usuarioId) => {
   return resultado.rows[0] || null;
 };
 
-module.exports = { criarParaFavoritosAfetados, listarPorUsuario, marcarComoLida };
+
+const contarNaoLidas = async (usuarioId) => {
+  const resultado = await pool.query(
+    `SELECT COUNT(*)::int AS total
+     FROM notificacoes
+     WHERE usuario_id = $1 AND lida = FALSE`,
+    [usuarioId]
+  );
+
+  return resultado.rows[0].total;
+};
+
+module.exports = {
+  criarParaFavoritosAfetados,
+  listarPorUsuario,
+  marcarComoLida,
+  contarNaoLidas
+};
