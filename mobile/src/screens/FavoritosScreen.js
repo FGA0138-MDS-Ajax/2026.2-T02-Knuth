@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-nati
 import { favoritosStore } from '../utils/favoritosStore';
 import FavoritosCarregador from '../components/FavoritosCarregador';
 import FavoritosSecao from '../components/FavoritosSecao';
+import AvisosSecao from '../components/AvisosSecao';
 import RodapeNavegacao from '../components/RodapeNavegacao';
 
 export default function FavoritosScreen({ navigation, store = favoritosStore }) {
@@ -19,6 +20,7 @@ export default function FavoritosScreen({ navigation, store = favoritosStore }) 
       <FavoritosCarregador navigation={navigation} store={store} />
 
       <ScrollView contentContainerStyle={styles.conteudo}>
+        {logado && <AvisosSecao />}
         {logado ? (
           <FavoritosSecao navigation={navigation} store={store} />
         ) : (
