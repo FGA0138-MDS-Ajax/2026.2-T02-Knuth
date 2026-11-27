@@ -36,7 +36,7 @@ const contarNaoLidas = async (usuarioId) => repository.contarNaoLidas(usuarioId)
 
 const marcarComoLida = async (id, usuarioId) => {
   const notificacao = await repository.marcarComoLida(id, usuarioId);
-  if (!notificacao) throw new Error('Notificação não encontrada.');
+  if (!notificacao) throw Object.assign(new Error('Notificação não encontrada.'), { status: 404 });
   return notificacao;
 };
 
